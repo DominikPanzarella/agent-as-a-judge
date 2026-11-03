@@ -1,4 +1,4 @@
-# agent-as-a-judge
+# Agent-As-a-Judge
 Neural Code Analysis Course Paper Presentation and Project
 
 **Project: Can a Judge Agent Make a Coding Agent Better?** (Dominik Panzarella, Daniele Buser)
