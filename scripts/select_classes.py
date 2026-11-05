@@ -3,6 +3,8 @@
 A class is dropped if benchmarks+ marks at least one of its methods as problematic,
 because its tests can no longer tell us whether the code is right. A class is also
 dropped if all of its methods are trivial, because feedback has nothing to improve.
+Classes listed in HARNESS_EXCLUSIONS are dropped too, because their reference solution
+fails in our harness (see scripts/harness.py).
 Writes data/selection/classes.csv with one row per class and the reason for each drop.
 """
 import collections
@@ -13,6 +15,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 AUGMENTED = ROOT / "data/raw/benchmarks_plus/benchmarks+/classeval_augmented.jsonl"
 OUT = ROOT / "data/selection/classes.csv"
+
+HARNESS_EXCLUSIONS = {
+    "ClassEval_49": "helper matches_requirements has its own tests but is not a method to write",
+}
 
 methods = [json.loads(line) for line in AUGMENTED.open(encoding="utf-8") if line.strip()]
 by_class = collections.defaultdict(list)
@@ -29,6 +35,8 @@ for task_id, ms in sorted(by_class.items(), key=lambda kv: int(kv[0].split("_")[
         reason = f"problematic: {names} ({'; '.join(issues)})"
     elif n_trivial == len(ms):
         reason = "all methods trivial"
+    elif task_id in HARNESS_EXCLUSIONS:
+        reason = HARNESS_EXCLUSIONS[task_id]
     else:
         reason = ""
     rows.append({

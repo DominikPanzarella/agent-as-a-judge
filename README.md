@@ -15,11 +15,14 @@ The plan up to the midway report, with what is done and what is still open, is i
 ## Setup
 
 ```bash
-cp .env.example .env          # add the API keys, never commit .env
-./scripts/download_data.sh    # ClassEval + benchmarks+ into data/raw/ (not tracked)
-python3 scripts/benchmark_stats.py
-python3 scripts/select_classes.py
-python3 scripts/order_methods.py
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env                     # add the API keys, never commit .env
+./scripts/download_data.sh               # ClassEval + benchmarks+ into data/raw/ (not tracked)
+.venv/bin/python scripts/benchmark_stats.py
+.venv/bin/python scripts/select_classes.py
+.venv/bin/python scripts/order_methods.py
+.venv/bin/python scripts/harness.py      # reference solutions must pass, stubs must fail
+.venv/bin/python scripts/check_api.py    # one tiny request to each API
 ```
 
 ## Data
@@ -33,14 +36,29 @@ python3 scripts/order_methods.py
 `scripts/select_classes.py` writes `data/selection/classes.csv`, one row per class with the reason for
 each drop. We drop a class when benchmarks+ marks one of its methods as problematic, since its tests
 then cannot say whether the code is right. This removes 27 classes. We also drop the one class whose
-methods are all trivial: all nine models tested in benchmarks+ solve them. The remaining 72 classes
-have 295 methods.
+methods are all trivial: all nine models tested in benchmarks+ solve them. Finally we drop
+ClassEval_49, whose helper method `matches_requirements` has its own tests but is not among the
+methods to write, so its reference solution fails in our harness. The remaining 71 classes have 289
+methods.
 
 ## Method order
 
 `scripts/order_methods.py` writes `data/selection/method_order.csv`. The coder writes the methods of a
 class in the order of its skeleton, which we take as the logical order chosen by the ClassEval
 authors. We change that order only where a method calls another method of the same class: the called
-method comes first. This changes the position of 48 of the 295 methods, in 15 classes. One ClassEval
+method comes first. This changes the position of 48 of the 289 methods, in 15 classes. One ClassEval
 annotation is wrong. In ClassEval_63, `process_data` does not call `process`, so we remove that
 dependency, which would otherwise create a cycle.
+
+## Test harness
+
+`scripts/harness.py` puts a class together from single methods and runs each ClassEval test class
+in its own subprocess, in a temporary folder and with a 10 second timeout. A method that is missing,
+or that does not compile, becomes a stub that returns None, so it fails only its own tests. Some
+ClassEval methods lose their decorator (such as `@staticmethod`), so the harness takes it back from
+the class skeleton.
+
+Run as a script, the harness checks itself. The reference solutions pass all 289 methods and all 71
+classes. With stubs only, 4 methods still pass, because their tests cannot tell a no-op from a
+solution. They are listed in `data/selection/weak_tests.csv` and we report results with and without
+them.
