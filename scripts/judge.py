@@ -1,25 +1,40 @@
-"""Judge v1: GPT-6 Luna reads one method and says whether it does what its docstring says.
+"""The judge: GPT-6 Luna reads one method and says whether it does what its docstring says.
 
 The judge gets the class skeleton (the class description and every docstring), the methods
 written before this one and the new method. It never sees the tests. It answers in JSON with a
 short reason and a verdict, OK or NOT OK. The reason is also the feedback that the coder will get
 in setups C1 and C2, which will call judge_method().
 
-Run as a script, the judge reads the methods of a finished run, such as runs/C0, one by one in the
-order they were written, and we compare its verdicts with the tests. This is how the pilot measures
-the judge: agreement with the tests, Cohen's kappa, and how often it says OK to a method that fails.
-Verdicts go to runs/judge/<setup>-<effort>/<task_id>.json and every request to runs/cost_log.csv.
+There are two versions. Judge v1 only reads the code. Judge v2 can also run Python before it
+answers, with the tool run_python: the code runs after the class written so far, so the judge can
+try the docstring examples or a case it doubts. We added v2 because v1, on the first methods,
+described results that the code does not produce. The tests stay hidden in both versions. The
+judge's code runs like the harness runs generated code: in a separate process, in a temporary
+folder, with a time limit.
 
-    .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55   # show the first prompt, no request
-    .venv/bin/python scripts/judge.py C0 ClassEval_19 ClassEval_55
-    .venv/bin/python scripts/judge.py C0 --effort medium ClassEval_19   # more reasoning
-    .venv/bin/python scripts/judge.py C0 --all                    # every class of runs/C0
-    .venv/bin/python scripts/judge.py C0 --summary                # only the comparison with the tests
+Both versions use the OpenAI Responses API with the same settings, so they differ only in the
+tool. The older Chat Completions API does not accept tools together with a reasoning effort for
+GPT-6 Luna.
+
+Run as a script, the judge reads the methods of a finished run, such as runs/C0, one by one in the
+order they were written, and we compare its verdicts with the tests: agreement, Cohen's kappa, and
+how often it says OK to a method that fails. Verdicts go to
+runs/judge/<setup>-<version>-<effort>/<task_id>.json and every request to runs/cost_log.csv.
+
+    .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55          # show the prompt, no request
+    .venv/bin/python scripts/judge.py C0 ClassEval_19 ClassEval_55       # v1, low effort
+    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium ClassEval_19
+    .venv/bin/python scripts/judge.py C0 --all                           # every class of runs/C0
+    .venv/bin/python scripts/judge.py C0 --version v2 --summary          # only the comparison with the tests
 """
 import argparse
 import json
 import os
+import re
+import subprocess
 import sys
+import tempfile
+from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -30,8 +45,11 @@ import harness
 
 ROOT = harness.ROOT
 MODEL = "gpt-6-luna"
+VERSIONS = ["v1", "v2"]
 EFFORTS = ["low", "medium"]  # the course allows low or medium reasoning effort
 EFFORT = "low"  # with "low", GPT-6 Luna used no reasoning tokens in the first test
+MAX_RUNS = 5  # code runs that judge v2 may ask for on one method
+OUTPUT_LIMIT = 2000  # characters of stdout and of stderr shown to the judge
 # OpenAI does not return the cost of a request, so we compute it. Standard tier, dollars per
 # million tokens, as OpenRouter lists it on 6 Nov 2026. The OpenAI dashboard has the real spend.
 PRICE = {"input": 0.10, "cached_input": 0.01, "output": 0.50}
@@ -47,11 +65,20 @@ SYSTEM = (
     "verdict: never write only OK or NOT OK there."
 )
 
+SYSTEM_TOOLS = SYSTEM + (
+    " You can run Python code with the tool run_python, at most " + str(MAX_RUNS) + " times. "
+    "Use it to check the examples in the docstring and any case you doubt before you answer. "
+    "The class is already defined when your code runs: call it directly and never copy or "
+    "redefine it, or you would test your copy instead of the developer's code. "
+    "When the reason says what the code returns or raises, it must be what you saw when you "
+    "ran it, not what you expect."
+)
+
 # Structured output: the reply is always this JSON object. The reason comes first, so the
 # verdict follows from it.
 VERDICT_FORMAT = {
-    "type": "json_schema",
-    "json_schema": {
+    "format": {
+        "type": "json_schema",
         "name": "verdict",
         "strict": True,
         "schema": {
@@ -68,6 +95,28 @@ VERDICT_FORMAT = {
     },
 }
 
+RUN_PYTHON = {
+    "type": "function",
+    "name": "run_python",
+    "description": (
+        "Run Python code placed after the class definition and get back what it prints and any "
+        "error. The class contains the method under review and the methods written so far; "
+        "methods not written yet only return None. Do not redefine the class: it is already "
+        "defined, so call it directly. Use print() to see values. Every run starts "
+        "from scratch and stops after " + str(harness.TIMEOUT) + " seconds."
+    ),
+    "strict": True,
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "code": {"type": "string",
+                     "description": "Python code to run, for example: print(Stack().size())"},
+        },
+        "required": ["code"],
+        "additionalProperties": False,
+    },
+}
+
 
 def prompt(task, written, name, code):
     parts = [f"This is the skeleton of the class {task['class_name']}:", "",
@@ -80,29 +129,102 @@ def prompt(task, written, name, code):
     return "\n".join(parts)
 
 
-def judge_method(client, task, written, name, code, effort=EFFORT):
-    messages = [{"role": "system", "content": SYSTEM},
-                {"role": "user", "content": prompt(task, written, name, code)}]
-    reply = client.chat.completions.create(model=MODEL, messages=messages, reasoning_effort=effort,
-                                           response_format=VERDICT_FORMAT)
-    u = reply.usage
-    cached = getattr(getattr(u, "prompt_tokens_details", None), "cached_tokens", None) or 0
-    reasoning = getattr(getattr(u, "completion_tokens_details", None), "reasoning_tokens", None)
-    cost = ((u.prompt_tokens - cached) * PRICE["input"] + cached * PRICE["cached_input"]
-            + u.completion_tokens * PRICE["output"]) / 1e6
-    content = reply.choices[0].message.content or ""
+def ask(client, instructions, input, effort, tools=None, tool_choice=None, previous=None):
+    """One request to the Responses API. With `previous`, the judge continues that conversation."""
+    kwargs = {"model": MODEL, "instructions": instructions, "input": input,
+              "reasoning": {"effort": effort}, "text": VERDICT_FORMAT}
+    if tools:
+        kwargs.update(tools=tools, tool_choice=tool_choice)
+    if previous:
+        kwargs["previous_response_id"] = previous
+    return client.responses.create(**kwargs)
+
+
+def usage_of(response):
+    """Tokens and computed cost of one OpenAI request."""
+    u = response.usage
+    cached = getattr(getattr(u, "input_tokens_details", None), "cached_tokens", None) or 0
+    reasoning = getattr(getattr(u, "output_tokens_details", None), "reasoning_tokens", None) or 0
+    cost = ((u.input_tokens - cached) * PRICE["input"] + cached * PRICE["cached_input"]
+            + u.output_tokens * PRICE["output"]) / 1e6
+    return {"provider": "OpenAI", "prompt_tokens": u.input_tokens, "cached_tokens": cached,
+            "completion_tokens": u.output_tokens, "reasoning_tokens": reasoning, "cost": cost}
+
+
+def parse_verdict(content):
     try:
-        answer = json.loads(content)
-        verdict, reason = answer["verdict"], answer["reason"]
+        answer = json.loads(content or "")
+        return answer["verdict"], answer["reason"]
     except (ValueError, KeyError, TypeError):
-        verdict, reason = None, content  # counted apart in the summary
-    return {"verdict": verdict, "reason": reason, "finish_reason": reply.choices[0].finish_reason,
-            "provider": "OpenAI", "prompt_tokens": u.prompt_tokens, "cached_tokens": cached,
-            "completion_tokens": u.completion_tokens, "reasoning_tokens": reasoning, "cost": cost}
+        return None, content  # counted apart in the summary
 
 
-def judge_run(client, task, run, effort=EFFORT):
+def judge_method(client, task, written, name, code, effort=EFFORT):
+    """Judge v1: one request, the judge only reads the code."""
+    response = ask(client, SYSTEM, [{"role": "user", "content": prompt(task, written, name, code)}], effort)
+    stats = usage_of(response)
+    verdict, reason = parse_verdict(response.output_text)
+    return {"verdict": verdict, "reason": reason, "status": response.status,
+            "requests": [stats], **stats}
+
+
+def run_python(source, code):
+    """Run the judge's code after the class, the way the harness runs generated code."""
+    with tempfile.TemporaryDirectory() as tmp:
+        Path(tmp, "snippet.py").write_text(source + "\n\n" + code, encoding="utf-8")
+        try:
+            proc = subprocess.run([sys.executable, "-I", "snippet.py"], cwd=tmp, capture_output=True,
+                                  text=True, timeout=harness.TIMEOUT)
+        except subprocess.TimeoutExpired:
+            return f"Stopped after {harness.TIMEOUT} seconds."
+    return (f"exit code {proc.returncode}\nstdout:\n{proc.stdout[-OUTPUT_LIMIT:]}"
+            f"\nstderr:\n{proc.stderr[-OUTPUT_LIMIT:]}")
+
+
+def judge_method_with_tools(client, task, written, name, code, effort=EFFORT):
+    """Judge v2: the judge may run code up to MAX_RUNS times, then gives its verdict."""
+    source = harness.build_class(task, {**written, name: code})
+    runs, requests = [], []
+    response = ask(client, SYSTEM_TOOLS, [{"role": "user", "content": prompt(task, written, name, code)}],
+                   effort, [RUN_PYTHON], "auto")
+    while True:
+        requests.append(usage_of(response))
+        calls = [item for item in response.output if item.type == "function_call"]
+        # The second condition only guards against a model that ignores tool_choice="none".
+        if not calls or len(requests) > MAX_RUNS + 1:
+            break
+        outputs = []
+        for call in calls:
+            # Every call needs an answer, also the ones beyond the limit.
+            if len(runs) >= MAX_RUNS:
+                output = "No more runs are allowed. Give your verdict now."
+            else:
+                try:
+                    snippet = json.loads(call.arguments)["code"]
+                except (ValueError, KeyError, TypeError):
+                    snippet, output = call.arguments, "The arguments were not valid JSON."
+                else:
+                    # In the first tests the judge copied the class into its code. A copy can
+                    # differ from the developer's code, so we do not run it.
+                    if re.search(r"^\s*class\s+" + re.escape(task["class_name"]) + r"\b", snippet, flags=re.M):
+                        output = (f"Not run: do not redefine the class {task['class_name']}. It is "
+                                  "already defined with the developer's code, so call it directly.")
+                    else:
+                        output = run_python(source, snippet)
+                runs.append({"code": snippet, "output": output})
+            outputs.append({"type": "function_call_output", "call_id": call.call_id, "output": output})
+        response = ask(client, SYSTEM_TOOLS, outputs, effort, [RUN_PYTHON],
+                       "auto" if len(runs) < MAX_RUNS else "none", previous=response.id)
+    verdict, reason = parse_verdict(response.output_text)
+    totals = {k: sum(r[k] for r in requests)
+              for k in ("prompt_tokens", "cached_tokens", "completion_tokens", "reasoning_tokens", "cost")}
+    return {"verdict": verdict, "reason": reason, "status": response.status, "provider": "OpenAI",
+            "n_runs": len(runs), "runs": runs, "requests": requests, **totals}
+
+
+def judge_run(client, task, run, version="v1", effort=EFFORT):
     """Verdicts on every method of a finished class, each judged with the methods before it."""
+    judge = judge_method if version == "v1" else judge_method_with_tools
     written, records = {}, []
     for m in run["methods"]:
         name = m["method_name"]
@@ -112,13 +234,14 @@ def judge_run(client, task, run, effort=EFFORT):
                             "reason": "The reply did not contain a method that compiles.",
                             "passed": m["passed"]})
             continue
-        r = judge_method(client, task, written, name, m["code"], effort)
-        budget.log(setup=run["setup"], task_id=task["task_id"], method_name=name, role="judge",
-                   service="openai", model=MODEL, **r)
+        r = judge(client, task, written, name, m["code"], effort)
+        for request in r["requests"]:
+            budget.log(setup=run["setup"], task_id=task["task_id"], method_name=name,
+                       role=f"judge-{version}", service="openai", model=MODEL, **request)
         records.append({"method_name": name, "auto": False, "passed": m["passed"], **r})
         written[name] = m["code"]
-    return {"task_id": task["task_id"], "setup": run["setup"], "model": MODEL, "effort": effort,
-            "methods": records}
+    return {"task_id": task["task_id"], "setup": run["setup"], "model": MODEL, "version": version,
+            "effort": effort, "methods": records}
 
 
 def agreement(rows):
@@ -145,15 +268,20 @@ def agreement(rows):
     }
 
 
-def summary(setup, effort=EFFORT):
-    folder = ROOT / "runs/judge" / f"{setup}-{effort}"
-    rows = [r for f in sorted(folder.glob("*.json"))
+def folder(setup, version, effort):
+    return ROOT / "runs/judge" / f"{setup}-{version}-{effort}"
+
+
+def summary(setup, version="v1", effort=EFFORT):
+    rows = [r for f in sorted(folder(setup, version, effort).glob("*.json"))
             for r in json.loads(f.read_text(encoding="utf-8"))["methods"]]
     judged = [r for r in rows if not r.get("auto")]
     a = agreement(judged)
     unreadable = sum(r["verdict"] is None for r in judged)
     cost = sum(r.get("cost") or 0 for r in judged)
-    print(f"{setup}, effort {effort}: {len(rows)} methods, {len(judged)} judged, {unreadable} unreadable replies, {cost:.5f} $")
+    runs = sum(r.get("n_runs", 0) for r in judged)
+    print(f"{setup}, judge {version}, effort {effort}: {len(rows)} methods, {len(judged)} judged, "
+          f"{unreadable} unreadable replies, {runs} code runs, {cost:.5f} $")
     if a["n"]:
         print(f"  agreement with the tests {a['accuracy']:.2f}, kappa {a['kappa']:.2f}")
         print(f"  OK to a failing method: {a['false_ok']:.2f} of {a['n_failing']}; "
@@ -161,18 +289,19 @@ def summary(setup, effort=EFFORT):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Judge v1 on the methods of a finished run.")
+    parser = argparse.ArgumentParser(description="The judge on the methods of a finished run.")
     parser.add_argument("setup", help="the run to judge, such as C0")
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
+    parser.add_argument("--version", choices=VERSIONS, default="v1", help="v2 can run code")
+    parser.add_argument("--effort", choices=EFFORTS, default=EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--all", action="store_true", help="every class of the run")
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")
     parser.add_argument("--force", action="store_true", help="judge again classes that already have verdicts")
     parser.add_argument("--summary", action="store_true", help="only compare the saved verdicts with the tests")
-    parser.add_argument("--effort", choices=EFFORTS, default=EFFORT, help="reasoning effort of the judge")
     args = parser.parse_args()
 
     if args.summary:
-        summary(args.setup, args.effort)
+        summary(args.setup, args.version, args.effort)
         return
     runs = ROOT / "runs" / args.setup
     chosen = sorted(f.stem for f in runs.glob("*.json")) if args.all else args.tasks
@@ -184,12 +313,15 @@ def main():
     if args.dry_run:
         run = json.loads((runs / f"{chosen[0]}.json").read_text(encoding="utf-8"))
         m = next(m for m in run["methods"] if m["valid"])
-        print("SYSTEM:\n" + SYSTEM + "\n\nUSER:\n" + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
+        system = SYSTEM if args.version == "v1" else SYSTEM_TOOLS
+        print("SYSTEM:\n" + system + "\n\nUSER:\n" + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
+        if args.version == "v2":
+            print("\nTOOL:\n" + json.dumps(RUN_PYTHON, indent=2))
         return
 
     load_dotenv(ROOT / ".env")
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"], max_retries=5)
-    out_dir = ROOT / "runs/judge" / f"{args.setup}-{args.effort}"
+    out_dir = folder(args.setup, args.version, args.effort)
     out_dir.mkdir(parents=True, exist_ok=True)
     for task_id in chosen:
         out = out_dir / f"{task_id}.json"
@@ -202,12 +334,12 @@ def main():
             print(f"Stopped before {task_id}: {stop}")
             sys.exit(1)
         run = json.loads((runs / f"{task_id}.json").read_text(encoding="utf-8"))
-        result = judge_run(client, tasks[task_id], run, args.effort)
+        result = judge_run(client, tasks[task_id], run, args.version, args.effort)
         out.write_text(json.dumps(result, indent=2), encoding="utf-8")
         verdicts = ", ".join(f"{m['method_name']} {m['verdict']} (tests {'pass' if m['passed'] else 'fail'})"
                              for m in result["methods"])
         print(f"{task_id}: {verdicts}")
-    summary(args.setup, args.effort)
+    summary(args.setup, args.version, args.effort)
 
 
 if __name__ == "__main__":

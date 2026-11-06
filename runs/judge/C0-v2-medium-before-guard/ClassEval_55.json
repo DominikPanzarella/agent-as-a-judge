@@ -1,0 +1,111 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: for the documented input, the method returns 2, but the palindrome centered at index 2 is `'aba'`, whose length is 3; it returns an expansion radius rather than the substring length. Convert that radius to the actual palindrome length (accounting for the separator representation) before returning it.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "class Manacher:\n def palindromic_length(self, center,diff,string):\n  if center-diff<0 or center+diff>=len(string) or string[center-diff]!=string[center+diff]: return diff-1\n  return self.palindromic_length(center,diff+1,string)\nm=Manacher()\nprint(m.palindromic_length(2,1,'a|b|a|b|a'))\n",
+          "output": "exit code 0\nstdout:\n2\n\nstderr:\n"
+        },
+        {
+          "code": "class Manacher:\n def palindromic_length(self,center,diff,string):\n  if center-diff<0 or center+diff>=len(string) or string[center-diff]!=string[center+diff]: return diff-1\n  return self.palindromic_length(center,diff+1,string)\nm=Manacher()\nprint(m.palindromic_length(2,1,'a|b|a'))\nprint(m.palindromic_length(2,1,'a|b|a|b|a'))",
+          "output": "exit code 0\nstdout:\n2\n2\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 940,
+          "cached_tokens": 0,
+          "completion_tokens": 117,
+          "reasoning_tokens": 0,
+          "cost": 0.0001525
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1079,
+          "cached_tokens": 0,
+          "completion_tokens": 635,
+          "reasoning_tokens": 497,
+          "cost": 0.0004254
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1738,
+          "cached_tokens": 1076,
+          "completion_tokens": 363,
+          "reasoning_tokens": 280,
+          "cost": 0.00025846
+        }
+      ],
+      "prompt_tokens": 3757,
+      "cached_tokens": 1076,
+      "completion_tokens": 1115,
+      "reasoning_tokens": 777,
+      "cost": 0.00083636
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The method assumes `|` does not occur in the input, but the docstring places no such restriction: for input `'x|x'`, it returns `'xx'` instead of the longest palindrome `'x|x'` (observed when run). Use a separator that cannot occur in the input, or track transformed positions without removing actual input characters.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "class Manacher:\n    def __init__(self,input_string): self.input_string=input_string\n    def palindromic_length(self, center, diff, string):\n        if center-diff<0 or center+diff>=len(string) or string[center-diff]!=string[center+diff]: return diff-1\n        return self.palindromic_length(center,diff+1,string)\n    def palindromic_string(self):\n        transformed='|'.join(self.input_string)\n        max_length=0; center=0\n        for i in range(len(transformed)):\n            length=self.palindromic_length(i,1,transformed)\n            if length>max_length: max_length=length; center=i\n        return ''.join(transformed[center-max_length:center+max_length+1].split('|'))\nm=Manacher('ababaxse')\nprint(m.palindromic_string())\nfor s in ['', 'a', 'abba', 'abc', 'aaaa']:\n print(repr(s),repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'abba' 'abba'\n'abc' 'b'\n'aaaa' 'aaaa'\n\nstderr:\n"
+        },
+        {
+          "code": "class M:\n def __init__(self,s): self.input_string=s\n def palindromic_length(self,center,diff,string):\n  if center-diff<0 or center+diff>=len(string) or string[center-diff]!=string[center+diff]: return diff-1\n  return self.palindromic_length(center,diff+1,string)\n def palindromic_string(self):\n  transformed='|'.join(self.input_string); ml=0;c=0\n  for i in range(len(transformed)):\n   l=self.palindromic_length(i,1,transformed)\n   if l>ml: ml=l;c=i\n  return ''.join(transformed[c-ml:c+ml+1].split('|'))\nfor s in ['a|b','ab|c','a||b','|ab|','ab|ba','x|x']:\n print(repr(s), repr(M(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\n'a|b' ''\n'ab|c' 'b'\n'a||b' ''\n'|ab|' 'a'\n'ab|ba' 'abba'\n'x|x' 'xx'\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1109,
+          "cached_tokens": 0,
+          "completion_tokens": 257,
+          "reasoning_tokens": 0,
+          "cost": 0.00023940000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1414,
+          "cached_tokens": 1106,
+          "completion_tokens": 650,
+          "reasoning_tokens": 419,
+          "cost": 0.00036686
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2122,
+          "cached_tokens": 1411,
+          "completion_tokens": 224,
+          "reasoning_tokens": 132,
+          "cost": 0.00019721000000000002
+        }
+      ],
+      "prompt_tokens": 4645,
+      "cached_tokens": 2517,
+      "completion_tokens": 1131,
+      "reasoning_tokens": 551,
+      "cost": 0.00080347
+    }
+  ]
+}

@@ -41,9 +41,11 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   method docstring and the code written so far. It answers OK or NOT OK with a short reason, in JSON.
   On the first four methods it agrees with the tests three times, but every concrete claim in its
   reasons is false: it cannot run code. This makes it the "judge without tools" control.
-- [ ] **Judge v2 with a tool** (to decide). Before the verdict the judge may run a few lines of
-  Python on the class written so far, for example the docstring examples, in a subprocess with a
-  timeout. The hidden tests stay hidden.
+- [x] **Judge v2 with a tool** (6 Nov). Before the verdict the judge may run Python up to 5 times
+  on the class written so far, for example the docstring examples, in a subprocess with a timeout.
+  The hidden tests stay hidden. On the first four methods all its claims about the code are true;
+  its two disagreements with the tests come from an ambiguous docstring and from a bug the tests do
+  not check.
 - [ ] **Pilot** (by Sunday 8 Nov). Run C0 on 8 classes and judge their methods with judge v1 (and v2,
   if we build it), with low and with medium effort. Three questions before going on. Is the judge
   clearly better than chance against the tests? We look at Cohen's kappa and at how often it says
@@ -66,7 +68,8 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   with and without the 4 weak methods, and for the judge its accuracy, kappa and rate of false OK
   verdicts. Compare C2 with C0 and with C1 using McNemar tests and bootstrap confidence intervals.
 - [ ] **Error analysis** (14 to 15 Nov). Read 20 cases where the judge and the tests disagree and
-  group them into a few types.
+  group them into a few types. For each case we also decide who is right, since the first runs
+  already show disagreements caused by ambiguous docstrings and by bugs the tests do not check.
 
 ## 16 to 19 November: midway report
 

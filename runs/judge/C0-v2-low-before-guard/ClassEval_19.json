@@ -1,0 +1,87 @@
+{
+  "task_id": "ClassEval_19",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "generate_primes",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly returns the primes up to and including `self.n`; the sieve handles limits below 2 and the odd-number indexing correctly. I ran the documented example and boundary cases, and the results were correct.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "class ChandrasekharSieve:\n    def __init__(self,n): self.n=n; self.primes=self.generate_primes()\n    def generate_primes(self):\n        n=self.n\n        if n<2:return []\n        primes=[2]\n        if n<3:return primes\n        size=(n-3)//2+1\n        is_prime=[True]*size\n        for i in range(size):\n            if is_prime[i]:\n                p=2*i+3\n                if p*p>n: break\n                start=(p*p-3)//2\n                for j in range(start,size,p):is_prime[j]=False\n        for i in range(size):\n            if is_prime[i]:primes.append(2*i+3)\n        return primes\nfor n in [-1,0,1,2,3,4,20]:\n c=ChandrasekharSieve(n); print(n,c.generate_primes())",
+          "output": "exit code 0\nstdout:\n-1 []\n0 []\n1 []\n2 [2]\n3 [2, 3]\n4 [2, 3]\n20 [2, 3, 5, 7, 11, 13, 17, 19]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 963,
+          "cached_tokens": 0,
+          "completion_tokens": 229,
+          "reasoning_tokens": 0,
+          "cost": 0.0002108
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1262,
+          "cached_tokens": 0,
+          "completion_tokens": 59,
+          "reasoning_tokens": 0,
+          "cost": 0.0001557
+        }
+      ],
+      "prompt_tokens": 2225,
+      "cached_tokens": 0,
+      "completion_tokens": 288,
+      "reasoning_tokens": 0,
+      "cost": 0.00036649999999999996
+    },
+    {
+      "method_name": "get_primes",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`__init__` initializes `self.primes` using `generate_primes`, and `get_primes` returns that list. For the documented limit of 20, it returned `[2, 3, 5, 7, 11, 13, 17, 19]`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "class ChandrasekharSieve:\n def __init__(self,n):\n  self.n=n; self.primes=self.generate_primes()\n def generate_primes(self):\n  n=self.n\n  if n<2:return []\n  primes=[2]\n  if n<3:return primes\n  size=(n-3)//2+1; is_prime=[True]*size\n  for i in range(size):\n   if is_prime[i]:\n    p=2*i+3\n    if p*p>n:break\n    start=(p*p-3)//2\n    for j in range(start,size,p):is_prime[j]=False\n  for i in range(size):\n   if is_prime[i]:primes.append(2*i+3)\n  return primes\n def get_primes(self):return self.primes\ncs=ChandrasekharSieve(20)\nprint(cs.get_primes())",
+          "output": "exit code 0\nstdout:\n[2, 3, 5, 7, 11, 13, 17, 19]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1056,
+          "cached_tokens": 0,
+          "completion_tokens": 289,
+          "reasoning_tokens": 66,
+          "cost": 0.0002501
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1389,
+          "cached_tokens": 1053,
+          "completion_tokens": 79,
+          "reasoning_tokens": 0,
+          "cost": 8.363e-05
+        }
+      ],
+      "prompt_tokens": 2445,
+      "cached_tokens": 1053,
+      "completion_tokens": 368,
+      "reasoning_tokens": 66,
+      "cost": 0.00033373
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "task_id": "ClassEval_19",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "generate_primes",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly handles limits below 2 and uses an odd-only sieve that returns all primes up to and including the limit; the documented example returns `[2, 3, 5, 7, 11, 13, 17, 19]`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "class ChandrasekharSieve:\n    def __init__(self,n): self.n=n; self.primes=self.generate_primes()\n    def generate_primes(self):\n        n=self.n\n        if n<2: return []\n        primes=[2]\n        if n<3:return primes\n        size=(n-3)//2+1\n        is_prime=[True]*size\n        for i in range(size):\n            if is_prime[i]:\n                p=2*i+3\n                if p*p>n:break\n                start=(p*p-3)//2\n                for j in range(start,size,p): is_prime[j]=False\n        for i in range(size):\n            if is_prime[i]: primes.append(2*i+3)\n        return primes\nprint(ChandrasekharSieve(20).generate_primes())\nprint([(n, ChandrasekharSieve(n).generate_primes()) for n in range(-1,20)])",
+          "output": "exit code 0\nstdout:\n[2, 3, 5, 7, 11, 13, 17, 19]\n[(-1, []), (0, []), (1, []), (2, [2]), (3, [2, 3]), (4, [2, 3]), (5, [2, 3, 5]), (6, [2, 3, 5]), (7, [2, 3, 5, 7]), (8, [2, 3, 5, 7]), (9, [2, 3, 5, 7]), (10, [2, 3, 5, 7]), (11, [2, 3, 5, 7, 11]), (12, [2, 3, 5, 7, 11]), (13, [2, 3, 5, 7, 11, 13]), (14, [2, 3, 5, 7, 11, 13]), (15, [2, 3, 5, 7, 11, 13]), (16, [2, 3, 5, 7, 11, 13]), (17, [2, 3, 5, 7, 11, 13, 17]), (18, [2, 3, 5, 7, 11, 13, 17]), (19, [2, 3, 5, 7, 11, 13, 17, 19])]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 963,
+          "cached_tokens": 0,
+          "completion_tokens": 234,
+          "reasoning_tokens": 0,
+          "cost": 0.0002133
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1561,
+          "cached_tokens": 0,
+          "completion_tokens": 174,
+          "reasoning_tokens": 101,
+          "cost": 0.00024310000000000003
+        }
+      ],
+      "prompt_tokens": 2524,
+      "cached_tokens": 0,
+      "completion_tokens": 408,
+      "reasoning_tokens": 101,
+      "cost": 0.00045640000000000003
+    },
+    {
+      "method_name": "get_primes",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`self.primes` is initialized by `generate_primes()` in the constructor, and `get_primes()` returns that list. For the documented limit of 20, it returned `[2, 3, 5, 7, 11, 13, 17, 19]`, as expected.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "class ChandrasekharSieve:\n    def __init__(self, n):\n        self.n = n\n        self.primes = self.generate_primes()\n    def generate_primes(self):\n        n = self.n\n        if n < 2: return []\n        primes = [2]\n        if n < 3: return primes\n        size = (n - 3) // 2 + 1\n        is_prime = [True] * size\n        for i in range(size):\n            if is_prime[i]:\n                p = 2 * i + 3\n                if p * p > n: break\n                start = (p * p - 3) // 2\n                for j in range(start, size, p): is_prime[j] = False\n        for i in range(size):\n            if is_prime[i]: primes.append(2 * i + 3)\n        return primes\n    def get_primes(self):\n        return self.primes\ncs = ChandrasekharSieve(20)\nprint(cs.get_primes())",
+          "output": "exit code 0\nstdout:\n[2, 3, 5, 7, 11, 13, 17, 19]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1056,
+          "cached_tokens": 0,
+          "completion_tokens": 316,
+          "reasoning_tokens": 57,
+          "cost": 0.0002636
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1416,
+          "cached_tokens": 1053,
+          "completion_tokens": 111,
+          "reasoning_tokens": 28,
+          "cost": 0.00010233000000000002
+        }
+      ],
+      "prompt_tokens": 2472,
+      "cached_tokens": 1053,
+      "completion_tokens": 427,
+      "reasoning_tokens": 85,
+      "cost": 0.00036593000000000004
+    }
+  ]
+}

@@ -78,22 +78,42 @@ every setup sends the coder the same number of requests. Each class is saved in
 the budgets and stops the run when a service has spent 70 percent of its 10 dollars. For OpenRouter
 it also asks the service how much the key has spent, because both of us use the same key.
 
-## Judge v1
+## The judge
 
 `scripts/judge.py` asks GPT-6 Luna whether a method does what its docstring says. The judge sees the
 class skeleton, the methods written before and the new method, never the tests. Its answer is a
 JSON object with a short reason and a verdict, OK or NOT OK; the reason is the feedback the coder
 will get in C1 and C2. On a finished run the script compares the verdicts with the tests (agreement,
 Cohen's kappa, OK given to failing methods, NOT OK given to passing ones). Verdicts go to
-`runs/judge/<setup>-<effort>/`. OpenAI does not return the cost of a request, so the script computes
-it from the standard prices.
+`runs/judge/<setup>-<version>-<effort>/`. OpenAI does not return the cost of a request, so the
+script computes it from the standard prices.
 
-On the first four methods the verdicts agree with the tests three times out of four, with low and
-with medium reasoning effort. Every concrete claim in the reasons, though, was false when we ran the
-code: the judge tries to execute the code in its head and gets it wrong. Judge v1 cannot run code,
-so it is the "judge without tools" of our plan.
+Judge v1 only reads the code. On the first four methods its verdicts agree with the tests three
+times out of four, with low and with medium reasoning effort, but every concrete claim in its
+reasons was false when we ran the code: it tries to execute the code in its head and gets it wrong.
+Judge v1 is therefore the "judge without tools" of our plan.
+
+Judge v2 can also run Python before it answers, up to 5 times per method, with the tool
+`run_python`. The code runs after the class written so far, in a separate process, in a temporary
+folder and with a 10 second limit, as in the test harness. The judge can try the docstring
+examples or a case it doubts, and the reason must report what it saw. The tests stay hidden. In
+its first runs the judge copied the class into its own code, so it could end up testing a copy
+instead of the coder's code; now the prompt asks it to call the class directly, and code that
+redefines the class is not run.
+
+On the same four methods every claim of judge v2 about what the code returns was true. It agrees
+with the tests on two methods. The other two disagreements are problems of ClassEval rather than of
+the judge. The docstring of `palindromic_length` does not say whether the result counts from `diff`
+or from the center, and the tests expect the reading the coder did not choose. `palindromic_string`
+breaks when the input contains `|`, its own separator, and no test checks that case. So in the
+analysis a disagreement with the tests does not always mean that the judge is wrong.
+
+Both versions use the OpenAI Responses API with the same settings, so they differ only in the tool;
+the older Chat Completions API does not accept tools together with a reasoning effort for GPT-6
+Luna.
 
 ```bash
-.venv/bin/python scripts/judge.py C0 --effort medium ClassEval_19 ClassEval_55
-.venv/bin/python scripts/judge.py C0 --effort medium --summary
+.venv/bin/python scripts/judge.py C0 --version v1 --effort medium ClassEval_19 ClassEval_55
+.venv/bin/python scripts/judge.py C0 --version v2 --effort medium ClassEval_19 ClassEval_55
+.venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
 ```

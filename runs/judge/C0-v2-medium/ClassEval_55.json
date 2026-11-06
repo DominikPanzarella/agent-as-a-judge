@@ -1,0 +1,99 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method expands outward from the supplied center until the next pair differs or reaches a boundary, then returns the last matching radius (`diff - 1`). It produces the documented result of 2 for the example, so it is correct for that radius-based meaning of palindromic length.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "m=Manacher('ababa')\nprint(m.palindromic_length(2,1,'a|b|a|b|a'))\nprint(m.palindromic_length(0,1,'a|b|a|b|a'))",
+          "output": "exit code 0\nstdout:\n2\n0\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 989,
+          "cached_tokens": 0,
+          "completion_tokens": 75,
+          "reasoning_tokens": 0,
+          "cost": 0.0001364
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1088,
+          "cached_tokens": 0,
+          "completion_tokens": 592,
+          "reasoning_tokens": 516,
+          "cost": 0.00040480000000000003
+        }
+      ],
+      "prompt_tokens": 2077,
+      "cached_tokens": 0,
+      "completion_tokens": 667,
+      "reasoning_tokens": 516,
+      "cost": 0.0005412
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The transformation uses `|` as a separator, but the method also treats any `|` in the input as a separator and removes it from the result. For example, I ran it with input `'|'` and it returned `''`; use a separator that cannot occur in the input or otherwise preserve and distinguish input characters from separators.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse')\nprint(m.palindromic_string())\nfor s in ['', 'a', 'ab', 'abba', 'cbbd']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'ab' 'a'\n'abba' 'abba'\n'cbbd' 'bb'\n\nstderr:\n"
+        },
+        {
+          "code": "for s in ['|','a|a','x|y']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\n'|' ''\n'a|a' 'aa'\n'x|y' ''\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1158,
+          "cached_tokens": 0,
+          "completion_tokens": 76,
+          "reasoning_tokens": 0,
+          "cost": 0.0001538
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1283,
+          "cached_tokens": 1155,
+          "completion_tokens": 457,
+          "reasoning_tokens": 405,
+          "cost": 0.00025285
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1775,
+          "cached_tokens": 1280,
+          "completion_tokens": 85,
+          "reasoning_tokens": 0,
+          "cost": 0.0001048
+        }
+      ],
+      "prompt_tokens": 4216,
+      "cached_tokens": 2435,
+      "completion_tokens": 618,
+      "reasoning_tokens": 405,
+      "cost": 0.00051145
+    }
+  ]
+}
