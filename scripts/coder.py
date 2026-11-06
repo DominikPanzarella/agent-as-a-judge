@@ -14,6 +14,7 @@ of every method. Every request also adds a line to runs/cost_log.csv.
     .venv/bin/python scripts/coder.py --dry-run ClassEval_19      # show the first prompt, no request
     .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53   # run these classes
     .venv/bin/python scripts/coder.py --all                       # every kept class not run yet
+    .venv/bin/python scripts/coder.py --name C0-r2 ClassEval_19   # a second run, saved in runs/C0-r2
 """
 import argparse
 import ast
@@ -33,7 +34,6 @@ import harness
 ROOT = harness.ROOT
 METHOD_ORDER = ROOT / "data/selection/method_order.csv"
 SETUP = "C0"
-RUNS = ROOT / "runs" / SETUP
 
 MODEL = "qwen/qwen3.8-27b"
 MAX_TOKENS = 4000  # the reasoning tokens count against this limit too
@@ -120,7 +120,7 @@ def ask(client, messages):
     }
 
 
-def run_class(client, task, steps):
+def run_class(client, task, steps, setup=SETUP):
     written, records = {}, []
     for name in steps:
         messages = [{"role": "system", "content": SYSTEM},
@@ -130,7 +130,7 @@ def run_class(client, task, steps):
         valid = code is not None and harness.as_class_member(code) is not None
         if valid:
             written[name] = code
-        budget.log(setup=SETUP, task_id=task["task_id"], method_name=name, role="coder",
+        budget.log(setup=setup, task_id=task["task_id"], method_name=name, role="coder",
                    service="openrouter", model=MODEL, **r)
         records.append({"method_name": name, "code": code, "valid": valid, **r})
 
@@ -139,7 +139,7 @@ def run_class(client, task, steps):
     passed = harness.method_passed(task, results)
     for record in records:
         record["passed"] = passed[record["method_name"]]
-    return {"task_id": task["task_id"], "class_name": task["class_name"], "setup": SETUP,
+    return {"task_id": task["task_id"], "class_name": task["class_name"], "setup": setup,
             "model": MODEL, "methods": records, "class_passed": harness.class_passed(results),
             "tests": results, "source": source}
 
@@ -150,6 +150,8 @@ def main():
     parser.add_argument("--all", action="store_true", help="every kept class")
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")
     parser.add_argument("--force", action="store_true", help="run again classes that already have a result")
+    parser.add_argument("--name", default=SETUP,
+                        help="name of the run and of its folder in runs/, such as C0-r2 for a second run")
     args = parser.parse_args()
 
     tasks = {t["task_id"]: t for t in harness.load_tasks()}
@@ -168,9 +170,10 @@ def main():
     load_dotenv(ROOT / ".env")
     client = OpenAI(api_key=os.environ["OPENROUTER_API_KEY"], base_url="https://openrouter.ai/api/v1",
                     max_retries=5)
-    RUNS.mkdir(parents=True, exist_ok=True)
+    runs = ROOT / "runs" / args.name
+    runs.mkdir(parents=True, exist_ok=True)
     for task_id in chosen:
-        out = RUNS / f"{task_id}.json"
+        out = runs / f"{task_id}.json"
         if out.exists() and not args.force:
             print(f"{task_id}: already done, skipped")
             continue
@@ -179,7 +182,7 @@ def main():
         except budget.BudgetReached as stop:
             print(f"Stopped before {task_id}: {stop}")
             sys.exit(1)
-        result = run_class(client, tasks[task_id], order[task_id])
+        result = run_class(client, tasks[task_id], order[task_id], args.name)
         out.write_text(json.dumps(result, indent=2), encoding="utf-8")
         ms = result["methods"]
         tokens = sum(m["prompt_tokens"] + m["completion_tokens"] for m in ms)

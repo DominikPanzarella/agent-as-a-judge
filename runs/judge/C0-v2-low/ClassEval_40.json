@@ -1,0 +1,126 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns weight divided by height squared, as its docstring specifies; the example returns 21.604938271604937 as expected.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1108,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.0001298
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1174,
+          "cached_tokens": 1105,
+          "completion_tokens": 45,
+          "reasoning_tokens": 0,
+          "cost": 4.045e-05
+        }
+      ],
+      "prompt_tokens": 2282,
+      "cached_tokens": 1105,
+      "completion_tokens": 83,
+      "reasoning_tokens": 0,
+      "cost": 0.00017025000000000002
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: The method returns 0 for the documented male example, because BMI is about 21.6 and falls within the configured male range of 20\u201325; the docstring expects -1. Make the example\u2019s expected result consistent with the stated standard, or change the standard if -1 is intended.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.condition_judge())",
+          "output": "exit code 0\nstdout:\n0\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1273,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.0001463
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1333,
+          "cached_tokens": 1270,
+          "completion_tokens": 81,
+          "reasoning_tokens": 0,
+          "cost": 5.95e-05
+        }
+      ],
+      "prompt_tokens": 2606,
+      "cached_tokens": 1270,
+      "completion_tokens": 119,
+      "reasoning_tokens": 0,
+      "cost": 0.00020580000000000002
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: For the documented male example, the method returns 862.75, not the documented 986.0; the BMR is 1642.5 and the condition is underweight, so the specified multiplier gives 2628.0. Fix the example or the calculation so its BMR formula and condition multiplier agree with the intended result.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "ft = FitnessTracker(1.8,70,20,'male'); print(ft.calculate_calorie_intake())\nprint(FitnessTracker(1.8,70,20,'female').calculate_calorie_intake())\nprint(FitnessTracker(1.8,70,20,'other').calculate_calorie_intake())",
+          "output": "exit code 1\nstdout:\n862.75\n630.3499999999999\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpjvosu0b0/snippet.py\", line 75, in <module>\n    print(FitnessTracker(1.8,70,20,'other').calculate_calorie_intake())\n          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpjvosu0b0/snippet.py\", line 63, in calculate_calorie_intake\n    condition = self.condition_judge()\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpjvosu0b0/snippet.py\", line 42, in condition_judge\n    if bmi > upper:\n             ^^^^^\nUnboundLocalError: cannot access local variable 'upper' where it is not associated with a value\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1613,
+          "cached_tokens": 0,
+          "completion_tokens": 86,
+          "reasoning_tokens": 0,
+          "cost": 0.0002043
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1953,
+          "cached_tokens": 1610,
+          "completion_tokens": 89,
+          "reasoning_tokens": 0,
+          "cost": 9.49e-05
+        }
+      ],
+      "prompt_tokens": 3566,
+      "cached_tokens": 1610,
+      "completion_tokens": 175,
+      "reasoning_tokens": 0,
+      "cost": 0.0002992
+    }
+  ]
+}

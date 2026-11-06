@@ -1,0 +1,96 @@
+{
+  "task_id": "ClassEval_60",
+  "class_name": "MovieTicketDB",
+  "setup": "C0",
+  "model": "qwen/qwen3.8-27b",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "code": "def create_table(self):\n    \"\"\"\n    Creates a \"tickets\" table in the database if it does not exist already.Fields include ID of type int, movie name of type str, theater name of type str, seat number of type str, and customer name of type str\n    :return: None\n    \"\"\"\n    self.cursor.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS tickets (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            movie_name TEXT,\n            theater_name TEXT,\n            seat_number TEXT,\n            customer_name TEXT\n        )\n    \"\"\")\n    self.connection.commit()",
+      "valid": true,
+      "reply": "\n\n```python\ndef create_table(self):\n    \"\"\"\n    Creates a \"tickets\" table in the database if it does not exist already.Fields include ID of type int, movie name of type str, theater name of type str, seat number of type str, and customer name of type str\n    :return: None\n    \"\"\"\n    self.cursor.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS tickets (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            movie_name TEXT,\n            theater_name TEXT,\n            seat_number TEXT,\n            customer_name TEXT\n        )\n    \"\"\")\n    self.connection.commit()\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 637,
+      "cached_tokens": 0,
+      "completion_tokens": 237,
+      "reasoning_tokens": 98,
+      "cost": 0.000539925,
+      "passed": true
+    },
+    {
+      "method_name": "insert_ticket",
+      "code": "def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):\n    \"\"\"\n    Inserts a new ticket into the \"tickets\" table.\n    :param movie_name: str, the name of the movie.\n    :param theater_name: str, the name of the theater.\n    :param seat_number: str, the seat number.\n    :param customer_name: str, the name of the customer.\n    :return: None\n    \"\"\"\n    self.cursor.execute(\n        \"INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name) VALUES (?, ?, ?, ?)\",\n        (movie_name, theater_name, seat_number, customer_name)\n    )\n    self.connection.commit()",
+      "valid": true,
+      "reply": "\n\n```python\ndef insert_ticket(self, movie_name, theater_name, seat_number, customer_name):\n    \"\"\"\n    Inserts a new ticket into the \"tickets\" table.\n    :param movie_name: str, the name of the movie.\n    :param theater_name: str, the name of the theater.\n    :param seat_number: str, the seat number.\n    :param customer_name: str, the name of the customer.\n    :return: None\n    \"\"\"\n    self.cursor.execute(\n        \"INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name) VALUES (?, ?, ?, ?)\",\n        (movie_name, theater_name, seat_number, customer_name)\n    )\n    self.connection.commit()\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 775,
+      "cached_tokens": 0,
+      "completion_tokens": 235,
+      "reasoning_tokens": 82,
+      "cost": 0.000556875,
+      "passed": true
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "code": "def search_tickets_by_customer(self, customer_name):\n    \"\"\"\n    Searches for tickets in the \"tickets\" table by customer name.\n    :param customer_name: str, the name of the customer to search for.\n    :return: list of tuples, the rows from the \"tickets\" table that match the search criteria.\n    >>> ticket_db = MovieTicketDB(\"ticket_database.db\")\n    >>> ticket_db.create_table()\n    >>> ticket_db.insert_ticket(\"Movie A\", \"Theater 1\", \"A1\", \"John Doe\")\n    >>> result = ticket_db.search_tickets_by_customer(\"John Doe\")\n    len(result) = 1\n    \"\"\"\n    self.cursor.execute(\"SELECT * FROM tickets WHERE customer_name = ?\", (customer_name,))\n    return self.cursor.fetchall()",
+      "valid": true,
+      "reply": "\n\n```python\ndef search_tickets_by_customer(self, customer_name):\n    \"\"\"\n    Searches for tickets in the \"tickets\" table by customer name.\n    :param customer_name: str, the name of the customer to search for.\n    :return: list of tuples, the rows from the \"tickets\" table that match the search criteria.\n    >>> ticket_db = MovieTicketDB(\"ticket_database.db\")\n    >>> ticket_db.create_table()\n    >>> ticket_db.insert_ticket(\"Movie A\", \"Theater 1\", \"A1\", \"John Doe\")\n    >>> result = ticket_db.search_tickets_by_customer(\"John Doe\")\n    len(result) = 1\n    \"\"\"\n    self.cursor.execute(\"SELECT * FROM tickets WHERE customer_name = ?\", (customer_name,))\n    return self.cursor.fetchall()\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 933,
+      "cached_tokens": 0,
+      "completion_tokens": 253,
+      "reasoning_tokens": 85,
+      "cost": 0.000614325,
+      "passed": true
+    },
+    {
+      "method_name": "delete_ticket",
+      "code": "def delete_ticket(self, ticket_id):\n    \"\"\"\n    Deletes a ticket from the \"tickets\" table by ticket ID.\n    :param ticket_id: int, the ID of the ticket to delete.\n    :return: None\n    \"\"\"\n    self.cursor.execute(\"DELETE FROM tickets WHERE id = ?\", (ticket_id,))\n    self.connection.commit()",
+      "valid": true,
+      "reply": "\n\n```python\ndef delete_ticket(self, ticket_id):\n    \"\"\"\n    Deletes a ticket from the \"tickets\" table by ticket ID.\n    :param ticket_id: int, the ID of the ticket to delete.\n    :return: None\n    \"\"\"\n    self.cursor.execute(\"DELETE FROM tickets WHERE id = ?\", (ticket_id,))\n    self.connection.commit()\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1101,
+      "cached_tokens": 0,
+      "completion_tokens": 149,
+      "reasoning_tokens": 73,
+      "cost": 0.000444525,
+      "passed": true
+    }
+  ],
+  "class_passed": true,
+  "tests": {
+    "MovieTicketDBTestInsertTicket": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MovieTicketDBTestSearchTicketsByCustomer": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MovieTicketDBTestDeleteTicket": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MovieTicketDBTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source": "import sqlite3\n\nclass MovieTicketDB: \n    def __init__(self, db_name):\n        \"\"\"\n        Initializes the MovieTicketDB object with the specified database name.\n        :param db_name: str, the name of the SQLite database.\n        \"\"\"\n        self.connection = sqlite3.connect(db_name)\n        self.cursor = self.connection.cursor()\n        self.create_table()\n\n    def create_table(self):\n        \"\"\"\n        Creates a \"tickets\" table in the database if it does not exist already.Fields include ID of type int, movie name of type str, theater name of type str, seat number of type str, and customer name of type str\n        :return: None\n        \"\"\"\n        self.cursor.execute(\"\"\"\n            CREATE TABLE IF NOT EXISTS tickets (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                movie_name TEXT,\n                theater_name TEXT,\n                seat_number TEXT,\n                customer_name TEXT\n            )\n        \"\"\")\n        self.connection.commit()\n\n    def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):\n        \"\"\"\n        Inserts a new ticket into the \"tickets\" table.\n        :param movie_name: str, the name of the movie.\n        :param theater_name: str, the name of the theater.\n        :param seat_number: str, the seat number.\n        :param customer_name: str, the name of the customer.\n        :return: None\n        \"\"\"\n        self.cursor.execute(\n            \"INSERT INTO tickets (movie_name, theater_name, seat_number, customer_name) VALUES (?, ?, ?, ?)\",\n            (movie_name, theater_name, seat_number, customer_name)\n        )\n        self.connection.commit()\n\n    def search_tickets_by_customer(self, customer_name):\n        \"\"\"\n        Searches for tickets in the \"tickets\" table by customer name.\n        :param customer_name: str, the name of the customer to search for.\n        :return: list of tuples, the rows from the \"tickets\" table that match the search criteria.\n        >>> ticket_db = MovieTicketDB(\"ticket_database.db\")\n        >>> ticket_db.create_table()\n        >>> ticket_db.insert_ticket(\"Movie A\", \"Theater 1\", \"A1\", \"John Doe\")\n        >>> result = ticket_db.search_tickets_by_customer(\"John Doe\")\n        len(result) = 1\n        \"\"\"\n        self.cursor.execute(\"SELECT * FROM tickets WHERE customer_name = ?\", (customer_name,))\n        return self.cursor.fetchall()\n\n    def delete_ticket(self, ticket_id):\n        \"\"\"\n        Deletes a ticket from the \"tickets\" table by ticket ID.\n        :param ticket_id: int, the ID of the ticket to delete.\n        :return: None\n        \"\"\"\n        self.cursor.execute(\"DELETE FROM tickets WHERE id = ?\", (ticket_id,))\n        self.connection.commit()\n"
+}

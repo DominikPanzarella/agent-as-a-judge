@@ -1,0 +1,191 @@
+{
+  "task_id": "ClassEval_94",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "restock_item",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method adds the requested quantity to an existing item and returns True, and returns False when the item is absent; both documented examples work. It is correct for the stated behavior.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':10}}; print(v.restock_item('Coke',10)); print(v.inventory); print(v.restock_item('Pizza',10))",
+          "output": "exit code 0\nstdout:\nTrue\n{'Coke': {'price': 1.25, 'quantity': 20}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1370,
+          "cached_tokens": 0,
+          "completion_tokens": 66,
+          "reasoning_tokens": 0,
+          "cost": 0.00017
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1478,
+          "cached_tokens": 1367,
+          "completion_tokens": 52,
+          "reasoning_tokens": 0,
+          "cost": 5.0770000000000003e-05
+        }
+      ],
+      "prompt_tokens": 2848,
+      "cached_tokens": 1367,
+      "completion_tokens": 118,
+      "reasoning_tokens": 0,
+      "cost": 0.00022077000000000002
+    },
+    {
+      "method_name": "add_item",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method returns `None` and produces the inventory shown in the docstring for a new item. Re-adding an existing name replaces its price and quantity, but the docstring does not specify different behavior for that case.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v = VendingMachine(); print(v.add_item('Coke',1.25,10)); print(v.inventory); v.add_item('Coke',2,3); print(v.inventory)",
+          "output": "exit code 0\nstdout:\nNone\n{'Coke': {'price': 1.25, 'quantity': 10}}\n{'Coke': {'price': 2, 'quantity': 3}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1530,
+          "cached_tokens": 0,
+          "completion_tokens": 56,
+          "reasoning_tokens": 0,
+          "cost": 0.000181
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1642,
+          "cached_tokens": 1527,
+          "completion_tokens": 61,
+          "reasoning_tokens": 0,
+          "cost": 5.727e-05
+        }
+      ],
+      "prompt_tokens": 3172,
+      "cached_tokens": 1527,
+      "completion_tokens": 117,
+      "reasoning_tokens": 0,
+      "cost": 0.00023827
+    },
+    {
+      "method_name": "insert_coin",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`insert_coin` adds the supplied amount to the existing `balance` and returns the updated balance, as the docstring specifies. The constructor initializes `balance`, so the method works for the documented example.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1619,
+          "cached_tokens": 0,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 0.0001904
+        }
+      ],
+      "prompt_tokens": 1619,
+      "cached_tokens": 0,
+      "completion_tokens": 57,
+      "reasoning_tokens": 0,
+      "cost": 0.0001904
+    },
+    {
+      "method_name": "purchase_item",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method checks that the item exists, is in stock, and the balance covers its price; it deducts one item and the price on success, and returns False otherwise. The documented examples ran and returned 0.0 and False, respectively.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':10}}; v.balance=1.25; print(v.purchase_item('Coke')); print(v.purchase_item('Pizza'))",
+          "output": "exit code 0\nstdout:\n0.0\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1836,
+          "cached_tokens": 0,
+          "completion_tokens": 63,
+          "reasoning_tokens": 0,
+          "cost": 0.00021510000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1925,
+          "cached_tokens": 1833,
+          "completion_tokens": 66,
+          "reasoning_tokens": 0,
+          "cost": 6.053e-05
+        }
+      ],
+      "prompt_tokens": 3761,
+      "cached_tokens": 1833,
+      "completion_tokens": 129,
+      "reasoning_tokens": 0,
+      "cost": 0.00027563
+    },
+    {
+      "method_name": "display_items",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "It returns `False` for an empty inventory and matches the documented single-item example. With multiple products it returns a list of formatted strings, as the docstring says, so the method is correct.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); print(v.display_items()); v.inventory={'Coke': {'price':1.25,'quantity':10}}; print(v.display_items()); v.inventory={'Coke': {'price':1.25,'quantity':10},'Tea': {'price':2,'quantity':3}}; print(v.display_items())",
+          "output": "exit code 0\nstdout:\nFalse\nCoke - $1.25 [10]\n['Coke - $1.25 [10]', 'Tea - $2 [3]']\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2007,
+          "cached_tokens": 0,
+          "completion_tokens": 86,
+          "reasoning_tokens": 0,
+          "cost": 0.00024370000000000001
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2145,
+          "cached_tokens": 2004,
+          "completion_tokens": 56,
+          "reasoning_tokens": 0,
+          "cost": 6.214e-05
+        }
+      ],
+      "prompt_tokens": 4152,
+      "cached_tokens": 2004,
+      "completion_tokens": 142,
+      "reasoning_tokens": 0,
+      "cost": 0.00030584000000000004
+    }
+  ]
+}

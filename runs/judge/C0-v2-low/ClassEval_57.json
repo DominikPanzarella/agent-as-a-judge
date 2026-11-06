@@ -1,0 +1,87 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented list input includes no nonempty requirement, but `mrr([])` divides by zero when calculating the mean. Handle an empty list explicitly (for example, return a defined empty-result value) before dividing.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1,0,1,0],4)))\nprint(MetricsCalculator2.mrr([([1,0,1,0],4),([0,1,0,1],4)]))\nprint(MetricsCalculator2.mrr([]))",
+          "output": "exit code 1\nstdout:\n(1.0, [1.0])\n(0.75, [1.0, 0.5])\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpcuw3uawp/snippet.py\", line 49, in <module>\n    print(MetricsCalculator2.mrr([]))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpcuw3uawp/snippet.py\", line 32, in mrr\n    mrr_val = sum(rr_list) / len(rr_list)\n              ~~~~~~~~~~~~~^~~~~~~~~~~~~~\nZeroDivisionError: division by zero\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1571,
+          "cached_tokens": 0,
+          "completion_tokens": 79,
+          "reasoning_tokens": 0,
+          "cost": 0.00019660000000000004
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1844,
+          "cached_tokens": 1568,
+          "completion_tokens": 437,
+          "reasoning_tokens": 375,
+          "cost": 0.00026178
+        }
+      ],
+      "prompt_tokens": 3415,
+      "cached_tokens": 1568,
+      "completion_tokens": 516,
+      "reasoning_tokens": 375,
+      "cost": 0.00045838
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method produces the documented results for both a single input and a list of inputs. It computes average precision by summing precision at each relevant rank and dividing by the supplied ground-truth count, then averages those AP values for a list.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1,0,1,0],4))); print(MetricsCalculator2.map([([1,0,1,0],4),([0,1,0,1],4)]))",
+          "output": "exit code 0\nstdout:\n(0.41666666666666663, [0.41666666666666663])\n(0.3333333333333333, [0.41666666666666663, 0.25])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2075,
+          "cached_tokens": 0,
+          "completion_tokens": 64,
+          "reasoning_tokens": 0,
+          "cost": 0.0002395
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2204,
+          "cached_tokens": 2072,
+          "completion_tokens": 64,
+          "reasoning_tokens": 0,
+          "cost": 6.592e-05
+        }
+      ],
+      "prompt_tokens": 4279,
+      "cached_tokens": 2072,
+      "completion_tokens": 128,
+      "reasoning_tokens": 0,
+      "cost": 0.00030542
+    }
+  ]
+}

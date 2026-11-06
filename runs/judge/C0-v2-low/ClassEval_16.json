@@ -1,0 +1,113 @@
+{
+  "task_id": "ClassEval_16",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "precedence",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns priorities 1 to `+` and `-`, 2 to `*` and `/`, and 3 to `^`, returning 0 for any other operator, as specified.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1066,
+          "cached_tokens": 0,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 0.00013510000000000003
+        }
+      ],
+      "prompt_tokens": 1066,
+      "cached_tokens": 0,
+      "completion_tokens": 57,
+      "reasoning_tokens": 0,
+      "cost": 0.00013510000000000003
+    },
+    {
+      "method_name": "apply_operator",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The method pops the top operator (`-`) and applies it to the top two operands, producing `-1`, but the remaining operator stack is `['+']`; the docstring example expects `['-']`. Fixing that example\u2019s expected stack (or changing the specified stack behavior) is needed.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))",
+          "output": "exit code 0\nstdout:\n([1, -1], ['+'])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1239,
+          "cached_tokens": 0,
+          "completion_tokens": 37,
+          "reasoning_tokens": 0,
+          "cost": 0.00014240000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1305,
+          "cached_tokens": 1236,
+          "completion_tokens": 79,
+          "reasoning_tokens": 0,
+          "cost": 5.876e-05
+        }
+      ],
+      "prompt_tokens": 2544,
+      "cached_tokens": 1236,
+      "completion_tokens": 116,
+      "reasoning_tokens": 0,
+      "cost": 0.00020116000000000003
+    },
+    {
+      "method_name": "calculate",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: The method silently skips every character it does not recognize, so malformed expressions can produce a value instead of None; for example, `calculate('1 2')` returns `2.0`. Reject invalid characters (and other malformed expression forms) rather than skipping them.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.calculate('1+2-3')); print(c.calculate('2+3*4')); print(c.calculate('2^3^2')); print(c.calculate('1 2')); print(c.calculate('1/0'))",
+          "output": "exit code 0\nstdout:\n0.0\n14.0\n512.0\n2.0\nNone\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1541,
+          "cached_tokens": 0,
+          "completion_tokens": 67,
+          "reasoning_tokens": 0,
+          "cost": 0.00018760000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1646,
+          "cached_tokens": 1538,
+          "completion_tokens": 74,
+          "reasoning_tokens": 0,
+          "cost": 6.318e-05
+        }
+      ],
+      "prompt_tokens": 3187,
+      "cached_tokens": 1538,
+      "completion_tokens": 141,
+      "reasoning_tokens": 0,
+      "cost": 0.00025078000000000004
+    }
+  ]
+}

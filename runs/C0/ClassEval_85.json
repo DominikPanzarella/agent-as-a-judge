@@ -1,0 +1,166 @@
+{
+  "task_id": "ClassEval_85",
+  "class_name": "Thermostat",
+  "setup": "C0",
+  "model": "qwen/qwen3.8-27b",
+  "methods": [
+    {
+      "method_name": "get_target_temperature",
+      "code": "def get_target_temperature(self):\n    \"\"\"\n    Get the target temperature of an instance of the Thermostat class.\n    :return self.current_temperature: int\n    >>> thermostat.get_target_temperature()\n    37.5\n    \"\"\"\n    return self.target_temperature",
+      "valid": true,
+      "reply": "\n\n```python\ndef get_target_temperature(self):\n    \"\"\"\n    Get the target temperature of an instance of the Thermostat class.\n    :return self.current_temperature: int\n    >>> thermostat.get_target_temperature()\n    37.5\n    \"\"\"\n    return self.target_temperature\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 826,
+      "cached_tokens": 0,
+      "completion_tokens": 216,
+      "reasoning_tokens": 178,
+      "cost": 0.0005289,
+      "passed": true
+    },
+    {
+      "method_name": "set_target_temperature",
+      "code": "def set_target_temperature(self, temperature):\n    \"\"\"\n    Set the target temperature\n    :param temperature: float, the target temperature\n    >>> thermostat.set_target_temperature(37.6)\n    >>> thermostat.target_temperature\n    37.6\n    \"\"\"\n    self.target_temperature = temperature",
+      "valid": true,
+      "reply": "\n\n```python\ndef set_target_temperature(self, temperature):\n    \"\"\"\n    Set the target temperature\n    :param temperature: float, the target temperature\n    >>> thermostat.set_target_temperature(37.6)\n    >>> thermostat.target_temperature\n    37.6\n    \"\"\"\n    self.target_temperature = temperature\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 896,
+      "cached_tokens": 0,
+      "completion_tokens": 104,
+      "reasoning_tokens": 38,
+      "cost": 0.0003294,
+      "passed": true
+    },
+    {
+      "method_name": "get_mode",
+      "code": "def get_mode(self):\n    \"\"\"\n    Get the current work mode\n    :return mode: str, working mode. only ['heat', 'cool']\n    \"\"\"\n    return self.mode",
+      "valid": true,
+      "reply": "\n\n```python\ndef get_mode(self):\n    \"\"\"\n    Get the current work mode\n    :return mode: str, working mode. only ['heat', 'cool']\n    \"\"\"\n    return self.mode\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 960,
+      "cached_tokens": 0,
+      "completion_tokens": 102,
+      "reasoning_tokens": 58,
+      "cost": 0.00033525,
+      "passed": true
+    },
+    {
+      "method_name": "set_mode",
+      "code": "def set_mode(self, mode):\n    \"\"\"\n    Get the current work mode\n    :param mode: str, working mode. only ['heat', 'cool']\n    >>> thermostat.set_mode('cool')\n    >>> thermostat.mode\n    'cool'\n    \"\"\"\n    if mode not in ['heat', 'cool']:\n        raise ValueError(\"Mode must be 'heat' or 'cool'\")\n    self.mode = mode",
+      "valid": true,
+      "reply": "\n\n```python\ndef set_mode(self, mode):\n    \"\"\"\n    Get the current work mode\n    :param mode: str, working mode. only ['heat', 'cool']\n    >>> thermostat.set_mode('cool')\n    >>> thermostat.mode\n    'cool'\n    \"\"\"\n    if mode not in ['heat', 'cool']:\n        raise ValueError(\"Mode must be 'heat' or 'cool'\")\n    self.mode = mode\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1002,
+      "cached_tokens": 0,
+      "completion_tokens": 289,
+      "reasoning_tokens": 189,
+      "cost": 0.000692175,
+      "passed": false
+    },
+    {
+      "method_name": "auto_set_mode",
+      "code": "def auto_set_mode(self):\n    \"\"\"\n    Automatically set the operating mode by comparing with the current temperature and target temperature. If the current temperature is lower than the target temperature, the operating mode is set to 'heat', otherwise it is set to 'cool'.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.auto_set_mode()\n    >>> thermostat.mode\n    'heat'\n    \"\"\"\n    if self.current_temperature < self.target_temperature:\n        self.mode = 'heat'\n    else:\n        self.mode = 'cool'",
+      "valid": true,
+      "reply": "\n\n```python\ndef auto_set_mode(self):\n    \"\"\"\n    Automatically set the operating mode by comparing with the current temperature and target temperature. If the current temperature is lower than the target temperature, the operating mode is set to 'heat', otherwise it is set to 'cool'.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.auto_set_mode()\n    >>> thermostat.mode\n    'heat'\n    \"\"\"\n    if self.current_temperature < self.target_temperature:\n        self.mode = 'heat'\n    else:\n        self.mode = 'cool'\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1095,
+      "cached_tokens": 0,
+      "completion_tokens": 245,
+      "reasoning_tokens": 100,
+      "cost": 0.000623625,
+      "passed": true
+    },
+    {
+      "method_name": "auto_check_conflict",
+      "code": "def auto_check_conflict(self):\n    \"\"\"\n    Check if there is a conflict between the operating mode and the relationship between the current temperature and the target temperature.\n    If there is a conflict, the operating mode will be adjusted automatically.\n    :return: True if mode isn't conflict with the relationship between the current temperature and the target temperature, or False otherwise.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.auto_check_conflict()\n    False\n    >>> thermostat.mode\n    'heat'\n    \"\"\"\n    if self.current_temperature < self.target_temperature:\n        if self.mode != 'heat':\n            self.mode = 'heat'\n            return False\n        return True\n    else:\n        if self.mode != 'cool':\n            self.mode = 'cool'\n            return False\n        return True",
+      "valid": true,
+      "reply": "\n\n```python\ndef auto_check_conflict(self):\n    \"\"\"\n    Check if there is a conflict between the operating mode and the relationship between the current temperature and the target temperature.\n    If there is a conflict, the operating mode will be adjusted automatically.\n    :return: True if mode isn't conflict with the relationship between the current temperature and the target temperature, or False otherwise.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.auto_check_conflict()\n    False\n    >>> thermostat.mode\n    'heat'\n    \"\"\"\n    if self.current_temperature < self.target_temperature:\n        if self.mode != 'heat':\n            self.mode = 'heat'\n            return False\n        return True\n    else:\n        if self.mode != 'cool':\n            self.mode = 'cool'\n            return False\n        return True\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1225,
+      "cached_tokens": 0,
+      "completion_tokens": 522,
+      "reasoning_tokens": 336,
+      "cost": 0.0011625,
+      "passed": false
+    },
+    {
+      "method_name": "simulate_operation",
+      "code": "def simulate_operation(self):\n    \"\"\"\n    simulate the operation of Thermostat. It will automatically start the auto_set_mode method to set the operating mode,\n    and then automatically adjust the current temperature according to the operating mode until the target temperature is reached.\n    :return time: int, the time it took to complete the simulation.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.simulate_operation()\n    18\n    \"\"\"\n    self.auto_set_mode()\n    time_count = 0\n    if self.mode == 'heat':\n        while self.current_temperature < self.target_temperature:\n            self.current_temperature += 1.0\n            time_count += 1\n    else:\n        while self.current_temperature > self.target_temperature:\n            self.current_temperature -= 1.0\n            time_count += 1\n    return time_count",
+      "valid": true,
+      "reply": "\n\n```python\ndef simulate_operation(self):\n    \"\"\"\n    simulate the operation of Thermostat. It will automatically start the auto_set_mode method to set the operating mode,\n    and then automatically adjust the current temperature according to the operating mode until the target temperature is reached.\n    :return time: int, the time it took to complete the simulation.\n    >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n    >>> thermostat.simulate_operation()\n    18\n    \"\"\"\n    self.auto_set_mode()\n    time_count = 0\n    if self.mode == 'heat':\n        while self.current_temperature < self.target_temperature:\n            self.current_temperature += 1.0\n            time_count += 1\n    else:\n        while self.current_temperature > self.target_temperature:\n            self.current_temperature -= 1.0\n            time_count += 1\n    return time_count\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1413,
+      "cached_tokens": 0,
+      "completion_tokens": 1472,
+      "reasoning_tokens": 732,
+      "cost": 0.00297195,
+      "passed": true
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "ThermostatTestGetTargetTemperature": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ThermostatTestSetTargetTemperature": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ThermostatTestGetMode": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ThermostatTestSetMode": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "ThermostatTestAutoSetMode": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ThermostatTestAutoCheckConflict": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "ThermostatTestSimulateOperation": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ThermostatTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source": "import time\n\nclass Thermostat: \n    def __init__(self, current_temperature, target_temperature, mode):\n        \"\"\"\n        initialize instances of the Thermostat class, including the current temperature, target temperature, and operating mode.\n        :param current_temperature: float\n        :param target_temperature: float\n        :param mode: str, the work mode\n        \"\"\"\n        self.current_temperature = current_temperature\n        self.target_temperature = target_temperature\n        self.mode = mode\n\n    def get_target_temperature(self):\n        \"\"\"\n        Get the target temperature of an instance of the Thermostat class.\n        :return self.current_temperature: int\n        >>> thermostat.get_target_temperature()\n        37.5\n        \"\"\"\n        return self.target_temperature\n\n    def set_target_temperature(self, temperature):\n        \"\"\"\n        Set the target temperature\n        :param temperature: float, the target temperature\n        >>> thermostat.set_target_temperature(37.6)\n        >>> thermostat.target_temperature\n        37.6\n        \"\"\"\n        self.target_temperature = temperature\n\n    def get_mode(self):\n        \"\"\"\n        Get the current work mode\n        :return mode: str, working mode. only ['heat', 'cool']\n        \"\"\"\n        return self.mode\n\n    def set_mode(self, mode):\n        \"\"\"\n        Get the current work mode\n        :param mode: str, working mode. only ['heat', 'cool']\n        >>> thermostat.set_mode('cool')\n        >>> thermostat.mode\n        'cool'\n        \"\"\"\n        if mode not in ['heat', 'cool']:\n            raise ValueError(\"Mode must be 'heat' or 'cool'\")\n        self.mode = mode\n\n    def auto_set_mode(self):\n        \"\"\"\n        Automatically set the operating mode by comparing with the current temperature and target temperature. If the current temperature is lower than the target temperature, the operating mode is set to 'heat', otherwise it is set to 'cool'.\n        >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n        >>> thermostat.auto_set_mode()\n        >>> thermostat.mode\n        'heat'\n        \"\"\"\n        if self.current_temperature < self.target_temperature:\n            self.mode = 'heat'\n        else:\n            self.mode = 'cool'\n\n    def auto_check_conflict(self):\n        \"\"\"\n        Check if there is a conflict between the operating mode and the relationship between the current temperature and the target temperature.\n        If there is a conflict, the operating mode will be adjusted automatically.\n        :return: True if mode isn't conflict with the relationship between the current temperature and the target temperature, or False otherwise.\n        >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n        >>> thermostat.auto_check_conflict()\n        False\n        >>> thermostat.mode\n        'heat'\n        \"\"\"\n        if self.current_temperature < self.target_temperature:\n            if self.mode != 'heat':\n                self.mode = 'heat'\n                return False\n            return True\n        else:\n            if self.mode != 'cool':\n                self.mode = 'cool'\n                return False\n            return True\n\n    def simulate_operation(self):\n        \"\"\"\n        simulate the operation of Thermostat. It will automatically start the auto_set_mode method to set the operating mode,\n        and then automatically adjust the current temperature according to the operating mode until the target temperature is reached.\n        :return time: int, the time it took to complete the simulation.\n        >>> thermostat = Thermostat(20.4, 37.5, 'cool')\n        >>> thermostat.simulate_operation()\n        18\n        \"\"\"\n        self.auto_set_mode()\n        time_count = 0\n        if self.mode == 'heat':\n            while self.current_temperature < self.target_temperature:\n                self.current_temperature += 1.0\n                time_count += 1\n        else:\n            while self.current_temperature > self.target_temperature:\n                self.current_temperature -= 1.0\n                time_count += 1\n        return time_count\n"
+}

@@ -1,0 +1,139 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "low",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`create_table` creates the `tickets` table with an integer auto-incrementing ID and text columns for the four named fields, and commits the change. `IF NOT EXISTS` makes it safe to call when the table already exists, so it matches the docstring.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1042,
+          "cached_tokens": 0,
+          "completion_tokens": 71,
+          "reasoning_tokens": 0,
+          "cost": 0.00013969999999999998
+        }
+      ],
+      "prompt_tokens": 1042,
+      "cached_tokens": 0,
+      "completion_tokens": 71,
+      "reasoning_tokens": 0,
+      "cost": 0.00013969999999999998
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method inserts the four supplied values into the matching columns using parameterized SQL and commits the transaction. Testing it against the class\u2019s table definition showed the expected row was inserted.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=MovieTicketDB(':memory:'); x.insert_ticket('Movie A','Theater 1','A1','John Doe'); print(x.cursor.execute('select * from tickets').fetchall())",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1196,
+          "cached_tokens": 0,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 0.00014810000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1295,
+          "cached_tokens": 1193,
+          "completion_tokens": 51,
+          "reasoning_tokens": 0,
+          "cost": 4.763e-05
+        }
+      ],
+      "prompt_tokens": 2491,
+      "cached_tokens": 1193,
+      "completion_tokens": 108,
+      "reasoning_tokens": 0,
+      "cost": 0.00019573000000000003
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method parameterizes the customer-name query and returns all matching rows as a list of tuples. The documented example returns one matching ticket, as expected.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "db=MovieTicketDB(':memory:'); db.create_table(); db.insert_ticket('Movie A','Theater 1','A1','John Doe'); result=db.search_tickets_by_customer('John Doe'); print(result); print(len(result))",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\n1\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1361,
+          "cached_tokens": 0,
+          "completion_tokens": 66,
+          "reasoning_tokens": 0,
+          "cost": 0.0001691
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1470,
+          "cached_tokens": 1358,
+          "completion_tokens": 46,
+          "reasoning_tokens": 0,
+          "cost": 4.778e-05
+        }
+      ],
+      "prompt_tokens": 2831,
+      "cached_tokens": 1358,
+      "completion_tokens": 112,
+      "reasoning_tokens": 0,
+      "cost": 0.00021688
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes rows matching the given ticket ID using a parameterized query and commits the change. It uses the existing cursor and connection and returns None as documented.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1424,
+          "cached_tokens": 0,
+          "completion_tokens": 48,
+          "reasoning_tokens": 0,
+          "cost": 0.0001664
+        }
+      ],
+      "prompt_tokens": 1424,
+      "cached_tokens": 0,
+      "completion_tokens": 48,
+      "reasoning_tokens": 0,
+      "cost": 0.0001664
+    }
+  ]
+}

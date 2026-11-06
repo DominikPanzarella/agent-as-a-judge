@@ -1,0 +1,165 @@
+{
+  "task_id": "ClassEval_20",
+  "setup": "C0",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "add_user",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns False for an existing username and otherwise adds it with an empty message list and returns True. The documented examples produce the expected results.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c = Chat(); print(c.add_user('John')); print(c.users); print(c.add_user('John'))",
+          "output": "exit code 0\nstdout:\nTrue\n{'John': []}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1138,
+          "cached_tokens": 0,
+          "completion_tokens": 95,
+          "reasoning_tokens": 54,
+          "cost": 0.00016130000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1262,
+          "cached_tokens": 1135,
+          "completion_tokens": 45,
+          "reasoning_tokens": 0,
+          "cost": 4.655e-05
+        }
+      ],
+      "prompt_tokens": 2400,
+      "cached_tokens": 1135,
+      "completion_tokens": 140,
+      "reasoning_tokens": 54,
+      "cost": 0.00020785
+    },
+    {
+      "method_name": "remove_user",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method removes the user and returns True when the username is present, and returns False when it is absent. The documented example produces True followed by False, as expected.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "chat = Chat()\nchat.users = {'John': []}\nprint(chat.remove_user('John'))\nprint(chat.remove_user('John'))",
+          "output": "exit code 0\nstdout:\nTrue\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1260,
+          "cached_tokens": 0,
+          "completion_tokens": 84,
+          "reasoning_tokens": 35,
+          "cost": 0.000168
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1368,
+          "cached_tokens": 1257,
+          "completion_tokens": 50,
+          "reasoning_tokens": 0,
+          "cost": 4.867e-05
+        }
+      ],
+      "prompt_tokens": 2628,
+      "cached_tokens": 1257,
+      "completion_tokens": 134,
+      "reasoning_tokens": 35,
+      "cost": 0.00021667
+    },
+    {
+      "method_name": "send_message",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "When `sender` and `receiver` are the same user, the method appends the message twice to that user's list, so one sent message appears as two. Append it only once when both names are equal.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "chat = Chat()\nchat.users = {'John': [], 'Mary': []}\nprint(chat.send_message('John', 'Mary', 'Hello'))\nprint(chat.users)\nprint(chat.send_message('John', 'Tom', 'Hello'))\nchat = Chat(); chat.users = {'John': []}; print(chat.send_message('John','John','Hi')); print(chat.users)",
+          "output": "exit code 0\nstdout:\nTrue\n{'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-06 09:54:23'}], 'Mary': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-06 09:54:23'}]}\nFalse\nTrue\n{'John': [{'sender': 'John', 'receiver': 'John', 'message': 'Hi', 'timestamp': '2026-11-06 09:54:23'}, {'sender': 'John', 'receiver': 'John', 'message': 'Hi', 'timestamp': '2026-11-06 09:54:23'}]}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1483,
+          "cached_tokens": 0,
+          "completion_tokens": 97,
+          "reasoning_tokens": 0,
+          "cost": 0.0001968
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1759,
+          "cached_tokens": 1480,
+          "completion_tokens": 240,
+          "reasoning_tokens": 178,
+          "cost": 0.0001627
+        }
+      ],
+      "prompt_tokens": 3242,
+      "cached_tokens": 1480,
+      "completion_tokens": 337,
+      "reasoning_tokens": 178,
+      "cost": 0.0003595
+    },
+    {
+      "method_name": "get_messages",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns the stored message list for a username in the chat and an empty list when the username is absent, matching the documented behavior and examples.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Chat(); c.users={'John':[{'sender':'John','receiver':'Mary','message':'Hello','timestamp':'2023-01-01 00:00:00'}]}; print(c.get_messages('John')); print(c.get_messages('Mary'))",
+          "output": "exit code 0\nstdout:\n[{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1667,
+          "cached_tokens": 0,
+          "completion_tokens": 70,
+          "reasoning_tokens": 0,
+          "cost": 0.00020170000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1795,
+          "cached_tokens": 1664,
+          "completion_tokens": 46,
+          "reasoning_tokens": 0,
+          "cost": 5.274e-05
+        }
+      ],
+      "prompt_tokens": 3462,
+      "cached_tokens": 1664,
+      "completion_tokens": 116,
+      "reasoning_tokens": 0,
+      "cost": 0.00025444000000000004
+    }
+  ]
+}

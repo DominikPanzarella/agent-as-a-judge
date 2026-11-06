@@ -1,0 +1,61 @@
+{
+  "task_id": "ClassEval_57",
+  "class_name": "MetricsCalculator2",
+  "setup": "C0",
+  "model": "qwen/qwen3.8-27b",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "code": "@staticmethod\ndef mrr(data):\n    \"\"\"\n    compute the MRR of the input data. MRR is a widely used evaluation index. It is the mean of reciprocal rank.\n    :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n     ([1,0,...],5),\n    or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n    1 stands for a correct answer, 0 stands for a wrong answer.\n    :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n    average recall on all list. The second return value is a list of precision for each input.\n    >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))\n    >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n    1.0, [1.0]\n    0.75, [1.0, 0.5]\n    \"\"\"\n    if isinstance(data, list):\n        rr_list = []\n        for item in data:\n            results, gt_num = item\n            for i, val in enumerate(results):\n                if val == 1:\n                    rr_list.append(1.0 / (i + 1))\n                    break\n            else:\n                rr_list.append(0.0)\n        mrr_val = sum(rr_list) / len(rr_list)\n        return mrr_val, rr_list\n    else:\n        results, gt_num = data\n        for i, val in enumerate(results):\n            if val == 1:\n                rr = 1.0 / (i + 1)\n                return rr, [rr]\n        return 0.0, [0.0]",
+      "valid": true,
+      "reply": "\n\n```python\n    @staticmethod\n    def mrr(data):\n        \"\"\"\n        compute the MRR of the input data. MRR is a widely used evaluation index. It is the mean of reciprocal rank.\n        :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n         ([1,0,...],5),\n        or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n        1 stands for a correct answer, 0 stands for a wrong answer.\n        :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n        average recall on all list. The second return value is a list of precision for each input.\n        >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))\n        >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n        1.0, [1.0]\n        0.75, [1.0, 0.5]\n        \"\"\"\n        if isinstance(data, list):\n            rr_list = []\n            for item in data:\n                results, gt_num = item\n                for i, val in enumerate(results):\n                    if val == 1:\n                        rr_list.append(1.0 / (i + 1))\n                        break\n                else:\n                    rr_list.append(0.0)\n            mrr_val = sum(rr_list) / len(rr_list)\n            return mrr_val, rr_list\n        else:\n            results, gt_num = data\n            for i, val in enumerate(results):\n                if val == 1:\n                    rr = 1.0 / (i + 1)\n                    return rr, [rr]\n            return 0.0, [0.0]\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 877,
+      "cached_tokens": 0,
+      "completion_tokens": 1339,
+      "reasoning_tokens": 714,
+      "cost": 0.002642175,
+      "passed": false
+    },
+    {
+      "method_name": "map",
+      "code": "@staticmethod\ndef map(data):\n    \"\"\"\n    compute the MAP of the input data. MAP is a widely used evaluation index. It is the mean of AP (average precision).\n    :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n     ([1,0,...],5),\n    or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n    1 stands for a correct answer, 0 stands for a wrong answer.\n    :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n    average recall on all list. The second return value is a list of precision for each input.\n    >>> MetricsCalculator2.map(([1, 0, 1, 0], 4))\n    >>> MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n    0.41666666666666663, [0.41666666666666663]\n    0.3333333333333333, [0.41666666666666663, 0.25]\n    \"\"\"\n    if isinstance(data, list):\n        ap_list = []\n        for item in data:\n            results, gt_num = item\n            relevant_count = 0\n            precision_sum = 0.0\n            for i, val in enumerate(results):\n                if val == 1:\n                    relevant_count += 1\n                    precision_sum += relevant_count / (i + 1)\n            ap = precision_sum / gt_num\n            ap_list.append(ap)\n        map_val = sum(ap_list) / len(ap_list)\n        return map_val, ap_list\n    else:\n        results, gt_num = data\n        relevant_count = 0\n        precision_sum = 0.0\n        for i, val in enumerate(results):\n            if val == 1:\n                relevant_count += 1\n                precision_sum += relevant_count / (i + 1)\n        ap = precision_sum / gt_num\n        return ap, [ap]",
+      "valid": true,
+      "reply": "\n\n```python\n@staticmethod\ndef map(data):\n    \"\"\"\n    compute the MAP of the input data. MAP is a widely used evaluation index. It is the mean of AP (average precision).\n    :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n     ([1,0,...],5),\n    or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n    1 stands for a correct answer, 0 stands for a wrong answer.\n    :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n    average recall on all list. The second return value is a list of precision for each input.\n    >>> MetricsCalculator2.map(([1, 0, 1, 0], 4))\n    >>> MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n    0.41666666666666663, [0.41666666666666663]\n    0.3333333333333333, [0.41666666666666663, 0.25]\n    \"\"\"\n    if isinstance(data, list):\n        ap_list = []\n        for item in data:\n            results, gt_num = item\n            relevant_count = 0\n            precision_sum = 0.0\n            for i, val in enumerate(results):\n                if val == 1:\n                    relevant_count += 1\n                    precision_sum += relevant_count / (i + 1)\n            ap = precision_sum / gt_num\n            ap_list.append(ap)\n        map_val = sum(ap_list) / len(ap_list)\n        return map_val, ap_list\n    else:\n        results, gt_num = data\n        relevant_count = 0\n        precision_sum = 0.0\n        for i, val in enumerate(results):\n            if val == 1:\n                relevant_count += 1\n                precision_sum += relevant_count / (i + 1)\n        ap = precision_sum / gt_num\n        return ap, [ap]\n```",
+      "finish_reason": "stop",
+      "provider": "DeepInfra",
+      "prompt_tokens": 1355,
+      "cached_tokens": 0,
+      "completion_tokens": 1662,
+      "reasoning_tokens": 821,
+      "cost": 0.0033195,
+      "passed": false
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "MetricsCalculator2TestMrr": {
+      "status": "ok",
+      "tests": 8,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "MetricsCalculator2TestMap": {
+      "status": "ok",
+      "tests": 8,
+      "failures": 0,
+      "errors": 2,
+      "passed": false
+    },
+    "MetricsCalculator2Test": {
+      "status": "ok",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source": "import numpy as np\n\nclass MetricsCalculator2: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def mrr(data):\n        \"\"\"\n        compute the MRR of the input data. MRR is a widely used evaluation index. It is the mean of reciprocal rank.\n        :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n         ([1,0,...],5),\n        or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n        1 stands for a correct answer, 0 stands for a wrong answer.\n        :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n        average recall on all list. The second return value is a list of precision for each input.\n        >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))\n        >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n        1.0, [1.0]\n        0.75, [1.0, 0.5]\n        \"\"\"\n        if isinstance(data, list):\n            rr_list = []\n            for item in data:\n                results, gt_num = item\n                for i, val in enumerate(results):\n                    if val == 1:\n                        rr_list.append(1.0 / (i + 1))\n                        break\n                else:\n                    rr_list.append(0.0)\n            mrr_val = sum(rr_list) / len(rr_list)\n            return mrr_val, rr_list\n        else:\n            results, gt_num = data\n            for i, val in enumerate(results):\n                if val == 1:\n                    rr = 1.0 / (i + 1)\n                    return rr, [rr]\n            return 0.0, [0.0]\n\n    @staticmethod\n    def map(data):\n        \"\"\"\n        compute the MAP of the input data. MAP is a widely used evaluation index. It is the mean of AP (average precision).\n        :param data: the data must be a tuple, list 0,1,eg.([1,0,...],5).  In each tuple (actual result,ground truth num),ground truth num is the total ground num.\n         ([1,0,...],5),\n        or list of tuple eg. [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)].\n        1 stands for a correct answer, 0 stands for a wrong answer.\n        :return: if input data is list, return the recall of this list. if the input data is list of list, return the\n        average recall on all list. The second return value is a list of precision for each input.\n        >>> MetricsCalculator2.map(([1, 0, 1, 0], 4))\n        >>> MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])\n        0.41666666666666663, [0.41666666666666663]\n        0.3333333333333333, [0.41666666666666663, 0.25]\n        \"\"\"\n        if isinstance(data, list):\n            ap_list = []\n            for item in data:\n                results, gt_num = item\n                relevant_count = 0\n                precision_sum = 0.0\n                for i, val in enumerate(results):\n                    if val == 1:\n                        relevant_count += 1\n                        precision_sum += relevant_count / (i + 1)\n                ap = precision_sum / gt_num\n                ap_list.append(ap)\n            map_val = sum(ap_list) / len(ap_list)\n            return map_val, ap_list\n        else:\n            results, gt_num = data\n            relevant_count = 0\n            precision_sum = 0.0\n            for i, val in enumerate(results):\n                if val == 1:\n                    relevant_count += 1\n                    precision_sum += relevant_count / (i + 1)\n            ap = precision_sum / gt_num\n            return ap, [ap]\n"
+}

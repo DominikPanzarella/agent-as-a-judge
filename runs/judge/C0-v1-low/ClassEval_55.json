@@ -2,6 +2,7 @@
   "task_id": "ClassEval_55",
   "setup": "C0",
   "model": "gpt-6-luna",
+  "version": "v1",
   "effort": "low",
   "methods": [
     {
@@ -9,28 +10,48 @@
       "auto": false,
       "passed": false,
       "verdict": "NOT OK",
-      "reason": "NOT OK: The example call returns 1, not the documented 2: when expansion first mismatches at diff=2, the method returns diff - 1. Return diff instead, since it counts the matching radius at diff=1 as length 1 in the transformed string.",
-      "finish_reason": "stop",
+      "reason": "The method returns `diff - 1` at the first mismatch, but it never checks the example\u2019s expected count: for the supplied center and string it returns 0, not 2. Adjust the return value to match the documented meaning of the length (and define how separators and even-length centers are handled).",
+      "status": "completed",
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 774,
+          "cached_tokens": 0,
+          "completion_tokens": 81,
+          "reasoning_tokens": 0,
+          "cost": 0.0001179
+        }
+      ],
       "provider": "OpenAI",
-      "prompt_tokens": 777,
+      "prompt_tokens": 774,
       "cached_tokens": 0,
-      "completion_tokens": 73,
+      "completion_tokens": 81,
       "reasoning_tokens": 0,
-      "cost": 0.0001142
+      "cost": 0.0001179
     },
     {
       "method_name": "palindromic_string",
       "auto": false,
       "passed": true,
       "verdict": "NOT OK",
-      "reason": "NOT OK: `palindromic_length` returns a radius that excludes the center, but the slice uses it as though it were the full radius, so it omits the first and last characters of the longest palindrome (the example returns `'aba'` instead of `'ababa'`). Adjust the slice boundaries to include one more character on each side, or use the returned radius consistently.",
-      "finish_reason": "stop",
+      "reason": "No. The transformed string omits separator characters at its ends, so the radius returned by `palindromic_length` can include only one side of an even-length palindrome; for example, `'abba'` yields an empty result instead of `'abba'`. Add separators at both ends (or otherwise handle even-length centers) before searching.",
+      "status": "completed",
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 943,
+          "cached_tokens": 0,
+          "completion_tokens": 86,
+          "reasoning_tokens": 0,
+          "cost": 0.0001373
+        }
+      ],
       "provider": "OpenAI",
-      "prompt_tokens": 946,
+      "prompt_tokens": 943,
       "cached_tokens": 0,
-      "completion_tokens": 95,
+      "completion_tokens": 86,
       "reasoning_tokens": 0,
-      "cost": 0.0001421
+      "cost": 0.0001373
     }
   ]
 }
