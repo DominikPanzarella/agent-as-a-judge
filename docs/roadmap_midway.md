@@ -37,8 +37,13 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   of `data/selection/method_order.csv`. It sees the class skeleton and the methods written so far,
   never the tests. First real run on ClassEval_19 and ClassEval_55: 3 of 4 methods pass, about
   1500 tokens and 0.0018 dollars per method.
-- [ ] **Judge v1** (6 to 7 Nov). For each new method the judge reads the class description, the
+- [x] **Judge v1** (6 Nov). For each new method the judge reads the class description, the
   method docstring and the code written so far. It answers OK or NOT OK with a short reason, in JSON.
+  On the first four methods it agrees with the tests three times, but every concrete claim in its
+  reasons is false: it cannot run code. This makes it the "judge without tools" control.
+- [ ] **Judge v2 with a tool** (to decide). Before the verdict the judge may run a few lines of
+  Python on the class written so far, for example the docstring examples, in a subprocess with a
+  timeout. The hidden tests stay hidden.
 - [ ] **Pilot** (8 Nov). Run C0 and the judge on 8 classes and answer two questions before going on.
   First, is the judge clearly better than chance against the tests? We look at Cohen's kappa and at
   how often it says OK to code that fails. Second, does one method cost few enough tokens for C0 to

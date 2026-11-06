@@ -77,3 +77,23 @@ every setup sends the coder the same number of requests. Each class is saved in
 `scripts/budget.py` writes one line per request to `runs/cost_log.csv`. Before each class it checks
 the budgets and stops the run when a service has spent 70 percent of its 10 dollars. For OpenRouter
 it also asks the service how much the key has spent, because both of us use the same key.
+
+## Judge v1
+
+`scripts/judge.py` asks GPT-6 Luna whether a method does what its docstring says. The judge sees the
+class skeleton, the methods written before and the new method, never the tests. Its answer is a
+JSON object with a short reason and a verdict, OK or NOT OK; the reason is the feedback the coder
+will get in C1 and C2. On a finished run the script compares the verdicts with the tests (agreement,
+Cohen's kappa, OK given to failing methods, NOT OK given to passing ones). Verdicts go to
+`runs/judge/<setup>-<effort>/`. OpenAI does not return the cost of a request, so the script computes
+it from the standard prices.
+
+On the first four methods the verdicts agree with the tests three times out of four, with low and
+with medium reasoning effort. Every concrete claim in the reasons, though, was false when we ran the
+code: the judge tries to execute the code in its head and gets it wrong. Judge v1 cannot run code,
+so it is the "judge without tools" of our plan.
+
+```bash
+.venv/bin/python scripts/judge.py C0 --effort medium ClassEval_19 ClassEval_55
+.venv/bin/python scripts/judge.py C0 --effort medium --summary
+```
