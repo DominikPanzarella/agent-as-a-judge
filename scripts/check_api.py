@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 JUDGE_MODEL = "gpt-6-luna"           # OpenAI project
-CODER_MODEL = "qwen/qwen3.6-27b"     # OpenRouter, the pilot may change it
+CODER_MODEL = "qwen/qwen3.8-27b"     # OpenRouter; qwen3.6-27b has no bf16 or fp16 provider
 PROMPT = "Answer with one word: what is the capital of Switzerland?"
 
 load_dotenv()

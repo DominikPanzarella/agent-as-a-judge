@@ -29,10 +29,10 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 
 ## Week 1 (5 to 8 November): setup and pilot
 
-- [ ] **API check** (5 Nov). Copy `.env.example` into `.env`, add the two keys and run
-  `scripts/check_api.py`. It sends one tiny request to GPT-6 Luna and one to Qwen, on the cheapest
-  OpenRouter provider that serves the model in full precision. Then tell Alessandro that the access
-  works.
+- [x] **API check** (6 Nov). `scripts/check_api.py` sends one tiny request to GPT-6 Luna and one to
+  Qwen, on the cheapest OpenRouter provider that serves the model in full precision. Both work.
+  qwen3.6-27b has no provider in bf16 or fp16, so the coder is now qwen3.8-27b, served in bf16 by
+  DeepInfra (0.15 dollars per million input tokens, 1.875 per million output tokens).
 - [ ] **Coder, setup C0** (6 to 7 Nov). The coder writes one method per request, in the order of
   `data/selection/method_order.csv`. It sees the class skeleton and the methods written so far,
   never the tests.
@@ -80,9 +80,10 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 
 ## Open decisions
 
-- [ ] **Which Qwen model writes the code.** Candidates are qwen3.6-27b, qwen3.8-27b or a smaller
-  model. The pilot decides, because a coder that already passes almost every test leaves no room for
-  feedback.
+- [ ] **Which Qwen model writes the code.** For now qwen3.8-27b, since qwen3.6-27b has no
+  full-precision provider. The pilot can still change it: a coder that already passes almost every
+  test leaves no room for feedback, and then a smaller model such as qwen3.5-9b (bf16 on DeepInfra)
+  would be the better choice.
 - [ ] **What "the same budget" means across setups.** A simple rule is at most one revision per
   method in C2 and one per class in C1, with the tokens of every setup reported next to the results.
 - [ ] **The note "classes with the 1st methods implemented"** from the lab session. We should ask
