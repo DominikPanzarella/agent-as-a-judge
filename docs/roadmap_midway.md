@@ -59,7 +59,8 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 
 - [ ] **Setups C1 and C2** (10 Nov). In C1 the judge gives its verdict on the finished class and the
   coder may revise once. In C2 the verdict comes after each method, again with one revision of that
-  method.
+  method. The code is ready (`scripts/loop.py`, 6 Nov) and tested without real requests; the runs
+  wait for the instructors' answer on coder, classes and repetitions.
 - [ ] **Full runs** (11 to 13 Nov). Run C0, C1 and C2 on the 71 classes, the coder with low
   reasoning effort and the judge with the effort chosen in the pilot.
   Log tokens and cost after every class, and stop if either budget reaches 70 percent. The lab of

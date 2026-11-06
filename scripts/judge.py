@@ -65,7 +65,7 @@ SYSTEM = (
     "verdict: never write only OK or NOT OK there."
 )
 
-SYSTEM_TOOLS = SYSTEM + (
+TOOLS_NOTE = (
     " You can run Python code with the tool run_python, at most " + str(MAX_RUNS) + " times. "
     "Use it to check the examples in the docstring and any case you doubt before you answer. "
     "The class is already defined when your code runs: call it directly and never copy or "
@@ -73,27 +73,45 @@ SYSTEM_TOOLS = SYSTEM + (
     "When the reason says what the code returns or raises, it must be what you saw when you "
     "ran it, not what you expect."
 )
+SYSTEM_TOOLS = SYSTEM + TOOLS_NOTE
+
+# Setup C1: the judge reads the finished class instead of one method.
+SYSTEM_CLASS = (
+    "You review Python code. A developer has written a whole class, one method at a time. Decide "
+    "whether every method does what its docstring says, given the rest of the class. Look for "
+    "wrong results, exceptions, cases in the docstrings that the code does not handle, and uses "
+    "of fields or methods that the class does not have. Answer OK if all methods are correct and "
+    "NOT OK if you find a concrete problem. In the reason, name each method with a problem and "
+    "say briefly what is wrong and how to fix it, or say why the class is correct. The reason "
+    "must explain the verdict: never write only OK or NOT OK there."
+)
+SYSTEM_CLASS_TOOLS = SYSTEM_CLASS + TOOLS_NOTE
 
 # Structured output: the reply is always this JSON object. The reason comes first, so the
 # verdict follows from it.
-VERDICT_FORMAT = {
-    "format": {
-        "type": "json_schema",
-        "name": "verdict",
-        "strict": True,
-        "schema": {
-            "type": "object",
-            "properties": {
-                "reason": {"type": "string",
-                           "description": "One or two sentences: what is wrong and how to fix it, "
-                                          "or why the method is correct. Not the verdict alone."},
-                "verdict": {"type": "string", "enum": ["OK", "NOT OK"]},
+def verdict_format(reason):
+    return {
+        "format": {
+            "type": "json_schema",
+            "name": "verdict",
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "reason": {"type": "string", "description": reason},
+                    "verdict": {"type": "string", "enum": ["OK", "NOT OK"]},
+                },
+                "required": ["reason", "verdict"],
+                "additionalProperties": False,
             },
-            "required": ["reason", "verdict"],
-            "additionalProperties": False,
         },
-    },
-}
+    }
+
+
+VERDICT_FORMAT = verdict_format("One or two sentences: what is wrong and how to fix it, "
+                                "or why the method is correct. Not the verdict alone.")
+CLASS_VERDICT_FORMAT = verdict_format("Each method with a problem, what is wrong and how to fix it, "
+                                      "or why the class is correct. Not the verdict alone.")
 
 RUN_PYTHON = {
     "type": "function",
@@ -129,10 +147,18 @@ def prompt(task, written, name, code):
     return "\n".join(parts)
 
 
-def ask(client, instructions, input, effort, tools=None, tool_choice=None, previous=None):
+def class_prompt(task, source):
+    return "\n".join([f"This is the skeleton of the class {task['class_name']}:", "",
+                      "```python", coder.skeleton(task), "```", "",
+                      "The developer has written the whole class:", "",
+                      "```python", source, "```", "", f"Is the class {task['class_name']} correct?"])
+
+
+def ask(client, instructions, input, effort, tools=None, tool_choice=None, previous=None,
+        text_format=VERDICT_FORMAT):
     """One request to the Responses API. With `previous`, the judge continues that conversation."""
     kwargs = {"model": MODEL, "instructions": instructions, "input": input,
-              "reasoning": {"effort": effort}, "text": VERDICT_FORMAT}
+              "reasoning": {"effort": effort}, "text": text_format}
     if tools:
         kwargs.update(tools=tools, tool_choice=tool_choice)
     if previous:
@@ -160,12 +186,8 @@ def parse_verdict(content):
 
 
 def judge_method(client, task, written, name, code, effort=EFFORT):
-    """Judge v1: one request, the judge only reads the code."""
-    response = ask(client, SYSTEM, [{"role": "user", "content": prompt(task, written, name, code)}], effort)
-    stats = usage_of(response)
-    verdict, reason = parse_verdict(response.output_text)
-    return {"verdict": verdict, "reason": reason, "status": response.status,
-            "requests": [stats], **stats}
+    """Judge v1 on one method: one request, the judge only reads the code."""
+    return review(client, task, SYSTEM, prompt(task, written, name, code), None, "v1", effort)
 
 
 def run_python(source, code):
@@ -182,14 +204,29 @@ def run_python(source, code):
 
 
 def judge_method_with_tools(client, task, written, name, code, effort=EFFORT):
-    """Judge v2: the judge may run code up to MAX_RUNS times, then gives its verdict."""
+    """Judge v2 on one method: it may run code on the class written so far, then answers."""
     source = harness.build_class(task, {**written, name: code})
+    return review(client, task, SYSTEM_TOOLS, prompt(task, written, name, code), source, "v2", effort)
+
+
+def judge_class(client, task, written, version="v1", effort=EFFORT):
+    """Setup C1: one verdict on the finished class, with v1 or v2."""
+    source = harness.build_class(task, written)
+    instructions = SYSTEM_CLASS if version == "v1" else SYSTEM_CLASS_TOOLS
+    return review(client, task, instructions, class_prompt(task, source), source, version, effort,
+                  CLASS_VERDICT_FORMAT)
+
+
+def review(client, task, instructions, content, source, version, effort, text_format=VERDICT_FORMAT):
+    """One review by the judge. v1 answers at once; v2 may first run code on `source`, up to
+    MAX_RUNS times, and then gives its verdict."""
+    tools = [RUN_PYTHON] if version == "v2" else None
     runs, requests = [], []
-    response = ask(client, SYSTEM_TOOLS, [{"role": "user", "content": prompt(task, written, name, code)}],
-                   effort, [RUN_PYTHON], "auto")
+    response = ask(client, instructions, [{"role": "user", "content": content}], effort,
+                   tools, "auto" if tools else None, text_format=text_format)
     while True:
         requests.append(usage_of(response))
-        calls = [item for item in response.output if item.type == "function_call"]
+        calls = [item for item in response.output if item.type == "function_call"] if tools else []
         # The second condition only guards against a model that ignores tool_choice="none".
         if not calls or len(requests) > MAX_RUNS + 1:
             break
@@ -213,8 +250,9 @@ def judge_method_with_tools(client, task, written, name, code, effort=EFFORT):
                         output = run_python(source, snippet)
                 runs.append({"code": snippet, "output": output})
             outputs.append({"type": "function_call_output", "call_id": call.call_id, "output": output})
-        response = ask(client, SYSTEM_TOOLS, outputs, effort, [RUN_PYTHON],
-                       "auto" if len(runs) < MAX_RUNS else "none", previous=response.id)
+        response = ask(client, instructions, outputs, effort, tools,
+                       "auto" if len(runs) < MAX_RUNS else "none", previous=response.id,
+                       text_format=text_format)
     verdict, reason = parse_verdict(response.output_text)
     totals = {k: sum(r[k] for r in requests)
               for k in ("prompt_tokens", "cached_tokens", "completion_tokens", "reasoning_tokens", "cost")}

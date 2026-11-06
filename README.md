@@ -117,3 +117,20 @@ Luna.
 .venv/bin/python scripts/judge.py C0 --version v2 --effort medium ClassEval_19 ClassEval_55
 .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
 ```
+
+## Setups C1 and C2
+
+`scripts/loop.py` runs the two setups with feedback. In C2 the judge reviews every method right
+after the coder writes it; after a NOT OK the coder reads the reason and writes that method again,
+once, and the next methods see the new version. In C1 the coder writes the whole class first; the
+judge reviews the finished class once, and after a NOT OK the coder writes the whole class again,
+once. In both setups a reply without a usable method is neither reviewed nor revised, as in C0, so
+the feedback is the only difference with C0. The harness runs the tests on the first version and on
+the final version of every method: the first tells how good the verdicts were, the second whether
+the feedback helped. Results go to `runs/<setup>-<judge>-<effort>/`.
+
+```bash
+.venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --dry-run ClassEval_19
+.venv/bin/python scripts/loop.py C2 --judge v2 --effort medium ClassEval_19 ClassEval_55
+.venv/bin/python scripts/loop.py C1 --judge v1 --all
+```
