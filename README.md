@@ -23,6 +23,8 @@ cp .env.example .env                     # add the API keys, never commit .env
 .venv/bin/python scripts/order_methods.py
 .venv/bin/python scripts/harness.py      # reference solutions must pass, stubs must fail
 .venv/bin/python scripts/check_api.py    # one tiny request to each API
+.venv/bin/python scripts/budget.py       # dollars spent so far on each API
+.venv/bin/python scripts/coder.py --dry-run ClassEval_19   # print a coder prompt, send nothing
 ```
 
 ## Data
@@ -62,3 +64,16 @@ Run as a script, the harness checks itself. The reference solutions pass all 289
 classes. With stubs only, 4 methods still pass, because their tests cannot tell a no-op from a
 solution. They are listed in `data/selection/weak_tests.csv` and we report results with and without
 them.
+
+## Coder (setup C0)
+
+`scripts/coder.py` asks Qwen (qwen3.8-27b on OpenRouter, served in bf16) for one method at a time,
+in the order of `data/selection/method_order.csv`. The prompt holds the class skeleton, the methods
+written so far and the name of the next method, never the tests. From the reply we keep only that
+method. If it is missing or does not compile, the method stays a stub and we do not ask again, so
+every setup sends the coder the same number of requests. Each class is saved in
+`runs/C0/<task_id>.json` with the code, tokens, cost and test result of every method.
+
+`scripts/budget.py` writes one line per request to `runs/cost_log.csv`. Before each class it checks
+the budgets and stops the run when a service has spent 70 percent of its 10 dollars. For OpenRouter
+it also asks the service how much the key has spent, because both of us use the same key.
