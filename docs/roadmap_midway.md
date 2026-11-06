@@ -33,9 +33,10 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   Qwen, on the cheapest OpenRouter provider that serves the model in full precision. Both work.
   qwen3.6-27b has no provider in bf16 or fp16, so the coder is now qwen3.8-27b, served in bf16 by
   DeepInfra (0.15 dollars per million input tokens, 1.875 per million output tokens).
-- [ ] **Coder, setup C0** (6 to 7 Nov). The coder writes one method per request, in the order of
-  `data/selection/method_order.csv`. It sees the class skeleton and the methods written so far,
-  never the tests.
+- [x] **Coder, setup C0** (6 Nov). `scripts/coder.py` writes one method per request, in the order
+  of `data/selection/method_order.csv`. It sees the class skeleton and the methods written so far,
+  never the tests. First real run on ClassEval_19 and ClassEval_55: 3 of 4 methods pass, about
+  1500 tokens and 0.0018 dollars per method.
 - [ ] **Judge v1** (6 to 7 Nov). For each new method the judge reads the class description, the
   method docstring and the code written so far. It answers OK or NOT OK with a short reason, in JSON.
 - [ ] **Pilot** (8 Nov). Run C0 and the judge on 8 classes and answer two questions before going on.
