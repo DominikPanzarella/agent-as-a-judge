@@ -44,18 +44,22 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 - [ ] **Judge v2 with a tool** (to decide). Before the verdict the judge may run a few lines of
   Python on the class written so far, for example the docstring examples, in a subprocess with a
   timeout. The hidden tests stay hidden.
-- [ ] **Pilot** (8 Nov). Run C0 and the judge on 8 classes and answer two questions before going on.
-  First, is the judge clearly better than chance against the tests? We look at Cohen's kappa and at
-  how often it says OK to code that fails. Second, does one method cost few enough tokens for C0 to
-  C2 on 71 classes to fit in the two budgets of 10 dollars? If the judge is close to chance, we change
-  the model before the full runs.
+- [ ] **Pilot** (by Sunday 8 Nov). Run C0 on 8 classes and judge their methods with judge v1 (and v2,
+  if we build it), with low and with medium effort. Three questions before going on. Is the judge
+  clearly better than chance against the tests? We look at Cohen's kappa and at how often it says
+  OK to code that fails or NOT OK to code that passes. Are the concrete claims in its reasons true?
+  We check a sample by running the code. Does one method cost few enough tokens for C0 to C2 on 71
+  classes to fit in the two budgets of 10 dollars? The first estimate is about 0.0018 dollars per
+  method for the coder. We also run C0 a second time on the same 8 classes, to see how many methods
+  change result by chance alone. If the judge is close to chance, we change it before the full runs.
 
 ## Week 2 (9 to 15 November): C1, C2 and the full runs
 
 - [ ] **Setups C1 and C2** (10 Nov). In C1 the judge gives its verdict on the finished class and the
   coder may revise once. In C2 the verdict comes after each method, again with one revision of that
   method.
-- [ ] **Full runs** (11 to 13 Nov). Run C0, C1 and C2 on the 71 classes with low reasoning effort.
+- [ ] **Full runs** (11 to 13 Nov). Run C0, C1 and C2 on the 71 classes, the coder with low
+  reasoning effort and the judge with the effort chosen in the pilot.
   Log tokens and cost after every class, and stop if either budget reaches 70 percent. The lab of
   12 November is a good moment to show the first numbers to the instructors.
 - [ ] **Analysis** (14 to 15 Nov). Report the share of methods and of classes that pass their tests,
@@ -67,8 +71,9 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 ## 16 to 19 November: midway report
 
 - [ ] **Draft** (16 Nov). Write the 2 pages and bring them to the lab for feedback. The changes to
-  the plan so far: the models run through the course APIs instead of locally, we use 71 of the 100
-  classes, and the order of the methods is fixed and documented.
+  the plan so far: the models run through the course APIs instead of locally (the coder is
+  qwen3.8-27b, because qwen3.6-27b has no full-precision provider), we use 71 of the 100 classes,
+  the order of the methods is fixed and documented, and, if we build it, the judge can run code.
 - [ ] **Submission** (19 Nov, before midnight). Final read and upload on iCorsi.
 
 ## After the midway (20 November to 17 December)
@@ -77,7 +82,8 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 - [ ] **Setup C3, the flywheel** (20 to 29 Nov). Split the 71 classes into three rounds. After each
   round the judge learns which of its verdicts the tests proved wrong and keeps them in memory.
 - [ ] **Setup C4 and the two controls** (30 Nov to 6 Dec). C4 gives the coder the real test results.
-  The controls are a judge without tools and a coder that judges its own code (self-refine).
+  The controls are the judge without tools (judge v1, already written) and a coder that judges its
+  own code (self-refine).
 - [ ] **Full analysis** (7 to 11 Dec). Answer RQ1, RQ2 and RQ3 with the same tests as above.
 - [ ] **Final report** (7 to 15 Dec). At most 10 pages plus 2 of references; bring a draft to the lab
   of 14 December.
@@ -93,7 +99,11 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 - [ ] **What "the same budget" means across setups.** A simple rule is at most one revision per
   method in C2 and one per class in C1, with the tokens of every setup reported next to the results.
 - [ ] **The note "classes with the 1st methods implemented"** from the lab session. We should ask
-  Alessandro what he meant.
+  Alessandro what he meant, at the lab of 12 November at the latest.
 - [ ] **Order by fields.** The dependencies cover calls between methods, not fields. A method that
   reads a field may make more sense after the method that fills it. We read the 71 classes once and
-  record any manual change in `scripts/order_methods.py`.
+  record any manual change in `scripts/order_methods.py`. This has to happen before the full runs
+  of 11 November, because it changes the prompts.
+- [ ] **Reasoning effort of the judge.** On the first four methods low and medium effort gave the
+  same verdicts. Medium costs about three times more, about 0.1 dollars for all 289 methods. The
+  pilot decides.
