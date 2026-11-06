@@ -1,0 +1,61 @@
+{
+  "task_id": "ClassEval_55",
+  "class_name": "Manacher",
+  "setup": "C0-9b",
+  "model": "qwen/qwen3.5-9b",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "code": "def palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    2\n    \"\"\"\n    left_index = center - diff\n    right_index = center + diff\n    length = 0\n\n    while left_index >= 0 and right_index < len(string) and string[left_index] == string[right_index]:\n        length += 1\n        left_index -= 1\n        right_index += 1\n\n    return length * 2",
+      "valid": true,
+      "reply": "```python\nclass Manacher:\n    \"\"\"\n    his is a class that implements a manacher algorithm to find the Longest palindromic substring in a given string.\n    \"\"\"\n\n    def __init__(self, input_string) -> None:\n        \"\"\"\n        Initializes the Manacher class with the given input_string.\n        :param input_string: The input_string to be searched, str.\n        \"\"\"\n        self.input_string = input_string\n\n    def palindromic_length(self, center, diff, string):\n        \"\"\"\n        Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n        :param center: The center of the palindromic substring, int.\n        :param diff: The difference between the center and the current position, int.\n        :param string: The string to be searched, str.\n        :return: The length of the palindromic substring, int.\n        >>> manacher = Manacher('ababa')\n        >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n        2\n        \"\"\"\n        left_index = center - diff\n        right_index = center + diff\n        length = 0\n        \n        while left_index >= 0 and right_index < len(string) and string[left_index] == string[right_index]:\n            length += 1\n            left_index -= 1\n            right_index += 1\n            \n        return length * 2\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 458,
+      "cached_tokens": 448,
+      "completion_tokens": 845,
+      "reasoning_tokens": 574,
+      "cost": 0.000115114,
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "code": "def palindromic_string(self):\n    \"\"\"\n    Finds the longest palindromic substring in the given string.\n    :return: The longest palindromic substring, str.\n    >>> manacher = Manacher('ababaxse')\n    >>> manacher.palindromic_string()\n    'ababa'\n    \"\"\"\n    if not self.input_string:\n        return \"\"\n\n    # Transform the string with delimiters for uniform handling\n    t = '#' + '#'.join(self.input_string) + '#'\n    n = len(t)\n\n    # Array to store radius at each position\n    p = [0] * n\n    center = 0\n    right = 0\n\n    # Run Manacher's algorithm to find maximum radius\n    for i in range(n):\n        # Mirror position around current center\n        i_mirror = 2 * center - i\n\n        if right > i:\n            p[i] = min(right - i, p[i_mirror])\n\n        # Attempt to expand palindrome centered at i\n        left_index, right_index = i - 1 - p[i], i + 1 + p[i]\n        while left_index >= 0 and right_index < n and t[left_index] == t[right_index]:\n            p[i] += 1\n            left_index -= 1\n            right_index += 1\n\n        # Update center and right boundary if expanded further\n        if i + p[i] > right:\n            center, right = i, i + p[i]\n\n    # Find position with maximum palindrome radius\n    max_radius = max(p)\n    center_index = p.index(max_radius)\n\n    # Convert back to original string indices\n    start = (center_index - max_radius) // 2\n    end = start + max_radius\n\n    return self.input_string[start:end]",
+      "valid": true,
+      "reply": "```python\ndef palindromic_string(self):\n    \"\"\"\n    Finds the longest palindromic substring in the given string.\n    :return: The longest palindromic substring, str.\n    >>> manacher = Manacher('ababaxse')\n    >>> manacher.palindromic_string()\n    'ababa'\n    \"\"\"\n    if not self.input_string:\n        return \"\"\n    \n    # Transform the string with delimiters for uniform handling\n    t = '#' + '#'.join(self.input_string) + '#'\n    n = len(t)\n    \n    # Array to store radius at each position\n    p = [0] * n\n    center = 0\n    right = 0\n    \n    # Run Manacher's algorithm to find maximum radius\n    for i in range(n):\n        # Mirror position around current center\n        i_mirror = 2 * center - i\n        \n        if right > i:\n            p[i] = min(right - i, p[i_mirror])\n        \n        # Attempt to expand palindrome centered at i\n        left_index, right_index = i - 1 - p[i], i + 1 + p[i]\n        while left_index >= 0 and right_index < n and t[left_index] == t[right_index]:\n            p[i] += 1\n            left_index -= 1\n            right_index += 1\n        \n        # Update center and right boundary if expanded further\n        if i + p[i] > right:\n            center, right = i, i + p[i]\n    \n    # Find position with maximum palindrome radius\n    max_radius = max(p)\n    center_index = p.index(max_radius)\n    \n    # Convert back to original string indices\n    start = (center_index - max_radius) // 2\n    end = start + max_radius\n    \n    return self.input_string[start:end]\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 703,
+      "cached_tokens": 0,
+      "completion_tokens": 1275,
+      "reasoning_tokens": 933,
+      "cost": 0.000208668,
+      "passed": true
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "ManacherTestPalindromicLength": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "ManacherTestPalindromicString": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ManacherTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source": "\n\nclass Manacher: \n    def __init__(self, input_string) -> None:\n        \"\"\"\n        Initializes the Manacher class with the given input_string.\n        :param input_string: The input_string to be searched, str.\n        \"\"\"\n        self.input_string = input_string\n\n    def palindromic_length(self, center, diff, string):\n        \"\"\"\n        Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n        :param center: The center of the palindromic substring, int.\n        :param diff: The difference between the center and the current position, int.\n        :param string: The string to be searched, str.\n        :return: The length of the palindromic substring, int.\n        >>> manacher = Manacher('ababa')\n        >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n        2\n        \"\"\"\n        left_index = center - diff\n        right_index = center + diff\n        length = 0\n\n        while left_index >= 0 and right_index < len(string) and string[left_index] == string[right_index]:\n            length += 1\n            left_index -= 1\n            right_index += 1\n\n        return length * 2\n\n    def palindromic_string(self):\n        \"\"\"\n        Finds the longest palindromic substring in the given string.\n        :return: The longest palindromic substring, str.\n        >>> manacher = Manacher('ababaxse')\n        >>> manacher.palindromic_string()\n        'ababa'\n        \"\"\"\n        if not self.input_string:\n            return \"\"\n\n        # Transform the string with delimiters for uniform handling\n        t = '#' + '#'.join(self.input_string) + '#'\n        n = len(t)\n\n        # Array to store radius at each position\n        p = [0] * n\n        center = 0\n        right = 0\n\n        # Run Manacher's algorithm to find maximum radius\n        for i in range(n):\n            # Mirror position around current center\n            i_mirror = 2 * center - i\n\n            if right > i:\n                p[i] = min(right - i, p[i_mirror])\n\n            # Attempt to expand palindrome centered at i\n            left_index, right_index = i - 1 - p[i], i + 1 + p[i]\n            while left_index >= 0 and right_index < n and t[left_index] == t[right_index]:\n                p[i] += 1\n                left_index -= 1\n                right_index += 1\n\n            # Update center and right boundary if expanded further\n            if i + p[i] > right:\n                center, right = i, i + p[i]\n\n        # Find position with maximum palindrome radius\n        max_radius = max(p)\n        center_index = p.index(max_radius)\n\n        # Convert back to original string indices\n        start = (center_index - max_radius) // 2\n        end = start + max_radius\n\n        return self.input_string[start:end]\n"
+}

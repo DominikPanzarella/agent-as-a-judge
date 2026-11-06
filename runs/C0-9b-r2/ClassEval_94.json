@@ -1,0 +1,124 @@
+{
+  "task_id": "ClassEval_94",
+  "class_name": "VendingMachine",
+  "setup": "C0-9b-r2",
+  "model": "qwen/qwen3.5-9b",
+  "methods": [
+    {
+      "method_name": "restock_item",
+      "code": "def restock_item(self, item_name, quantity):\n    \"\"\"\n    Replenishes the inventory of a product already in the vending machine.\n    :param item_name: The name of the product to be replenished, str.\n    :param quantity: The quantity of the product to be replenished, int.\n    :return: If the product is already in the vending machine, returns True, otherwise, returns False.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n    >>> vendingMachine.restock_item('Coke', 10)\n    True\n    >>> vendingMachine.restock_item('Pizza', 10)\n    False\n\n    \"\"\"\n    if item_name in self.inventory:\n        self.inventory[item_name]['quantity'] += quantity\n        return True\n    else:\n        return False",
+      "valid": true,
+      "reply": "```python\ndef restock_item(self, item_name, quantity):\n    \"\"\"\n    Replenishes the inventory of a product already in the vending machine.\n    :param item_name: The name of the product to be replenished, str.\n    :param quantity: The quantity of the product to be replenished, int.\n    :return: If the product is already in the vending machine, returns True, otherwise, returns False.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n    >>> vendingMachine.restock_item('Coke', 10)\n    True\n    >>> vendingMachine.restock_item('Pizza', 10)\n    False\n\n    \"\"\"\n    if item_name in self.inventory:\n        self.inventory[item_name]['quantity'] += quantity\n        return True\n    else:\n        return False\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 911,
+      "cached_tokens": 0,
+      "completion_tokens": 656,
+      "reasoning_tokens": 466,
+      "cost": 0.000144275,
+      "passed": true
+    },
+    {
+      "method_name": "add_item",
+      "code": "def add_item(self, item_name, price, quantity):\n    \"\"\"\n    Adds a product to the vending machine's inventory.\n    :param item_name: The name of the product to be added, str.\n    :param price: The price of the product to be added, float.\n    :param quantity: The quantity of the product to be added, int.\n    :return: None\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.add_item('Coke', 1.25, 10)\n    >>> vendingMachine.inventory\n    {'Coke': {'price': 1.25, 'quantity': 10}}\n\n    \"\"\"\n    self.inventory[item_name] = {\n        'price': price,\n        'quantity': quantity\n    }",
+      "valid": true,
+      "reply": "```python\ndef add_item(self, item_name, price, quantity):\n    \"\"\"\n    Adds a product to the vending machine's inventory.\n    :param item_name: The name of the product to be added, str.\n    :param price: The price of the product to be added, float.\n    :param quantity: The quantity of the product to be added, int.\n    :return: None\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.add_item('Coke', 1.25, 10)\n    >>> vendingMachine.inventory\n    {'Coke': {'price': 1.25, 'quantity': 10}}\n\n    \"\"\"\n    self.inventory[item_name] = {\n        'price': price,\n        'quantity': quantity\n    }\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1122,
+      "cached_tokens": 0,
+      "completion_tokens": 649,
+      "reasoning_tokens": 482,
+      "cost": 0.000159731,
+      "passed": false
+    },
+    {
+      "method_name": "insert_coin",
+      "code": "def insert_coin(self, amount):\n    \"\"\"\n    Inserts coins into the vending machine.\n    :param amount: The amount of coins to be inserted, float.\n    :return: The balance of the vending machine after the coins are inserted, float.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.insert_coin(1.25)\n    1.25\n\n    \"\"\"\n    self.balance += amount\n    return self.balance",
+      "valid": true,
+      "reply": "```python\ndef insert_coin(self, amount):\n    \"\"\"\n    Inserts coins into the vending machine.\n    :param amount: The amount of coins to be inserted, float.\n    :return: The balance of the vending machine after the coins are inserted, float.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.insert_coin(1.25)\n    1.25\n\n    \"\"\"\n    self.balance += amount\n    return self.balance\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1295,
+      "cached_tokens": 0,
+      "completion_tokens": 365,
+      "reasoning_tokens": 276,
+      "cost": 0.00014096,
+      "passed": true
+    },
+    {
+      "method_name": "purchase_item",
+      "code": "def purchase_item(self, item_name):\n    \"\"\"\n    Purchases a product from the vending machine and returns the balance after the purchase and display purchase unsuccessful if the product is out of stock.\n    :param item_name: The name of the product to be purchased, str.\n    :return: If successful, returns the balance of the vending machine after the product is purchased, float,otherwise,returns False.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n    >>> vendingMachine.balance = 1.25\n    >>> vendingMachine.purchase_item('Coke')\n    0.0\n    >>> vendingMachine.purchase_item('Pizza')\n    False\n    \"\"\"\n    if item_name not in self.inventory:\n        return False\n\n    product = self.inventory[item_name]\n    if product['quantity'] <= 0:\n        return False\n\n    price = product['price']\n    if self.balance < price:\n        return False\n\n    self.balance -= price\n    self.inventory[item_name]['quantity'] -= 1\n    return self.balance",
+      "valid": true,
+      "reply": "```python\ndef purchase_item(self, item_name):\n    \"\"\"\n    Purchases a product from the vending machine and returns the balance after the purchase and display purchase unsuccessful if the product is out of stock.\n    :param item_name: The name of the product to be purchased, str.\n    :return: If successful, returns the balance of the vending machine after the product is purchased, float,otherwise,returns False.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n    >>> vendingMachine.balance = 1.25\n    >>> vendingMachine.purchase_item('Coke')\n    0.0\n    >>> vendingMachine.purchase_item('Pizza')\n    False\n    \"\"\"\n    if item_name not in self.inventory:\n        return False\n    \n    product = self.inventory[item_name]\n    if product['quantity'] <= 0:\n        return False\n    \n    price = product['price']\n    if self.balance < price:\n        return False\n    \n    self.balance -= price\n    self.inventory[item_name]['quantity'] -= 1\n    return self.balance\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1394,
+      "cached_tokens": 0,
+      "completion_tokens": 745,
+      "reasoning_tokens": 519,
+      "cost": 0.000191523,
+      "passed": true
+    },
+    {
+      "method_name": "display_items",
+      "code": "def display_items(self):\n    \"\"\"\n    Displays the products in the vending machine.\n    :return: If the vending machine is empty, returns False, otherwise, returns a list of the products in the vending machine, str.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.display_items()\n    False\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10} }\n    >>> vendingMachine.display_items()\n    'Coke - $1.25 [10]'\n\n    \"\"\"\n    if not self.inventory:\n        return False\n\n    items = []\n    for item_name, product in self.inventory.items():\n        items.append(f\"{item_name} - ${product['price']} [{product['quantity']}]\")\n\n    return ', '.join(items)",
+      "valid": true,
+      "reply": "```python\ndef display_items(self):\n    \"\"\"\n    Displays the products in the vending machine.\n    :return: If the vending machine is empty, returns False, otherwise, returns a list of the products in the vending machine, str.\n    >>> vendingMachine = VendingMachine()\n    >>> vendingMachine.display_items()\n    False\n    >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10} }\n    >>> vendingMachine.display_items()\n    'Coke - $1.25 [10]'\n\n    \"\"\"\n    if not self.inventory:\n        return False\n    \n    items = []\n    for item_name, product in self.inventory.items():\n        items.append(f\"{item_name} - ${product['price']} [{product['quantity']}]\")\n    \n    return ', '.join(items)\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1644,
+      "cached_tokens": 0,
+      "completion_tokens": 1349,
+      "reasoning_tokens": 1319,
+      "cost": 0.000279025,
+      "passed": false
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "VendingMachineTestAddItem": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "VendingMachineTestInsertCoin": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VendingMachineTestPurchaseItem": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VendingMachineTestRestockItem": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VendingMachineTestDisplayItems": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "VendingMachineTestMain": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source": "\n\nclass VendingMachine: \n    def __init__(self):\n        \"\"\"\n        Initializes the vending machine's inventory and balance.\n        \"\"\"\n        self.inventory = {}\n        self.balance = 0\n\n    def add_item(self, item_name, price, quantity):\n        \"\"\"\n        Adds a product to the vending machine's inventory.\n        :param item_name: The name of the product to be added, str.\n        :param price: The price of the product to be added, float.\n        :param quantity: The quantity of the product to be added, int.\n        :return: None\n        >>> vendingMachine = VendingMachine()\n        >>> vendingMachine.add_item('Coke', 1.25, 10)\n        >>> vendingMachine.inventory\n        {'Coke': {'price': 1.25, 'quantity': 10}}\n\n        \"\"\"\n        self.inventory[item_name] = {\n            'price': price,\n            'quantity': quantity\n        }\n\n    def insert_coin(self, amount):\n        \"\"\"\n        Inserts coins into the vending machine.\n        :param amount: The amount of coins to be inserted, float.\n        :return: The balance of the vending machine after the coins are inserted, float.\n        >>> vendingMachine = VendingMachine()\n        >>> vendingMachine.insert_coin(1.25)\n        1.25\n\n        \"\"\"\n        self.balance += amount\n        return self.balance\n\n    def purchase_item(self, item_name):\n        \"\"\"\n        Purchases a product from the vending machine and returns the balance after the purchase and display purchase unsuccessful if the product is out of stock.\n        :param item_name: The name of the product to be purchased, str.\n        :return: If successful, returns the balance of the vending machine after the product is purchased, float,otherwise,returns False.\n        >>> vendingMachine = VendingMachine()\n        >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n        >>> vendingMachine.balance = 1.25\n        >>> vendingMachine.purchase_item('Coke')\n        0.0\n        >>> vendingMachine.purchase_item('Pizza')\n        False\n        \"\"\"\n        if item_name not in self.inventory:\n            return False\n\n        product = self.inventory[item_name]\n        if product['quantity'] <= 0:\n            return False\n\n        price = product['price']\n        if self.balance < price:\n            return False\n\n        self.balance -= price\n        self.inventory[item_name]['quantity'] -= 1\n        return self.balance\n\n    def restock_item(self, item_name, quantity):\n        \"\"\"\n        Replenishes the inventory of a product already in the vending machine.\n        :param item_name: The name of the product to be replenished, str.\n        :param quantity: The quantity of the product to be replenished, int.\n        :return: If the product is already in the vending machine, returns True, otherwise, returns False.\n        >>> vendingMachine = VendingMachine()\n        >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}\n        >>> vendingMachine.restock_item('Coke', 10)\n        True\n        >>> vendingMachine.restock_item('Pizza', 10)\n        False\n\n        \"\"\"\n        if item_name in self.inventory:\n            self.inventory[item_name]['quantity'] += quantity\n            return True\n        else:\n            return False\n\n    def display_items(self):\n        \"\"\"\n        Displays the products in the vending machine.\n        :return: If the vending machine is empty, returns False, otherwise, returns a list of the products in the vending machine, str.\n        >>> vendingMachine = VendingMachine()\n        >>> vendingMachine.display_items()\n        False\n        >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10} }\n        >>> vendingMachine.display_items()\n        'Coke - $1.25 [10]'\n\n        \"\"\"\n        if not self.inventory:\n            return False\n\n        items = []\n        for item_name, product in self.inventory.items():\n            items.append(f\"{item_name} - ${product['price']} [{product['quantity']}]\")\n\n        return ', '.join(items)\n"
+}

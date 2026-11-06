@@ -15,6 +15,7 @@ of every method. Every request also adds a line to runs/cost_log.csv.
     .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53   # run these classes
     .venv/bin/python scripts/coder.py --all                       # every kept class not run yet
     .venv/bin/python scripts/coder.py --name C0-r2 ClassEval_19   # a second run, saved in runs/C0-r2
+    .venv/bin/python scripts/coder.py --model qwen/qwen3.5-9b --name C0-9b ClassEval_19   # another coder
 """
 import argparse
 import ast
@@ -102,8 +103,8 @@ def extract_method(reply, name):
     return None
 
 
-def ask(client, messages):
-    reply = client.chat.completions.create(model=MODEL, messages=messages,
+def ask(client, messages, model=MODEL):
+    reply = client.chat.completions.create(model=model, messages=messages,
                                            max_tokens=MAX_TOKENS, extra_body=EXTRA_BODY)
     u = reply.usage
     prompt_details = getattr(u, "prompt_tokens_details", None)
@@ -120,18 +121,18 @@ def ask(client, messages):
     }
 
 
-def run_class(client, task, steps, setup=SETUP):
+def run_class(client, task, steps, setup=SETUP, model=MODEL):
     written, records = {}, []
     for name in steps:
         messages = [{"role": "system", "content": SYSTEM},
                     {"role": "user", "content": prompt(task, written, name)}]
-        r = ask(client, messages)
+        r = ask(client, messages, model)
         code = extract_method(r["reply"], name)
         valid = code is not None and harness.as_class_member(code) is not None
         if valid:
             written[name] = code
         budget.log(setup=setup, task_id=task["task_id"], method_name=name, role="coder",
-                   service="openrouter", model=MODEL, **r)
+                   service="openrouter", model=model, **r)
         records.append({"method_name": name, "code": code, "valid": valid, **r})
 
     source = harness.build_class(task, written)
@@ -140,7 +141,7 @@ def run_class(client, task, steps, setup=SETUP):
     for record in records:
         record["passed"] = passed[record["method_name"]]
     return {"task_id": task["task_id"], "class_name": task["class_name"], "setup": setup,
-            "model": MODEL, "methods": records, "class_passed": harness.class_passed(results),
+            "model": model, "methods": records, "class_passed": harness.class_passed(results),
             "tests": results, "source": source}
 
 
@@ -152,6 +153,7 @@ def main():
     parser.add_argument("--force", action="store_true", help="run again classes that already have a result")
     parser.add_argument("--name", default=SETUP,
                         help="name of the run and of its folder in runs/, such as C0-r2 for a second run")
+    parser.add_argument("--model", default=MODEL, help="OpenRouter model of the coder")
     args = parser.parse_args()
 
     tasks = {t["task_id"]: t for t in harness.load_tasks()}
@@ -182,7 +184,7 @@ def main():
         except budget.BudgetReached as stop:
             print(f"Stopped before {task_id}: {stop}")
             sys.exit(1)
-        result = run_class(client, tasks[task_id], order[task_id], args.name)
+        result = run_class(client, tasks[task_id], order[task_id], args.name, args.model)
         out.write_text(json.dumps(result, indent=2), encoding="utf-8")
         ms = result["methods"]
         tokens = sum(m["prompt_tokens"] + m["completion_tokens"] for m in ms)

@@ -1,0 +1,103 @@
+{
+  "task_id": "ClassEval_20",
+  "class_name": "Chat",
+  "setup": "C0-9b-r2",
+  "model": "qwen/qwen3.5-9b",
+  "methods": [
+    {
+      "method_name": "add_user",
+      "code": "def add_user(self, username):\n    \"\"\"\n    Add a new user to the Chat.\n    :param username: The user's name, str.\n    :return: If the user is already in the Chat, returns False, otherwise, returns True.\n    >>> chat = Chat()\n    >>> chat.add_user('John')\n    True\n    self.users = {'John': []}\n    >>> chat.add_user('John')\n    False\n\n    \"\"\"\n    if username in self.users:\n        return False\n    self.users[username] = []\n    return True",
+      "valid": true,
+      "reply": "```python\n    def add_user(self, username):\n        \"\"\"\n        Add a new user to the Chat.\n        :param username: The user's name, str.\n        :return: If the user is already in the Chat, returns False, otherwise, returns True.\n        >>> chat = Chat()\n        >>> chat.add_user('John')\n        True\n        self.users = {'John': []}\n        >>> chat.add_user('John')\n        False\n\n        \"\"\"\n        if username in self.users:\n            return False\n        self.users[username] = []\n        return True\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 744,
+      "cached_tokens": 0,
+      "completion_tokens": 566,
+      "reasoning_tokens": 461,
+      "cost": 0.000127618,
+      "passed": true
+    },
+    {
+      "method_name": "remove_user",
+      "code": "def remove_user(self, username):\n    \"\"\"\n    Remove a user from the Chat.\n    :param username: The user's name, str.\n    :return: If the user is already in the Chat, returns True, otherwise, returns False.\n    >>> chat = Chat()\n    >>> chat.users = {'John': []}\n    >>> chat.remove_user('John')\n    True\n    >>> chat.remove_user('John')\n    False\n\n    \"\"\"\n    if username in self.users:\n        del self.users[username]\n        return True\n    return False",
+      "valid": true,
+      "reply": "```python\ndef remove_user(self, username):\n    \"\"\"\n    Remove a user from the Chat.\n    :param username: The user's name, str.\n    :return: If the user is already in the Chat, returns True, otherwise, returns False.\n    >>> chat = Chat()\n    >>> chat.users = {'John': []}\n    >>> chat.remove_user('John')\n    True\n    >>> chat.remove_user('John')\n    False\n\n    \"\"\"\n    if username in self.users:\n        del self.users[username]\n        return True\n    return False\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 881,
+      "cached_tokens": 0,
+      "completion_tokens": 290,
+      "reasoning_tokens": 159,
+      "cost": 0.000105871,
+      "passed": true
+    },
+    {
+      "method_name": "send_message",
+      "code": "def send_message(self, sender, receiver, message):\n    \"\"\"\n    Send a message from a user to another user.\n    :param sender: The sender's name, str.\n    :param receiver: The receiver's name, str.\n    :param message: The message, str.\n    :return: If the sender or the receiver is not in the Chat, returns False, otherwise, returns True.\n    >>> chat = Chat()\n    >>> chat.users = {'John': [], 'Mary': []}\n    >>> chat.send_message('John', 'Mary', 'Hello')\n    True\n    >>> chat.send_message('John', 'Tom', 'Hello')\n    False\n\n    \"\"\"\n    if sender in self.users and receiver in self.users:\n        self.users[sender].append({\n            'sender': sender,\n            'receiver': receiver,\n            'message': message,\n            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n        })\n        return True\n    return False",
+      "valid": true,
+      "reply": "```python\ndef send_message(self, sender, receiver, message):\n    \"\"\"\n    Send a message from a user to another user.\n    :param sender: The sender's name, str.\n    :param receiver: The receiver's name, str.\n    :param message: The message, str.\n    :return: If the sender or the receiver is not in the Chat, returns False, otherwise, returns True.\n    >>> chat = Chat()\n    >>> chat.users = {'John': [], 'Mary': []}\n    >>> chat.send_message('John', 'Mary', 'Hello')\n    True\n    >>> chat.send_message('John', 'Tom', 'Hello')\n    False\n\n    \"\"\"\n    if sender in self.users and receiver in self.users:\n        self.users[sender].append({\n            'sender': sender,\n            'receiver': receiver,\n            'message': message,\n            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n        })\n        return True\n    return False\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1005,
+      "cached_tokens": 0,
+      "completion_tokens": 851,
+      "reasoning_tokens": 668,
+      "cost": 0.000182674,
+      "passed": false
+    },
+    {
+      "method_name": "get_messages",
+      "code": "def get_messages(self, username):\n    \"\"\"\n    Get all the messages of a user from the Chat.\n    :param username: The user's name, str.\n    :return: A list of messages, each message is a dictionary with keys 'sender', 'receiver', 'message', 'timestamp'.\n    >>> chat = Chat()\n    >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]}\n    >>> chat.get_messages('John')\n    [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]\n    >>> chat.get_messages('Mary')\n    []\n\n    \"\"\"\n    if username in self.users:\n        return self.users[username]\n    return []",
+      "valid": true,
+      "reply": "```python\n    def get_messages(self, username):\n        \"\"\"\n        Get all the messages of a user from the Chat.\n        :param username: The user's name, str.\n        :return: A list of messages, each message is a dictionary with keys 'sender', 'receiver', 'message', 'timestamp'.\n        >>> chat = Chat()\n        >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]}\n        >>> chat.get_messages('John')\n        [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]\n        >>> chat.get_messages('Mary')\n        []\n\n        \"\"\"\n        if username in self.users:\n            return self.users[username]\n        return []\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1231,
+      "cached_tokens": 960,
+      "completion_tokens": 661,
+      "reasoning_tokens": 436,
+      "cost": 0.00017069,
+      "passed": true
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "ChatTestAddUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestRemoveUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestSendMessage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "ChatTestGetMessages": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestMain": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source": "from datetime import datetime\n\nclass Chat: \n    def __init__(self):\n        \"\"\"\n        Initialize the Chat with an attribute users, which is an empty dictionary.\n        \"\"\"\n        self.users = {}\n\n    def add_user(self, username):\n        \"\"\"\n        Add a new user to the Chat.\n        :param username: The user's name, str.\n        :return: If the user is already in the Chat, returns False, otherwise, returns True.\n        >>> chat = Chat()\n        >>> chat.add_user('John')\n        True\n        self.users = {'John': []}\n        >>> chat.add_user('John')\n        False\n\n        \"\"\"\n        if username in self.users:\n            return False\n        self.users[username] = []\n        return True\n\n    def remove_user(self, username):\n        \"\"\"\n        Remove a user from the Chat.\n        :param username: The user's name, str.\n        :return: If the user is already in the Chat, returns True, otherwise, returns False.\n        >>> chat = Chat()\n        >>> chat.users = {'John': []}\n        >>> chat.remove_user('John')\n        True\n        >>> chat.remove_user('John')\n        False\n\n        \"\"\"\n        if username in self.users:\n            del self.users[username]\n            return True\n        return False\n\n    def send_message(self, sender, receiver, message):\n        \"\"\"\n        Send a message from a user to another user.\n        :param sender: The sender's name, str.\n        :param receiver: The receiver's name, str.\n        :param message: The message, str.\n        :return: If the sender or the receiver is not in the Chat, returns False, otherwise, returns True.\n        >>> chat = Chat()\n        >>> chat.users = {'John': [], 'Mary': []}\n        >>> chat.send_message('John', 'Mary', 'Hello')\n        True\n        >>> chat.send_message('John', 'Tom', 'Hello')\n        False\n\n        \"\"\"\n        if sender in self.users and receiver in self.users:\n            self.users[sender].append({\n                'sender': sender,\n                'receiver': receiver,\n                'message': message,\n                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n            })\n            return True\n        return False\n\n    def get_messages(self, username):\n        \"\"\"\n        Get all the messages of a user from the Chat.\n        :param username: The user's name, str.\n        :return: A list of messages, each message is a dictionary with keys 'sender', 'receiver', 'message', 'timestamp'.\n        >>> chat = Chat()\n        >>> chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]}\n        >>> chat.get_messages('John')\n        [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]\n        >>> chat.get_messages('Mary')\n        []\n\n        \"\"\"\n        if username in self.users:\n            return self.users[username]\n        return []\n"
+}

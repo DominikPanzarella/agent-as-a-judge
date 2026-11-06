@@ -1,0 +1,61 @@
+{
+  "task_id": "ClassEval_19",
+  "class_name": "ChandrasekharSieve",
+  "setup": "C0-9b-r2",
+  "model": "qwen/qwen3.5-9b",
+  "methods": [
+    {
+      "method_name": "generate_primes",
+      "code": "def generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2] if self.n >= 2 else []\n    limit = int(self.n ** 0.5)\n\n    if limit <= 1:\n        return primes\n\n    num_array = [(2 * i + 1) for i in range((limit - 1) // 2)]\n    odd_count = len(num_array)\n\n    for i in range(odd_count):\n        if num_array[i] > limit:\n            break\n\n        if num_array[i] == 0:\n            continue\n\n        current_odd = 2 * i + 1\n        if current_odd > limit:\n            break\n\n        primes.append(current_odd)\n\n        start = current_odd * current_odd\n        if start > self.n:\n            continue\n\n        step = 2 * current_odd\n        for j in range(start, self.n + 1, step):\n            index = (j - 1) // 2 - 1\n            if index >= 0 and index < odd_count:\n                num_array[index] = 0\n\n    filtered_primes = [num for num in num_array if num != 0]\n    if 3 in filtered_primes:\n        filtered_primes.remove(3)\n\n    result = [2] + sorted(filtered_primes)\n    result += [x for x in range(limit + 1) if x % 2 != 0 and all(x % p != 0 for p in result[:len(result)//2])]\n\n    return result",
+      "valid": true,
+      "reply": "```python\ndef generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n    \n    primes = [2] if self.n >= 2 else []\n    limit = int(self.n ** 0.5)\n    \n    if limit <= 1:\n        return primes\n    \n    num_array = [(2 * i + 1) for i in range((limit - 1) // 2)]\n    odd_count = len(num_array)\n    \n    for i in range(odd_count):\n        if num_array[i] > limit:\n            break\n        \n        if num_array[i] == 0:\n            continue\n        \n        current_odd = 2 * i + 1\n        if current_odd > limit:\n            break\n            \n        primes.append(current_odd)\n        \n        start = current_odd * current_odd\n        if start > self.n:\n            continue\n        \n        step = 2 * current_odd\n        for j in range(start, self.n + 1, step):\n            index = (j - 1) // 2 - 1\n            if index >= 0 and index < odd_count:\n                num_array[index] = 0\n                \n    filtered_primes = [num for num in num_array if num != 0]\n    if 3 in filtered_primes:\n        filtered_primes.remove(3)\n        \n    result = [2] + sorted(filtered_primes)\n    result += [x for x in range(limit + 1) if x % 2 != 0 and all(x % p != 0 for p in result[:len(result)//2])]\n    \n    return result\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 418,
+      "cached_tokens": 384,
+      "completion_tokens": 1512,
+      "reasoning_tokens": 1155,
+      "cost": 0.000194982,
+      "passed": false
+    },
+    {
+      "method_name": "get_primes",
+      "code": "def get_primes(self):\n    \"\"\"\n    Get the list of generated prime numbers.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.get_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n    \"\"\"\n    return self.primes",
+      "valid": true,
+      "reply": "```python\ndef get_primes(self):\n    \"\"\"\n    Get the list of generated prime numbers.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.get_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n    \"\"\"\n    return self.primes\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 862,
+      "cached_tokens": 0,
+      "completion_tokens": 364,
+      "reasoning_tokens": 250,
+      "cost": 0.000113138,
+      "passed": false
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "ChandrasekharSieveTestGeneratePrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "ChandrasekharSieveTestGetPrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "ChandrasekharSieveTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source": "\n\nclass ChandrasekharSieve: \n    def __init__(self, n):\n        \"\"\"\n        Initialize the ChandrasekharSieve class with the given limit.\n        :param n: int, the upper limit for generating prime numbers\n        \"\"\"\n        self.n = n\n        self.primes = self.generate_primes()\n\n    def generate_primes(self):\n        \"\"\"\n        Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.generate_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n\n        \"\"\"\n        if self.n < 2:\n            return []\n\n        primes = [2] if self.n >= 2 else []\n        limit = int(self.n ** 0.5)\n\n        if limit <= 1:\n            return primes\n\n        num_array = [(2 * i + 1) for i in range((limit - 1) // 2)]\n        odd_count = len(num_array)\n\n        for i in range(odd_count):\n            if num_array[i] > limit:\n                break\n\n            if num_array[i] == 0:\n                continue\n\n            current_odd = 2 * i + 1\n            if current_odd > limit:\n                break\n\n            primes.append(current_odd)\n\n            start = current_odd * current_odd\n            if start > self.n:\n                continue\n\n            step = 2 * current_odd\n            for j in range(start, self.n + 1, step):\n                index = (j - 1) // 2 - 1\n                if index >= 0 and index < odd_count:\n                    num_array[index] = 0\n\n        filtered_primes = [num for num in num_array if num != 0]\n        if 3 in filtered_primes:\n            filtered_primes.remove(3)\n\n        result = [2] + sorted(filtered_primes)\n        result += [x for x in range(limit + 1) if x % 2 != 0 and all(x % p != 0 for p in result[:len(result)//2])]\n\n        return result\n\n    def get_primes(self):\n        \"\"\"\n        Get the list of generated prime numbers.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.get_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n        \"\"\"\n        return self.primes\n"
+}

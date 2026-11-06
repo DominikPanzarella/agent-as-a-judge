@@ -1,0 +1,82 @@
+{
+  "task_id": "ClassEval_40",
+  "class_name": "FitnessTracker",
+  "setup": "C0-9b",
+  "model": "qwen/qwen3.5-9b",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "code": "def get_BMI(self):\n    \"\"\"\n    Calculate the BMI based on the height and weight.\n    :return: BMI,which is the weight divide by the square of height, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.get_BMI()\n    21.604938271604937\n\n    \"\"\"\n    return self.weight / (self.height ** 2)",
+      "valid": true,
+      "reply": "```python\n    def get_BMI(self):\n        \"\"\"\n        Calculate the BMI based on the height and weight.\n        :return: BMI,which is the weight divide by the square of height, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.get_BMI()\n        21.604938271604937\n\n        \"\"\"\n        return self.weight / (self.height ** 2)\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 734,
+      "cached_tokens": 0,
+      "completion_tokens": 334,
+      "reasoning_tokens": 171,
+      "cost": 9.92e-05,
+      "passed": true
+    },
+    {
+      "method_name": "condition_judge",
+      "code": "def condition_judge(self):\n    \"\"\"\n    Judge the condition of the user based on the BMI standard.\n    :return: 1 if the user is too fat, -1 if the user is too thin, 0 if normal, int.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.condition_judge()\n    -1\n    \"\"\"\n    bmi = self.get_BMI()\n\n    if self.sex == \"male\":\n        min_bmi, max_bmi = self.BMI_std[\"male\"][0], self.BMI_std[\"male\"][1]\n    else:  # female\n        min_bmi, max_bmi = self.BMI_std[\"female\"][0], self.BMI_std[\"female\"][1]\n\n    if bmi > max_bmi:\n        return 1\n    elif bmi < min_bmi:\n        return -1\n    else:\n        return 0",
+      "valid": true,
+      "reply": "```python\ndef condition_judge(self):\n    \"\"\"\n    Judge the condition of the user based on the BMI standard.\n    :return: 1 if the user is too fat, -1 if the user is too thin, 0 if normal, int.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.condition_judge()\n    -1\n    \"\"\"\n    bmi = self.get_BMI()\n    \n    if self.sex == \"male\":\n        min_bmi, max_bmi = self.BMI_std[\"male\"][0], self.BMI_std[\"male\"][1]\n    else:  # female\n        min_bmi, max_bmi = self.BMI_std[\"female\"][0], self.BMI_std[\"female\"][1]\n    \n    if bmi > max_bmi:\n        return 1\n    elif bmi < min_bmi:\n        return -1\n    else:\n        return 0\n```",
+      "finish_reason": "stop",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 858,
+      "cached_tokens": 0,
+      "completion_tokens": 760,
+      "reasoning_tokens": 482,
+      "cost": 0.000159938,
+      "passed": false
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "code": null,
+      "valid": false,
+      "reply": "",
+      "finish_reason": "length",
+      "provider": "PrimeIntellect",
+      "prompt_tokens": 1072,
+      "cached_tokens": 0,
+      "completion_tokens": 4000,
+      "reasoning_tokens": 3880,
+      "cost": 0.000562832,
+      "passed": false
+    }
+  ],
+  "class_passed": false,
+  "tests": {
+    "FitnessTrackerTestGetBMI": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestConditionJudge": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "FitnessTrackerTestCaculateCalorieIntake": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "FitnessTrackerTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source": "\n\nclass FitnessTracker: \n    def __init__(self, height, weight, age, sex) -> None:\n        \"\"\"\n        Initialize the class with height, weight, age, and sex, and calculate the BMI standard based on sex, and male is 20-25, female is 19-24.\n        \"\"\"\n        self.height = height\n        self.weight = weight\n        self.age = age\n        self.sex = sex\n        self.BMI_std = [\n            {\"male\": [20, 25]},\n            {\"female\": [19, 24]}\n        ]\n\n    def get_BMI(self):\n        \"\"\"\n        Calculate the BMI based on the height and weight.\n        :return: BMI,which is the weight divide by the square of height, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.get_BMI()\n        21.604938271604937\n\n        \"\"\"\n        return self.weight / (self.height ** 2)\n\n    def condition_judge(self):\n        \"\"\"\n        Judge the condition of the user based on the BMI standard.\n        :return: 1 if the user is too fat, -1 if the user is too thin, 0 if normal, int.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.condition_judge()\n        -1\n        \"\"\"\n        bmi = self.get_BMI()\n\n        if self.sex == \"male\":\n            min_bmi, max_bmi = self.BMI_std[\"male\"][0], self.BMI_std[\"male\"][1]\n        else:  # female\n            min_bmi, max_bmi = self.BMI_std[\"female\"][0], self.BMI_std[\"female\"][1]\n\n        if bmi > max_bmi:\n            return 1\n        elif bmi < min_bmi:\n            return -1\n        else:\n            return 0\n\n    def calculate_calorie_intake(self):\n        return None\n"
+}
