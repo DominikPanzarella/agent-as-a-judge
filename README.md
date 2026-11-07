@@ -44,11 +44,12 @@ We ask three questions:
 
 ## 2. How it works
 
-![Architecture](docs/architecture.png)
+![Architecture](docs/architecture_proposed.png)
 
-The diagram is also in `docs/architecture.svg`, which can be edited by hand. The architecture we
-propose after the pilot, with the changes we are discussing with the instructors, is in
-[docs/architecture_proposed.png](docs/architecture_proposed.png) and explained in the roadmap.
+Blue marks the parts we built and tried in the pilot on 10 classes. In orange and dashed are the
+changes we propose after the pilot, and the setups planned for after the midway report; the roadmap
+explains each one. You can edit the diagram by hand in `docs/architecture_proposed.svg`, while
+`docs/architecture.svg` keeps the first one, drawn before the pilot.
 
 Work goes through three blocks. First the data scripts download ClassEval, drop the classes whose
 tests or descriptions are unreliable and fix the order in which the methods are written. Then the
@@ -61,14 +62,15 @@ We keep the coder and the tasks the same and change only the feedback:
 
 | Setup | Feedback to the coder | Answers | Status |
 |---|---|---|---|
-| C0 | none (baseline) | RQ1 | code ready, piloted |
-| C1 | the judge reviews the finished class, one revision of the class | RQ1 | code ready |
-| C2 | the judge reviews each method right after it is written, one revision of that method | RQ1, RQ3 | code ready |
-| C3 | as C2, with the classes split into three rounds; after each round the judge learns which of its verdicts the tests proved wrong | RQ2 | planned |
+| C0 | none (baseline) | RQ1 | piloted on 10 classes |
+| C1 | the judge reviews the finished class, one revision of the class | RQ1 | piloted on 10 classes |
+| C2 | the judge reviews each method right after it is written, one revision of that method | RQ1, RQ3 | piloted on 10 classes |
+| C3 | as C2, with the classes split into three rounds; after each round the judge learns which of its verdicts the tests proved wrong (we propose to keep only the ones we confirm by hand) | RQ2 | planned |
 | C4 | the coder sees the real test results after each method (best case) | upper bound | planned |
 
 The plan also has two controls: judge v1, which cannot run code (the "judge without tools"), and a
-coder that reviews its own code (self-refine).
+coder that reviews its own code (self-refine). After the pilot we propose a third one, in which the
+coder gets NOT OK without the reason.
 
 ## 3. Status
 
@@ -235,8 +237,8 @@ run to `runs/error_analysis_<run>.csv` for the error analysis.
 .env.example                     # names of the two API keys; copy it to .env
 requirements.txt                 # Python dependencies
 docs/
-  architecture.svg, .png         # the diagram in section 2
-  architecture_proposed.svg, .png  # the architecture proposed after the pilot
+  architecture_proposed.svg, .png  # the diagram in section 2: built parts and proposals
+  architecture.svg, .png         # the first diagram, drawn before the pilot
   roadmap_midway.md              # plan and dates up to the final report, with checkboxes
 scripts/
   download_data.sh               # ClassEval and benchmarks+ -> data/raw/

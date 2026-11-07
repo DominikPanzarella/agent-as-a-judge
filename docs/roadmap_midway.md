@@ -5,9 +5,11 @@ The midway report is a written report of at most 2 pages, submitted on iCorsi by
 the original plan, the status of the project with explicit numbers, and a detailed schedule until
 16 December that explains why each step is feasible. Tick a box by changing `[ ]` into `[x]`.
 
-![Architecture](architecture.png)
+![Architecture](architecture_proposed.png)
 
-The diagram is also in `architecture.svg`, which can be edited by hand.
+The diagram is also in `architecture_proposed.svg`, which can be edited by hand. Blue is what we
+built, orange is proposed or planned. `architecture.svg` keeps the first diagram, drawn before the
+pilot.
 
 ## Course dates
 
@@ -122,10 +124,8 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 
 These come from the pilot and from the Agent-as-a-Judge paper. Others come from the lessons on
 Reflexion, Self-Refine and CRITIC in the ai-engineering-from-scratch course, and from lectures 4, 5
-and 14 of Engineering AI Systems (USI, Fall 2026). In the diagram below, blue is what we built and
-orange is proposed or planned.
-
-![Proposed architecture](architecture_proposed.png)
+and 14 of Engineering AI Systems (USI, Fall 2026). The diagram at the top of this file shows them
+in orange.
 
 - [ ] **Same first versions in every setup.** Two identical runs of C0 differ by up to 3 methods, as
   much as the effect we want to measure. C1 can start from the class written in C0. C2 can reuse
