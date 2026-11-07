@@ -207,7 +207,8 @@ allows.
 ### 5.7 Summary of the pilot
 
 ```bash
-.venv/bin/python scripts/pilot_report.py
+.venv/bin/python scripts/pilot_report.py   # tables of the pilot
+.venv/bin/python scripts/plot_results.py   # charts of the pilot -> docs/figures/
 ```
 
 It prints the tables of [section 9](#9-results-so-far) from the saved results and writes
@@ -239,6 +240,7 @@ requirements.txt                 # Python dependencies
 docs/
   architecture_proposed.svg, .png  # the diagram in section 2: built parts and proposals
   architecture.svg, .png         # the first diagram, drawn before the pilot
+  figures/                       # charts of the results, drawn by scripts/plot_results.py
   roadmap_midway.md              # plan and dates up to the final report, with checkboxes
 scripts/
   download_data.sh               # ClassEval and benchmarks+ -> data/raw/
@@ -255,6 +257,7 @@ scripts/
   loop.py                        # setups C1 and C2: judge feedback and one revision
   pilot_report.py                # tables of the pilot from the saved results
   check_claims.py                # runs the concrete claims of the judges' reasons
+  plot_results.py                # charts of the pilot -> docs/figures/
   check_field_order.py           # methods that read a field which a later method fills
   analyze.py                     # pass rates, judge scores, McNemar and bootstrap between runs
 data/
@@ -405,7 +408,9 @@ reply had no usable method, so the judge was not asked.
 ## 9. Results so far
 
 These numbers come from the pilot on the 10 development classes (38 methods) and are not the
-results of the study. Run `scripts/pilot_report.py` to print them again.
+results of the study. Run `scripts/pilot_report.py` to print them again, and
+`scripts/plot_results.py` to draw the charts in `docs/figures/`. Each chart comes with the table of
+its numbers.
 
 The coder, two identical runs per model:
 
@@ -430,8 +435,12 @@ does not say. For 3 others the docstring example contradicts the reference solut
 finds a real bug that no test checks in 3 methods. Only 2 are coder bugs that the tests catch; the
 last 2 are edge cases outside the docstring, where the judge is stricter than the specification.
 
+![Why the judge and the tests disagree](docs/figures/disagreements.png)
+
 We then scored the judges against these corrected labels. A method where the judge is right counts
 as failing, and the 5 methods where the tests ask for something unstated are left out:
+
+![Cohen's kappa against the tests and against our labels](docs/figures/judge_kappa.png)
 
 | Judge | Methods | Agreement | Cohen's kappa | OK to a failing method | NOT OK to a passing method |
 |---|---|---|---|---|---|
@@ -445,7 +454,11 @@ We also ran the 22 concrete claims found in the NOT OK reasons, such as "'a|a' g
 low effort 12 of 16 are true. The coder reads these reasons in C1 and C2, so the loops use v2 with
 medium effort.
 
+![Claims of the judges checked by running the code](docs/figures/judge_claims.png)
+
 Setups C1 and C2 on the same 10 classes, with judge v2 and medium effort:
+
+![Methods passing before and after the feedback](docs/figures/setups_first_final.png)
 
 | Run | Methods passing, first versions | Methods passing, final | Fixed / broken by a revision | Classes passing |
 |---|---|---|---|---|
