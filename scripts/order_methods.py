@@ -1,11 +1,7 @@
-"""Fix the order in which the coder writes the methods of each kept class.
+"""Fix the order in which the coder writes the methods of each class.
 
-We take the order of the class skeleton as the logical order chosen by the ClassEval
-authors and change it only where dependencies require it: before a method, the coder
-writes the methods of the same class that it calls (method_dependencies in ClassEval).
-This moves a helper just before the first method that needs it and leaves the rest
-in place. A dependency cycle cannot be ordered, so its methods are flagged.
-Writes data/selection/method_order.csv with one row per method.
+We keep the skeleton order and move a method only so that the methods it calls come first. Methods
+in a dependency cycle are flagged. Output: data/selection/method_order.csv.
 """
 import csv
 import json

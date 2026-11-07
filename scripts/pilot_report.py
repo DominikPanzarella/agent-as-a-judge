@@ -1,14 +1,8 @@
-"""Summary of the pilot on the development classes. It reads saved results and sends no request.
+"""Tables of the pilot on the development classes, from saved results. Sends no request.
 
-It answers the pilot's questions. How often does the coder pass, and how many methods change
-result between two identical runs of C0, only by chance? How does each judge (v1 or v2, low or
-medium effort) agree with the tests, and what does it cost? What would the full runs cost?
-
-It also writes runs/pilot_disagreements.csv, with every method on which a judge and the tests
-disagree. The column who_is_right is left empty: we fill it in by hand (judge, tests, or unclear).
-Once runs/pilot_adjudication.csv holds that decision for every disputed method, a second table
-scores the judges against the corrected labels: a method the judge rightly rejects counts as
-failing, and a method marked unclear is left out.
+For the coder: pass rates of two identical runs and the methods that change between them. For the
+judges: agreement with the tests and with our corrected labels (runs/pilot_adjudication.csv), and
+the cost of a full run. Disagreements go to runs/pilot_disagreements.csv.
 """
 import csv
 import json

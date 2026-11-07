@@ -1,31 +1,15 @@
-"""The judge: GPT-6 Luna reads one method and says whether it does what its docstring says.
+"""The judge: GPT-6 Luna says whether a method, or a whole class, does what its docstring says.
 
-The judge gets the class skeleton (the class description and every docstring), the methods
-written before this one and the new method. It never sees the tests. It answers in JSON with a
-short reason and a verdict, OK or NOT OK. The reason is also the feedback that the coder will get
-in setups C1 and C2, which will call judge_method().
+It sees the class skeleton, the methods written before and the new one, never the tests. It
+answers in JSON with a reason and a verdict, OK or NOT OK. Judge v1 only reads the code; v2 can
+also run Python up to 5 times on the class written so far. Both use the Responses API, because
+Chat Completions does not accept tools with a reasoning effort for this model.
 
-There are two versions. Judge v1 only reads the code. Judge v2 can also run Python before it
-answers, with the tool run_python: the code runs after the class written so far, so the judge can
-try the docstring examples or a case it doubts. We added v2 because v1, on the first methods,
-described results that the code does not produce. The tests stay hidden in both versions. The
-judge's code runs like the harness runs generated code: in a separate process, in a temporary
-folder, with a time limit.
+Run as a script, it judges a finished run and compares the verdicts with the tests.
 
-Both versions use the OpenAI Responses API with the same settings, so they differ only in the
-tool. The older Chat Completions API does not accept tools together with a reasoning effort for
-GPT-6 Luna.
-
-Run as a script, the judge reads the methods of a finished run, such as runs/C0, one by one in the
-order they were written, and we compare its verdicts with the tests: agreement, Cohen's kappa, and
-how often it says OK to a method that fails. Verdicts go to
-runs/judge/<setup>-<version>-<effort>/<task_id>.json and every request to runs/cost_log.csv.
-
-    .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55          # show the prompt, no request
-    .venv/bin/python scripts/judge.py C0 ClassEval_19 ClassEval_55       # v1, low effort
-    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium ClassEval_19
-    .venv/bin/python scripts/judge.py C0 --all                           # every class of runs/C0
-    .venv/bin/python scripts/judge.py C0 --version v2 --summary          # only the comparison with the tests
+    .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55
+    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
+    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
 """
 import argparse
 import json

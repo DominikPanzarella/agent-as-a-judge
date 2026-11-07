@@ -1,13 +1,8 @@
-"""Does a method come before the method that fills a field it reads?
+"""List the methods that read a field which a later method writes.
 
-The method order follows the calls between methods, not the fields. This script reads the
-reference solution of each kept class and lists every pair in which a method reads a field
-(self.x) that a later method writes: an assignment, an item assignment, or a call such as append
-or update. A pair is "new field" when the field is not set in __init__, so the coder could not
-know it exists; otherwise the field is already in the skeleton and the pair is "fills".
-
-On the 71 classes there are 43 pairs, all of kind "fills", so the order stays as it is. The pairs
-go to data/selection/field_order_check.csv.
+The method order follows calls, not fields. A pair is a problem only if __init__ does not set the
+field. The 71 classes have 43 pairs and none is a problem, so the order stays. Output:
+data/selection/field_order_check.csv.
 
     .venv/bin/python scripts/check_field_order.py
 """

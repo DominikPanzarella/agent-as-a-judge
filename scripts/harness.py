@@ -1,14 +1,11 @@
 """Run the ClassEval tests on a class put together from single methods.
 
-build_class() turns a dict of method sources into the full class. A method that has not
-been written yet, or that does not compile, becomes a stub that only returns None, so its
-tests fail and the tests of the other methods still run. run_tests() runs every test class of the task in its own subprocess, in a fresh
-temporary folder and with a timeout, because generated code can hang or write files.
+build_class() turns missing or broken methods into stubs, so they fail only their own tests.
+run_tests() runs each test class in its own process, in a temporary folder, with a timeout.
 
-Run as a script, it checks the harness itself in two ways. The reference solution of every
-kept method must pass its tests; failures go to data/selection/reference_check.csv. A class
-made only of stubs must fail its tests; methods that pass anyway have tests too weak to tell
-a no-op from a solution, and they go to data/selection/weak_tests.csv.
+Run as a script, it checks itself: every reference method must pass (failures go to
+data/selection/reference_check.csv) and stubs must fail (the ones that pass go to
+data/selection/weak_tests.csv).
 """
 import ast
 import csv

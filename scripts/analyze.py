@@ -1,22 +1,12 @@
-"""Analysis of the runs (week 2). It reads saved results and sends no request.
+"""Analysis of the runs: pass rates, judge scores and comparisons between setups. Sends no request.
 
-For each run it reports the share of methods and of classes that pass their tests, with and
-without the 4 weak methods. For a run with a judge it also scores the judge's verdicts on the
-first versions against the tests on those versions: accuracy, Cohen's kappa, TPR (passing methods
-called OK) and TNR (failing methods called NOT OK), the two numbers that Engineering AI Systems
-(USI) recommends instead of overall agreement. In C2 the judge gives one verdict per method, in C1 one per class. It also counts how
-many methods the revisions fixed and how many they broke.
-
-Then it compares every pair of runs method by method, with an exact McNemar test, and gives a 95%
-bootstrap interval for the difference in the share of passing methods. The bootstrap resamples
-whole classes, because the methods of one class depend on each other.
-
-With --sample N it writes N random disagreements between the judge and the tests of each run to
-runs/error_analysis_<run>.csv. The columns type and who_is_right are left empty: we fill them in
-by hand.
+For each run: methods and classes passing (with and without the weak methods) and, when there is a
+judge, its agreement, kappa, TPR and TNR on the first versions. For each pair of runs: an exact
+McNemar test and a bootstrap interval over classes. --sample N writes N disagreements per run to
+runs/error_analysis_<run>.csv, to classify by hand.
 
     .venv/bin/python scripts/analyze.py --classes dev C0 C1-v2-medium C2-v2-medium
-    .venv/bin/python scripts/analyze.py --classes test C0 C1-v2-medium C2-v2-medium --sample 20
+    .venv/bin/python scripts/analyze.py --classes test C0 C2-v2-medium --sample 20
 """
 import argparse
 import csv

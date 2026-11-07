@@ -1,8 +1,6 @@
-"""Pick the development classes, the ones we use to try out and tune the coder and the judge.
+"""Pick the 10 development classes: ClassEval_19 and ClassEval_55, plus 8 drawn with seed 2026.
 
-ClassEval_19 and ClassEval_55 were the first trial. The pilot adds 8 classes drawn at random, with
-a fixed seed, from the other kept classes. All 10 stay out of the final analysis, so that we do
-not evaluate the setups on the classes we used to choose them. The result goes to
+We use them to tune coder and judge, so the final analysis leaves them out. Output:
 data/selection/dev_classes.csv.
 """
 import csv

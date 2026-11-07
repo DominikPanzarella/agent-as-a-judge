@@ -1,12 +1,7 @@
-"""Pilot, question 2: are the concrete claims in the judge's reasons true?
+"""Are the concrete claims in the judges' NOT OK reasons true? Sends no request.
 
-We took every NOT OK verdict of the four judges (v1 and v2, low and medium effort) on run C0 of
-the 10 development classes. OK verdicts rarely say anything concrete, so they are left out. For
-each claim about what the code returns, prints or raises, we wrote a short snippet by hand and run
-it on the class the judge saw. A claim is true when the snippet prints what the judge said.
-
-The script sends no request. It writes runs/pilot_claims.csv and prints, for each judge, how many
-of its claims are true.
+Each claim has a snippet written by hand, which runs on the code the judge saw. The results go to
+runs/pilot_claims.csv, with a count per judge.
 
     .venv/bin/python scripts/check_claims.py
 """

@@ -1,14 +1,9 @@
-"""Charts of the pilot for the README. It reads saved results and sends no request.
+"""Charts of the pilot for the README, from saved results. Sends no request.
 
-Each chart answers one question of the pilot and goes to docs/figures/:
-
-    judge_kappa.png         does the judge agree with the tests, and with our corrected labels?
-    judge_claims.png        are the concrete claims in the judge's reasons true?
-    disagreements.png       why do the judge and the tests disagree, and who is right?
-    setups_first_final.png  how many methods pass before and after the feedback, per setup?
-
-The colors are the first three slots of a palette checked for color blindness. Every bar and dot
-also carries its value as text, and the README keeps the tables with the same numbers.
+One chart per question, in docs/figures/: the judges' kappa (judge_kappa.png), their claims
+(judge_claims.png), why judge and tests disagree (disagreements.png), and the methods passing
+before and after the feedback (setups_first_final.png). The colors are checked for color
+blindness, and every mark carries its value.
 
     .venv/bin/python scripts/plot_results.py
 """

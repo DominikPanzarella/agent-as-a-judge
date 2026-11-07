@@ -1,21 +1,13 @@
-"""Setup C0: the coder writes each class one method at a time, with no feedback.
+"""Setup C0: Qwen writes each class one method at a time, with no feedback.
 
-The coder is Qwen on OpenRouter. For each method, in the order of
-data/selection/method_order.csv, it gets the class skeleton, the methods it has already
-written and the name of the next method. It never sees the tests. The method must come back
-in a Python code block. If it does not, or if it does not compile, the method stays empty and
-fails only its own tests. We never ask a second time, so every setup sends the coder the same
-number of requests.
+For each method it gets the class skeleton, the methods written so far and the method's name,
+never the tests. A reply without a usable method leaves a stub and is not asked again. Results go
+to runs/<name>/<task_id>.json and every request to runs/cost_log.csv.
 
-When a class is finished the harness runs its tests. The result goes to
-runs/C0/<task_id>.json: code, tokens, cost and provider of every request, and the test result
-of every method. Every request also adds a line to runs/cost_log.csv.
-
-    .venv/bin/python scripts/coder.py --dry-run ClassEval_19      # show the first prompt, no request
-    .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53   # run these classes
-    .venv/bin/python scripts/coder.py --all                       # every kept class not run yet
-    .venv/bin/python scripts/coder.py --name C0-r2 ClassEval_19   # a second run, saved in runs/C0-r2
-    .venv/bin/python scripts/coder.py --model qwen/qwen3.5-9b --name C0-9b ClassEval_19   # another coder
+    .venv/bin/python scripts/coder.py --dry-run ClassEval_19      # show the first prompt
+    .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53
+    .venv/bin/python scripts/coder.py --all
+    .venv/bin/python scripts/coder.py --model qwen/qwen3.5-9b --name C0-9b ClassEval_19
 """
 import argparse
 import ast

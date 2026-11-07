@@ -1,25 +1,9 @@
-"""Run the examples in the ClassEval docstrings on the reference solution.
+"""Run the docstring examples of every kept method on the reference solution.
 
-The pilot found docstring examples that contradict the reference solution and the tests, for
-example in ClassEval_16 and ClassEval_40. Coder and judge both read the docstrings, so a wrong
-example can mislead them. This script runs every example of every kept method on the reference
-solution, with Python's doctest parser, and compares the result with the one written in the
-docstring. Each class runs in its own subprocess, in a temporary folder and with a time limit.
-
-An example can end in five ways:
-- match: the reference gives what the docstring says. The two sides are compared as Python
-  values when both can be read as one, so quote style, NumPy number types and rounding to the
-  digits shown do not count as differences;
-- mismatch: both sides are Python values and they differ, so the example (or the reference) is
-  wrong;
-- unclear: the text differs, but one side is not a Python value, such as "self.length = 1",
-  a value printed one line too late, or an object address. These are not checked;
-- raised: the example raises an error the docstring does not show, often because it needs a
-  file or an object set up elsewhere;
-- no expected value: the docstring shows no result for a call that returns one.
-Only mismatches point to a wrong example; we still read each of them by hand.
-
-The result goes to data/selection/docstring_examples.csv, one row per method.
+A wrong example can mislead both coder and judge. Each example ends as match, mismatch (both sides
+are Python values and differ), unclear (they cannot be compared), raised, or no expected value.
+Values are compared as Python objects, so quotes, NumPy types and rounding do not count. We read
+every mismatch by hand. Output: data/selection/docstring_examples.csv.
 """
 import csv
 import json

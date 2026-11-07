@@ -1,11 +1,8 @@
-"""Choose the ClassEval classes we use (option A).
+"""Choose the ClassEval classes we keep (option A).
 
-A class is dropped if benchmarks+ marks at least one of its methods as problematic,
-because its tests can no longer tell us whether the code is right. A class is also
-dropped if all of its methods are trivial, because feedback has nothing to improve.
-Classes listed in HARNESS_EXCLUSIONS are dropped too, because their reference solution
-fails in our harness (see scripts/harness.py).
-Writes data/selection/classes.csv with one row per class and the reason for each drop.
+A class is dropped if benchmarks+ marks one of its methods as problematic, if all its methods are
+trivial, or if its reference solution fails in our harness. Output: data/selection/classes.csv,
+with the reason for each drop.
 """
 import collections
 import csv

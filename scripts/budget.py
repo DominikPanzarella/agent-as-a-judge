@@ -1,11 +1,7 @@
-"""Cost log of every request, and the stop at 70 percent of the two course budgets.
+"""Cost log of every request, and the stop at 70% of each 10 dollar budget.
 
-The coder and the judge add one line to runs/cost_log.csv for each request. check() is
-called before each class: it raises BudgetReached when a service has used 70 percent of its
-10 dollars. For OpenRouter it also asks the service how much the key has spent, because the
-key is shared with the other team member and our own log only sees this machine.
-
-Run as a script, it prints how much each service has spent so far.
+check() runs before each class and raises BudgetReached at 70%. For OpenRouter it also asks the
+service, because both of us use the same key. Run as a script, it prints the spend so far.
 """
 import csv
 import json

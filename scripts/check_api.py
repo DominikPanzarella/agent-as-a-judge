@@ -1,9 +1,7 @@
-"""Check that both API keys work, with one very small request to each service.
+"""Check both API keys with one tiny request each.
 
-OpenAI: lists the models the key can use (free) and asks GPT-6 Luna for one word.
-OpenRouter: asks a Qwen model for one word, choosing the cheapest provider that serves
-the model in full precision, as the course asks. Both requests use low reasoning effort.
-The keys are read from .env; the script prints tokens, cost and provider, never the keys.
+GPT-6 Luna on OpenAI, and Qwen on OpenRouter on the cheapest full-precision provider. It prints
+tokens, cost and provider, never the keys.
 """
 import os
 import sys

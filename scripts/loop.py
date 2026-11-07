@@ -1,26 +1,13 @@
-"""Setups C1 and C2: the coder writes a class, the judge reviews it, the coder may revise once.
+"""Setups C1 and C2: coder and judge together, with one revision.
 
-C2, feedback on every method. For each method, in the fixed order, the coder writes it as in C0
-and the judge reviews it. If the verdict is NOT OK, the coder reads the judge's reason and writes
-the method again, once. The new version replaces the first one, and the next methods see it.
-
-C1, feedback on the finished class. The coder writes the whole class as in C0, one method at a
-time. The judge reviews the finished class once. If the verdict is NOT OK, the coder reads the
-reason and writes the whole class again, once. From that reply we take each method; a method that
-is missing from it, or does not compile, keeps its first version.
-
-In both setups a reply without a usable method is neither reviewed nor revised, as in C0, so the
-judge's feedback is the only difference with C0. The judge can be v1 or v2 (it can run code), with
-low or medium effort.
-
-At the end the harness runs the tests twice: on the first version of every method and on the
-final one. The first run tells how good the judge's verdicts were, the second whether the
-feedback helped. Each class goes to runs/<name>/<task_id>.json, where the name is, for example,
-C2-v2-medium. Every request goes to runs/cost_log.csv.
+C2: the judge reviews each method; after a NOT OK the coder rewrites that method once, and the
+next methods see the new version. C1: the judge reviews the finished class; after a NOT OK the
+coder rewrites the class once. The tests run on the first and on the final version of every
+method. Results go to runs/<setup>-<judge>-<effort>/<task_id>.json.
 
     .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --dry-run ClassEval_19
-    .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium ClassEval_19 ClassEval_55
-    .venv/bin/python scripts/loop.py C1 --judge v1 --all
+    .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --all
+    .venv/bin/python scripts/loop.py C1 --judge v2 --effort medium --all
 """
 import argparse
 import json
@@ -129,9 +116,8 @@ def run_c1(run, task, steps):
         messages = [{"role": "system", "content": CLASS_SYSTEM},
                     {"role": "user", "content": class_revision_prompt(task, harness.build_class(task, written),
                                                                       review["reason"])}]
-        # A whole class needs more room than one method. In C2 each revised method can use
-        # MAX_TOKENS, so here the class gets MAX_TOKENS for each of its methods. With MAX_TOKENS
-        # alone, the first run of ClassEval_55 spent them all on reasoning and wrote no code.
+        # A whole class gets MAX_TOKENS per method, as C2 gives each revised method. With
+        # MAX_TOKENS alone, ClassEval_55 spent them all on reasoning and wrote no code.
         r = run.write(task, messages, "", "coder-revision", coder.MAX_TOKENS * len(records))
         replaced = []
         for record in records:
