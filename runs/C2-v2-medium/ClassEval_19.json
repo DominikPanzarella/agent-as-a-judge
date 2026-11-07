@@ -1,0 +1,182 @@
+{
+  "task_id": "ClassEval_19",
+  "class_name": "ChandrasekharSieve",
+  "setup": "C2",
+  "name": "C2-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "generate_primes",
+      "first": {
+        "code": "def generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2]\n\n    if self.n < 3:\n        return primes\n\n    # Sieve odd numbers from 3 to n\n    # Index i represents the number 2*i + 3\n    size = (self.n - 3) // 2 + 1\n    sieve = [True] * size\n\n    limit = int(self.n ** 0.5)\n\n    for i in range(size):\n        num = 2 * i + 3\n        if sieve[i]:\n            if num <= limit:\n                # Mark odd multiples of num*num starting from num*num\n                start = (num * num - 3) // 2\n                step = num * 2\n                for j in range(start, size, step):\n                    sieve[j] = False\n\n    for i in range(size):\n        if sieve[i]:\n            primes.append(2 * i + 3)\n\n    return primes",
+        "valid": true,
+        "reply": "\n\n```python\ndef generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2]\n\n    if self.n < 3:\n        return primes\n\n    # Sieve odd numbers from 3 to n\n    # Index i represents the number 2*i + 3\n    size = (self.n - 3) // 2 + 1\n    sieve = [True] * size\n\n    limit = int(self.n ** 0.5)\n\n    for i in range(size):\n        num = 2 * i + 3\n        if sieve[i]:\n            if num <= limit:\n                # Mark odd multiples of num*num starting from num*num\n                start = (num * num - 3) // 2\n                step = num * 2\n                for j in range(start, size, step):\n                    sieve[j] = False\n\n    for i in range(size):\n        if sieve[i]:\n            primes.append(2 * i + 3)\n\n    return primes\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 444,
+        "cached_tokens": 0,
+        "completion_tokens": 2187,
+        "reasoning_tokens": 1365,
+        "cost": 0.004167225
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The sieve uses `step = num * 2` for indices, but indices represent odd numbers, so the index step between odd multiples of `num` should be `num`. For example, running it with `n=20` returns `[2, 3, 5, 7, 11, 13, 15, 17, 19]`; change the index step to `num` so 15 is marked composite.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "cs = ChandrasekharSieve(20)\nprint(cs.generate_primes())\nfor n in [-2,0,1,2,3,4,9,10]:\n print(n, ChandrasekharSieve(n).generate_primes())",
+            "output": "exit code 0\nstdout:\n[2, 3, 5, 7, 11, 13, 15, 17, 19]\n-2 []\n0 []\n1 []\n2 [2]\n3 [2, 3]\n4 [2, 3]\n9 [2, 3, 5, 7]\n10 [2, 3, 5, 7]\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1027,
+            "cached_tokens": 0,
+            "completion_tokens": 74,
+            "reasoning_tokens": 0,
+            "cost": 0.00013969999999999998
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1199,
+            "cached_tokens": 1024,
+            "completion_tokens": 164,
+            "reasoning_tokens": 54,
+            "cost": 0.00010974
+          }
+        ],
+        "prompt_tokens": 2226,
+        "cached_tokens": 1024,
+        "completion_tokens": 238,
+        "reasoning_tokens": 54,
+        "cost": 0.00024943999999999997
+      },
+      "revision": {
+        "code": "def generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2]\n\n    if self.n < 3:\n        return primes\n\n    # Sieve odd numbers from 3 to n\n    # Index i represents the number 2*i + 3\n    size = (self.n - 3) // 2 + 1\n    sieve = [True] * size\n\n    limit = int(self.n ** 0.5)\n\n    for i in range(size):\n        num = 2 * i + 3\n        if sieve[i]:\n            if num <= limit:\n                # Mark odd multiples of num*num starting from num*num\n                start = (num * num - 3) // 2\n                step = num\n                for j in range(start, size, step):\n                    sieve[j] = False\n\n    for i in range(size):\n        if sieve[i]:\n            primes.append(2 * i + 3)\n\n    return primes",
+        "valid": true,
+        "reply": "\n\n```python\ndef generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2]\n\n    if self.n < 3:\n        return primes\n\n    # Sieve odd numbers from 3 to n\n    # Index i represents the number 2*i + 3\n    size = (self.n - 3) // 2 + 1\n    sieve = [True] * size\n\n    limit = int(self.n ** 0.5)\n\n    for i in range(size):\n        num = 2 * i + 3\n        if sieve[i]:\n            if num <= limit:\n                # Mark odd multiples of num*num starting from num*num\n                start = (num * num - 3) // 2\n                step = num\n                for j in range(start, size, step):\n                    sieve[j] = False\n\n    for i in range(size):\n        if sieve[i]:\n            primes.append(2 * i + 3)\n\n    return primes\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 904,
+        "cached_tokens": 0,
+        "completion_tokens": 827,
+        "reasoning_tokens": 310,
+        "cost": 0.001686225
+      },
+      "final_code": "def generate_primes(self):\n    \"\"\"\n    Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.generate_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    if self.n < 2:\n        return []\n\n    primes = [2]\n\n    if self.n < 3:\n        return primes\n\n    # Sieve odd numbers from 3 to n\n    # Index i represents the number 2*i + 3\n    size = (self.n - 3) // 2 + 1\n    sieve = [True] * size\n\n    limit = int(self.n ** 0.5)\n\n    for i in range(size):\n        num = 2 * i + 3\n        if sieve[i]:\n            if num <= limit:\n                # Mark odd multiples of num*num starting from num*num\n                start = (num * num - 3) // 2\n                step = num\n                for j in range(start, size, step):\n                    sieve[j] = False\n\n    for i in range(size):\n        if sieve[i]:\n            primes.append(2 * i + 3)\n\n    return primes",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "get_primes",
+      "first": {
+        "code": "def get_primes(self):\n    \"\"\"\n    Get the list of generated prime numbers.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.get_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    return self.primes",
+        "valid": true,
+        "reply": "\n\n```python\ndef get_primes(self):\n    \"\"\"\n    Get the list of generated prime numbers.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.get_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    return self.primes\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 765,
+        "cached_tokens": 0,
+        "completion_tokens": 176,
+        "reasoning_tokens": 79,
+        "cost": 0.00044475
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`get_primes` returns `self.primes`, which the constructor initializes using `generate_primes`; for the documented example, it returns `[2, 3, 5, 7, 11, 13, 17, 19]`.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "cs = ChandrasekharSieve(20)\nprint(cs.get_primes())",
+            "output": "exit code 0\nstdout:\n[2, 3, 5, 7, 11, 13, 17, 19]\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1117,
+            "cached_tokens": 0,
+            "completion_tokens": 35,
+            "reasoning_tokens": 0,
+            "cost": 0.0001292
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1196,
+            "cached_tokens": 1114,
+            "completion_tokens": 70,
+            "reasoning_tokens": 0,
+            "cost": 5.4340000000000005e-05
+          }
+        ],
+        "prompt_tokens": 2313,
+        "cached_tokens": 1114,
+        "completion_tokens": 105,
+        "reasoning_tokens": 0,
+        "cost": 0.00018354
+      },
+      "revision": null,
+      "final_code": "def get_primes(self):\n    \"\"\"\n    Get the list of generated prime numbers.\n    :return: list, a list of prime numbers\n    >>> cs = ChandrasekharSieve(20)\n    >>> cs.get_primes()\n    [2, 3, 5, 7, 11, 13, 17, 19]\n\n    \"\"\"\n    return self.primes",
+      "passed_first": false,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": true,
+  "tests_first": {
+    "ChandrasekharSieveTestGeneratePrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "ChandrasekharSieveTestGetPrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "ChandrasekharSieveTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "ChandrasekharSieveTestGeneratePrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChandrasekharSieveTestGetPrimes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChandrasekharSieveTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass ChandrasekharSieve: \n    def __init__(self, n):\n        \"\"\"\n        Initialize the ChandrasekharSieve class with the given limit.\n        :param n: int, the upper limit for generating prime numbers\n        \"\"\"\n        self.n = n\n        self.primes = self.generate_primes()\n\n    def generate_primes(self):\n        \"\"\"\n        Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.generate_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n\n        \"\"\"\n        if self.n < 2:\n            return []\n\n        primes = [2]\n\n        if self.n < 3:\n            return primes\n\n        # Sieve odd numbers from 3 to n\n        # Index i represents the number 2*i + 3\n        size = (self.n - 3) // 2 + 1\n        sieve = [True] * size\n\n        limit = int(self.n ** 0.5)\n\n        for i in range(size):\n            num = 2 * i + 3\n            if sieve[i]:\n                if num <= limit:\n                    # Mark odd multiples of num*num starting from num*num\n                    start = (num * num - 3) // 2\n                    step = num * 2\n                    for j in range(start, size, step):\n                        sieve[j] = False\n\n        for i in range(size):\n            if sieve[i]:\n                primes.append(2 * i + 3)\n\n        return primes\n\n    def get_primes(self):\n        \"\"\"\n        Get the list of generated prime numbers.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.get_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n\n        \"\"\"\n        return self.primes\n",
+  "source": "\n\nclass ChandrasekharSieve: \n    def __init__(self, n):\n        \"\"\"\n        Initialize the ChandrasekharSieve class with the given limit.\n        :param n: int, the upper limit for generating prime numbers\n        \"\"\"\n        self.n = n\n        self.primes = self.generate_primes()\n\n    def generate_primes(self):\n        \"\"\"\n        Generate prime numbers up to the specified limit using the Chandrasekhar sieve algorithm.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.generate_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n\n        \"\"\"\n        if self.n < 2:\n            return []\n\n        primes = [2]\n\n        if self.n < 3:\n            return primes\n\n        # Sieve odd numbers from 3 to n\n        # Index i represents the number 2*i + 3\n        size = (self.n - 3) // 2 + 1\n        sieve = [True] * size\n\n        limit = int(self.n ** 0.5)\n\n        for i in range(size):\n            num = 2 * i + 3\n            if sieve[i]:\n                if num <= limit:\n                    # Mark odd multiples of num*num starting from num*num\n                    start = (num * num - 3) // 2\n                    step = num\n                    for j in range(start, size, step):\n                        sieve[j] = False\n\n        for i in range(size):\n            if sieve[i]:\n                primes.append(2 * i + 3)\n\n        return primes\n\n    def get_primes(self):\n        \"\"\"\n        Get the list of generated prime numbers.\n        :return: list, a list of prime numbers\n        >>> cs = ChandrasekharSieve(20)\n        >>> cs.get_primes()\n        [2, 3, 5, 7, 11, 13, 17, 19]\n\n        \"\"\"\n        return self.primes\n"
+}

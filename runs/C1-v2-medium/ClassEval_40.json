@@ -1,0 +1,180 @@
+{
+  "task_id": "ClassEval_40",
+  "class_name": "FitnessTracker",
+  "setup": "C1",
+  "name": "C1-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "first": {
+        "code": "def get_BMI(self):\n    \"\"\"\n    Calculate the BMI based on the height and weight.\n    :return: BMI,which is the weight divide by the square of height, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.get_BMI()\n    21.604938271604937\n\n    \"\"\"\n    return self.weight / (self.height ** 2)",
+        "valid": true,
+        "reply": "\n\n```python\ndef get_BMI(self):\n    \"\"\"\n    Calculate the BMI based on the height and weight.\n    :return: BMI,which is the weight divide by the square of height, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.get_BMI()\n    21.604938271604937\n\n    \"\"\"\n    return self.weight / (self.height ** 2)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 760,
+        "cached_tokens": 0,
+        "completion_tokens": 250,
+        "reasoning_tokens": 95,
+        "cost": 0.00058275
+      },
+      "final_code": "def get_BMI(self):\n    \"\"\"\n    Calculate the BMI based on the height and weight.\n    :return: BMI, which is the weight divide by the square of height, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.get_BMI()\n    21.604938271604937\n\n    \"\"\"\n    return self.weight / (self.height ** 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "condition_judge",
+      "first": {
+        "code": "def condition_judge(self):\n    \"\"\"\n    Judge the condition of the user based on the BMI standard.\n    :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.condition_judge()\n    -1\n\n    \"\"\"\n    bmi = self.get_BMI()\n    for item in self.BMI_std:\n        if self.sex in item:\n            lower, upper = item[self.sex]\n            if bmi < lower:\n                return -1\n            elif bmi > upper:\n                return 1\n            else:\n                return 0\n    return 0",
+        "valid": true,
+        "reply": "\n\n```python\ndef condition_judge(self):\n    \"\"\"\n    Judge the condition of the user based on the BMI standard.\n    :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.condition_judge()\n    -1\n\n    \"\"\"\n    bmi = self.get_BMI()\n    for item in self.BMI_std:\n        if self.sex in item:\n            lower, upper = item[self.sex]\n            if bmi < lower:\n                return -1\n            elif bmi > upper:\n                return 1\n            else:\n                return 0\n    return 0\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 884,
+        "cached_tokens": 0,
+        "completion_tokens": 1059,
+        "reasoning_tokens": 677,
+        "cost": 0.002118225
+      },
+      "final_code": "def condition_judge(self):\n    \"\"\"\n    Judge the condition of the user based on the BMI standard.\n    :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.condition_judge()\n    0\n\n    \"\"\"\n    bmi = self.get_BMI()\n    for item in self.BMI_std:\n        if self.sex in item:\n            lower, upper = item[self.sex]\n            if bmi < lower:\n                return -1\n            elif bmi > upper:\n                return 1\n            else:\n                return 0\n    return 0",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "first": {
+        "code": "def calculate_calorie_intake(self):\n    \"\"\"\n    Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate),BMR is calculated based on the user's height, weight, age, and sex,male is10 * self.weight + 6.25 * self.height - 5 * self.age + 5,female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition,if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n    :return: calorie intake, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.calculate_calorie_intake()\n    986.0\n\n    \"\"\"\n    if self.sex == \"male\":\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n    else:\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n    condition = self.condition_judge()\n    if condition == 1:\n        return bmr * 1.2\n    elif condition == -1:\n        return bmr * 1.6\n    else:\n        return bmr * 1.4",
+        "valid": true,
+        "reply": "\n\n```python\ndef calculate_calorie_intake(self):\n    \"\"\"\n    Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate),BMR is calculated based on the user's height, weight, age, and sex,male is10 * self.weight + 6.25 * self.height - 5 * self.age + 5,female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition,if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n    :return: calorie intake, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.calculate_calorie_intake()\n    986.0\n\n    \"\"\"\n    if self.sex == \"male\":\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n    else:\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n    condition = self.condition_judge()\n    if condition == 1:\n        return bmr * 1.2\n    elif condition == -1:\n        return bmr * 1.6\n    else:\n        return bmr * 1.4\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1058,
+        "cached_tokens": 0,
+        "completion_tokens": 1610,
+        "reasoning_tokens": 912,
+        "cost": 0.00317745
+      },
+      "final_code": "def calculate_calorie_intake(self):\n    \"\"\"\n    Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n    :return: calorie intake, float.\n    >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n    >>> fitnessTracker.calculate_calorie_intake()\n    862.75\n\n    \"\"\"\n    if self.sex == \"male\":\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n    else:\n        bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n    condition = self.condition_judge()\n    if condition == 1:\n        return bmr * 1.2\n    elif condition == -1:\n        return bmr * 1.6\n    else:\n        return bmr * 1.4",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "review": {
+    "verdict": "NOT OK",
+    "reason": "NOT OK. `condition_judge` follows the stated male BMI range of 20\u201325, but its example says the BMI 21.6049 should return -1; when run, it returns 0. The example or the stated range needs to be corrected. `calculate_calorie_intake` also fails its example: when run for the documented inputs, it returns 862.75, not 986.0. That expected value assumes the condition is -1 and applies the 1.6 multiplier, conflicting with the stated BMI range and `condition_judge` behavior. Reconcile the examples with the intended BMI ranges and calorie multipliers.",
+    "status": "completed",
+    "provider": "OpenAI",
+    "n_runs": 1,
+    "runs": [
+      {
+        "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.get_BMI()); print(f.condition_judge()); print(f.calculate_calorie_intake())",
+        "output": "exit code 0\nstdout:\n21.604938271604937\n0\n862.75\n\nstderr:\n"
+      }
+    ],
+    "requests": [
+      {
+        "provider": "OpenAI",
+        "prompt_tokens": 1703,
+        "cached_tokens": 0,
+        "completion_tokens": 52,
+        "reasoning_tokens": 0,
+        "cost": 0.0001963
+      },
+      {
+        "provider": "OpenAI",
+        "prompt_tokens": 1789,
+        "cached_tokens": 1700,
+        "completion_tokens": 669,
+        "reasoning_tokens": 516,
+        "cost": 0.0003604
+      }
+    ],
+    "prompt_tokens": 3492,
+    "cached_tokens": 1700,
+    "completion_tokens": 721,
+    "reasoning_tokens": 516,
+    "cost": 0.0005567
+  },
+  "revision": {
+    "replaced": [
+      "get_BMI",
+      "condition_judge",
+      "calculate_calorie_intake"
+    ],
+    "reply": "\n\n```python\nclass FitnessTracker:\n    \"\"\"\n    This is a class as fitness tracker that implements to calculate BMI (Body Mass Index) and calorie intake based on the user's height, weight, age, and sex.\n    \"\"\"\n\n    def __init__(self, height, weight, age, sex) -> None:\n        \"\"\"\n        Initialize the class with height, weight, age, and sex, and calculate the BMI standard based on sex, and male is 20-25, female is 19-24.\n        \"\"\"\n        self.height = height\n        self.weight = weight\n        self.age = age\n        self.sex = sex\n        self.BMI_std = [\n            {\"male\": [20, 25]},\n            {\"female\": [19, 24]}\n        ]\n\n    def get_BMI(self):\n        \"\"\"\n        Calculate the BMI based on the height and weight.\n        :return: BMI, which is the weight divide by the square of height, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.get_BMI()\n        21.604938271604937\n\n        \"\"\"\n        return self.weight / (self.height ** 2)\n\n    def condition_judge(self):\n        \"\"\"\n        Judge the condition of the user based on the BMI standard.\n        :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.condition_judge()\n        0\n\n        \"\"\"\n        bmi = self.get_BMI()\n        for item in self.BMI_std:\n            if self.sex in item:\n                lower, upper = item[self.sex]\n                if bmi < lower:\n                    return -1\n                elif bmi > upper:\n                    return 1\n                else:\n                    return 0\n        return 0\n\n    def calculate_calorie_intake(self):\n        \"\"\"\n        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n        :return: calorie intake, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.calculate_calorie_intake()\n        862.75\n\n        \"\"\"\n        if self.sex == \"male\":\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n        else:\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n        condition = self.condition_judge()\n        if condition == 1:\n            return bmr * 1.2\n        elif condition == -1:\n            return bmr * 1.6\n        else:\n            return bmr * 1.4\n```",
+    "finish_reason": "stop",
+    "provider": "DeepInfra",
+    "prompt_tokens": 1688,
+    "cached_tokens": 0,
+    "completion_tokens": 2324,
+    "reasoning_tokens": 1236,
+    "cost": 0.0046107
+  },
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "FitnessTrackerTestGetBMI": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestConditionJudge": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestCaculateCalorieIntake": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "FitnessTrackerTestGetBMI": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestConditionJudge": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestCaculateCalorieIntake": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "FitnessTrackerTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass FitnessTracker: \n    def __init__(self, height, weight, age, sex) -> None:\n        \"\"\"\n        Initialize the class with height, weight, age, and sex, and calculate the BMI standard based on sex, and male is 20-25, female is 19-24.\n        \"\"\"\n        self.height = height\n        self.weight = weight\n        self.age = age\n        self.sex = sex\n        self.BMI_std = [\n            {\"male\": [20, 25]},\n            {\"female\": [19, 24]}\n        ]\n\n    def get_BMI(self):\n        \"\"\"\n        Calculate the BMI based on the height and weight.\n        :return: BMI,which is the weight divide by the square of height, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.get_BMI()\n        21.604938271604937\n\n        \"\"\"\n        return self.weight / (self.height ** 2)\n\n    def condition_judge(self):\n        \"\"\"\n        Judge the condition of the user based on the BMI standard.\n        :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.condition_judge()\n        -1\n\n        \"\"\"\n        bmi = self.get_BMI()\n        for item in self.BMI_std:\n            if self.sex in item:\n                lower, upper = item[self.sex]\n                if bmi < lower:\n                    return -1\n                elif bmi > upper:\n                    return 1\n                else:\n                    return 0\n        return 0\n\n    def calculate_calorie_intake(self):\n        \"\"\"\n        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate),BMR is calculated based on the user's height, weight, age, and sex,male is10 * self.weight + 6.25 * self.height - 5 * self.age + 5,female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition,if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n        :return: calorie intake, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.calculate_calorie_intake()\n        986.0\n\n        \"\"\"\n        if self.sex == \"male\":\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n        else:\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n        condition = self.condition_judge()\n        if condition == 1:\n            return bmr * 1.2\n        elif condition == -1:\n            return bmr * 1.6\n        else:\n            return bmr * 1.4\n",
+  "source": "\n\nclass FitnessTracker: \n    def __init__(self, height, weight, age, sex) -> None:\n        \"\"\"\n        Initialize the class with height, weight, age, and sex, and calculate the BMI standard based on sex, and male is 20-25, female is 19-24.\n        \"\"\"\n        self.height = height\n        self.weight = weight\n        self.age = age\n        self.sex = sex\n        self.BMI_std = [\n            {\"male\": [20, 25]},\n            {\"female\": [19, 24]}\n        ]\n\n    def get_BMI(self):\n        \"\"\"\n        Calculate the BMI based on the height and weight.\n        :return: BMI, which is the weight divide by the square of height, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.get_BMI()\n        21.604938271604937\n\n        \"\"\"\n        return self.weight / (self.height ** 2)\n\n    def condition_judge(self):\n        \"\"\"\n        Judge the condition of the user based on the BMI standard.\n        :return: 1 if the user is too fat, -1 if the user is too thin, 0 if the user is normal, int.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.condition_judge()\n        0\n\n        \"\"\"\n        bmi = self.get_BMI()\n        for item in self.BMI_std:\n            if self.sex in item:\n                lower, upper = item[self.sex]\n                if bmi < lower:\n                    return -1\n                elif bmi > upper:\n                    return 1\n                else:\n                    return 0\n        return 0\n\n    def calculate_calorie_intake(self):\n        \"\"\"\n        Calculate the calorie intake based on the user's condition and BMR (Basal Metabolic Rate), BMR is calculated based on the user's height, weight, age, and sex, male is 10 * self.weight + 6.25 * self.height - 5 * self.age + 5, female is 10 * self.weight + 6.25 * self.height - 5 * self.age - 161, and the calorie intake is calculated based on the BMR and the user's condition, if the user is too fat, the calorie intake is BMR * 1.2, if the user is too thin, the calorie intake is BMR * 1.6, if the user is normal, the calorie intake is BMR * 1.4.\n        :return: calorie intake, float.\n        >>> fitnessTracker = FitnessTracker(1.8, 70, 20, \"male\")\n        >>> fitnessTracker.calculate_calorie_intake()\n        862.75\n\n        \"\"\"\n        if self.sex == \"male\":\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5\n        else:\n            bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161\n\n        condition = self.condition_judge()\n        if condition == 1:\n            return bmr * 1.2\n        elif condition == -1:\n            return bmr * 1.6\n        else:\n            return bmr * 1.4\n"
+}

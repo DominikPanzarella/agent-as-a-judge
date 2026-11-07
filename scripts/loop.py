@@ -70,8 +70,8 @@ class Run:
         self.setup, self.name, self.model = setup, name, model
         self.version, self.effort = version, effort
 
-    def write(self, task, messages, method_name, role):
-        r = coder.ask(self.coder_client, messages, self.model)
+    def write(self, task, messages, method_name, role, max_tokens=coder.MAX_TOKENS):
+        r = coder.ask(self.coder_client, messages, self.model, max_tokens)
         budget.log(setup=self.name, task_id=task["task_id"], method_name=method_name, role=role,
                    service="openrouter", model=self.model, **r)
         return r
@@ -129,7 +129,10 @@ def run_c1(run, task, steps):
         messages = [{"role": "system", "content": CLASS_SYSTEM},
                     {"role": "user", "content": class_revision_prompt(task, harness.build_class(task, written),
                                                                       review["reason"])}]
-        r = run.write(task, messages, "", "coder-revision")
+        # A whole class needs more room than one method. In C2 each revised method can use
+        # MAX_TOKENS, so here the class gets MAX_TOKENS for each of its methods. With MAX_TOKENS
+        # alone, the first run of ClassEval_55 spent them all on reasoning and wrote no code.
+        r = run.write(task, messages, "", "coder-revision", coder.MAX_TOKENS * len(records))
         replaced = []
         for record in records:
             # Only methods that were usable at first can change, as in C2. A method the coder

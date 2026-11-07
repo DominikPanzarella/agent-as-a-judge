@@ -46,7 +46,7 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   The hidden tests stay hidden. On the first four methods all its claims about the code are true;
   its two disagreements with the tests come from an ambiguous docstring and from a bug the tests do
   not check.
-- [ ] **Pilot** (by Sunday 8 Nov). Run C0 on 8 classes and judge their methods with judge v1 (and v2,
+- [x] **Pilot** (by Sunday 8 Nov). Run C0 on 8 classes and judge their methods with judge v1 (and v2,
   if we build it), with low and with medium effort. Three questions before going on. Is the judge
   clearly better than chance against the tests? We look at Cohen's kappa and at how often it says
   OK to code that fails or NOT OK to code that passes. Are the concrete claims in its reasons true?
@@ -55,12 +55,35 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   method for the coder. We also run C0 a second time on the same 8 classes, to see how many methods
   change result by chance alone. If the judge is close to chance, we change it before the full runs.
 
+  Results (6 and 7 Nov, `scripts/pilot_report.py`, 10 development classes, 38 methods). The coder
+  passes 31 and 32 methods in two identical runs, and 3 methods change result by chance. Against the
+  tests the judges are close to chance, with kappa between -0.10 and 0.21. We then read the 15
+  methods on which a judge and the tests disagree (`runs/pilot_adjudication.csv`). In 5 of them the
+  tests ask for behaviour that the docstring does not describe, in 3 the docstring example is wrong,
+  and in 3 the judge finds a real bug that no test checks. Against these corrected labels, with the
+  5 unclear methods left out, kappa rises to 0.60 for v1-low and to 0.47 for v1-medium and
+  v2-medium. Most of the gap comes from the tests, so we keep the judge as it is.
+  `scripts/check_claims.py` runs the 22 concrete claims found in the NOT OK reasons. Several judges
+  make the same claim; counted per judge, 23 of 23 claims are true with medium effort and 12 of 16
+  with low effort. Costs are small: about 0.0012 dollars per method for
+  the coder and 0.0003 for judge v2-medium, so a whole setup on 289 methods costs well under one
+  dollar.
+
 ## Week 2 (9 to 15 November): C1, C2 and the full runs
 
-- [ ] **Setups C1 and C2** (10 Nov). In C1 the judge gives its verdict on the finished class and the
+- [x] **Setups C1 and C2** (10 Nov). In C1 the judge gives its verdict on the finished class and the
   coder may revise once. In C2 the verdict comes after each method, again with one revision of that
-  method. The code is ready (`scripts/loop.py`, 6 Nov) and tested without real requests; the runs
-  wait for the instructors' answer on coder, classes and repetitions.
+  method. The code is ready (`scripts/loop.py`, 6 Nov). On 7 Nov we ran both on the 10 development
+  classes, with judge v2 and medium effort. In C2 the revisions fixed 3 methods and broke 2. The
+  two broken methods were correct, and the judge asked for behaviour the docstring does not
+  describe. In C1 the class revisions changed no test result. Both setups end below C0 (27 and 29
+  methods against 31), but their first versions were already worse, so the gap comes from the
+  coder's randomness before any feedback. The first C1 run of ClassEval_55 exposed a bug: a whole
+  class with only 4000 tokens ran out during reasoning and wrote no code. The class revision now
+  gets 4000 tokens per method of the class, as in C2 (old result in `runs/C1-v2-medium-before-fix`).
+  Cost on 289 methods: about 0.6 dollars for the coder and 0.1 for the judge in each setup. The
+  full runs wait for the instructors' answer on coder, classes, repetitions and the proposals of
+  the next section.
 - [ ] **Full runs** (11 to 13 Nov). Run C0, C1 and C2 on the 71 classes, the coder with low
   reasoning effort and the judge with the effort chosen in the pilot.
   Log tokens and cost after every class, and stop if either budget reaches 70 percent. The lab of
@@ -68,8 +91,9 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 - [ ] **Analysis** (14 to 15 Nov). Report the share of methods and of classes that pass their tests,
   with and without the 4 weak methods, and for the judge its accuracy, kappa and rate of false OK
   verdicts. Compare C2 with C0 and with C1 using McNemar tests and bootstrap confidence intervals.
+  `scripts/analyze.py` does all of this and already works on the development runs.
 - [ ] **Error analysis** (14 to 15 Nov). Read 20 cases where the judge and the tests disagree and
-  group them into a few types. For each case we also decide who is right, since the first runs
+  group them into a few types (`scripts/analyze.py --sample 20` draws them). For each case we also decide who is right, since the first runs
   already show disagreements caused by ambiguous docstrings and by bugs the tests do not check.
 
 ## 16 to 19 November: midway report
@@ -94,6 +118,33 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 - [ ] **Submission of the final report** (16 Dec).
 - [ ] **5-minute presentation** (17 Dec).
 
+## Proposals to discuss with the instructors (7 Nov)
+
+These come from the pilot, from the Agent-as-a-Judge paper and from the lessons on Reflexion,
+Self-Refine and CRITIC, and verification gates in the ai-engineering-from-scratch course.
+
+- [ ] **Same first versions in every setup.** Two identical runs of C0 differ by up to 3 methods, as
+  much as the effect we want to measure. C1 can start from the class written in C0. C2 can reuse
+  the C0 version of a method as long as no earlier method was revised, because the prompt is then
+  the same. The difference between setups would then come only from the feedback.
+- [ ] **Human labels next to the tests.** The paper scores the judge against the majority vote of
+  three experts, not against tests. We can label the disagreements independently, measure our
+  agreement, and then settle each case together.
+- [ ] **Feedback with evidence.** In C2 the coder could also receive the code the judge ran and its
+  output, as in CRITIC. The paper notes that the judge is sensitive to noise and needs factual
+  information, and the claims of v2 with medium effort were all true.
+- [ ] **A judge that checks only what the docstring states.** Both methods broken in C2 were correct
+  code that the judge rejected for behaviour the docstring does not describe. The paper's ask
+  module judges one requirement at a time; a v3 could list the requirements of the docstring and
+  check each.
+- [ ] **Memory in C3.** The paper found its memory module harmful, because an error in one judgment
+  spreads to the next ones. Our memory would hold the verdicts that the tests proved wrong, but in
+  the pilot about one method in five had a conflict between test and docstring. We could keep only
+  the corrections confirmed by hand, and cap their number.
+- [ ] **A control with empty feedback.** After a NOT OK, the coder is asked to write the method again
+  without the reason. With self-refine, it separates the effect of the reason from the effect of a
+  second attempt.
+
 ## Open decisions
 
 - [ ] **Which Qwen model writes the code.** For now qwen3.8-27b, since qwen3.6-27b has no
@@ -104,10 +155,10 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
   method in C2 and one per class in C1, with the tokens of every setup reported next to the results.
 - [ ] **The note "classes with the 1st methods implemented"** from the lab session. We should ask
   Alessandro what he meant, at the lab of 12 November at the latest.
-- [ ] **Order by fields.** The dependencies cover calls between methods, not fields. A method that
-  reads a field may make more sense after the method that fills it. We read the 71 classes once and
-  record any manual change in `scripts/order_methods.py`. This has to happen before the full runs
-  of 11 November, because it changes the prompts.
-- [ ] **Reasoning effort of the judge.** On the first four methods low and medium effort gave the
-  same verdicts. Medium costs about three times more, about 0.1 dollars for all 289 methods. The
-  pilot decides.
+- [x] **Order by fields** (7 Nov). The dependencies cover calls between methods, not fields.
+  `scripts/check_field_order.py` lists every method that reads a field which a later method writes.
+  There are 43 such pairs in 20 classes, and in all of them `__init__` already sets the field, so
+  the coder sees it in the skeleton. The order stays as it is.
+- [x] **Reasoning effort of the judge** (7 Nov). Medium. With low effort 4 of the 16 claims we
+  could run were false, with medium effort none of 23. The coder reads these claims in C1 and C2,
+  so they must be true, and medium costs only about 0.09 dollars for all 289 methods with v2.

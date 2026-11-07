@@ -6,6 +6,9 @@ medium effort) agree with the tests, and what does it cost? What would the full 
 
 It also writes runs/pilot_disagreements.csv, with every method on which a judge and the tests
 disagree. The column who_is_right is left empty: we fill it in by hand (judge, tests, or unclear).
+Once runs/pilot_adjudication.csv holds that decision for every disputed method, a second table
+scores the judges against the corrected labels: a method the judge rightly rejects counts as
+failing, and a method marked unclear is left out.
 """
 import csv
 import json
@@ -16,6 +19,7 @@ import judge
 ROOT = Path(__file__).resolve().parent.parent
 DEV = ROOT / "data/selection/dev_classes.csv"
 DISAGREEMENTS = ROOT / "runs/pilot_disagreements.csv"
+ADJUDICATION = ROOT / "runs/pilot_adjudication.csv"
 N_METHODS = 289  # all kept methods, for the cost projection
 CONFIGS = [(v, e) for v in judge.VERSIONS for e in judge.EFFORTS]
 
@@ -95,11 +99,36 @@ def judge_section(task_ids):
     return costs
 
 
+def adjudicated_section(task_ids):
+    if not ADJUDICATION.exists():
+        return
+    with ADJUDICATION.open(encoding="utf-8") as f:
+        decided = {(r["task_id"], r["method_name"]): r["who_is_right"] for r in csv.DictReader(f)}
+    print("\nJUDGE on run C0 against the corrected labels (runs/pilot_adjudication.csv)")
+    print(f"  {'judge':<12} {'methods':>7} {'agree':>6} {'kappa':>6} {'OK to fail':>11} {'NOT OK to pass':>15}")
+    for version, effort in CONFIGS:
+        results = load(judge.folder("C0", version, effort), task_ids)
+        rows = []
+        for t, r in results.items():
+            for m in r["methods"]:
+                who = decided.get((t, m["method_name"]), "tests")
+                if m.get("auto") or who == "unclear":
+                    continue
+                # When the judge is right, the tests missed a bug: the method counts as failing.
+                rows.append(dict(m, passed=bool(m["passed"]) != (who == "judge")))
+        a = judge.agreement(rows)
+        if a["n"]:
+            print(f"  {version + '-' + effort:<12} {a['n']:>7} {a['accuracy']:>6.2f} {a['kappa']:>6.2f} "
+                  f"{a['false_ok']:>5.2f} of {a['n_failing']:<3} {a['false_not_ok']:>8.2f} of {a['n_passing']:<4}")
+    print(f"  left out as unclear: {sum(v == 'unclear' for v in decided.values())} methods")
+
+
 def main():
     task_ids = dev_classes()
     print(f"{len(task_ids)} development classes\n")
     coder_cost = coder_section(task_ids)
     judge_costs = judge_section(task_ids)
+    adjudicated_section(task_ids)
     print(f"\nPROJECTION for {N_METHODS} methods")
     print(f"  coder, one run of C0: {coder_cost * N_METHODS:.2f} $ (C2 can need up to twice as many requests)")
     for (version, effort), cost in judge_costs.items():

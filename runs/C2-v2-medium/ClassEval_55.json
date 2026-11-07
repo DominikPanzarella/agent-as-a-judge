@@ -1,0 +1,229 @@
+{
+  "task_id": "ClassEval_55",
+  "class_name": "Manacher",
+  "setup": "C2",
+  "name": "C2-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "first": {
+        "code": "def palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    2\n\n    \"\"\"\n    if center - diff < 0 or center + diff >= len(string):\n        return diff - 1\n    if string[center - diff] != string[center + diff]:\n        return diff - 1\n    return self.palindromic_length(center, diff + 1, string)",
+        "valid": true,
+        "reply": "\n\n```python\ndef palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    2\n\n    \"\"\"\n    if center - diff < 0 or center + diff >= len(string):\n        return diff - 1\n    if string[center - diff] != string[center + diff]:\n        return diff - 1\n    return self.palindromic_length(center, diff + 1, string)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 484,
+        "cached_tokens": 0,
+        "completion_tokens": 1712,
+        "reasoning_tokens": 1163,
+        "cost": 0.0032826
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "NOT OK: The method returns the number of successful outward comparisons, not the palindrome\u2019s length. In the documented example it returns 2, while the palindrome centered at index 2 in the supplied string is `a|b|a` (length 5); return the intended substring length, or clarify that the result is a radius rather than a length.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "m=Manacher('ababa'); print(m.palindromic_length(2,1,'a|b|a|b|a'))",
+            "output": "exit code 0\nstdout:\n2\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 997,
+            "cached_tokens": 0,
+            "completion_tokens": 48,
+            "reasoning_tokens": 0,
+            "cost": 0.0001237
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1067,
+            "cached_tokens": 0,
+            "completion_tokens": 2346,
+            "reasoning_tokens": 2255,
+            "cost": 0.0012797000000000002
+          }
+        ],
+        "prompt_tokens": 2064,
+        "cached_tokens": 0,
+        "completion_tokens": 2394,
+        "reasoning_tokens": 2255,
+        "cost": 0.0014034000000000002
+      },
+      "revision": {
+        "code": "def palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    5\n    \"\"\"\n    if center - diff < 0 or center + diff >= len(string):\n        return 2 * diff - 1\n    if string[center - diff] != string[center + diff]:\n        return 2 * diff - 1\n    return self.palindromic_length(center, diff + 1, string)",
+        "valid": true,
+        "reply": "\n\n```python\ndef palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    5\n    \"\"\"\n    if center - diff < 0 or center + diff >= len(string):\n        return 2 * diff - 1\n    if string[center - diff] != string[center + diff]:\n        return 2 * diff - 1\n    return self.palindromic_length(center, diff + 1, string)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 835,
+        "cached_tokens": 0,
+        "completion_tokens": 1575,
+        "reasoning_tokens": 1155,
+        "cost": 0.003078375
+      },
+      "final_code": "def palindromic_length(self, center, diff, string):\n    \"\"\"\n    Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n    :param center: The center of the palindromic substring, int.\n    :param diff: The difference between the center and the current position, int.\n    :param string: The string to be searched, str.\n    :return: The length of the palindromic substring, int.\n    >>> manacher = Manacher('ababa')\n    >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n    5\n    \"\"\"\n    if center - diff < 0 or center + diff >= len(string):\n        return 2 * diff - 1\n    if string[center - diff] != string[center + diff]:\n        return 2 * diff - 1\n    return self.palindromic_length(center, diff + 1, string)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "first": {
+        "code": "def palindromic_string(self):\n    \"\"\"\n    Finds the longest palindromic substring in the given string.\n    :return: The longest palindromic substring, str.\n    >>> manacher = Manacher('ababaxse')\n    >>> manacher.palindromic_string()\n    'ababa'\n\n    \"\"\"\n    if not self.input_string:\n        return \"\"\n\n    transformed = \"|\".join(self.input_string)\n    max_length = 0\n    max_center = 0\n\n    for center in range(len(transformed)):\n        length = self.palindromic_length(center, 1, transformed)\n        if length > max_length:\n            max_length = length\n            max_center = center\n\n    start = (max_center - max_length // 2) // 2\n    end = (max_center + max_length // 2) // 2 + 1\n\n    return self.input_string[start:end]",
+        "valid": true,
+        "reply": "\n\n```python\ndef palindromic_string(self):\n    \"\"\"\n    Finds the longest palindromic substring in the given string.\n    :return: The longest palindromic substring, str.\n    >>> manacher = Manacher('ababaxse')\n    >>> manacher.palindromic_string()\n    'ababa'\n\n    \"\"\"\n    if not self.input_string:\n        return \"\"\n\n    transformed = \"|\".join(self.input_string)\n    max_length = 0\n    max_center = 0\n\n    for center in range(len(transformed)):\n        length = self.palindromic_length(center, 1, transformed)\n        if length > max_length:\n            max_length = length\n            max_center = center\n\n    start = (max_center - max_length // 2) // 2\n    end = (max_center + max_length // 2) // 2 + 1\n\n    return self.input_string[start:end]\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 727,
+        "cached_tokens": 0,
+        "completion_tokens": 1596,
+        "reasoning_tokens": 949,
+        "cost": 0.00310155
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The transformation uses `|` as a separator even when `|` occurs in the input, so it can mistake input characters for separators; for example, `palindromic_string()` on `'a|b'` returns `'a|'`, which is not a palindrome. Use a separator guaranteed not to occur in the input, or represent separators separately.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 4,
+        "runs": [
+          {
+            "code": "m=Manacher('ababaxse'); print(m.palindromic_string()); print(m.palindromic_length(2,1,'a|b|a|b|a'))",
+            "output": "exit code 0\nstdout:\nababa\n5\n\nstderr:\n"
+          },
+          {
+            "code": "m=Manacher('a'*600); print(len(m.palindromic_string()))",
+            "output": "exit code 0\nstdout:\n600\n\nstderr:\n"
+          },
+          {
+            "code": "m=Manacher('a'*1100); print(len(m.palindromic_string()))",
+            "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpbgsxznit/snippet.py\", line 56, in <module>\n    m=Manacher('a'*1100); print(len(m.palindromic_string()))\n                                    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpbgsxznit/snippet.py\", line 45, in palindromic_string\n    length = self.palindromic_length(center, 1, transformed)\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpbgsxznit/snippet.py\", line 26, in palindromic_length\n    return self.palindromic_length(center, diff + 1, string)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpbgsxznit/snippet.py\", line 26, in palindromic_length\n    return self.palindromic_length(center, diff + 1, string)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpbgsxznit/snippet.py\", line 26, in palindromic_length\n    return self.palindromic_length(center, diff + 1, string)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  [Previous line repeated 995 more times]\nRecursionError: maximum recursion depth exceeded\n"
+          },
+          {
+            "code": "def brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   t=s[i:j]\n   if t==t[::-1] and len(t)>len(best): best=t\n return best\nfor s in ['|a','a|b','a||b','|ab|c','a|aa','ab|ba','a|b|c','||a']:\n m=Manacher(s); print(repr(s), repr(m.palindromic_string()), repr(brute(s)))",
+            "output": "exit code 0\nstdout:\n'|a' '|' '|'\n'a|b' 'a|' 'a'\n'a||b' 'a||' '||'\n'|ab|c' '|a' '|'\n'a|aa' 'a|a' 'a|a'\n'ab|ba' 'ab|ba' 'ab|ba'\n'a|b|c' 'a|b|' '|b|'\n'||a' '||' '||'\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1206,
+            "cached_tokens": 0,
+            "completion_tokens": 58,
+            "reasoning_tokens": 0,
+            "cost": 0.00014960000000000003
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1289,
+            "cached_tokens": 1203,
+            "completion_tokens": 402,
+            "reasoning_tokens": 364,
+            "cost": 0.00022163
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1713,
+            "cached_tokens": 1286,
+            "completion_tokens": 91,
+            "reasoning_tokens": 52,
+            "cost": 0.00010106
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2221,
+            "cached_tokens": 1710,
+            "completion_tokens": 370,
+            "reasoning_tokens": 225,
+            "cost": 0.0002532
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2703,
+            "cached_tokens": 2218,
+            "completion_tokens": 206,
+            "reasoning_tokens": 115,
+            "cost": 0.00017368
+          }
+        ],
+        "prompt_tokens": 9132,
+        "cached_tokens": 6417,
+        "completion_tokens": 1127,
+        "reasoning_tokens": 756,
+        "cost": 0.00089917
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1062,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 3139,
+        "cost": 0.0076593
+      },
+      "final_code": "def palindromic_string(self):\n    \"\"\"\n    Finds the longest palindromic substring in the given string.\n    :return: The longest palindromic substring, str.\n    >>> manacher = Manacher('ababaxse')\n    >>> manacher.palindromic_string()\n    'ababa'\n\n    \"\"\"\n    if not self.input_string:\n        return \"\"\n\n    transformed = \"|\".join(self.input_string)\n    max_length = 0\n    max_center = 0\n\n    for center in range(len(transformed)):\n        length = self.palindromic_length(center, 1, transformed)\n        if length > max_length:\n            max_length = length\n            max_center = center\n\n    start = (max_center - max_length // 2) // 2\n    end = (max_center + max_length // 2) // 2 + 1\n\n    return self.input_string[start:end]",
+      "passed_first": false,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "ManacherTestPalindromicLength": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "ManacherTestPalindromicString": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "ManacherTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "ManacherTestPalindromicLength": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "ManacherTestPalindromicString": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ManacherTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass Manacher: \n    def __init__(self, input_string) -> None:\n        \"\"\"\n        Initializes the Manacher class with the given input_string.\n        :param input_string: The input_string to be searched, str.\n        \"\"\"\n        self.input_string = input_string\n\n    def palindromic_length(self, center, diff, string):\n        \"\"\"\n        Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n        :param center: The center of the palindromic substring, int.\n        :param diff: The difference between the center and the current position, int.\n        :param string: The string to be searched, str.\n        :return: The length of the palindromic substring, int.\n        >>> manacher = Manacher('ababa')\n        >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n        2\n\n        \"\"\"\n        if center - diff < 0 or center + diff >= len(string):\n            return diff - 1\n        if string[center - diff] != string[center + diff]:\n            return diff - 1\n        return self.palindromic_length(center, diff + 1, string)\n\n    def palindromic_string(self):\n        \"\"\"\n        Finds the longest palindromic substring in the given string.\n        :return: The longest palindromic substring, str.\n        >>> manacher = Manacher('ababaxse')\n        >>> manacher.palindromic_string()\n        'ababa'\n\n        \"\"\"\n        if not self.input_string:\n            return \"\"\n\n        transformed = \"|\".join(self.input_string)\n        max_length = 0\n        max_center = 0\n\n        for center in range(len(transformed)):\n            length = self.palindromic_length(center, 1, transformed)\n            if length > max_length:\n                max_length = length\n                max_center = center\n\n        start = (max_center - max_length // 2) // 2\n        end = (max_center + max_length // 2) // 2 + 1\n\n        return self.input_string[start:end]\n",
+  "source": "\n\nclass Manacher: \n    def __init__(self, input_string) -> None:\n        \"\"\"\n        Initializes the Manacher class with the given input_string.\n        :param input_string: The input_string to be searched, str.\n        \"\"\"\n        self.input_string = input_string\n\n    def palindromic_length(self, center, diff, string):\n        \"\"\"\n        Recursively calculates the length of the palindromic substring based on a given center, difference value, and input string.\n        :param center: The center of the palindromic substring, int.\n        :param diff: The difference between the center and the current position, int.\n        :param string: The string to be searched, str.\n        :return: The length of the palindromic substring, int.\n        >>> manacher = Manacher('ababa')\n        >>> manacher.palindromic_length(2, 1, 'a|b|a|b|a')\n        5\n        \"\"\"\n        if center - diff < 0 or center + diff >= len(string):\n            return 2 * diff - 1\n        if string[center - diff] != string[center + diff]:\n            return 2 * diff - 1\n        return self.palindromic_length(center, diff + 1, string)\n\n    def palindromic_string(self):\n        \"\"\"\n        Finds the longest palindromic substring in the given string.\n        :return: The longest palindromic substring, str.\n        >>> manacher = Manacher('ababaxse')\n        >>> manacher.palindromic_string()\n        'ababa'\n\n        \"\"\"\n        if not self.input_string:\n            return \"\"\n\n        transformed = \"|\".join(self.input_string)\n        max_length = 0\n        max_center = 0\n\n        for center in range(len(transformed)):\n            length = self.palindromic_length(center, 1, transformed)\n            if length > max_length:\n                max_length = length\n                max_center = center\n\n        start = (max_center - max_length // 2) // 2\n        end = (max_center + max_length // 2) // 2 + 1\n\n        return self.input_string[start:end]\n"
+}

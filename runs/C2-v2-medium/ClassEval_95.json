@@ -1,0 +1,421 @@
+{
+  "task_id": "ClassEval_95",
+  "class_name": "Warehouse",
+  "setup": "C2",
+  "name": "C2-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "add_product",
+      "first": {
+        "code": "def add_product(self, product_id, name, quantity):\n    \"\"\"\n    Add product to inventory and plus the quantity if it has existed in inventory.\n    Or just add new product to dict otherwise.\n    :param product_id: int\n    :param name: str, product name\n    :param quantity: int, product quantity\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 3}}\n    \"\"\"\n    if product_id in self.inventory:\n        self.inventory[product_id]['quantity'] += quantity\n    else:\n        self.inventory[product_id] = {'name': name, 'quantity': quantity}",
+        "valid": true,
+        "reply": "\n\n```python\ndef add_product(self, product_id, name, quantity):\n    \"\"\"\n    Add product to inventory and plus the quantity if it has existed in inventory.\n    Or just add new product to dict otherwise.\n    :param product_id: int\n    :param name: str, product name\n    :param quantity: int, product quantity\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 3}}\n    \"\"\"\n    if product_id in self.inventory:\n        self.inventory[product_id]['quantity'] += quantity\n    else:\n        self.inventory[product_id] = {'name': name, 'quantity': quantity}\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1026,
+        "cached_tokens": 0,
+        "completion_tokens": 260,
+        "reasoning_tokens": 104,
+        "cost": 0.0006414
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method adds a new product with the specified name and quantity, and for an existing product it increases the quantity without replacing its name. The documented example and an existing-product case both work.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "w = Warehouse(); w.add_product(1, 'product1', 3); print(w.inventory); w.add_product(1, 'different', 2); print(w.inventory)",
+            "output": "exit code 0\nstdout:\n{1: {'name': 'product1', 'quantity': 3}}\n{1: {'name': 'product1', 'quantity': 5}}\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1436,
+            "cached_tokens": 0,
+            "completion_tokens": 107,
+            "reasoning_tokens": 51,
+            "cost": 0.0001971
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1595,
+            "cached_tokens": 1433,
+            "completion_tokens": 54,
+            "reasoning_tokens": 0,
+            "cost": 5.753e-05
+          }
+        ],
+        "prompt_tokens": 3031,
+        "cached_tokens": 1433,
+        "completion_tokens": 161,
+        "reasoning_tokens": 51,
+        "cost": 0.00025463
+      },
+      "revision": null,
+      "final_code": "def add_product(self, product_id, name, quantity):\n    \"\"\"\n    Add product to inventory and plus the quantity if it has existed in inventory.\n    Or just add new product to dict otherwise.\n    :param product_id: int\n    :param name: str, product name\n    :param quantity: int, product quantity\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 3}}\n    \"\"\"\n    if product_id in self.inventory:\n        self.inventory[product_id]['quantity'] += quantity\n    else:\n        self.inventory[product_id] = {'name': name, 'quantity': quantity}",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update_product_quantity",
+      "first": {
+        "code": "def update_product_quantity(self, product_id, quantity):\n    \"\"\"\n    According to product_id, add the quantity to the corresponding product in inventory.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.update_product_quantity(1, -1)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 2}}\n    \"\"\"\n    self.inventory[product_id]['quantity'] += quantity",
+        "valid": true,
+        "reply": "\n\n```python\ndef update_product_quantity(self, product_id, quantity):\n    \"\"\"\n    According to product_id, add the quantity to the corresponding product in inventory.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.update_product_quantity(1, -1)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 2}}\n    \"\"\"\n    self.inventory[product_id]['quantity'] += quantity\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1197,
+        "cached_tokens": 0,
+        "completion_tokens": 241,
+        "reasoning_tokens": 144,
+        "cost": 0.000631425
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method adds the given quantity to the specified product\u2019s existing quantity, and the documented example produces quantity 2. The docstring does not specify behavior for a product ID that is absent from inventory, so the direct lookup does not violate its stated behavior.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "w = Warehouse(); w.add_product(1, 'product1', 3); print(w.update_product_quantity(1, -1)); print(w.inventory)",
+            "output": "exit code 0\nstdout:\nNone\n{1: {'name': 'product1', 'quantity': 2}}\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1541,
+            "cached_tokens": 0,
+            "completion_tokens": 146,
+            "reasoning_tokens": 95,
+            "cost": 0.00022710000000000002
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1725,
+            "cached_tokens": 1538,
+            "completion_tokens": 67,
+            "reasoning_tokens": 0,
+            "cost": 6.758e-05
+          }
+        ],
+        "prompt_tokens": 3266,
+        "cached_tokens": 1538,
+        "completion_tokens": 213,
+        "reasoning_tokens": 95,
+        "cost": 0.00029468
+      },
+      "revision": null,
+      "final_code": "def update_product_quantity(self, product_id, quantity):\n    \"\"\"\n    According to product_id, add the quantity to the corresponding product in inventory.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.update_product_quantity(1, -1)\n    >>> warehouse.inventory\n    {1: {'name': 'product1', 'quantity': 2}}\n    \"\"\"\n    self.inventory[product_id]['quantity'] += quantity",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "get_product_quantity",
+      "first": {
+        "code": "def get_product_quantity(self, product_id):\n    \"\"\"\n    Get the quantity of specific product by product_id.\n    :param product_id, int\n    :return: if the product_id is in inventory then return the corresponding quantity,\n            or False otherwise.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.get_product_quantity(1)\n    3\n    >>> warehouse.get_product_quantity(2)\n    False\n    \"\"\"\n    if product_id in self.inventory:\n        return self.inventory[product_id]['quantity']\n    else:\n        return False",
+        "valid": true,
+        "reply": "\n\n```python\ndef get_product_quantity(self, product_id):\n    \"\"\"\n    Get the quantity of specific product by product_id.\n    :param product_id, int\n    :return: if the product_id is in inventory then return the corresponding quantity,\n            or False otherwise.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.get_product_quantity(1)\n    3\n    >>> warehouse.get_product_quantity(2)\n    False\n    \"\"\"\n    if product_id in self.inventory:\n        return self.inventory[product_id]['quantity']\n    else:\n        return False\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1296,
+        "cached_tokens": 0,
+        "completion_tokens": 182,
+        "reasoning_tokens": 38,
+        "cost": 0.00053565
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns the stored quantity when the product ID is in inventory and returns `False` otherwise; the documented examples produced `3` and `False`.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "w = Warehouse(); w.add_product(1, 'product1', 3); print(w.get_product_quantity(1)); print(w.get_product_quantity(2))",
+            "output": "exit code 0\nstdout:\n3\nFalse\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1660,
+            "cached_tokens": 0,
+            "completion_tokens": 104,
+            "reasoning_tokens": 52,
+            "cost": 0.000218
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1788,
+            "cached_tokens": 1657,
+            "completion_tokens": 48,
+            "reasoning_tokens": 0,
+            "cost": 5.367e-05
+          }
+        ],
+        "prompt_tokens": 3448,
+        "cached_tokens": 1657,
+        "completion_tokens": 152,
+        "reasoning_tokens": 52,
+        "cost": 0.00027167
+      },
+      "revision": null,
+      "final_code": "def get_product_quantity(self, product_id):\n    \"\"\"\n    Get the quantity of specific product by product_id.\n    :param product_id, int\n    :return: if the product_id is in inventory then return the corresponding quantity,\n            or False otherwise.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.get_product_quantity(1)\n    3\n    >>> warehouse.get_product_quantity(2)\n    False\n    \"\"\"\n    if product_id in self.inventory:\n        return self.inventory[product_id]['quantity']\n    else:\n        return False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "create_order",
+      "first": {
+        "code": "def create_order(self, order_id, product_id, quantity):\n    \"\"\"\n    Create a order which includes the infomation of product, like id and quantity.\n    And put the new order into self.orders.\n    The default value of status is 'Shipped'.\n    :param order_id: int\n    :param product_id: int\n    :param quantity: the quantity of product that be selected.\n    :return False: only if product_id is not in inventory or the quantity is not adequate\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\n    >>> warehouse.create_order(1, 2, 2)\n    False\n    \"\"\"\n    if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:\n        return False\n    self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_order(self, order_id, product_id, quantity):\n    \"\"\"\n    Create a order which includes the infomation of product, like id and quantity.\n    And put the new order into self.orders.\n    The default value of status is 'Shipped'.\n    :param order_id: int\n    :param product_id: int\n    :param quantity: the quantity of product that be selected.\n    :return False: only if product_id is not in inventory or the quantity is not adequate\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\n    >>> warehouse.create_order(1, 2, 2)\n    False\n    \"\"\"\n    if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:\n        return False\n    self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1426,
+        "cached_tokens": 0,
+        "completion_tokens": 339,
+        "reasoning_tokens": 88,
+        "cost": 0.000849525
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that the product exists and has enough quantity, returns `False` when either check fails, and otherwise stores the order with the documented fields and default status. The examples produced the expected order dictionary and `False` for a missing product.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "w=Warehouse(); w.add_product(1,'product1',3); print(w.create_order(1,1,2)); print(w.orders); print(w.create_order(1,2,2))",
+            "output": "exit code 0\nstdout:\nNone\n{1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\nFalse\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1888,
+            "cached_tokens": 0,
+            "completion_tokens": 58,
+            "reasoning_tokens": 0,
+            "cost": 0.0002178
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1993,
+            "cached_tokens": 1885,
+            "completion_tokens": 322,
+            "reasoning_tokens": 254,
+            "cost": 0.00019065
+          }
+        ],
+        "prompt_tokens": 3881,
+        "cached_tokens": 1885,
+        "completion_tokens": 380,
+        "reasoning_tokens": 254,
+        "cost": 0.00040845
+      },
+      "revision": null,
+      "final_code": "def create_order(self, order_id, product_id, quantity):\n    \"\"\"\n    Create a order which includes the infomation of product, like id and quantity.\n    And put the new order into self.orders.\n    The default value of status is 'Shipped'.\n    :param order_id: int\n    :param product_id: int\n    :param quantity: the quantity of product that be selected.\n    :return False: only if product_id is not in inventory or the quantity is not adequate\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\n    >>> warehouse.create_order(1, 2, 2)\n    False\n    \"\"\"\n    if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:\n        return False\n    self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "change_order_status",
+      "first": {
+        "code": "def change_order_status(self, order_id, status):\n    \"\"\"\n    Change the status of order if the input order_id is in self.orders.\n    :param order_id: int\n    :param status: str, the state that is going to change to\n    :return False: only if the order_id is not in self.orders\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.change_order_status(1, \"done\")\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\n    \"\"\"\n    if order_id in self.orders:\n        self.orders[order_id]['status'] = status\n    else:\n        return False",
+        "valid": true,
+        "reply": "\n\n```python\ndef change_order_status(self, order_id, status):\n    \"\"\"\n    Change the status of order if the input order_id is in self.orders.\n    :param order_id: int\n    :param status: str, the state that is going to change to\n    :return False: only if the order_id is not in self.orders\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.change_order_status(1, \"done\")\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\n    \"\"\"\n    if order_id in self.orders:\n        self.orders[order_id]['status'] = status\n    else:\n        return False\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1671,
+        "cached_tokens": 0,
+        "completion_tokens": 250,
+        "reasoning_tokens": 75,
+        "cost": 0.0007194
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method updates the status for an existing order and returns `False` when the order ID is absent, as documented. The order structure created by `create_order` has the `status` field it updates.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2057,
+            "cached_tokens": 0,
+            "completion_tokens": 94,
+            "reasoning_tokens": 34,
+            "cost": 0.0002527
+          }
+        ],
+        "prompt_tokens": 2057,
+        "cached_tokens": 0,
+        "completion_tokens": 94,
+        "reasoning_tokens": 34,
+        "cost": 0.0002527
+      },
+      "revision": null,
+      "final_code": "def change_order_status(self, order_id, status):\n    \"\"\"\n    Change the status of order if the input order_id is in self.orders.\n    :param order_id: int\n    :param status: str, the state that is going to change to\n    :return False: only if the order_id is not in self.orders\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.change_order_status(1, \"done\")\n    >>> warehouse.orders\n    {1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\n    \"\"\"\n    if order_id in self.orders:\n        self.orders[order_id]['status'] = status\n    else:\n        return False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "track_order",
+      "first": {
+        "code": "def track_order(self, order_id):\n    \"\"\"\n    Get the status of specific order.\n    :param order_id: int\n    :return False: only if the order_id is not in self.orders.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.track_order(1)\n    'Shipped'\n    \"\"\"\n    if order_id in self.orders:\n        return self.orders[order_id]['status']\n    else:\n        return False",
+        "valid": true,
+        "reply": "\n\n```python\ndef track_order(self, order_id):\n    \"\"\"\n    Get the status of specific order.\n    :param order_id: int\n    :return False: only if the order_id is not in self.orders.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.track_order(1)\n    'Shipped'\n    \"\"\"\n    if order_id in self.orders:\n        return self.orders[order_id]['status']\n    else:\n        return False\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1847,
+        "cached_tokens": 1568,
+        "completion_tokens": 196,
+        "reasoning_tokens": 68,
+        "cost": 0.00046815
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns the stored status when the order ID exists and returns `False` otherwise, matching the docstring and example.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2166,
+            "cached_tokens": 0,
+            "completion_tokens": 74,
+            "reasoning_tokens": 31,
+            "cost": 0.00025360000000000004
+          }
+        ],
+        "prompt_tokens": 2166,
+        "cached_tokens": 0,
+        "completion_tokens": 74,
+        "reasoning_tokens": 31,
+        "cost": 0.00025360000000000004
+      },
+      "revision": null,
+      "final_code": "def track_order(self, order_id):\n    \"\"\"\n    Get the status of specific order.\n    :param order_id: int\n    :return False: only if the order_id is not in self.orders.\n    >>> warehouse.add_product(1, \"product1\", 3)\n    >>> warehouse.create_order(1, 1, 2)\n    >>> warehouse.track_order(1)\n    'Shipped'\n    \"\"\"\n    if order_id in self.orders:\n        return self.orders[order_id]['status']\n    else:\n        return False",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "WarehouseTestAddProduct": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestUpdateProductQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "WarehouseTestGetProductQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestCreateOrder": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestChangeOrderStatus": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestTrackOrder": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "WarehouseTestAddProduct": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestUpdateProductQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "WarehouseTestGetProductQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestCreateOrder": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestChangeOrderStatus": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestTrackOrder": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "WarehouseTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Warehouse: \n    def __init__(self):\n        \"\"\"\n        Initialize two fields.\n        self.inventory is a dict that stores the products.\n        self.inventory = {Product ID: Product}\n        self.orders is a dict that stores the products in a order.\n        self.orders = {Order ID: Order}\n        \"\"\"\n        self.inventory = {}  # Product ID: Product\n        self.orders = {}  # Order ID: Order\n\n    def add_product(self, product_id, name, quantity):\n        \"\"\"\n        Add product to inventory and plus the quantity if it has existed in inventory.\n        Or just add new product to dict otherwise.\n        :param product_id: int\n        :param name: str, product name\n        :param quantity: int, product quantity\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.inventory\n        {1: {'name': 'product1', 'quantity': 3}}\n        \"\"\"\n        if product_id in self.inventory:\n            self.inventory[product_id]['quantity'] += quantity\n        else:\n            self.inventory[product_id] = {'name': name, 'quantity': quantity}\n\n    def update_product_quantity(self, product_id, quantity):\n        \"\"\"\n        According to product_id, add the quantity to the corresponding product in inventory.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.update_product_quantity(1, -1)\n        >>> warehouse.inventory\n        {1: {'name': 'product1', 'quantity': 2}}\n        \"\"\"\n        self.inventory[product_id]['quantity'] += quantity\n\n    def get_product_quantity(self, product_id):\n        \"\"\"\n        Get the quantity of specific product by product_id.\n        :param product_id, int\n        :return: if the product_id is in inventory then return the corresponding quantity,\n                or False otherwise.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.get_product_quantity(1)\n        3\n        >>> warehouse.get_product_quantity(2)\n        False\n        \"\"\"\n        if product_id in self.inventory:\n            return self.inventory[product_id]['quantity']\n        else:\n            return False\n\n    def create_order(self, order_id, product_id, quantity):\n        \"\"\"\n        Create a order which includes the infomation of product, like id and quantity.\n        And put the new order into self.orders.\n        The default value of status is 'Shipped'.\n        :param order_id: int\n        :param product_id: int\n        :param quantity: the quantity of product that be selected.\n        :return False: only if product_id is not in inventory or the quantity is not adequate\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.orders\n        {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\n        >>> warehouse.create_order(1, 2, 2)\n        False\n        \"\"\"\n        if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:\n            return False\n        self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}\n\n    def change_order_status(self, order_id, status):\n        \"\"\"\n        Change the status of order if the input order_id is in self.orders.\n        :param order_id: int\n        :param status: str, the state that is going to change to\n        :return False: only if the order_id is not in self.orders\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.change_order_status(1, \"done\")\n        >>> warehouse.orders\n        {1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\n        \"\"\"\n        if order_id in self.orders:\n            self.orders[order_id]['status'] = status\n        else:\n            return False\n\n    def track_order(self, order_id):\n        \"\"\"\n        Get the status of specific order.\n        :param order_id: int\n        :return False: only if the order_id is not in self.orders.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.track_order(1)\n        'Shipped'\n        \"\"\"\n        if order_id in self.orders:\n            return self.orders[order_id]['status']\n        else:\n            return False\n",
+  "source": "\n\nclass Warehouse: \n    def __init__(self):\n        \"\"\"\n        Initialize two fields.\n        self.inventory is a dict that stores the products.\n        self.inventory = {Product ID: Product}\n        self.orders is a dict that stores the products in a order.\n        self.orders = {Order ID: Order}\n        \"\"\"\n        self.inventory = {}  # Product ID: Product\n        self.orders = {}  # Order ID: Order\n\n    def add_product(self, product_id, name, quantity):\n        \"\"\"\n        Add product to inventory and plus the quantity if it has existed in inventory.\n        Or just add new product to dict otherwise.\n        :param product_id: int\n        :param name: str, product name\n        :param quantity: int, product quantity\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.inventory\n        {1: {'name': 'product1', 'quantity': 3}}\n        \"\"\"\n        if product_id in self.inventory:\n            self.inventory[product_id]['quantity'] += quantity\n        else:\n            self.inventory[product_id] = {'name': name, 'quantity': quantity}\n\n    def update_product_quantity(self, product_id, quantity):\n        \"\"\"\n        According to product_id, add the quantity to the corresponding product in inventory.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.update_product_quantity(1, -1)\n        >>> warehouse.inventory\n        {1: {'name': 'product1', 'quantity': 2}}\n        \"\"\"\n        self.inventory[product_id]['quantity'] += quantity\n\n    def get_product_quantity(self, product_id):\n        \"\"\"\n        Get the quantity of specific product by product_id.\n        :param product_id, int\n        :return: if the product_id is in inventory then return the corresponding quantity,\n                or False otherwise.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.get_product_quantity(1)\n        3\n        >>> warehouse.get_product_quantity(2)\n        False\n        \"\"\"\n        if product_id in self.inventory:\n            return self.inventory[product_id]['quantity']\n        else:\n            return False\n\n    def create_order(self, order_id, product_id, quantity):\n        \"\"\"\n        Create a order which includes the infomation of product, like id and quantity.\n        And put the new order into self.orders.\n        The default value of status is 'Shipped'.\n        :param order_id: int\n        :param product_id: int\n        :param quantity: the quantity of product that be selected.\n        :return False: only if product_id is not in inventory or the quantity is not adequate\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.orders\n        {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\n        >>> warehouse.create_order(1, 2, 2)\n        False\n        \"\"\"\n        if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:\n            return False\n        self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}\n\n    def change_order_status(self, order_id, status):\n        \"\"\"\n        Change the status of order if the input order_id is in self.orders.\n        :param order_id: int\n        :param status: str, the state that is going to change to\n        :return False: only if the order_id is not in self.orders\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.change_order_status(1, \"done\")\n        >>> warehouse.orders\n        {1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\n        \"\"\"\n        if order_id in self.orders:\n            self.orders[order_id]['status'] = status\n        else:\n            return False\n\n    def track_order(self, order_id):\n        \"\"\"\n        Get the status of specific order.\n        :param order_id: int\n        :return False: only if the order_id is not in self.orders.\n        >>> warehouse.add_product(1, \"product1\", 3)\n        >>> warehouse.create_order(1, 1, 2)\n        >>> warehouse.track_order(1)\n        'Shipped'\n        \"\"\"\n        if order_id in self.orders:\n            return self.orders[order_id]['status']\n        else:\n            return False\n"
+}

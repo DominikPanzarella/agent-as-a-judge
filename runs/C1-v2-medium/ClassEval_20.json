@@ -1,0 +1,198 @@
+{
+  "task_id": "ClassEval_20",
+  "class_name": "Chat",
+  "setup": "C1",
+  "name": "C1-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "add_user",
+      "first": {
+        "code": "def add_user(self, username):\n    if username in self.users:\n        return False\n    self.users[username] = []\n    return True",
+        "valid": true,
+        "reply": "\n\n```python\ndef add_user(self, username):\n    if username in self.users:\n        return False\n    self.users[username] = []\n    return True\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 770,
+        "cached_tokens": 0,
+        "completion_tokens": 134,
+        "reasoning_tokens": 94,
+        "cost": 0.00036675
+      },
+      "final_code": "def add_user(self, username):\n    if username in self.users:\n        return False\n    self.users[username] = []\n    return True",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "remove_user",
+      "first": {
+        "code": "def remove_user(self, username):\n    if username in self.users:\n        del self.users[username]\n        return True\n    return False",
+        "valid": true,
+        "reply": "\n\n```python\ndef remove_user(self, username):\n    if username in self.users:\n        del self.users[username]\n        return True\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 815,
+        "cached_tokens": 0,
+        "completion_tokens": 136,
+        "reasoning_tokens": 101,
+        "cost": 0.00037725
+      },
+      "final_code": "def remove_user(self, username):\n    if username in self.users:\n        del self.users[username]\n        return True\n    return False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "send_message",
+      "first": {
+        "code": "def send_message(self, sender, receiver, message):\n    if sender not in self.users or receiver not in self.users:\n        return False\n    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    msg = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}\n    self.users[sender].append(msg)\n    self.users[receiver].append(msg)\n    return True",
+        "valid": true,
+        "reply": "\n\n```python\ndef send_message(self, sender, receiver, message):\n    if sender not in self.users or receiver not in self.users:\n        return False\n    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    msg = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}\n    self.users[sender].append(msg)\n    self.users[receiver].append(msg)\n    return True\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 847,
+        "cached_tokens": 0,
+        "completion_tokens": 780,
+        "reasoning_tokens": 719,
+        "cost": 0.00158955
+      },
+      "final_code": "def send_message(self, sender, receiver, message):\n    if sender not in self.users or receiver not in self.users:\n        return False\n    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    msg = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}\n    self.users[sender].append(msg)\n    self.users[receiver].append(msg)\n    return True",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_messages",
+      "first": {
+        "code": "def get_messages(self, username):\n    if username in self.users:\n        return self.users[username]\n    return []",
+        "valid": true,
+        "reply": "\n\n```python\ndef get_messages(self, username):\n    if username in self.users:\n        return self.users[username]\n    return []\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 947,
+        "cached_tokens": 0,
+        "completion_tokens": 138,
+        "reasoning_tokens": 97,
+        "cost": 0.0004008
+      },
+      "final_code": "def get_messages(self, username):\n    if username in self.users:\n        return self.users[username]\n    return []",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "review": {
+    "verdict": "OK",
+    "reason": "All methods meet their documented behavior. add_user and remove_user return the specified booleans and update users accordingly. send_message checks that both users exist, creates a timestamped message, records it for both participants, and returns the specified result. get_messages returns the user's messages, or an empty list if the username is absent.",
+    "status": "completed",
+    "provider": "OpenAI",
+    "n_runs": 1,
+    "runs": [
+      {
+        "code": "c=Chat(); c.users={'John': [], 'Mary': []}; print(c.send_message('John','Mary','Hello')); print(c.users); print(c.get_messages('John') is c.users['John']); print(c.get_messages('Mary'))",
+        "output": "exit code 0\nstdout:\nTrue\n{'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-07 19:21:08'}], 'Mary': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-07 19:21:08'}]}\nTrue\n[{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-07 19:21:08'}]\n\nstderr:\n"
+      }
+    ],
+    "requests": [
+      {
+        "provider": "OpenAI",
+        "prompt_tokens": 1230,
+        "cached_tokens": 0,
+        "completion_tokens": 67,
+        "reasoning_tokens": 0,
+        "cost": 0.0001565
+      },
+      {
+        "provider": "OpenAI",
+        "prompt_tokens": 1436,
+        "cached_tokens": 1227,
+        "completion_tokens": 359,
+        "reasoning_tokens": 275,
+        "cost": 0.00021267
+      }
+    ],
+    "prompt_tokens": 2666,
+    "cached_tokens": 1227,
+    "completion_tokens": 426,
+    "reasoning_tokens": 275,
+    "cost": 0.00036917000000000004
+  },
+  "revision": null,
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "ChatTestAddUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestRemoveUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestSendMessage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestGetMessages": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestMain": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "ChatTestAddUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestRemoveUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestSendMessage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestGetMessages": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ChatTestMain": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "from datetime import datetime\n\nclass Chat: \n    def __init__(self):\n        \"\"\"\n        Initialize the Chat with an attribute users, which is an empty dictionary.\n        \"\"\"\n        self.users = {}\n\n    def add_user(self, username):\n        if username in self.users:\n            return False\n        self.users[username] = []\n        return True\n\n    def remove_user(self, username):\n        if username in self.users:\n            del self.users[username]\n            return True\n        return False\n\n    def send_message(self, sender, receiver, message):\n        if sender not in self.users or receiver not in self.users:\n            return False\n        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n        msg = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}\n        self.users[sender].append(msg)\n        self.users[receiver].append(msg)\n        return True\n\n    def get_messages(self, username):\n        if username in self.users:\n            return self.users[username]\n        return []\n",
+  "source": "from datetime import datetime\n\nclass Chat: \n    def __init__(self):\n        \"\"\"\n        Initialize the Chat with an attribute users, which is an empty dictionary.\n        \"\"\"\n        self.users = {}\n\n    def add_user(self, username):\n        if username in self.users:\n            return False\n        self.users[username] = []\n        return True\n\n    def remove_user(self, username):\n        if username in self.users:\n            del self.users[username]\n            return True\n        return False\n\n    def send_message(self, sender, receiver, message):\n        if sender not in self.users or receiver not in self.users:\n            return False\n        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n        msg = {'sender': sender, 'receiver': receiver, 'message': message, 'timestamp': timestamp}\n        self.users[sender].append(msg)\n        self.users[receiver].append(msg)\n        return True\n\n    def get_messages(self, username):\n        if username in self.users:\n            return self.users[username]\n        return []\n"
+}

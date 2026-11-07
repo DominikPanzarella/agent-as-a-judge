@@ -1,0 +1,274 @@
+{
+  "task_id": "ClassEval_16",
+  "class_name": "Calculator",
+  "setup": "C2",
+  "name": "C2-v2-medium",
+  "coder_model": "qwen/qwen3.8-27b",
+  "judge": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "precedence",
+      "first": {
+        "code": "def precedence(self, operator):\n    \"\"\"\n    Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'\n    :param operator: string, given operator\n    :return: int, the priority of the given operator, otherwise return 0\n    >>> calculator = Calculator()\n    >>> calculator.precedence('+')\n    1\n    >>> calculator.precedence('^')\n    3\n    \"\"\"\n    return {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}.get(operator, 0)",
+        "valid": true,
+        "reply": "\n\n```python\n    def precedence(self, operator):\n        \"\"\"\n        Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'\n        :param operator: string, given operator\n        :return: int, the priority of the given operator, otherwise return 0\n        >>> calculator = Calculator()\n        >>> calculator.precedence('+')\n        1\n        >>> calculator.precedence('^')\n        3\n        \"\"\"\n        return {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}.get(operator, 0)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 616,
+        "cached_tokens": 0,
+        "completion_tokens": 298,
+        "reasoning_tokens": 110,
+        "cost": 0.00065115
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method assigns the documented priorities to all five operators and returns 0 for an unrecognized operator. The documented examples return 1 for '+' and 3 for '^'.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "c=Calculator(); print(c.precedence('+')); print(c.precedence('^')); print(c.precedence('?'))",
+            "output": "exit code 0\nstdout:\n1\n3\n0\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1062,
+            "cached_tokens": 0,
+            "completion_tokens": 75,
+            "reasoning_tokens": 33,
+            "cost": 0.0001437
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1163,
+            "cached_tokens": 1059,
+            "completion_tokens": 51,
+            "reasoning_tokens": 0,
+            "cost": 4.6490000000000004e-05
+          }
+        ],
+        "prompt_tokens": 2225,
+        "cached_tokens": 1059,
+        "completion_tokens": 126,
+        "reasoning_tokens": 33,
+        "cost": 0.00019019
+      },
+      "revision": null,
+      "final_code": "def precedence(self, operator):\n    \"\"\"\n    Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'\n    :param operator: string, given operator\n    :return: int, the priority of the given operator, otherwise return 0\n    >>> calculator = Calculator()\n    >>> calculator.precedence('+')\n    1\n    >>> calculator.precedence('^')\n    3\n    \"\"\"\n    return {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}.get(operator, 0)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "apply_operator",
+      "first": {
+        "code": "def apply_operator(self, operand_stack, operator_stack):\n    \"\"\"\n    Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n    :param operand_stack:list\n    :param operator_stack:list\n    :return: the updated operand_stack and operator_stack\n    >>> calculator = Calculator()\n    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n    ([1, -1], ['-'])\n    \"\"\"\n    operator = operator_stack.pop()\n    second = operand_stack.pop()\n    first = operand_stack.pop()\n    result = self.operators[operator](first, second)\n    operand_stack.append(result)\n    return operand_stack, operator_stack",
+        "valid": true,
+        "reply": "\n\n```python\ndef apply_operator(self, operand_stack, operator_stack):\n    \"\"\"\n    Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n    :param operand_stack:list\n    :param operator_stack:list\n    :return: the updated operand_stack and operator_stack\n    >>> calculator = Calculator()\n    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n    ([1, -1], ['-'])\n    \"\"\"\n    operator = operator_stack.pop()\n    second = operand_stack.pop()\n    first = operand_stack.pop()\n    result = self.operators[operator](first, second)\n    operand_stack.append(result)\n    return operand_stack, operator_stack\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 782,
+        "cached_tokens": 0,
+        "completion_tokens": 487,
+        "reasoning_tokens": 278,
+        "cost": 0.001030425
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method applies the top operator to the top two operands correctly, but the doctest is inconsistent: running it returns `([1, -1], ['+'])`, not `([1, -1], ['-'])`. Fix the example to expect `['+']`, the operator left after popping `'-'`.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 1,
+        "runs": [
+          {
+            "code": "c = Calculator(); print(c.apply_operator([1, 2, 3], ['+', '-']))",
+            "output": "exit code 0\nstdout:\n([1, -1], ['+'])\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1235,
+            "cached_tokens": 0,
+            "completion_tokens": 38,
+            "reasoning_tokens": 0,
+            "cost": 0.0001425
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1302,
+            "cached_tokens": 1232,
+            "completion_tokens": 309,
+            "reasoning_tokens": 224,
+            "cost": 0.00017381999999999999
+          }
+        ],
+        "prompt_tokens": 2537,
+        "cached_tokens": 1232,
+        "completion_tokens": 347,
+        "reasoning_tokens": 224,
+        "cost": 0.00031632
+      },
+      "revision": {
+        "code": "def apply_operator(self, operand_stack, operator_stack):\n    \"\"\"\n    Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n    :param operand_stack:list\n    :param operator_stack:list\n    :return: the updated operand_stack and operator_stack\n    >>> calculator = Calculator()\n    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n    ([1, -1], ['+'])\n    \"\"\"\n    operator = operator_stack.pop()\n    second = operand_stack.pop()\n    first = operand_stack.pop()\n    result = self.operators[operator](first, second)\n    operand_stack.append(result)\n    return operand_stack, operator_stack",
+        "valid": true,
+        "reply": "\n\n```python\ndef apply_operator(self, operand_stack, operator_stack):\n    \"\"\"\n    Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n    :param operand_stack:list\n    :param operator_stack:list\n    :return: the updated operand_stack and operator_stack\n    >>> calculator = Calculator()\n    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n    ([1, -1], ['+'])\n    \"\"\"\n    operator = operator_stack.pop()\n    second = operand_stack.pop()\n    first = operand_stack.pop()\n    result = self.operators[operator](first, second)\n    operand_stack.append(result)\n    return operand_stack, operator_stack\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1065,
+        "cached_tokens": 0,
+        "completion_tokens": 367,
+        "reasoning_tokens": 146,
+        "cost": 0.000847875
+      },
+      "final_code": "def apply_operator(self, operand_stack, operator_stack):\n    \"\"\"\n    Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n    :param operand_stack:list\n    :param operator_stack:list\n    :return: the updated operand_stack and operator_stack\n    >>> calculator = Calculator()\n    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n    ([1, -1], ['+'])\n    \"\"\"\n    operator = operator_stack.pop()\n    second = operand_stack.pop()\n    first = operand_stack.pop()\n    result = self.operators[operator](first, second)\n    operand_stack.append(result)\n    return operand_stack, operator_stack",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "calculate",
+      "first": {
+        "code": "def calculate(self, expression):\n    \"\"\"\n    Calculate the value of a given expression\n    :param expression: string, given expression\n    :return:If successful, returns the value of the expression; otherwise, returns None\n    >>> calculator = Calculator()\n    >>> calculator.calculate('1+2-3')\n    0.0\n    \"\"\"\n    try:\n        operand_stack = []\n        operator_stack = []\n        i = 0\n        while i < len(expression):\n            char = expression[i]\n            if char.isdigit() or char == '.':\n                j = i\n                while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):\n                    j += 1\n                operand_stack.append(float(expression[i:j]))\n                i = j\n                continue\n            elif char in self.operators:\n                is_right_assoc = (char == '^')\n                while operator_stack:\n                    top = operator_stack[-1]\n                    if is_right_assoc:\n                        if self.precedence(top) > self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                    else:\n                        if self.precedence(top) >= self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                operator_stack.append(char)\n            elif char.isspace():\n                pass\n            else:\n                return None\n            i += 1\n\n        while operator_stack:\n            self.apply_operator(operand_stack, operator_stack)\n\n        if len(operand_stack) != 1:\n            return None\n\n        return operand_stack[0]\n    except:\n        return None",
+        "valid": true,
+        "reply": "\n\n```python\ndef calculate(self, expression):\n    \"\"\"\n    Calculate the value of a given expression\n    :param expression: string, given expression\n    :return:If successful, returns the value of the expression; otherwise, returns None\n    >>> calculator = Calculator()\n    >>> calculator.calculate('1+2-3')\n    0.0\n    \"\"\"\n    try:\n        operand_stack = []\n        operator_stack = []\n        i = 0\n        while i < len(expression):\n            char = expression[i]\n            if char.isdigit() or char == '.':\n                j = i\n                while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):\n                    j += 1\n                operand_stack.append(float(expression[i:j]))\n                i = j\n                continue\n            elif char in self.operators:\n                is_right_assoc = (char == '^')\n                while operator_stack:\n                    top = operator_stack[-1]\n                    if is_right_assoc:\n                        if self.precedence(top) > self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                    else:\n                        if self.precedence(top) >= self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                operator_stack.append(char)\n            elif char.isspace():\n                pass\n            else:\n                return None\n            i += 1\n\n        while operator_stack:\n            self.apply_operator(operand_stack, operator_stack)\n\n        if len(operand_stack) != 1:\n            return None\n\n        return operand_stack[0]\n    except:\n        return None\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 954,
+        "cached_tokens": 0,
+        "completion_tokens": 1376,
+        "reasoning_tokens": 1113,
+        "cost": 0.0027231
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The parser treats every `-` as a binary operator, so valid expressions with negative operands such as `-1+2` and `2*-3` return `None`. Handle unary signs when parsing operands to support negative numbers.",
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 2,
+        "runs": [
+          {
+            "code": "c=Calculator(); print(c.calculate('1+2-3')); print(c.calculate('2^3^2')); print(c.calculate('2+')); print(c.calculate('')); print(c.calculate('1 2'))",
+            "output": "exit code 0\nstdout:\n0.0\n512.0\nNone\nNone\nNone\n\nstderr:\n"
+          },
+          {
+            "code": "c=Calculator(); print(c.calculate('-1+2')); print(c.calculate('2*-3')); print(c.calculate('1/0'))",
+            "output": "exit code 0\nstdout:\nNone\nNone\nNone\n\nstderr:\n"
+          }
+        ],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1570,
+            "cached_tokens": 0,
+            "completion_tokens": 61,
+            "reasoning_tokens": 0,
+            "cost": 0.0001875
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1665,
+            "cached_tokens": 1567,
+            "completion_tokens": 368,
+            "reasoning_tokens": 321,
+            "cost": 0.00020947
+          },
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2059,
+            "cached_tokens": 1662,
+            "completion_tokens": 107,
+            "reasoning_tokens": 41,
+            "cost": 0.00010982
+          }
+        ],
+        "prompt_tokens": 5294,
+        "cached_tokens": 3229,
+        "completion_tokens": 536,
+        "reasoning_tokens": 362,
+        "cost": 0.00050679
+      },
+      "revision": {
+        "code": "def calculate(self, expression):\n    \"\"\"\n    Calculate the value of a given expression\n    :param expression: string, given expression\n    :return:If successful, returns the value of the expression; otherwise, returns None\n    >>> calculator = Calculator()\n    >>> calculator.calculate('1+2-3')\n    0.0\n    \"\"\"\n    try:\n        operand_stack = []\n        operator_stack = []\n        i = 0\n        n = len(expression)\n\n        while i < n:\n            char = expression[i]\n\n            if char.isspace():\n                i += 1\n                continue\n\n            if char in ('+', '-'):\n                # Determine if unary: at start or after an operator\n                j = i - 1\n                while j >= 0 and expression[j].isspace():\n                    j -= 1\n                is_unary = (j < 0) or (expression[j] in self.operators)\n\n                if is_unary:\n                    if char == '+':\n                        i += 1\n                        continue\n                    else:\n                        i += 1\n                        j = i\n                        while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                            j += 1\n                        operand_stack.append(-float(expression[i:j]))\n                        i = j\n                        continue\n\n            if char in self.operators:\n                is_right_assoc = (char == '^')\n                while operator_stack:\n                    top = operator_stack[-1]\n                    if is_right_assoc:\n                        if self.precedence(top) > self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                    else:\n                        if self.precedence(top) >= self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                operator_stack.append(char)\n                i += 1\n                continue\n\n            if char.isdigit() or char == '.':\n                j = i\n                while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                    j += 1\n                operand_stack.append(float(expression[i:j]))\n                i = j\n                continue\n\n            return None\n\n        while operator_stack:\n            self.apply_operator(operand_stack, operator_stack)\n\n        if len(operand_stack) != 1:\n            return None\n\n        return operand_stack[0]\n    except:\n        return None",
+        "valid": true,
+        "reply": "\n\n```python\ndef calculate(self, expression):\n    \"\"\"\n    Calculate the value of a given expression\n    :param expression: string, given expression\n    :return:If successful, returns the value of the expression; otherwise, returns None\n    >>> calculator = Calculator()\n    >>> calculator.calculate('1+2-3')\n    0.0\n    \"\"\"\n    try:\n        operand_stack = []\n        operator_stack = []\n        i = 0\n        n = len(expression)\n\n        while i < n:\n            char = expression[i]\n\n            if char.isspace():\n                i += 1\n                continue\n\n            if char in ('+', '-'):\n                # Determine if unary: at start or after an operator\n                j = i - 1\n                while j >= 0 and expression[j].isspace():\n                    j -= 1\n                is_unary = (j < 0) or (expression[j] in self.operators)\n\n                if is_unary:\n                    if char == '+':\n                        i += 1\n                        continue\n                    else:\n                        i += 1\n                        j = i\n                        while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                            j += 1\n                        operand_stack.append(-float(expression[i:j]))\n                        i = j\n                        continue\n\n            if char in self.operators:\n                is_right_assoc = (char == '^')\n                while operator_stack:\n                    top = operator_stack[-1]\n                    if is_right_assoc:\n                        if self.precedence(top) > self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                    else:\n                        if self.precedence(top) >= self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                operator_stack.append(char)\n                i += 1\n                continue\n\n            if char.isdigit() or char == '.':\n                j = i\n                while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                    j += 1\n                operand_stack.append(float(expression[i:j]))\n                i = j\n                continue\n\n            return None\n\n        while operator_stack:\n            self.apply_operator(operand_stack, operator_stack)\n\n        if len(operand_stack) != 1:\n            return None\n\n        return operand_stack[0]\n    except:\n        return None\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1417,
+        "cached_tokens": 0,
+        "completion_tokens": 1879,
+        "reasoning_tokens": 1476,
+        "cost": 0.003735675
+      },
+      "final_code": "def calculate(self, expression):\n    \"\"\"\n    Calculate the value of a given expression\n    :param expression: string, given expression\n    :return:If successful, returns the value of the expression; otherwise, returns None\n    >>> calculator = Calculator()\n    >>> calculator.calculate('1+2-3')\n    0.0\n    \"\"\"\n    try:\n        operand_stack = []\n        operator_stack = []\n        i = 0\n        n = len(expression)\n\n        while i < n:\n            char = expression[i]\n\n            if char.isspace():\n                i += 1\n                continue\n\n            if char in ('+', '-'):\n                # Determine if unary: at start or after an operator\n                j = i - 1\n                while j >= 0 and expression[j].isspace():\n                    j -= 1\n                is_unary = (j < 0) or (expression[j] in self.operators)\n\n                if is_unary:\n                    if char == '+':\n                        i += 1\n                        continue\n                    else:\n                        i += 1\n                        j = i\n                        while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                            j += 1\n                        operand_stack.append(-float(expression[i:j]))\n                        i = j\n                        continue\n\n            if char in self.operators:\n                is_right_assoc = (char == '^')\n                while operator_stack:\n                    top = operator_stack[-1]\n                    if is_right_assoc:\n                        if self.precedence(top) > self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                    else:\n                        if self.precedence(top) >= self.precedence(char):\n                            self.apply_operator(operand_stack, operator_stack)\n                        else:\n                            break\n                operator_stack.append(char)\n                i += 1\n                continue\n\n            if char.isdigit() or char == '.':\n                j = i\n                while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                    j += 1\n                operand_stack.append(float(expression[i:j]))\n                i = j\n                continue\n\n            return None\n\n        while operator_stack:\n            self.apply_operator(operand_stack, operator_stack)\n\n        if len(operand_stack) != 1:\n            return None\n\n        return operand_stack[0]\n    except:\n        return None",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "CalculatorTestCalculate": {
+      "status": "ok",
+      "tests": 8,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "CalculatorTestPrecedence": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CalculatorTestApplyOperator": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "CalculatorTestCalculate": {
+      "status": "ok",
+      "tests": 8,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "CalculatorTestPrecedence": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CalculatorTestApplyOperator": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Calculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the operations performed by the five operators'+','-','*','/','^'\n        \"\"\"\n        self.operators = {\n            '+': lambda x, y: x + y,\n            '-': lambda x, y: x - y,\n            '*': lambda x, y: x * y,\n            '/': lambda x, y: x / y,\n            '^': lambda x, y: x ** y\n        }\n\n    def calculate(self, expression):\n        \"\"\"\n        Calculate the value of a given expression\n        :param expression: string, given expression\n        :return:If successful, returns the value of the expression; otherwise, returns None\n        >>> calculator = Calculator()\n        >>> calculator.calculate('1+2-3')\n        0.0\n        \"\"\"\n        try:\n            operand_stack = []\n            operator_stack = []\n            i = 0\n            while i < len(expression):\n                char = expression[i]\n                if char.isdigit() or char == '.':\n                    j = i\n                    while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):\n                        j += 1\n                    operand_stack.append(float(expression[i:j]))\n                    i = j\n                    continue\n                elif char in self.operators:\n                    is_right_assoc = (char == '^')\n                    while operator_stack:\n                        top = operator_stack[-1]\n                        if is_right_assoc:\n                            if self.precedence(top) > self.precedence(char):\n                                self.apply_operator(operand_stack, operator_stack)\n                            else:\n                                break\n                        else:\n                            if self.precedence(top) >= self.precedence(char):\n                                self.apply_operator(operand_stack, operator_stack)\n                            else:\n                                break\n                    operator_stack.append(char)\n                elif char.isspace():\n                    pass\n                else:\n                    return None\n                i += 1\n\n            while operator_stack:\n                self.apply_operator(operand_stack, operator_stack)\n\n            if len(operand_stack) != 1:\n                return None\n\n            return operand_stack[0]\n        except:\n            return None\n\n    def precedence(self, operator):\n        \"\"\"\n        Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'\n        :param operator: string, given operator\n        :return: int, the priority of the given operator, otherwise return 0\n        >>> calculator = Calculator()\n        >>> calculator.precedence('+')\n        1\n        >>> calculator.precedence('^')\n        3\n        \"\"\"\n        return {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}.get(operator, 0)\n\n    def apply_operator(self, operand_stack, operator_stack):\n        \"\"\"\n        Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n        :param operand_stack:list\n        :param operator_stack:list\n        :return: the updated operand_stack and operator_stack\n        >>> calculator = Calculator()\n        >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n        ([1, -1], ['-'])\n        \"\"\"\n        operator = operator_stack.pop()\n        second = operand_stack.pop()\n        first = operand_stack.pop()\n        result = self.operators[operator](first, second)\n        operand_stack.append(result)\n        return operand_stack, operator_stack\n",
+  "source": "\n\nclass Calculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the operations performed by the five operators'+','-','*','/','^'\n        \"\"\"\n        self.operators = {\n            '+': lambda x, y: x + y,\n            '-': lambda x, y: x - y,\n            '*': lambda x, y: x * y,\n            '/': lambda x, y: x / y,\n            '^': lambda x, y: x ** y\n        }\n\n    def calculate(self, expression):\n        \"\"\"\n        Calculate the value of a given expression\n        :param expression: string, given expression\n        :return:If successful, returns the value of the expression; otherwise, returns None\n        >>> calculator = Calculator()\n        >>> calculator.calculate('1+2-3')\n        0.0\n        \"\"\"\n        try:\n            operand_stack = []\n            operator_stack = []\n            i = 0\n            n = len(expression)\n\n            while i < n:\n                char = expression[i]\n\n                if char.isspace():\n                    i += 1\n                    continue\n\n                if char in ('+', '-'):\n                    # Determine if unary: at start or after an operator\n                    j = i - 1\n                    while j >= 0 and expression[j].isspace():\n                        j -= 1\n                    is_unary = (j < 0) or (expression[j] in self.operators)\n\n                    if is_unary:\n                        if char == '+':\n                            i += 1\n                            continue\n                        else:\n                            i += 1\n                            j = i\n                            while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                                j += 1\n                            operand_stack.append(-float(expression[i:j]))\n                            i = j\n                            continue\n\n                if char in self.operators:\n                    is_right_assoc = (char == '^')\n                    while operator_stack:\n                        top = operator_stack[-1]\n                        if is_right_assoc:\n                            if self.precedence(top) > self.precedence(char):\n                                self.apply_operator(operand_stack, operator_stack)\n                            else:\n                                break\n                        else:\n                            if self.precedence(top) >= self.precedence(char):\n                                self.apply_operator(operand_stack, operator_stack)\n                            else:\n                                break\n                    operator_stack.append(char)\n                    i += 1\n                    continue\n\n                if char.isdigit() or char == '.':\n                    j = i\n                    while j < n and (expression[j].isdigit() or expression[j] == '.'):\n                        j += 1\n                    operand_stack.append(float(expression[i:j]))\n                    i = j\n                    continue\n\n                return None\n\n            while operator_stack:\n                self.apply_operator(operand_stack, operator_stack)\n\n            if len(operand_stack) != 1:\n                return None\n\n            return operand_stack[0]\n        except:\n            return None\n\n    def precedence(self, operator):\n        \"\"\"\n        Returns the priority of the specified operator, where the higher the priority, the greater the assignment. The priority of '^' is greater than '/' and '*', and the priority of '/' and '*' is greater than '+' and '-'\n        :param operator: string, given operator\n        :return: int, the priority of the given operator, otherwise return 0\n        >>> calculator = Calculator()\n        >>> calculator.precedence('+')\n        1\n        >>> calculator.precedence('^')\n        3\n        \"\"\"\n        return {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}.get(operator, 0)\n\n    def apply_operator(self, operand_stack, operator_stack):\n        \"\"\"\n        Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack\n        :param operand_stack:list\n        :param operator_stack:list\n        :return: the updated operand_stack and operator_stack\n        >>> calculator = Calculator()\n        >>> calculator.apply_operator([1, 2, 3], ['+', '-'])\n        ([1, -1], ['+'])\n        \"\"\"\n        operator = operator_stack.pop()\n        second = operand_stack.pop()\n        first = operand_stack.pop()\n        result = self.operators[operator](first, second)\n        operand_stack.append(result)\n        return operand_stack, operator_stack\n"
+}

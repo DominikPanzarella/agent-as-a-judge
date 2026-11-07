@@ -78,13 +78,14 @@ coder that reviews its own code (self-refine).
 | API access (OpenAI project and OpenRouter key from the course) | done |
 | Coder, setup C0 | done, piloted on 10 classes |
 | Judge v1 and v2 | done, piloted on 10 classes |
-| Setups C1 and C2 | code ready and tested offline; runs wait for the instructors' advice |
+| Setups C1 and C2 | done, piloted on 10 classes; full runs wait for the instructors' advice |
+| Analysis and error-analysis script | ready, tested on the runs of the pilot |
 | Setups C3, C4, self-refine control | planned after the midway report |
 | Midway report (2 pages) | due 19 November 2026 |
 | Final report and 5-minute talk | due 16 and 17 December 2026 |
 
 The plan with dates is in [docs/roadmap_midway.md](docs/roadmap_midway.md). Up to now the project
-has spent about 0.11 dollars on OpenRouter and 0.04 dollars on OpenAI, out of 10 dollars each.
+has spent about 0.26 dollars on OpenRouter and 0.06 dollars on OpenAI, out of 10 dollars each.
 
 ## 4. Getting started
 
@@ -149,11 +150,14 @@ The outputs are already in the repository. Run these again only if you change th
 ```bash
 .venv/bin/python scripts/harness.py                   # reference solutions must pass, stubs must fail
 .venv/bin/python scripts/check_docstring_examples.py  # runs every docstring example on the reference
+.venv/bin/python scripts/check_field_order.py         # methods that read a field a later method fills
 ```
 
 The harness writes `data/selection/reference_check.csv` (empty when every reference passes) and
 `data/selection/weak_tests.csv`. The docstring check writes `data/selection/docstring_examples.csv`;
-the examples we checked by hand are in `data/selection/wrong_docstring_examples.csv`.
+the examples we checked by hand are in `data/selection/wrong_docstring_examples.csv`. The field check
+writes `data/selection/field_order_check.csv`. All 43 pairs it finds use a field that `__init__`
+already sets, so the method order does not change.
 
 ### 5.3 Check the APIs and the budget
 
@@ -203,7 +207,25 @@ allows.
 ```
 
 It prints the tables of [section 9](#9-results-so-far) from the saved results and writes
-`runs/pilot_disagreements.csv`. It sends no request.
+`runs/pilot_disagreements.csv`. It sends no request. The concrete claims in the judges' reasons are
+checked by a separate script, which runs a snippet written by hand for each claim:
+
+```bash
+.venv/bin/python scripts/check_claims.py    # -> runs/pilot_claims.csv
+```
+
+### 5.8 Analysis of the runs
+
+```bash
+.venv/bin/python scripts/analyze.py --classes dev C0 C1-v2-medium C2-v2-medium
+.venv/bin/python scripts/analyze.py --classes test C0 C1-v2-medium C2-v2-medium --sample 20
+```
+
+For each run it prints the share of methods and classes that pass, with and without the weak
+methods, and the judge's agreement with the tests on the first versions. It then compares every
+pair of runs with an exact McNemar test and a bootstrap interval over classes. `--classes test`
+uses the 61 classes outside the development set. `--sample 20` writes 20 random disagreements per
+run to `runs/error_analysis_<run>.csv` for the error analysis.
 
 ## 6. Project layout
 
@@ -227,6 +249,9 @@ scripts/
   judge.py                       # judge v1 and v2, on one method or on a whole class
   loop.py                        # setups C1 and C2: judge feedback and one revision
   pilot_report.py                # tables of the pilot from the saved results
+  check_claims.py                # runs the concrete claims of the judges' reasons
+  check_field_order.py           # methods that read a field which a later method fills
+  analyze.py                     # pass rates, judge scores, McNemar and bootstrap between runs
 data/
   raw/                           # downloaded data, not tracked
   selection/
@@ -237,14 +262,19 @@ data/
     reference_check.csv          # reference methods that fail our harness (none)
     docstring_examples.csv       # outcome of every docstring example, one row per method
     wrong_docstring_examples.csv # docstring examples checked by hand: wrong or not
+    field_order_check.csv        # reader and writer of each field, by step
 runs/
   C0/, C0-r2/                    # two runs of the coder with qwen3.8-27b
   C0-9b/, C0-9b-r2/              # two runs of the coder with qwen3.5-9b
   judge/<run>-<version>-<effort>/  # verdicts of the judge on a finished run
   judge/*-before-fix, *-before-guard/  # first verdicts, kept to document two fixes of the judge
+  C1-v2-medium/, C2-v2-medium/   # setups C1 and C2 on the development classes, with their .log
+  C1-v2-medium-before-fix/       # the C1 class revision that ran out of tokens
   cost_log.csv                   # one row per API request
   pilot_disagreements.csv        # methods where a judge and the tests disagree
   pilot_adjudication.csv         # our reading of each disagreement: who is right
+  pilot_claims.csv               # each claim of the judges, the snippet, and what it printed
+  error_analysis_<run>.csv       # sampled disagreements of a run, to classify by hand
 ```
 
 ## 7. Method details
@@ -328,6 +358,10 @@ usable method, as in C0, so the feedback is the only difference with C0.
 The harness runs the tests twice, on the first version and on the final version of every method.
 The first run tells how good the verdicts were, the second whether the feedback helped.
 
+A revised method in C2 can use up to 4000 tokens, like a first version. In C1 the revision rewrites
+the whole class, so it gets 4000 tokens for each method of the class. With 4000 tokens in all, the
+first C1 run of ClassEval_55 spent them on reasoning and returned no code.
+
 ### 7.7 Costs and budget
 
 | Model | Provider | Input | Cached input | Output |
@@ -391,6 +425,34 @@ does not say. For 3 others the docstring example contradicts the reference solut
 finds a real bug that no test checks in 3 methods. Only 2 are coder bugs that the tests catch; the
 last 2 are edge cases outside the docstring, where the judge is stricter than the specification.
 
+We then scored the judges against these corrected labels. A method where the judge is right counts
+as failing, and the 5 methods where the tests ask for something unstated are left out:
+
+| Judge | Methods | Agreement | Cohen's kappa | OK to a failing method | NOT OK to a passing method |
+|---|---|---|---|---|---|
+| v1, low effort | 33 | 0.88 | 0.60 | 1 of 5 | 3 of 28 |
+| v1, medium effort | 33 | 0.82 | 0.47 | 1 of 5 | 5 of 28 |
+| v2, low effort | 33 | 0.79 | 0.24 | 3 of 5 | 4 of 28 |
+| v2, medium effort | 33 | 0.82 | 0.47 | 1 of 5 | 5 of 28 |
+
+We also ran the 22 concrete claims found in the NOT OK reasons, such as "'a|a' gives 'aa'"
+(`runs/pilot_claims.csv`). Counted per judge, all 23 claims made with medium effort are true. With
+low effort 12 of 16 are true. The coder reads these reasons in C1 and C2, so the loops use v2 with
+medium effort.
+
+Setups C1 and C2 on the same 10 classes, with judge v2 and medium effort:
+
+| Run | Methods passing, first versions | Methods passing, final | Fixed / broken by a revision | Classes passing |
+|---|---|---|---|---|
+| C0 | 31 of 38 | 31 of 38 | none | 6 of 10 |
+| C1 | 29 of 38 | 29 of 38 | 0 / 0 | 5 of 10 |
+| C2 | 26 of 38 | 27 of 38 | 3 / 2 | 3 of 10 |
+
+The revisions of C2 fixed 3 methods and broke 2. Both broken methods were correct code that the
+judge rejected for behaviour the docstring does not describe. The two setups end below C0, but
+their first versions were already worse: the coder writes them again in every run. Each setup
+would cost about 0.6 dollars for the coder and 0.1 for the judge on all 289 methods.
+
 ## 10. Known issues
 
 - ClassEval tests and docstrings do not always agree, even after the benchmarks+ filter. Running
@@ -400,10 +462,13 @@ last 2 are edge cases outside the docstring, where the judge is stricter than th
 - Agreement with the tests alone does not measure the judge well, so we also classify the
   disagreements by hand.
 - The coder is not deterministic. Between two identical runs 3 of 38 methods change result with
-  qwen3.8-27b, and 7 with qwen3.5-9b.
+  qwen3.8-27b, and 7 with qwen3.5-9b. Since C1 and C2 write their own first versions, this noise
+  is as large as the effect of the feedback. One fix is to start every setup from the first
+  versions of C0; it is one of the proposals in the roadmap.
 - qwen3.5-9b reasons for longer, and 2 or 3 of its replies per run hit the limit of 4000 tokens.
-- The choice of coder, the handling of the classes with conflicting tests and the number of
-  repetitions are open questions that we have asked the instructors about.
+- The choice of coder, the handling of the classes with conflicting tests, the number of
+  repetitions and the proposals in [docs/roadmap_midway.md](docs/roadmap_midway.md) are open
+  questions that we have asked the instructors about.
 
 ## 11. References
 

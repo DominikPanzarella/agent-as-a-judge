@@ -103,9 +103,9 @@ def extract_method(reply, name):
     return None
 
 
-def ask(client, messages, model=MODEL):
+def ask(client, messages, model=MODEL, max_tokens=MAX_TOKENS):
     reply = client.chat.completions.create(model=model, messages=messages,
-                                           max_tokens=MAX_TOKENS, extra_body=EXTRA_BODY)
+                                           max_tokens=max_tokens, extra_body=EXTRA_BODY)
     u = reply.usage
     prompt_details = getattr(u, "prompt_tokens_details", None)
     completion_details = getattr(u, "completion_tokens_details", None)
