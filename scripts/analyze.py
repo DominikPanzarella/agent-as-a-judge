@@ -2,8 +2,9 @@
 
 For each run it reports the share of methods and of classes that pass their tests, with and
 without the 4 weak methods. For a run with a judge it also scores the judge's verdicts on the
-first versions against the tests on those versions: accuracy, Cohen's kappa, false OK and false
-NOT OK. In C2 the judge gives one verdict per method, in C1 one per class. It also counts how
+first versions against the tests on those versions: accuracy, Cohen's kappa, TPR (passing methods
+called OK) and TNR (failing methods called NOT OK), the two numbers that Engineering AI Systems
+(USI) recommends instead of overall agreement. In C2 the judge gives one verdict per method, in C1 one per class. It also counts how
 many methods the revisions fixed and how many they broke.
 
 Then it compares every pair of runs method by method, with an exact McNemar test, and gives a 95%
@@ -93,8 +94,7 @@ def describe(name, results, weak):
     unit = "classes" if rows[0]["method_name"] == "(whole class)" else "methods"
     a = judge.agreement(rows)
     print(f"  judge on first versions ({a['n']} {unit}): agreement {a['accuracy']:.2f}, kappa {a['kappa']:.2f}, "
-          f"false OK {a['false_ok']:.2f} of {a['n_failing']} failing, "
-          f"false NOT OK {a['false_not_ok']:.2f} of {a['n_passing']} passing")
+          f"TPR {a['tpr']:.2f} of {a['n_passing']} passing, TNR {a['tnr']:.2f} of {a['n_failing']} failing")
     first = {(t, m["method_name"]): bool(m["passed_first"]) for t, r in results.items() for m in r["methods"]}
     fixed = sum(not first[k] and out[k] for k in out)
     broken = sum(first[k] and not out[k] for k in out)

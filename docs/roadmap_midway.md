@@ -120,8 +120,12 @@ The diagram is also in `architecture.svg`, which can be edited by hand.
 
 ## Proposals to discuss with the instructors (7 Nov)
 
-These come from the pilot, from the Agent-as-a-Judge paper and from the lessons on Reflexion,
-Self-Refine and CRITIC, and verification gates in the ai-engineering-from-scratch course.
+These come from the pilot and from the Agent-as-a-Judge paper. Others come from the lessons on
+Reflexion, Self-Refine and CRITIC in the ai-engineering-from-scratch course, and from lectures 4, 5
+and 14 of Engineering AI Systems (USI, Fall 2026). In the diagram below, blue is what we built and
+orange is proposed or planned.
+
+![Proposed architecture](architecture_proposed.png)
 
 - [ ] **Same first versions in every setup.** Two identical runs of C0 differ by up to 3 methods, as
   much as the effect we want to measure. C1 can start from the class written in C0. C2 can reuse
@@ -141,6 +145,22 @@ Self-Refine and CRITIC, and verification gates in the ai-engineering-from-scratc
   spreads to the next ones. Our memory would hold the verdicts that the tests proved wrong, but in
   the pilot about one method in five had a conflict between test and docstring. We could keep only
   the corrections confirmed by hand, and cap their number.
+- [ ] **TPR and TNR instead of agreement.** Engineering AI Systems reports a judge with two numbers:
+  the share of passing outputs it accepts (TPR) and the share of failing ones it rejects (TNR). When
+  most methods pass, as with our coder, a judge that accepts everything already agrees often.
+  `scripts/analyze.py` now prints both. The lecture asks for 30 to 50 failures in the development
+  set and as many in the test set, while our development classes have 7 failing methods in C0. The
+  9B coder, which fails more often, would help here too.
+- [ ] **Written criteria before the labels.** Shankar et al. (2024) show that people change their
+  criteria while they label ("criteria drift"). We would write the rules for deciding who is right
+  first, label a few cases together, and only then label alone. For the error analysis we would
+  write a note on each case before naming the kinds of error (open coding, then axial coding).
+- [ ] **The judge as an evaluator.** With TPR and TNR measured on the development classes, the
+  formula of Rogan and Gladen turns the judge's share of OK verdicts on the other 61 classes into an
+  estimate of the true pass rate. Comparing it with the tests shows whether the judge could replace
+  them, which is the use the paper had in mind.
+- [ ] **pass^k if we repeat the runs.** If each setup runs k times, the pass^k of τ-bench (the share
+  of methods that pass in all k runs) shows how reliable the coder is, next to the average.
 - [ ] **A control with empty feedback.** After a NOT OK, the coder is asked to write the method again
   without the reason. With self-refine, it separates the effect of the reason from the effect of a
   second attempt.

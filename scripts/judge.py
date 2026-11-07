@@ -303,6 +303,12 @@ def agreement(rows):
         "false_not_ok": (sum(not o for o in passing) / len(passing)) if passing else float("nan"),
         "n_failing": len(failing),
         "n_passing": len(passing),
+        # With pass as the positive answer: TPR is the share of passing methods the judge calls
+        # OK, TNR the share of failing methods it calls NOT OK.
+        "tpr": (sum(passing) / len(passing)) if passing else float("nan"),
+        "tnr": (sum(not o for o in failing) / len(failing)) if failing else float("nan"),
+        "p_ok": p_ok,
+        "p_pass": p_pass,
     }
 
 

@@ -46,7 +46,9 @@ We ask three questions:
 
 ![Architecture](docs/architecture.png)
 
-The diagram is also in `docs/architecture.svg`, which can be edited by hand.
+The diagram is also in `docs/architecture.svg`, which can be edited by hand. The architecture we
+propose after the pilot, with the changes we are discussing with the instructors, is in
+[docs/architecture_proposed.png](docs/architecture_proposed.png) and explained in the roadmap.
 
 Work goes through three blocks. First the data scripts download ClassEval, drop the classes whose
 tests or descriptions are unreliable and fix the order in which the methods are written. Then the
@@ -234,6 +236,7 @@ run to `runs/error_analysis_<run>.csv` for the error analysis.
 requirements.txt                 # Python dependencies
 docs/
   architecture.svg, .png         # the diagram in section 2
+  architecture_proposed.svg, .png  # the architecture proposed after the pilot
   roadmap_midway.md              # plan and dates up to the final report, with checkboxes
 scripts/
   download_data.sh               # ClassEval and benchmarks+ -> data/raw/
