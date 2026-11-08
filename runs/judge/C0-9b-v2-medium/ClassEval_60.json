@@ -1,0 +1,152 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method creates the `tickets` table only if it does not already exist, with an autoincrementing integer ID and text columns for all four fields, then commits the change. It matches the docstring and returns `None` implicitly.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1043,
+          "cached_tokens": 0,
+          "completion_tokens": 114,
+          "reasoning_tokens": 47,
+          "cost": 0.00016130000000000002
+        }
+      ],
+      "prompt_tokens": 1043,
+      "cached_tokens": 0,
+      "completion_tokens": 114,
+      "reasoning_tokens": 47,
+      "cost": 0.00016130000000000002
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method inserts the supplied values into the matching columns using parameterized SQL and commits the transaction. It returns `None` as documented, and the test inserted the expected ticket row.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "db = MovieTicketDB(':memory:')\nprint(db.insert_ticket('Movie A', 'Theater 1', 'A1', 'John Doe'))\nprint(db.cursor.execute('SELECT * FROM tickets').fetchall())",
+          "output": "exit code 0\nstdout:\nNone\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1197,
+          "cached_tokens": 0,
+          "completion_tokens": 65,
+          "reasoning_tokens": 0,
+          "cost": 0.00015219999999999999
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1306,
+          "cached_tokens": 1194,
+          "completion_tokens": 52,
+          "reasoning_tokens": 0,
+          "cost": 4.914e-05
+        }
+      ],
+      "prompt_tokens": 2503,
+      "cached_tokens": 1194,
+      "completion_tokens": 117,
+      "reasoning_tokens": 0,
+      "cost": 0.00020134
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method queries tickets for an exact customer-name match and returns the fetched rows as a list of tuples; the documented example returns one row, and a name with no matches returns an empty list. It uses the existing cursor and table correctly.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "db=MovieTicketDB(':memory:'); db.create_table(); db.insert_ticket('Movie A','Theater 1','A1','John Doe'); result=db.search_tickets_by_customer('John Doe'); print(result, len(result)); print(db.search_tickets_by_customer('Not found'))",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')] 1\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1387,
+          "cached_tokens": 0,
+          "completion_tokens": 76,
+          "reasoning_tokens": 0,
+          "cost": 0.0001767
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1508,
+          "cached_tokens": 1384,
+          "completion_tokens": 64,
+          "reasoning_tokens": 0,
+          "cost": 5.8240000000000005e-05
+        }
+      ],
+      "prompt_tokens": 2895,
+      "cached_tokens": 1384,
+      "completion_tokens": 140,
+      "reasoning_tokens": 0,
+      "cost": 0.00023494000000000002
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes rows whose ID matches `ticket_id` and commits the change; in the test, it returned `None` and the ticket no longer appeared in the search results. This matches the docstring.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\ndb.insert_ticket('Movie A','Theater 1','A1','John Doe')\nprint(db.search_tickets_by_customer('John Doe'))\nprint(db.delete_ticket(1))\nprint(db.search_tickets_by_customer('John Doe'))\ndb.connection.close(); os.remove(p)",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\nNone\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1454,
+          "cached_tokens": 0,
+          "completion_tokens": 100,
+          "reasoning_tokens": 0,
+          "cost": 0.0001954
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1598,
+          "cached_tokens": 1451,
+          "completion_tokens": 58,
+          "reasoning_tokens": 0,
+          "cost": 5.821e-05
+        }
+      ],
+      "prompt_tokens": 3052,
+      "cached_tokens": 1451,
+      "completion_tokens": 158,
+      "reasoning_tokens": 0,
+      "cost": 0.00025361000000000003
+    }
+  ]
+}

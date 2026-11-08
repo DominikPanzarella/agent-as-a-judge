@@ -103,6 +103,7 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot
+.venv/bin/python scripts/pilot_controls.py             # resampling control, judge TNR, power
 .venv/bin/python scripts/plot_results.py               # charts -> docs/figures/
 .venv/bin/python scripts/analyze.py --classes test C0 C1-v2-medium C2-v2-medium --sample 20
 ```
@@ -118,7 +119,8 @@ scripts/
   download_data.sh, select_classes.py, order_methods.py, pick_dev_classes.py   data
   harness.py, check_docstring_examples.py, check_field_order.py               checks
   coder.py, judge.py, loop.py, budget.py, check_api.py                         runs
-  pilot_report.py, check_claims.py, plot_results.py, analyze.py               results
+  pilot_report.py, pilot_controls.py, check_claims.py, plot_results.py,
+  analyze.py                                                                   results
 data/selection/  the kept classes, method order, development classes, weak tests
 runs/            one folder per run with a JSON file per class, plus cost_log.csv
 ```
@@ -154,8 +156,18 @@ the first versions of C0.
 
 ![Methods passing before and after the feedback](docs/figures/setups_first_final.png)
 
+**Two checks** (`pilot_controls.py`). We replaced the methods the judge rejects with the same
+methods from a second run, written without feedback. In each run we tried, this fixes 0 to 2 and
+breaks 1, while C2 fixed 3 and broke 2: on 10 classes the judge's reason does not yet beat a
+second attempt, so the full runs need this control. The judge also catches 15 of 22 failing
+methods written by the 9B, but only 5 of 19 written by the 27B. In C0, 5 of the 27B's 7 failures
+come from tests that ask for something the docstring does not say, which a judge reading the
+docstring cannot catch.
+
+![The judge's TPR and TNR on the 27B and 9B runs](docs/figures/judge_rates.png)
+
 **Cost.** About 0.0012 dollars per method for the coder and 0.0003 for the judge, so one setup on
-all 289 methods costs under one dollar. So far: 0.26 dollars on OpenRouter and 0.06 on OpenAI.
+all 289 methods costs under one dollar. So far: 0.26 dollars on OpenRouter and 0.08 on OpenAI.
 
 The open questions (coder, conflicting tests, repetitions, proposals) are in the
 [roadmap](docs/roadmap_midway.md).

@@ -33,6 +33,9 @@ Blue is built, orange is proposed or planned. The source is `architecture_propos
 - [x] **Setups C1 and C2 on the development classes** (7 Nov). C2: 3 methods fixed, 2 broken. C1:
   no change. Both start from worse first versions than C0, so the coder's randomness hides the
   effect of the feedback.
+- [x] **Checks after the literature review** (8 Nov, `pilot_controls.py`). Rewriting the rejected
+  methods without feedback does about as well as C2's revisions. The judge catches 15 of 22 failing
+  methods of the 9B and 5 of 19 of the 27B, whose failures are mostly hidden requirements.
 
 ## Week 2 (9 to 15 November)
 
@@ -70,26 +73,41 @@ Each comes with its reason and source.
 - [ ] **Feedback with evidence.** The coder also gets the code the judge ran and its output.
   Grounded critiques work better (CRITIC, Gou et al. 2024), and the judge's medium-effort claims
   were all true.
-- [ ] **Judge v3, one docstring requirement at a time**, like the paper's ask module. Both methods
-  broken in C2 were correct code rejected for behaviour the docstring does not describe.
+- [ ] **Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
+  verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
+  rejected for behaviour the docstring does not describe. Telling an underspecified task apart from
+  a wrong solution works better as a separate step (Edwards and Schuster 2026). v3 also writes its
+  checks from the docstring before reading the code, because tests written by a model carry a bias
+  that can mislead the feedback (Chen et al., ACL 2025).
 - [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The paper
   found its memory module harmful, because errors spread to later verdicts.
-- [ ] **Control with empty feedback** (NOT OK without the reason), to separate the effect of the
-  reason from that of a second attempt.
+- [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
+  written again without feedback). They separate the effect of the reason from that of a second
+  attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).
+- [ ] **Up to three revision rounds for RQ3**, on the development classes only, recording the
+  judge's OK and the tests at each round. A coder learns to please a judge only under repeated
+  feedback (Gao et al. 2023; Pan et al. 2024), and one revision is too little to show it.
+- [ ] **Count the revisions that change behaviour.** The coder must always rewrite, so it also
+  follows wrong reviews (sycophancy, Sharma et al. 2024).
 - [ ] **The judge as an evaluator.** TPR and TNR from the development classes correct the judge's
   pass rate on the other 61 classes (Rogan and Gladen formula).
 - [ ] **pass^k if we repeat runs**: the share of methods that pass in all k runs (from τ-bench).
 
-Sources: Zhuge et al. 2025 (the paper); lessons 03 and 05 of phase 14 of AI Engineering from
-Scratch (https://github.com/DominikPanzarella/ai-engineering-from-scratch); lectures 4, 5 and 14
-of Engineering AI Systems, USI
+Sources: Zhuge et al. 2025 (the paper); Edwards and Schuster 2026 (arXiv 2603.26233); Chen et al. 2025
+(ACL, 2025.acl-long.881); Iscan 2026 (arXiv 2606.31511); Gao et al. 2023 (ICML); Pan et al. 2024
+(arXiv 2402.06627); Sharma et al. 2024 (arXiv 2310.13548); phase 14 (lessons 03 and 05), 16.23 and
+18.02 of AI Engineering from Scratch (https://github.com/DominikPanzarella/ai-engineering-from-scratch);
+lectures 4, 5, 6 and 14 of Engineering AI Systems, USI
 (https://www.composablesystems.org/courses/engineering-ai-systems/fa2026/).
 
 ## Open decisions
 
 - [ ] **Coder.** qwen3.8-27b passes 82% of the methods and leaves little room for feedback;
-  qwen3.5-9b passes fewer but is less stable.
-- [ ] **Repetitions.** One run per setup, or two or three.
+  qwen3.5-9b passes fewer but is less stable, and the judge catches more of its failures (15 of 22
+  against 5 of 19).
+- [ ] **Repetitions.** One run per setup, or two or three. A simulation on the 251 test methods: an
+  effect like the pilot's (3 fixed and 2 broken per 38) is detected 16% of the time with one run
+  and about 48% with three; an 8-point gain 94% of the time with one run.
 - [ ] **Same budget across setups.** For now: one revision per method in C2, one per class in C1.
 - [ ] **The lab note "classes with the 1st methods implemented".** To ask Alessandro.
 - [x] **Judge effort** (7 Nov). Medium: its claims were all true, at about 0.09 dollars per 289

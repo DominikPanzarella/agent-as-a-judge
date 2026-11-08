@@ -1,0 +1,91 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly computes the longest palindromic substring and returns the documented example result, `'ababa'`. It also handles empty and single-character strings; I found no concrete correctness issue.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 4,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string())\nfor s in ['', 'a', 'abba', 'babad', 'cbbd', '#a#']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'abba' 'abba'\n'babad' 'bab'\n'cbbd' 'bb'\n'#a#' '#a#'\n\nstderr:\n"
+        },
+        {
+          "code": "def brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nimport itertools\nfor n in range(1,7):\n for chars in itertools.product('a#b', repeat=n):\n  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if got != exp:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('all ok')",
+          "output": "exit code 0\nstdout:\nall ok\n\nstderr:\n"
+        },
+        {
+          "code": "def brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nimport itertools\nfor n in range(1,9):\n for chars in itertools.product('a#', repeat=n):\n  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if got != exp:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('all ok')",
+          "output": "exit code 0\nstdout:\nall ok\n\nstderr:\n"
+        },
+        {
+          "code": "def brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nimport itertools\nfor n in range(1,10):\n for chars in itertools.product('a#b', repeat=n):\n  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if got != exp:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('all ok')",
+          "output": "exit code 0\nstdout:\nall ok\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1066,
+          "cached_tokens": 0,
+          "completion_tokens": 79,
+          "reasoning_tokens": 0,
+          "cost": 0.00014610000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1203,
+          "cached_tokens": 1063,
+          "completion_tokens": 226,
+          "reasoning_tokens": 61,
+          "cost": 0.00013763
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1452,
+          "cached_tokens": 1200,
+          "completion_tokens": 197,
+          "reasoning_tokens": 33,
+          "cost": 0.0001357
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1672,
+          "cached_tokens": 1449,
+          "completion_tokens": 433,
+          "reasoning_tokens": 268,
+          "cost": 0.00025329
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2128,
+          "cached_tokens": 1669,
+          "completion_tokens": 314,
+          "reasoning_tokens": 257,
+          "cost": 0.00021959
+        }
+      ],
+      "prompt_tokens": 7521,
+      "cached_tokens": 5381,
+      "completion_tokens": 1249,
+      "reasoning_tokens": 619,
+      "cost": 0.00089231
+    }
+  ]
+}

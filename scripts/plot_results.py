@@ -1,8 +1,9 @@
 """Charts of the pilot for the README, from saved results. Sends no request.
 
 One chart per question, in docs/figures/: the judges' kappa (judge_kappa.png), their claims
-(judge_claims.png), why judge and tests disagree (disagreements.png), and the methods passing
-before and after the feedback (setups_first_final.png). The colors are checked for color
+(judge_claims.png), why judge and tests disagree (disagreements.png), the methods passing
+before and after the feedback (setups_first_final.png), and the judge's TPR and TNR with their
+intervals (judge_rates.png, from pilot_controls.py). The colors are checked for color
 blindness, and every mark carries its value.
 
     .venv/bin/python scripts/plot_results.py
@@ -179,6 +180,36 @@ def setups_first_final(task_ids):
     save(fig, "setups_first_final.png", 0.74)
 
 
+def judge_rates():
+    path = ROOT / "runs/pilot_controls.json"
+    if not path.exists():
+        print("runs/pilot_controls.json is missing: run scripts/pilot_controls.py first")
+        return
+    rates = json.loads(path.read_text(encoding="utf-8"))["judge_v2_medium"]
+    labels = list(rates)
+
+    fig, ax = figure("The judge catches the 9B's failures better than the 27B's",
+                     "Judge v2 with medium effort on the 10 development classes, with 95% Wilson "
+                     "intervals", 4.3)
+    for y, label in enumerate(reversed(labels)):
+        r = rates[label]
+        for key, color, dy, name in [("tpr", BLUE, 0.14, "TPR: passing methods called OK"),
+                                     ("tnr", ORANGE, -0.14, "TNR: failing methods called NOT OK")]:
+            lo, hi = r[f"{key}_ci"]
+            ax.plot([lo, hi], [y + dy, y + dy], color=color, linewidth=2, alpha=0.5, zorder=2)
+            ax.scatter([r[key]], [y + dy], s=60, color=color, edgecolor=SURFACE, linewidth=1.5,
+                       zorder=3, label=name if y == 0 else None)
+            ax.text(hi + 0.015, y + dy, f"{r[key]:.2f}", va="center", fontsize=8.5, color=INK_2)
+        ax.text(1.1, y, f"{r['n_passing']} passing\n{r['n_failing']} failing", va="center",
+                fontsize=8.5, color=INK_2)
+    ax.set_yticks(range(len(labels)), list(reversed(labels)))
+    ax.set_xlim(0, 1.3)
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
+    ax.set_xlabel("share of methods")
+    ax.legend(loc="lower right", fontsize=9.5, ncol=2, bbox_to_anchor=(1.0, 1.0), handletextpad=0.3)
+    save(fig, "judge_rates.png", 0.76, left=0.25)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     task_ids = pilot_report.dev_classes()
@@ -186,6 +217,7 @@ def main():
     judge_claims()
     disagreements()
     setups_first_final(task_ids)
+    judge_rates()
 
 
 if __name__ == "__main__":

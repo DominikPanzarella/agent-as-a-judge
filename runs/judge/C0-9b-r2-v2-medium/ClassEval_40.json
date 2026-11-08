@@ -1,0 +1,138 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns weight divided by height squared, as specified; for the docstring example, it returns 21.604938271604937. No concrete issue is apparent for the documented inputs.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t=FitnessTracker(1.8,70,20,'male'); print(t.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1113,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.00013030000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1179,
+          "cached_tokens": 1110,
+          "completion_tokens": 55,
+          "reasoning_tokens": 0,
+          "cost": 4.55e-05
+        }
+      ],
+      "prompt_tokens": 2292,
+      "cached_tokens": 1110,
+      "completion_tokens": 93,
+      "reasoning_tokens": 0,
+      "cost": 0.00017580000000000002
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The method raises `KeyError('female')` for a female user because it only looks up `self.BMI_std[0]`, which contains the male standard; it should find the entry matching `self.sex`. Also, the documented male example returns `0` when run, not `-1`: BMI 21.6 falls within the stated male range of 20\u201325, so that example expectation should be corrected.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "ft = FitnessTracker(1.8,70,20,\"male\")\ntry:\n print(ft.condition_judge())\nexcept Exception as e:\n print(type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\n0\n\nstderr:\n"
+        },
+        {
+          "code": "ft = FitnessTracker(1.8,70,20,\"female\")\ntry:\n print(ft.condition_judge())\nexcept Exception as e:\n print(type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\nKeyError 'female'\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1280,
+          "cached_tokens": 0,
+          "completion_tokens": 60,
+          "reasoning_tokens": 0,
+          "cost": 0.000158
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1362,
+          "cached_tokens": 1277,
+          "completion_tokens": 215,
+          "reasoning_tokens": 153,
+          "cost": 0.00012877
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1602,
+          "cached_tokens": 1359,
+          "completion_tokens": 104,
+          "reasoning_tokens": 0,
+          "cost": 8.989e-05
+        }
+      ],
+      "prompt_tokens": 4244,
+      "cached_tokens": 2636,
+      "completion_tokens": 379,
+      "reasoning_tokens": 153,
+      "cost": 0.00037666
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented example does not match the class behavior: running it returns 862.75, because `condition_judge()` classifies BMI 21.60 as normal and the method applies the 1.4 multiplier. The example\u2019s 986.0 requires the too-thin multiplier (1.6), so reconcile the example or the condition logic with the stated BMI standards.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.calculate_calorie_intake())",
+          "output": "exit code 0\nstdout:\n862.75\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1670,
+          "cached_tokens": 0,
+          "completion_tokens": 40,
+          "reasoning_tokens": 0,
+          "cost": 0.000187
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1734,
+          "cached_tokens": 1667,
+          "completion_tokens": 809,
+          "reasoning_tokens": 714,
+          "cost": 0.00042787
+        }
+      ],
+      "prompt_tokens": 3404,
+      "cached_tokens": 1667,
+      "completion_tokens": 849,
+      "reasoning_tokens": 714,
+      "cost": 0.00061487
+    }
+  ]
+}
