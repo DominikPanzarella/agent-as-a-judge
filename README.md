@@ -32,9 +32,8 @@ worker improve each other (a "flywheel"). We test both ideas on tasks with real 
 
 ![Architecture](docs/architecture_proposed.png)
 
-Blue parts are built and were tried in the pilot; orange, dashed parts are proposed or planned (see
-the [roadmap](docs/roadmap_midway.md)). The first diagram, from before the pilot, is in
-`docs/architecture.svg`.
+Solid parts are built and were tried in the pilot; orange, dashed parts are proposed or planned.
+The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
 We keep coder and tasks fixed and change only the feedback:
 
@@ -46,22 +45,35 @@ We keep coder and tasks fixed and change only the feedback:
 | C3 | as C2, plus a memory of the judge's mistakes | planned |
 | C4 | the coder sees the real test results (best case) | planned |
 
-The main choices:
+**Built**
 
-- **Classes.** 71 of the 100 ClassEval classes (289 methods). We drop the classes that benchmarks+
-  marks as problematic, plus two with trivial or broken methods. 10 of them are development
-  classes for the pilot; the final analysis uses the other 61.
-- **Order.** Methods follow the class skeleton, except that a called method comes before its
-  caller.
-- **Tests.** Each ClassEval test class runs in its own process. A missing method becomes a stub,
-  so it fails only its own tests. 4 methods pass even as stubs; we report results with and
+- **Class selection.** 71 of the 100 ClassEval classes (289 methods): we drop the classes that
+  benchmarks+ marks as problematic, plus two with trivial or broken methods. 10 are development
+  classes for the pilot; the analysis uses the other 61. Methods follow the skeleton, except that a
+  called method comes before its caller.
+- **Prompt.** The class skeleton, the methods written so far and the docstring of the next method.
+- **Coder.** `qwen/qwen3.8-27b` on OpenRouter, in bf16, with low reasoning effort and 4000 output
+  tokens per request. It writes one method at a time and rewrites it after a NOT OK.
+- **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
+  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times.
+- **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
+  stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
-- **Coder.** `qwen/qwen3.8-27b` on OpenRouter, in bf16 on the cheapest provider, with low reasoning
-  effort and 4000 output tokens per request.
-- **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason.
-  Judge v1 only reads the code; v2 can also run it up to 5 times. The reason is the feedback.
-- **Budget.** Every request is logged in `runs/cost_log.csv`, and a run stops when either 10 dollar
-  budget reaches 70%.
+- **Judge vs tests and labels.** TPR, TNR and Cohen's kappa of the judge's verdicts.
+- **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
+
+**Proposed** (numbered as in the diagram; reasons and sources are in the
+[roadmap](docs/roadmap_midway.md))
+
+1. **First versions of C0.** C1 and C2 reuse them, so the setups differ only after the feedback.
+2. **Our labels.** We label the methods by hand, with criteria written first, and measure the judge
+   against these labels too.
+3. **Feedback with evidence.** The coder also gets the code the judge ran and its output.
+4. **Judge v3.** One check per docstring requirement, and a NOT SPECIFIED verdict that never
+   reaches the coder.
+5. **Judge memory.** In C3 the judge keeps only the corrections we confirm by hand.
+6. **Controls.** Empty feedback (NOT OK without the reason) and resampling (the method written
+   again without feedback).
 
 ## 3. Quick start
 
@@ -87,7 +99,7 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/order_methods.py
 .venv/bin/python scripts/harness.py                    # references must pass, stubs must fail
 
-# check the APIs and the money spent
+# check the APIs and the budget
 .venv/bin/python scripts/check_api.py
 .venv/bin/python scripts/budget.py
 
@@ -165,9 +177,6 @@ come from tests that ask for something the docstring does not say, which a judge
 docstring cannot catch.
 
 ![The judge's TPR and TNR on the 27B and 9B runs](docs/figures/judge_rates.png)
-
-**Cost.** About 0.0012 dollars per method for the coder and 0.0003 for the judge, so one setup on
-all 289 methods costs under one dollar. So far: 0.26 dollars on OpenRouter and 0.08 on OpenAI.
 
 The open questions (coder, conflicting tests, repetitions, proposals) are in the
 [roadmap](docs/roadmap_midway.md).

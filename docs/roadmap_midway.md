@@ -6,7 +6,8 @@ title, the team, the changes to the plan, the status with numbers, and a schedul
 
 ![Architecture](architecture_proposed.png)
 
-Blue is built, orange is proposed or planned. The source is `architecture_proposed.svg`.
+Solid parts are built, orange dashed parts are proposed or planned, and the numbers 1 to 6 are the
+first six proposals below. The source is `architecture_proposed.svg`.
 
 ## Course dates
 
@@ -40,7 +41,6 @@ Blue is built, orange is proposed or planned. The source is `architecture_propos
 ## Week 2 (9 to 15 November)
 
 - [ ] **Full runs** (11 to 13 Nov). C0, C1 and C2 on the 71 classes, after the instructors' answer.
-  About one dollar per setup.
 - [ ] **Analysis** (14 to 15 Nov). Pass rates with and without the weak methods, the judge's TPR
   and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
 - [ ] **Error analysis** (14 to 15 Nov). 20 disagreements between judge and tests, grouped into
@@ -65,23 +65,23 @@ Blue is built, orange is proposed or planned. The source is `architecture_propos
 
 Each comes with its reason and source.
 
-- [ ] **Same first versions in every setup.** C1 and C2 reuse the first versions of C0 while the
+- [ ] **1. Same first versions in every setup.** C1 and C2 reuse the first versions of C0 while the
   prompt is identical, since two identical C0 runs differ by 3 methods, as much as the feedback.
-- [ ] **Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
+- [ ] **2. Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
   experts, and our tests and docstrings often disagree. We write the labelling criteria first,
   because people change them while labelling (Shankar et al. 2024, "criteria drift").
-- [ ] **Feedback with evidence.** The coder also gets the code the judge ran and its output.
+- [ ] **3. Feedback with evidence.** The coder also gets the code the judge ran and its output.
   Grounded critiques work better (CRITIC, Gou et al. 2024), and the judge's medium-effort claims
   were all true.
-- [ ] **Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
+- [ ] **4. Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
   verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
   rejected for behaviour the docstring does not describe. Telling an underspecified task apart from
   a wrong solution works better as a separate step (Edwards and Schuster 2026). v3 also writes its
   checks from the docstring before reading the code, because tests written by a model carry a bias
   that can mislead the feedback (Chen et al., ACL 2025).
-- [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The paper
-  found its memory module harmful, because errors spread to later verdicts.
-- [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
+- [ ] **5. A careful memory in C3**: only corrections we confirm by hand, at most about ten. The
+  paper found its memory module harmful, because errors spread to later verdicts.
+- [ ] **6. Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
   written again without feedback). They separate the effect of the reason from that of a second
   attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).
 - [ ] **Up to three revision rounds for RQ3**, on the development classes only, recording the
@@ -110,5 +110,4 @@ lectures 4, 5, 6 and 14 of Engineering AI Systems, USI
   and about 48% with three; an 8-point gain 94% of the time with one run.
 - [ ] **Same budget across setups.** For now: one revision per method in C2, one per class in C1.
 - [ ] **The lab note "classes with the 1st methods implemented".** To ask Alessandro.
-- [x] **Judge effort** (7 Nov). Medium: its claims were all true, at about 0.09 dollars per 289
-  methods.
+- [x] **Judge effort** (7 Nov). Medium: its claims were all true.
