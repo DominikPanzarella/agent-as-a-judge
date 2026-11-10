@@ -156,46 +156,7 @@ is one, the token counts, the cost and the test result.
 
 ## 6. Results so far
 
-These come from the pilot on the 10 development classes (38 methods), not from the study. The
-pilot used the judge without the tests (v1 and v2).
-
-**The coder.** Two identical runs of qwen3.8-27b pass 31 and 32 methods, and 3 methods change
-result by chance. qwen3.5-9b passes fewer (26 and 23) but changes 7.
-
-**The judge against the tests and against our labels.** Against the tests the judges look close to
-chance. We read the 15 disputed methods by hand: often the tests, not the judge, are the problem.
-
-![Why the judge and the tests disagree](docs/figures/disagreements.png)
-
-With these corrected labels (5 unclear methods left out), the agreement rises a lot:
-
-![Cohen's kappa against the tests and against our labels](docs/figures/judge_kappa.png)
-
-**The judge's claims.** We ran every concrete claim in the NOT OK reasons. With medium effort all
-of them were true, so the loops use v2 with medium effort.
-
-![Claims of the judges checked by running the code](docs/figures/judge_claims.png)
-
-**C1 and C2.** In C2 the revisions fixed 3 methods and broke 2; in C1 they changed nothing. Both
-setups end below C0, but their first versions were already worse before any feedback. The coder's
-randomness is as large as the effect we want to measure, and the full runs have to take it into
-account (see the roadmap).
-
-![Methods passing before and after the feedback](docs/figures/setups_first_final.png)
-
-**Two checks** (`pilot_controls.py`). We replaced the methods the judge rejects with the same
-methods from a second run, written without feedback. In each run we tried, this fixes 0 to 2 and
-breaks 1, while C2 fixed 3 and broke 2: on 10 classes the judge's reason does not yet beat a
-second attempt, so the full runs need this control. The judge also catches 15 of 22 failing
-methods written by the 9B, but only 5 of 19 written by the 27B. In C0, 5 of the 27B's 7 failures
-come from tests that ask for something the docstring does not say, which a judge reading only the
-docstring cannot catch. This is one reason for the base version, where the judge also reads the
-tests.
-
-![The judge's TPR and TNR on the 27B and 9B runs](docs/figures/judge_rates.png)
-
-The open questions (coder, conflicting tests, repetitions, later variants) are in the
-[roadmap](docs/roadmap_midway.md).
+[TODO] Completing...
 
 ## 7. References and data
 
