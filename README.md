@@ -31,7 +31,7 @@ worker improve each other (a "flywheel"). We test both ideas on tasks with real 
 
 ## 2. How it works
 
-![Architecture](docs/architecture_proposed.png)
+![Architecture](docs/architecture_base.png)
 
 Solid parts are built and were tried in the pilot. Orange parts are new in the base version, or
 planned when dashed.

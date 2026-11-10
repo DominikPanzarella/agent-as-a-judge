@@ -4,10 +4,10 @@ The midway report is at most 2 pages, uploaded on iCorsi by midnight of 19 Novem
 title, the team, the changes to the plan, the status with numbers, and a schedule until
 16 December. Tick a box by changing `[ ]` into `[x]`.
 
-![Architecture](architecture_proposed.png)
+![Architecture](architecture_base.png)
 
 Solid parts are built. Orange parts are new in the base version, or planned when dashed. The
-source is `architecture_proposed.svg`.
+source is `architecture_base.svg`.
 
 ## Course dates
 
