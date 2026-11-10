@@ -6,7 +6,8 @@ Dominik Panzarella and Daniele Buser, Neural Code Analysis, USI, autumn 2026.
 
 A coding agent writes a Python class one method at a time, and a judge agent reviews the work. We
 measure whether the judge's feedback makes the code pass more tests, and how often the judge is
-wrong. The tasks come from ClassEval, whose tests stay hidden from both agents.
+wrong. The tasks come from ClassEval. The coder never sees the tests and runs no code; in the base
+version the judge reads the docstring and the tests, and runs both.
 
 ## Contents
 
@@ -25,14 +26,15 @@ future work suggests using the judge's verdicts as feedback during the work, and
 worker improve each other (a "flywheel"). We test both ideas on tasks with real tests:
 
 - RQ1: Does the coder write better code with feedback after every method, at the end, or never?
-- RQ2: If the judge remembers the mistakes the tests caught, do judge and coder improve over time?
+- RQ2: If the judge remembers its past mistakes, do judge and coder improve over time?
 - RQ3: How often is the judge wrong inside the loop, and does the coder learn to please it?
 
 ## 2. How it works
 
 ![Architecture](docs/architecture_proposed.png)
 
-Solid parts are built and were tried in the pilot; orange, dashed parts are proposed or planned.
+Solid parts are built and were tried in the pilot. Orange parts are new in the base version, or
+planned when dashed.
 The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
 We keep coder and tasks fixed and change only the feedback:
@@ -40,10 +42,16 @@ We keep coder and tasks fixed and change only the feedback:
 | Setup | Feedback to the coder | Status |
 |---|---|---|
 | C0 | none (baseline) | piloted |
-| C1 | the judge reviews the finished class; one revision of the class | piloted |
-| C2 | the judge reviews each method; one revision of that method | piloted |
-| C3 | as C2, plus a memory of the judge's mistakes | planned |
-| C4 | the coder sees the real test results (best case) | planned |
+| C1 | the judge reviews the finished class, with the results of all its tests; one revision of the class | piloted without tests |
+| C2 | after each method the judge runs its tests and reviews it; one revision of that method | piloted without tests |
+| C3 | as C2, plus a memory of the judge's mistakes that we confirm by hand | planned |
+| C4 | the coder gets only the test results, without the judge | planned |
+
+**One method in C2.** (1) The coder writes the method. (2) The tests of that method run on the
+class written so far. (3) The judge gets the docstring, the code and the test results, may run code
+of its own, and answers OK or NOT OK with a reason. (4) After a NOT OK the coder rewrites the method
+once. (5) The final version joins the methods already written, and the next method starts. When
+the class is finished, all its tests run on the first and on the final versions: that is the grade.
 
 **Built**
 
@@ -51,29 +59,35 @@ We keep coder and tasks fixed and change only the feedback:
   benchmarks+ marks as problematic, plus two with trivial or broken methods. 10 are development
   classes for the pilot; the analysis uses the other 61. Methods follow the skeleton, except that a
   called method comes before its caller.
-- **Prompt.** The class skeleton, the methods written so far and the docstring of the next method.
+- **Prompt.** The class skeleton with all the docstrings, the methods written so far and the name
+  of the next method.
 - **Coder.** `qwen/qwen3.8-27b` on OpenRouter, in bf16, with low reasoning effort and 4000 output
-  tokens per request. It writes one method at a time and rewrites it after a NOT OK.
+  tokens per request. It writes one method at a time and rewrites it after a NOT OK. The tests stay
+  hidden from it and it runs no code, so it improves only inside the conversation.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
-  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times.
+  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. Neither sees
+  the tests yet.
 - **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
   stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
-- **Judge vs tests and labels.** TPR, TNR and Cohen's kappa of the judge's verdicts.
+- **Judge vs tests.** TPR, TNR and Cohen's kappa of the judge's verdicts.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
-**Proposed** (numbered as in the diagram; reasons and sources are in the
-[roadmap](docs/roadmap_midway.md))
+**Base version** (decided on 9 November, not built yet)
 
-1. **First versions of C0.** C1 and C2 reuse them, so the setups differ only after the feedback.
-2. **Our labels.** We label the methods by hand, with criteria written first, and measure the judge
-   against these labels too.
-3. **Feedback with evidence.** The coder also gets the code the judge ran and its output.
-4. **Judge v3.** One check per docstring requirement, and a NOT SPECIFIED verdict that never
-   reaches the coder.
-5. **Judge memory.** In C3 the judge keeps only the corrections we confirm by hand.
-6. **Controls.** Empty feedback (NOT OK without the reason) and resampling (the method written
-   again without feedback).
+- **Judge with the tests.** The judge reads the docstring and all the ClassEval tests of the
+  method, runs the method and the tests on the class written so far, and checks what the tests do
+  not cover. In practice tests exist but are incomplete, and this is the case we want to study. The
+  feedback lists the tests that fail and the problems found beyond them.
+- **Methods not written yet.** The tests of 14 of the 289 methods also call a method that comes
+  later in the order, which is still a stub. The judge is told which methods are missing, so it does
+  not blame the method for them.
+- **C4 without the judge.** The coder gets only the test results, so C2 against C4 shows what the
+  judge adds to the tests.
+- **The grade** stays the same in every setup: all the ClassEval tests on the finished class.
+
+Later variants (a memory for the coder, a coder that runs its own code, test cases split between
+the judge and the grade, judge v3, our labels, controls) are in the [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -142,7 +156,8 @@ is one, the token counts, the cost and the test result.
 
 ## 6. Results so far
 
-These come from the pilot on the 10 development classes (38 methods), not from the study.
+These come from the pilot on the 10 development classes (38 methods), not from the study. The
+pilot used the judge without the tests (v1 and v2).
 
 **The coder.** Two identical runs of qwen3.8-27b pass 31 and 32 methods, and 3 methods change
 result by chance. qwen3.5-9b passes fewer (26 and 23) but changes 7.
@@ -163,8 +178,8 @@ of them were true, so the loops use v2 with medium effort.
 
 **C1 and C2.** In C2 the revisions fixed 3 methods and broke 2; in C1 they changed nothing. Both
 setups end below C0, but their first versions were already worse before any feedback. The coder's
-randomness is as large as the effect we want to measure, so we propose to start every setup from
-the first versions of C0.
+randomness is as large as the effect we want to measure, and the full runs have to take it into
+account (see the roadmap).
 
 ![Methods passing before and after the feedback](docs/figures/setups_first_final.png)
 
@@ -173,8 +188,9 @@ methods from a second run, written without feedback. In each run we tried, this 
 breaks 1, while C2 fixed 3 and broke 2: on 10 classes the judge's reason does not yet beat a
 second attempt, so the full runs need this control. The judge also catches 15 of 22 failing
 methods written by the 9B, but only 5 of 19 written by the 27B. In C0, 5 of the 27B's 7 failures
-come from tests that ask for something the docstring does not say, which a judge reading the
-docstring cannot catch.
+come from tests that ask for something the docstring does not say, which a judge reading only the
+docstring cannot catch. This is one reason for the base version, where the judge also reads the
+tests.
 
 ![The judge's TPR and TNR on the 27B and 9B runs](docs/figures/judge_rates.png)
 

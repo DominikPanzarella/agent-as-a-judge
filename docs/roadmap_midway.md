@@ -6,8 +6,8 @@ title, the team, the changes to the plan, the status with numbers, and a schedul
 
 ![Architecture](architecture_proposed.png)
 
-Solid parts are built, orange dashed parts are proposed or planned, and the numbers 1 to 6 are the
-first six proposals below. The source is `architecture_proposed.svg`.
+Solid parts are built. Orange parts are new in the base version, or planned when dashed. The
+source is `architecture_proposed.svg`.
 
 ## Course dates
 
@@ -40,7 +40,10 @@ first six proposals below. The source is `architecture_proposed.svg`.
 
 ## Week 2 (9 to 15 November)
 
-- [ ] **Full runs** (11 to 13 Nov). C0, C1 and C2 on the 71 classes, after the instructors' answer.
+- [ ] **Base judge** (10 to 12 Nov). `judge.py` gets the tests of the method and their results;
+  `loop.py` runs them after each method and tells the judge which methods are still missing. A dry
+  run on the development classes first.
+- [ ] **Full runs** (12 to 13 Nov). C0, C1 and C2 on the 71 classes, after the instructors' answer.
 - [ ] **Analysis** (14 to 15 Nov). Pass rates with and without the weak methods, the judge's TPR
   and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
 - [ ] **Error analysis** (14 to 15 Nov). 20 disagreements between judge and tests, grouped into
@@ -55,33 +58,57 @@ first six proposals below. The source is `architecture_proposed.svg`.
 
 - [ ] **C3, the flywheel** (20 to 29 Nov). Three rounds of classes; between rounds the judge keeps
   a memory of its mistakes.
-- [ ] **C4 and the controls** (30 Nov to 6 Dec). C4 gives the coder the real test results. Controls:
-  judge v1 (no tools) and self-refine.
+- [ ] **C4 and the controls** (30 Nov to 6 Dec). C4 gives the coder the test results.
+  Controls: judge v1 (no tools) and self-refine.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
 
-## Proposals to discuss with the instructors
+## Base version (decided on 9 and 10 November)
+
+- [ ] **Coder unchanged.** It writes one method at a time, never sees the tests and runs no code;
+  it improves only inside the conversation, after the judge's feedback.
+- [ ] **Judge with the tests.** The judge gets the docstring and all the ClassEval tests of the
+  method, runs the method and the tests on the class written so far, and checks what the tests do
+  not cover. In practice tests exist but are incomplete, and this is the case we want to study.
+- [ ] **Methods not written yet.** The tests of 14 of the 289 methods call a method that comes
+  later in the order (68 call some other method of the class). The judge is told which methods are
+  still stubs.
+- [ ] **Feedback after every method (C2) and at the end of the class (C1)**, as for RQ1. The grade is
+  always all the ClassEval tests on the finished class.
+- [ ] **C4 with the tests only**, without the judge: C2 against C4 measures what the judge adds.
+
+## Later variants, to discuss with the instructors
 
 Each comes with its reason and source.
 
-- [ ] **1. Same first versions in every setup.** C1 and C2 reuse the first versions of C0 while the
+- [ ] **A memory for the coder.** In the base version the coder carries nothing from one class to
+  the next. A short list of the corrections it received, in its prompt, would let it improve over
+  time (Reflexion, Shinn et al. 2023).
+- [ ] **A coder that runs its own code**, on the docstring examples and without the ClassEval tests,
+  before handing the method in (Self-Debug, Chen, Lin et al. 2024). Whether the coder may also see
+  the tests is a question for the instructors.
+- [ ] **Test cases split between the judge and the grade.** Some test cases of each method go to the
+  judge, the others give the grade (224 of the 289 methods have five), so the grade does not use
+  the tests the judge has seen.
+
+- [ ] **Same first versions in every setup.** C1 and C2 reuse the first versions of C0 while the
   prompt is identical, since two identical C0 runs differ by 3 methods, as much as the feedback.
-- [ ] **2. Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
+- [ ] **Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
   experts, and our tests and docstrings often disagree. We write the labelling criteria first,
   because people change them while labelling (Shankar et al. 2024, "criteria drift").
-- [ ] **3. Feedback with evidence.** The coder also gets the code the judge ran and its output.
+- [ ] **Feedback with evidence.** The coder also gets the code the judge ran and its output.
   Grounded critiques work better (CRITIC, Gou et al. 2024), and the judge's medium-effort claims
   were all true.
-- [ ] **4. Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
+- [ ] **Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
   verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
   rejected for behaviour the docstring does not describe. Telling an underspecified task apart from
   a wrong solution works better as a separate step (Edwards and Schuster 2026). v3 also writes its
   checks from the docstring before reading the code, because tests written by a model carry a bias
   that can mislead the feedback (Chen et al., ACL 2025).
-- [ ] **5. A careful memory in C3**: only corrections we confirm by hand, at most about ten. The
+- [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The
   paper found its memory module harmful, because errors spread to later verdicts.
-- [ ] **6. Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
+- [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
   written again without feedback). They separate the effect of the reason from that of a second
   attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).
 - [ ] **Up to three revision rounds for RQ3**, on the development classes only, recording the
@@ -93,11 +120,13 @@ Each comes with its reason and source.
   pass rate on the other 61 classes (Rogan and Gladen formula).
 - [ ] **pass^k if we repeat runs**: the share of methods that pass in all k runs (from τ-bench).
 
-Sources: Zhuge et al. 2025 (the paper); Edwards and Schuster 2026 (arXiv 2603.26233); Chen et al. 2025
-(ACL, 2025.acl-long.881); Iscan 2026 (arXiv 2606.31511); Gao et al. 2023 (ICML); Pan et al. 2024
-(arXiv 2402.06627); Sharma et al. 2024 (arXiv 2310.13548); phase 14 (lessons 03 and 05), 16.23 and
-18.02 of AI Engineering from Scratch (https://github.com/DominikPanzarella/ai-engineering-from-scratch);
-lectures 4, 5, 6 and 14 of Engineering AI Systems, USI
+Sources: Zhuge et al. 2025 (the paper); Shinn et al. 2023 (Reflexion, arXiv 2303.11366); Chen, Lin
+et al. 2024 (Self-Debug, arXiv 2304.05128); Edwards and Schuster 2026 (arXiv 2603.26233); Chen et
+al. 2025 (ACL, 2025.acl-long.881); Iscan 2026 (arXiv 2606.31511); Gao et al. 2023 (ICML); Pan et al.
+2024 (arXiv 2402.06627); Sharma et al. 2024 (arXiv 2310.13548); phase 14 (lessons 03 and 05), 16.23
+and 18.02 of AI Engineering from Scratch
+(https://github.com/DominikPanzarella/ai-engineering-from-scratch); lectures 4, 5, 6 and 14 of
+Engineering AI Systems, USI
 (https://www.composablesystems.org/courses/engineering-ai-systems/fa2026/).
 
 ## Open decisions
@@ -110,4 +139,5 @@ lectures 4, 5, 6 and 14 of Engineering AI Systems, USI
   and about 48% with three; an 8-point gain 94% of the time with one run.
 - [ ] **Same budget across setups.** For now: one revision per method in C2, one per class in C1.
 - [ ] **The lab note "classes with the 1st methods implemented".** To ask Alessandro.
+- [ ] **Coder memory and tests for the coder** in the later versions. To ask the instructors.
 - [x] **Judge effort** (7 Nov). Medium: its claims were all true.
