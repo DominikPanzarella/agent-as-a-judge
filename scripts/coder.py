@@ -1,8 +1,10 @@
-"""Setup C0: Qwen writes each class one method at a time, with no feedback.
+"""The coder alone: Qwen writes each class one method at a time, with no feedback.
 
-For each method it gets the class skeleton, the methods written so far and the method's name,
-never the tests. A reply without a usable method leaves a stub and is not asked again. Results go
-to runs/<name>/<task_id>.json and every request to runs/cost_log.csv.
+The pilot ran this as setup C0. In the base version every setup has a judge, and these are the
+first versions, written before any feedback. For each method it gets the class skeleton, the
+methods written so far and the method's name, never the tests. A reply without a usable method
+leaves a stub and is not asked again. Results go to runs/<name>/<task_id>.json and every request to
+runs/cost_log.csv.
 
     .venv/bin/python scripts/coder.py --dry-run ClassEval_19      # show the first prompt
     .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53
@@ -138,7 +140,7 @@ def run_class(client, task, steps, setup=SETUP, model=MODEL):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Setup C0: the coder writes each class with no feedback.")
+    parser = argparse.ArgumentParser(description="The coder alone: it writes each class with no feedback.")
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
     parser.add_argument("--all", action="store_true", help="every kept class")
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")

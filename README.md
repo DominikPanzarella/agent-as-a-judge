@@ -37,15 +37,16 @@ Solid parts are built and were tried in the pilot. Orange parts are new in the b
 planned when dashed.
 The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
-We keep coder and tasks fixed and change only the feedback:
+Every setup has a coder and a judge; they differ in when and how the judge gives its feedback:
 
 | Setup | Feedback to the coder | Status |
 |---|---|---|
-| C0 | none (baseline) | piloted |
 | C1 | the judge reviews the finished class, with the results of all its tests; one revision of the class | piloted without tests |
 | C2 | after each method the judge runs its tests and reviews it; one revision of that method | piloted without tests |
 | C3 | as C2, plus a memory of the judge's mistakes that we confirm by hand | planned |
-| C4 | the coder gets only the test results, without the judge | planned |
+
+There is no setup without the judge: the baseline is inside each setup, in the first version of
+each method, written before any feedback.
 
 **One method in C2.** (1) The coder writes the method. (2) The tests of that method run on the
 class written so far. (3) The judge gets the docstring, the code and the test results, may run code
@@ -82,9 +83,8 @@ the class is finished, all its tests run on the first and on the final versions:
 - **Methods not written yet.** The tests of 14 of the 289 methods also call a method that comes
   later in the order, which is still a stub. The judge is told which methods are missing, so it does
   not blame the method for them.
-- **C4 without the judge.** The coder gets only the test results, so C2 against C4 shows what the
-  judge adds to the tests.
-- **The grade** stays the same in every setup: all the ClassEval tests on the finished class.
+- **The grade** stays the same in every setup: all the ClassEval tests on the finished class, with
+  the first and with the final versions of the methods.
 
 Later variants (a memory for the coder, a coder that runs its own code, test cases split between
 the judge and the grade, judge v3, our labels, controls) are in the [roadmap](docs/roadmap_midway.md).
@@ -117,7 +117,7 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/check_api.py
 .venv/bin/python scripts/budget.py
 
-# C0: the coder alone
+# the coder alone (setup C0 of the pilot, now only the first versions)
 .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_55
 .venv/bin/python scripts/coder.py --all
 
@@ -194,7 +194,7 @@ tests.
 
 ![The judge's TPR and TNR on the 27B and 9B runs](docs/figures/judge_rates.png)
 
-The open questions (coder, conflicting tests, repetitions, proposals) are in the
+The open questions (coder, conflicting tests, repetitions, later variants) are in the
 [roadmap](docs/roadmap_midway.md).
 
 ## 7. References and data

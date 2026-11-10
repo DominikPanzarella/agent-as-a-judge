@@ -43,7 +43,7 @@ source is `architecture_base.svg`.
 - [ ] **Base judge** (10 to 12 Nov). `judge.py` gets the tests of the method and their results;
   `loop.py` runs them after each method and tells the judge which methods are still missing. A dry
   run on the development classes first.
-- [ ] **Full runs** (12 to 13 Nov). C0, C1 and C2 on the 71 classes, after the instructors' answer.
+- [ ] **Full runs** (12 to 13 Nov). C1 and C2 on the 71 classes, after the instructors' answer.
 - [ ] **Analysis** (14 to 15 Nov). Pass rates with and without the weak methods, the judge's TPR
   and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
 - [ ] **Error analysis** (14 to 15 Nov). 20 disagreements between judge and tests, grouped into
@@ -58,8 +58,7 @@ source is `architecture_base.svg`.
 
 - [ ] **C3, the flywheel** (20 to 29 Nov). Three rounds of classes; between rounds the judge keeps
   a memory of its mistakes.
-- [ ] **C4 and the controls** (30 Nov to 6 Dec). C4 gives the coder the test results.
-  Controls: judge v1 (no tools) and self-refine.
+- [ ] **Later variants** (30 Nov to 6 Dec), the ones the instructors accept.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
@@ -76,7 +75,8 @@ source is `architecture_base.svg`.
   still stubs.
 - [ ] **Feedback after every method (C2) and at the end of the class (C1)**, as for RQ1. The grade is
   always all the ClassEval tests on the finished class.
-- [ ] **C4 with the tests only**, without the judge: C2 against C4 measures what the judge adds.
+- [ ] **Always a coder and a judge** (10 Nov). C0 and C4 are dropped. The baseline is the first
+  version of each method, written before any feedback, against the final one.
 
 ## Later variants, to discuss with the instructors
 
@@ -92,8 +92,8 @@ Each comes with its reason and source.
   judge, the others give the grade (224 of the 289 methods have five), so the grade does not use
   the tests the judge has seen.
 
-- [ ] **Same first versions in every setup.** C1 and C2 reuse the first versions of C0 while the
-  prompt is identical, since two identical C0 runs differ by 3 methods, as much as the feedback.
+- [ ] **Same first versions in every setup.** C1 and C2 start from the same first versions, written
+  once with the same prompt, since two identical runs differ by 3 methods, as much as the feedback.
 - [ ] **Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
   experts, and our tests and docstrings often disagree. We write the labelling criteria first,
   because people change them while labelling (Shankar et al. 2024, "criteria drift").
