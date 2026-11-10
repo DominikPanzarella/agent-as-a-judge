@@ -108,6 +108,14 @@ Each comes with its reason and source.
   that can mislead the feedback (Chen et al., ACL 2025).
 - [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The
   paper found its memory module harmful, because errors spread to later verdicts.
+- [ ] **C3 without the manual check.** Every disagreement between the judge and the tests goes into
+  the memory as it is, as in the paper's memory module. Against C3 with the manual check, it shows
+  how much the check matters.
+- [ ] **C3 with a third model as reviewer.** A model of a third family, neither Qwen nor GPT, reads
+  each disagreement (docstring, tests, code, the judge's reason) and decides in our place who is
+  right. On the development classes we first compare it with our labels. Models tend to favour
+  their own outputs (Panickssery et al. 2024); a model that judges a judge is the meta-judge of
+  Wu et al. 2024, and a panel of different models is the jury of Verga et al. 2024.
 - [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
   written again without feedback). They separate the effect of the reason from that of a second
   attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).
@@ -120,11 +128,12 @@ Each comes with its reason and source.
   pass rate on the other 61 classes (Rogan and Gladen formula).
 - [ ] **pass^k if we repeat runs**: the share of methods that pass in all k runs (from τ-bench).
 
-Sources: Zhuge et al. 2025 (the paper); Shinn et al. 2023 (Reflexion, arXiv 2303.11366); Chen, Lin
-et al. 2024 (Self-Debug, arXiv 2304.05128); Edwards and Schuster 2026 (arXiv 2603.26233); Chen et
-al. 2025 (ACL, 2025.acl-long.881); Iscan 2026 (arXiv 2606.31511); Gao et al. 2023 (ICML); Pan et al.
-2024 (arXiv 2402.06627); Sharma et al. 2024 (arXiv 2310.13548); phase 14 (lessons 03 and 05), 16.23
-and 18.02 of AI Engineering from Scratch
+Sources: Zhuge et al. 2025 (the paper); Panickssery et al. 2024 (arXiv 2404.13076); Wu et al. 2024
+(Meta-Rewarding, arXiv 2407.19594); Verga et al. 2024 (juries, arXiv 2404.18796); Shinn et al. 2023
+(Reflexion, arXiv 2303.11366); Chen, Lin et al. 2024 (Self-Debug, arXiv 2304.05128); Edwards and
+Schuster 2026 (arXiv 2603.26233); Chen et al. 2025 (ACL, 2025.acl-long.881); Iscan 2026 (arXiv
+2606.31511); Gao et al. 2023 (ICML); Pan et al. 2024 (arXiv 2402.06627); Sharma et al. 2024 (arXiv
+2310.13548); phase 14 (lessons 03 and 05), 16.23 and 18.02 of AI Engineering from Scratch
 (https://github.com/DominikPanzarella/ai-engineering-from-scratch); lectures 4, 5, 6 and 14 of
 Engineering AI Systems, USI
 (https://www.composablesystems.org/courses/engineering-ai-systems/fa2026/).
