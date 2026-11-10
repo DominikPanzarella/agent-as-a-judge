@@ -41,18 +41,19 @@ Every setup has a coder and a judge; they differ in when and how the judge gives
 
 | Setup | Feedback to the coder | Status |
 |---|---|---|
-| C1 | the judge reviews the finished class, with the results of all its tests; one revision of the class | piloted without tests |
-| C2 | after each method the judge runs its tests and reviews it; one revision of that method | piloted without tests |
-| C3 | as C2, plus a memory of the judge's mistakes that we confirm by hand | planned |
+| C1 | the coder writes the whole class, then the judge runs its tests and reviews it; one revision of the class | piloted without tests |
+| C2 | after each method the judge runs its tests and reviews it; one revision of that method, then the next method | piloted without tests |
+| C3 | as C2, in rounds of classes; from the second round the judge has a memory of its mistakes that we confirm by hand | planned |
 
 There is no setup without the judge: the baseline is inside each setup, in the first version of
 each method, written before any feedback.
 
-**One method in C2.** (1) The coder writes the method. (2) The tests of that method run on the
-class written so far. (3) The judge gets the docstring, the code and the test results, may run code
-of its own, and answers OK or NOT OK with a reason. (4) After a NOT OK the coder rewrites the method
-once. (5) The final version joins the methods already written, and the next method starts. When
-the class is finished, all its tests run on the first and on the final versions: that is the grade.
+**One method in C2.** (1) The coder writes the method; it never sees or runs the tests. (2) The
+judge gets the docstring, the code and the ClassEval tests of that method, and runs the tests itself
+on the class written so far, plus code of its own if needed. (3) It answers OK or NOT OK with a
+reason. (4) After a NOT OK the coder rewrites the method once. (5) The final version joins the
+methods already written, and the next method starts. When the class is finished, the harness runs
+all its tests on the first and on the final versions: that is the grade.
 
 **Built**
 
@@ -71,7 +72,9 @@ the class is finished, all its tests run on the first and on the final versions:
 - **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
   stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
-- **Judge vs tests.** TPR, TNR and Cohen's kappa of the judge's verdicts.
+- **Judge vs tests.** Not part of the loop: after a run, the judge's verdict on each first version is
+  set next to the grade of the same version. It gives TPR, TNR and Cohen's kappa, and the list of
+  disagreements that we check by hand.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
 **Base version** (decided on 9 November, not built yet)

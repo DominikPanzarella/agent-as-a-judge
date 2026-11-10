@@ -40,9 +40,9 @@ source is `architecture_base.svg`.
 
 ## Week 2 (9 to 15 November)
 
-- [ ] **Base judge** (10 to 12 Nov). `judge.py` gets the tests of the method and their results;
-  `loop.py` runs them after each method and tells the judge which methods are still missing. A dry
-  run on the development classes first.
+- [ ] **Base judge** (10 to 12 Nov). `judge.py` gets the tests of the method and a tool that runs
+  them on the class written so far, next to `run_python`; `loop.py` tells the judge which methods
+  are still missing. A dry run on the development classes first.
 - [ ] **Full runs** (12 to 13 Nov). C1 and C2 on the 71 classes, after the instructors' answer.
 - [ ] **Analysis** (14 to 15 Nov). Pass rates with and without the weak methods, the judge's TPR
   and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
