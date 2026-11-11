@@ -1,0 +1,139 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "It creates the `tickets` table only if it does not already exist, with an autoincrementing integer ID and text columns for the four specified fields, then commits the change. It returns `None` implicitly, as documented.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1086,
+          "cached_tokens": 0,
+          "completion_tokens": 143,
+          "reasoning_tokens": 78,
+          "cost": 0.00018010000000000001
+        }
+      ],
+      "prompt_tokens": 1086,
+      "cached_tokens": 0,
+      "completion_tokens": 143,
+      "reasoning_tokens": 78,
+      "cost": 0.00018010000000000001
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method inserts all four ticket values into the matching columns using parameterized SQL, then commits the change. This matches the docstring and the table created by `create_table`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1240,
+          "cached_tokens": 0,
+          "completion_tokens": 115,
+          "reasoning_tokens": 61,
+          "cost": 0.0001815
+        }
+      ],
+      "prompt_tokens": 1240,
+      "cached_tokens": 0,
+      "completion_tokens": 115,
+      "reasoning_tokens": 61,
+      "cost": 0.0001815
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method selects all ticket fields for rows whose customer name exactly matches the argument, fetches them as a list of tuples, and returns that list. The documented example returns one matching row, as required.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\ndb.create_table(); db.insert_ticket('Movie A','Theater 1','A1','John Doe')\nr=db.search_tickets_by_customer('John Doe')\nprint(r, len(r))\nos.remove(p)",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')] 1\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1430,
+          "cached_tokens": 0,
+          "completion_tokens": 84,
+          "reasoning_tokens": 0,
+          "cost": 0.000185
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1558,
+          "cached_tokens": 1427,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 5.5870000000000005e-05
+        }
+      ],
+      "prompt_tokens": 2988,
+      "cached_tokens": 1427,
+      "completion_tokens": 141,
+      "reasoning_tokens": 0,
+      "cost": 0.00024087000000000002
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes the row whose `id` matches `ticket_id` and commits the change, returning `None` as documented. It works with the table schema and connection fields defined by the other methods.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\ndb.insert_ticket('Movie A','Theater 1','A1','John Doe')\nr=db.search_tickets_by_customer('John Doe')\nprint(r)\nprint(db.delete_ticket(r[0][0]))\nprint(db.search_tickets_by_customer('John Doe'))",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\nNone\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1497,
+          "cached_tokens": 0,
+          "completion_tokens": 96,
+          "reasoning_tokens": 0,
+          "cost": 0.0001977
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1637,
+          "cached_tokens": 1494,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 5.774e-05
+        }
+      ],
+      "prompt_tokens": 3134,
+      "cached_tokens": 1494,
+      "completion_tokens": 153,
+      "reasoning_tokens": 0,
+      "cost": 0.00025544
+    }
+  ]
+}

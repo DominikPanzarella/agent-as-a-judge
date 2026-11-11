@@ -1,0 +1,99 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For tuple input, `mrr` computes the reciprocal rank but falls through without returning it; the documented tuple example returned `None` when run. Return the mean and reciprocal-rank list for the tuple case as well as for nonempty list input.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint(MetricsCalculator2.mrr([]))",
+          "output": "exit code 0\nstdout:\nNone\n(0.75, [1.0, 0.5])\nNone\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1633,
+          "cached_tokens": 0,
+          "completion_tokens": 110,
+          "reasoning_tokens": 17,
+          "cost": 0.00021830000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1782,
+          "cached_tokens": 1630,
+          "completion_tokens": 166,
+          "reasoning_tokens": 96,
+          "cost": 0.0001145
+        }
+      ],
+      "prompt_tokens": 3415,
+      "cached_tokens": 1630,
+      "completion_tokens": 276,
+      "reasoning_tokens": 113,
+      "cost": 0.0003328
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The tuple input returns `None` (as the example run showed), and the list example returns `(0.1875, [0.1875, 0.1875])` instead of the documented result. Accumulate precision at each relevant rank and divide by `num_gt`, then return the single-query result as well as the list result.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1,0,1,0],4)); print(MetricsCalculator2.map([([1,0,1,0],4),([0,1,0,1],4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmp_2ixafga/snippet.py\", line 102\n    print(MetricsCalculator2.map(([1,0,1,0],4)); print(MetricsCalculator2.map([([1,0,1,0],4),([0,1,0,1],4)]))\n                                               ^\nSyntaxError: invalid syntax\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.map(([1,0,1,0],4))); print(MetricsCalculator2.map([([1,0,1,0],4),([0,1,0,1],4)]))",
+          "output": "exit code 0\nstdout:\nNone\n(0.1875, [0.1875, 0.1875])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2241,
+          "cached_tokens": 0,
+          "completion_tokens": 64,
+          "reasoning_tokens": 0,
+          "cost": 0.00025610000000000005
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2423,
+          "cached_tokens": 2238,
+          "completion_tokens": 210,
+          "reasoning_tokens": 144,
+          "cost": 0.00014588
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2673,
+          "cached_tokens": 2420,
+          "completion_tokens": 198,
+          "reasoning_tokens": 108,
+          "cost": 0.0001485
+        }
+      ],
+      "prompt_tokens": 7337,
+      "cached_tokens": 4658,
+      "completion_tokens": 472,
+      "reasoning_tokens": 252,
+      "cost": 0.0005504800000000001
+    }
+  ]
+}

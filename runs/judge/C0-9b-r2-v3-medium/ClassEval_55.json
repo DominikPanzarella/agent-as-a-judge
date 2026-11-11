@@ -1,0 +1,91 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly applies Manacher\u2019s algorithm to the transformed string and maps the longest radius back to a substring; the documented example returns `'ababa'`. It also handles empty input and strings containing the separator character correctly, so I found no concrete issue.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 4,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string()); print(Manacher('').palindromic_string()); print(Manacher('abba').palindromic_string()); print(Manacher('a').palindromic_string())",
+          "output": "exit code 0\nstdout:\nababa\n\nabba\na\n\nstderr:\n"
+        },
+        {
+          "code": "from itertools import product\n\ndef brute(s):\n    vals=[s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]]\n    return max(vals,key=len) if vals else ''\nfor n in range(1,7):\n for tup in product('a#', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(got)!=len(exp) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        },
+        {
+          "code": "from itertools import product\n\ndef brute(s):\n vals=[s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]]\n return max(vals,key=len) if vals else ''\nfor n in range(1,9):\n for tup in product('ab#', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(got)!=len(exp) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        },
+        {
+          "code": "import random\n\ndef brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if len(x)>len(best) and x==x[::-1]: best=x\n return best\nfor _ in range(10000):\n s=''.join(random.choice('ab#') for _ in range(random.randrange(15)))\n got=Manacher(s).palindromic_string(); exp=brute(s)\n if len(got)!=len(exp) or got!=got[::-1]:\n  print(repr(s),repr(got),repr(exp)); break\nelse: print('all good')",
+          "output": "exit code 0\nstdout:\nall good\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1109,
+          "cached_tokens": 0,
+          "completion_tokens": 72,
+          "reasoning_tokens": 0,
+          "cost": 0.0001469
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1208,
+          "cached_tokens": 1106,
+          "completion_tokens": 307,
+          "reasoning_tokens": 133,
+          "cost": 0.00017476
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1537,
+          "cached_tokens": 1205,
+          "completion_tokens": 275,
+          "reasoning_tokens": 103,
+          "cost": 0.00018275
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1834,
+          "cached_tokens": 1534,
+          "completion_tokens": 561,
+          "reasoning_tokens": 387,
+          "cost": 0.00032584000000000004
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2418,
+          "cached_tokens": 1831,
+          "completion_tokens": 67,
+          "reasoning_tokens": 0,
+          "cost": 0.00011051000000000001
+        }
+      ],
+      "prompt_tokens": 8106,
+      "cached_tokens": 5676,
+      "completion_tokens": 1282,
+      "reasoning_tokens": 623,
+      "cost": 0.00094076
+    }
+  ]
+}

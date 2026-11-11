@@ -1,16 +1,19 @@
 """The judge: GPT-6 Luna says whether a method, or a whole class, does what its docstring says.
 
 It sees the class skeleton, the methods written before and the new one, never the tests, which
-only give the grade. It
-answers in JSON with a reason and a verdict, OK or NOT OK. Judge v1 only reads the code; v2 can
-also run Python up to 5 times on the class written so far. Both use the Responses API, because
-Chat Completions does not accept tools with a reasoning effort for this model.
+only give the grade. It answers in JSON with a reason and a verdict, OK or NOT OK. Judge v1 only
+reads the code; v2 can also run Python up to 5 times on the class written so far. v3, v4 and v5
+are v2 with one more paragraph, the prompt variants tried on the pilot classes (11 November): v3
+judges only what the docstring asks, v4 sorts each problem by kind and fails only the serious
+ones, v5 tries every behaviour the docstring describes. All use the Responses API, because Chat
+Completions does not accept tools with a reasoning effort for this model.
 
 Run as a script, it judges a finished run and compares the verdicts with the tests.
 
     .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55
     .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
     .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
+    .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --tag r2 --all   # a repeat
 """
 import argparse
 import json
@@ -30,7 +33,7 @@ import harness
 
 ROOT = harness.ROOT
 MODEL = "gpt-6-luna"
-VERSIONS = ["v1", "v2"]
+VERSIONS = ["v1", "v2", "v3", "v4", "v5"]
 EFFORTS = ["low", "medium"]  # the course allows low or medium reasoning effort
 EFFORT = "low"  # with "low", GPT-6 Luna used no reasoning tokens in the first test
 MAX_RUNS = 5  # code runs that judge v2 may ask for on one method
@@ -59,6 +62,31 @@ TOOLS_NOTE = (
     "ran it, not what you expect."
 )
 SYSTEM_TOOLS = SYSTEM + TOOLS_NOTE
+
+# The prompt variants, each added to v2. Each one targets an error of v2 on the pilot of the 9B.
+# v3: the judge failed correct methods for checks or messages the docstring does not ask for
+# (CodeJudge, Tong and Zhang 2024, found the same over-strict error handling).
+SCOPE_NOTE = (
+    " Judge only what the docstring and the rest of the class ask for. A check, a message or a "
+    "behaviour that the docstring does not describe is not a problem: do not answer NOT OK for it."
+)
+# v4: CodeJudge's idea of sorting each problem by kind and severity, with a binary verdict.
+SEVERITY_NOTE = (
+    " Before the verdict, sort each problem you find into one kind. Serious: a wrong result or an "
+    "exception on an input the docstring describes, a case named in the docstring that the code "
+    "does not handle, a field or method the class does not have, incomplete code. Minor: missing "
+    "error handling, an input the docstring does not mention, efficiency, style. Answer NOT OK only "
+    "for a serious problem, and name its kind in the reason."
+)
+# v5: the judge passed wrong methods after trying only the docstring example.
+PLAN_NOTE = (
+    " Before you answer, run the examples of the docstring and at least one more case for each "
+    "behaviour it describes: each branch, each special value it names, such as an empty input, a "
+    "missing key or a limit, and the fields the method changes that other methods read. You can "
+    "check several cases in one run."
+)
+INSTRUCTIONS = {"v1": SYSTEM, "v2": SYSTEM_TOOLS, "v3": SYSTEM_TOOLS + SCOPE_NOTE,
+                "v4": SYSTEM_TOOLS + SEVERITY_NOTE, "v5": SYSTEM_TOOLS + PLAN_NOTE}
 
 # Setup C1: the judge reads the finished class instead of one method.
 SYSTEM_CLASS = (
@@ -188,10 +216,19 @@ def run_python(source, code):
             f"\nstderr:\n{proc.stderr[-OUTPUT_LIMIT:]}")
 
 
-def judge_method_with_tools(client, task, written, name, code, effort=EFFORT):
-    """Judge v2 on one method: it may run code on the class written so far, then answers."""
+def judge_method_with_tools(client, task, written, name, code, effort=EFFORT, version="v2"):
+    """Judge v2 (or a variant of it) on one method: it may run code on the class written so far,
+    then answers."""
     source = harness.build_class(task, {**written, name: code})
-    return review(client, task, SYSTEM_TOOLS, prompt(task, written, name, code), source, "v2", effort)
+    return review(client, task, INSTRUCTIONS[version], prompt(task, written, name, code), source,
+                  version, effort)
+
+
+def judge_any(client, task, written, name, code, version="v1", effort=EFFORT):
+    """One method with any version of the judge."""
+    if version == "v1":
+        return judge_method(client, task, written, name, code, effort)
+    return judge_method_with_tools(client, task, written, name, code, effort, version)
 
 
 def judge_class(client, task, written, version="v1", effort=EFFORT):
@@ -205,7 +242,7 @@ def judge_class(client, task, written, version="v1", effort=EFFORT):
 def review(client, task, instructions, content, source, version, effort, text_format=VERDICT_FORMAT):
     """One review by the judge. v1 answers at once; v2 may first run code on `source`, up to
     MAX_RUNS times, and then gives its verdict."""
-    tools = [RUN_PYTHON] if version == "v2" else None
+    tools = [RUN_PYTHON] if version != "v1" else None
     runs, requests = [], []
     response = ask(client, instructions, [{"role": "user", "content": content}], effort,
                    tools, "auto" if tools else None, text_format=text_format)
@@ -247,7 +284,6 @@ def review(client, task, instructions, content, source, version, effort, text_fo
 
 def judge_run(client, task, run, version="v1", effort=EFFORT):
     """Verdicts on every method of a finished class, each judged with the methods before it."""
-    judge = judge_method if version == "v1" else judge_method_with_tools
     written, records = {}, []
     for m in run["methods"]:
         name = m["method_name"]
@@ -257,7 +293,7 @@ def judge_run(client, task, run, version="v1", effort=EFFORT):
                             "reason": "The reply did not contain a method that compiles.",
                             "passed": m["passed"]})
             continue
-        r = judge(client, task, written, name, m["code"], effort)
+        r = judge_any(client, task, written, name, m["code"], version, effort)
         for request in r["requests"]:
             budget.log(setup=run["setup"], task_id=task["task_id"], method_name=name,
                        role=f"judge-{version}", service="openai", model=MODEL, **request)
@@ -297,19 +333,21 @@ def agreement(rows):
     }
 
 
-def folder(setup, version, effort):
-    return ROOT / "runs/judge" / f"{setup}-{version}-{effort}"
+def folder(setup, version, effort, tag=""):
+    """runs/judge/<setup>-<version>-<effort>, with -<tag> for a repeat of the same judge."""
+    return ROOT / "runs/judge" / (f"{setup}-{version}-{effort}" + (f"-{tag}" if tag else ""))
 
 
-def summary(setup, version="v1", effort=EFFORT):
-    rows = [r for f in sorted(folder(setup, version, effort).glob("*.json"))
+def summary(setup, version="v1", effort=EFFORT, tag=""):
+    rows = [r for f in sorted(folder(setup, version, effort, tag).glob("*.json"))
             for r in json.loads(f.read_text(encoding="utf-8"))["methods"]]
     judged = [r for r in rows if not r.get("auto")]
     a = agreement(judged)
     unreadable = sum(r["verdict"] is None for r in judged)
     cost = sum(r.get("cost") or 0 for r in judged)
     runs = sum(r.get("n_runs", 0) for r in judged)
-    print(f"{setup}, judge {version}, effort {effort}: {len(rows)} methods, {len(judged)} judged, "
+    name = f"{setup}, judge {version}, effort {effort}" + (f", {tag}" if tag else "")
+    print(f"{name}: {len(rows)} methods, {len(judged)} judged, "
           f"{unreadable} unreadable replies, {runs} code runs, {cost:.5f} $")
     if a["n"]:
         print(f"  agreement with the tests {a['accuracy']:.2f}, kappa {a['kappa']:.2f}")
@@ -321,8 +359,9 @@ def main():
     parser = argparse.ArgumentParser(description="The judge on the methods of a finished run.")
     parser.add_argument("setup", help="the run to judge, such as C0")
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
-    parser.add_argument("--version", choices=VERSIONS, default="v1", help="v2 can run code")
+    parser.add_argument("--version", choices=VERSIONS, default="v1", help="v2 to v5 can run code")
     parser.add_argument("--effort", choices=EFFORTS, default=EFFORT, help="reasoning effort of the judge")
+    parser.add_argument("--tag", default="", help="suffix of the folder, such as r2 for a repeat")
     parser.add_argument("--all", action="store_true", help="every class of the run")
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")
     parser.add_argument("--force", action="store_true", help="judge again classes that already have verdicts")
@@ -330,7 +369,7 @@ def main():
     args = parser.parse_args()
 
     if args.summary:
-        summary(args.setup, args.version, args.effort)
+        summary(args.setup, args.version, args.effort, args.tag)
         return
     runs = ROOT / "runs" / args.setup
     chosen = sorted(f.stem for f in runs.glob("*.json")) if args.all else args.tasks
@@ -342,15 +381,15 @@ def main():
     if args.dry_run:
         run = json.loads((runs / f"{chosen[0]}.json").read_text(encoding="utf-8"))
         m = next(m for m in run["methods"] if m["valid"])
-        system = SYSTEM if args.version == "v1" else SYSTEM_TOOLS
-        print("SYSTEM:\n" + system + "\n\nUSER:\n" + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
-        if args.version == "v2":
+        print("SYSTEM:\n" + INSTRUCTIONS[args.version] + "\n\nUSER:\n"
+              + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
+        if args.version != "v1":
             print("\nTOOL:\n" + json.dumps(RUN_PYTHON, indent=2))
         return
 
     load_dotenv(ROOT / ".env")
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"], max_retries=5)
-    out_dir = folder(args.setup, args.version, args.effort)
+    out_dir = folder(args.setup, args.version, args.effort, args.tag)
     out_dir.mkdir(parents=True, exist_ok=True)
     for task_id in chosen:
         out = out_dir / f"{task_id}.json"
@@ -368,7 +407,7 @@ def main():
         verdicts = ", ".join(f"{m['method_name']} {m['verdict']} (tests {'pass' if m['passed'] else 'fail'})"
                              for m in result["methods"])
         print(f"{task_id}: {verdicts}")
-    summary(args.setup, args.version, args.effort)
+    summary(args.setup, args.version, args.effort, args.tag)
 
 
 if __name__ == "__main__":

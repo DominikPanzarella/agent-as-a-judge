@@ -1,0 +1,111 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For the documented call, the method returns 4, not the expected 2. It counts matching pairs and then doubles that count; adjust the calculation to return the length the method is meant to report.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "m=Manacher('ababa'); print(m.palindromic_length(2,1,'a|b|a|b|a'))",
+          "output": "exit code 0\nstdout:\n4\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1007,
+          "cached_tokens": 0,
+          "completion_tokens": 48,
+          "reasoning_tokens": 0,
+          "cost": 0.0001247
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1077,
+          "cached_tokens": 0,
+          "completion_tokens": 386,
+          "reasoning_tokens": 326,
+          "cost": 0.0003007
+        }
+      ],
+      "prompt_tokens": 2084,
+      "cached_tokens": 0,
+      "completion_tokens": 434,
+      "reasoning_tokens": 326,
+      "cost": 0.0004254
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly computes palindrome radii in the transformed string, then maps the longest radius back to a substring of the original input. It handles empty input and returns the documented `'ababa'` for the example.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 3,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string())\nfor s in ['','a','aa','ab','aba','abba','abc','a#b','##','a|b|a']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'aa' 'aa'\n'ab' 'a'\n'aba' 'aba'\n'abba' 'abba'\n'abc' 'a'\n'a#b' 'a'\n'##' '##'\n'a|b|a' 'a|b|a'\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nfor n in range(1,7):\n for tup in itertools.product('#a', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); want=brute(s)\n  if len(got)!=len(want) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(want)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute(s):\n return max((s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]),key=len,default='')\nfor n in range(1,9):\n for tup in itertools.product('#ab', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); want=brute(s)\n  if len(got)!=len(want) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(want)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1394,
+          "cached_tokens": 0,
+          "completion_tokens": 85,
+          "reasoning_tokens": 0,
+          "cost": 0.0001819
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1564,
+          "cached_tokens": 1391,
+          "completion_tokens": 269,
+          "reasoning_tokens": 92,
+          "cost": 0.00016571
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1855,
+          "cached_tokens": 1561,
+          "completion_tokens": 226,
+          "reasoning_tokens": 59,
+          "cost": 0.00015800999999999999
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2103,
+          "cached_tokens": 1852,
+          "completion_tokens": 810,
+          "reasoning_tokens": 749,
+          "cost": 0.00044862
+        }
+      ],
+      "prompt_tokens": 6916,
+      "cached_tokens": 4804,
+      "completion_tokens": 1390,
+      "reasoning_tokens": 900,
+      "cost": 0.00095424
+    }
+  ]
+}

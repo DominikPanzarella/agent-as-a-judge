@@ -1,0 +1,138 @@
+{
+  "task_id": "ClassEval_16",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "precedence",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns priorities 1 to `+` and `-`, 2 to `*` and `/`, and 3 to `^`, returning 0 for other operators, as the docstring specifies. The documented examples return 1 and 3.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.precedence('+')); print(c.precedence('^')); print(c.precedence('x'))",
+          "output": "exit code 0\nstdout:\n1\n3\n0\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1091,
+          "cached_tokens": 0,
+          "completion_tokens": 73,
+          "reasoning_tokens": 30,
+          "cost": 0.00014560000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1190,
+          "cached_tokens": 1088,
+          "completion_tokens": 69,
+          "reasoning_tokens": 0,
+          "cost": 5.558e-05
+        }
+      ],
+      "prompt_tokens": 2281,
+      "cached_tokens": 1088,
+      "completion_tokens": 142,
+      "reasoning_tokens": 30,
+      "cost": 0.00020118000000000002
+    },
+    {
+      "method_name": "apply_operator",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The documented example expects `([1, -1], ['-'])`, but running the method returns `([1, -1], ['+'])`: it pops the final operator `'-'` and leaves `'+'`. Make the example consistent with the stack behavior or change the operator-stack handling to match the documented result.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))",
+          "output": "exit code 0\nstdout:\n([1, -1], ['+'])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1290,
+          "cached_tokens": 0,
+          "completion_tokens": 37,
+          "reasoning_tokens": 0,
+          "cost": 0.0001475
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1356,
+          "cached_tokens": 1287,
+          "completion_tokens": 327,
+          "reasoning_tokens": 243,
+          "cost": 0.00018327
+        }
+      ],
+      "prompt_tokens": 2646,
+      "cached_tokens": 1287,
+      "completion_tokens": 364,
+      "reasoning_tokens": 243,
+      "cost": 0.00033077
+    },
+    {
+      "method_name": "calculate",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: For malformed expressions such as `'1+'`, the final loop repeatedly calls `apply_operator`, which leaves the stacks unchanged when there are fewer than two operands, so `calculate` never returns `None` as promised. Check that an operator has two operands before applying it, and return `None` if the expression is invalid.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "c=Calculator()\nfor e in ['1+2-3','1+2*3','2^3^2','1  +2','1+','+1','1..2','1/0','2*-3','1.5+2']:\n print(repr(e), repr(c.calculate(e)))",
+          "output": "Stopped after 10 seconds."
+        },
+        {
+          "code": "c=Calculator()\nfor e in ['1+2-3','1+2*3','2^3^2','1+2','1.5+2','1+']:\n if e=='1+': continue\n print(repr(e), repr(c.calculate(e)))",
+          "output": "exit code 0\nstdout:\n'1+2-3' 0.0\n'1+2*3' 7.0\n'2^3^2' 64.0\n'1+2' 3.0\n'1.5+2' 3.5\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1555,
+          "cached_tokens": 0,
+          "completion_tokens": 85,
+          "reasoning_tokens": 0,
+          "cost": 0.000198
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1657,
+          "cached_tokens": 1552,
+          "completion_tokens": 347,
+          "reasoning_tokens": 268,
+          "cost": 0.00019952000000000001
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2082,
+          "cached_tokens": 1654,
+          "completion_tokens": 316,
+          "reasoning_tokens": 229,
+          "cost": 0.00021734
+        }
+      ],
+      "prompt_tokens": 5294,
+      "cached_tokens": 3206,
+      "completion_tokens": 748,
+      "reasoning_tokens": 497,
+      "cost": 0.0006148600000000001
+    }
+  ]
+}

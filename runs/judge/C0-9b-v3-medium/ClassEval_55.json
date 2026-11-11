@@ -1,0 +1,111 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented call returns `4`, not the expected `2`: `length` counts matching pairs in the separator-augmented string and is then doubled. Adjust the counting/return logic to match the documented length convention.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "m=Manacher('ababa'); print(m.palindromic_length(2,1,'a|b|a|b|a')); print(m.palindromic_length(4,1,'a|b|a|b|a'))",
+          "output": "exit code 0\nstdout:\n4\n8\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1050,
+          "cached_tokens": 0,
+          "completion_tokens": 71,
+          "reasoning_tokens": 0,
+          "cost": 0.0001405
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1145,
+          "cached_tokens": 1047,
+          "completion_tokens": 215,
+          "reasoning_tokens": 152,
+          "cost": 0.00012777
+        }
+      ],
+      "prompt_tokens": 2195,
+      "cached_tokens": 1047,
+      "completion_tokens": 286,
+      "reasoning_tokens": 152,
+      "cost": 0.00026827000000000003
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly handles an empty input and uses the transformed-string palindrome radii to return a longest palindromic substring; the documented example returns `'ababa'`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 3,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string())",
+          "output": "exit code 0\nstdout:\nababa\n\nstderr:\n"
+        },
+        {
+          "code": "for s in ['#', 'a#a', '##', 'a#b', 'ab#ba']:\n m=Manacher(s); print(repr(s), repr(m.palindromic_string()))",
+          "output": "exit code 0\nstdout:\n'#' '#'\n'a#a' 'a#a'\n'##' '##'\n'a#b' 'a'\n'ab#ba' 'ab#ba'\n\nstderr:\n"
+        },
+        {
+          "code": "from itertools import product\n\ndef brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nfor n in range(1,8):\n for tup in product('a#b', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); want=brute(s)\n  if len(got)!=len(want) or got != got[::-1]:\n   print(repr(s),repr(got),repr(want)); raise SystemExit\nprint('no counter')",
+          "output": "exit code 0\nstdout:\nno counter\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1437,
+          "cached_tokens": 0,
+          "completion_tokens": 35,
+          "reasoning_tokens": 0,
+          "cost": 0.00016120000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1495,
+          "cached_tokens": 1434,
+          "completion_tokens": 222,
+          "reasoning_tokens": 158,
+          "cost": 0.00013144
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1770,
+          "cached_tokens": 1492,
+          "completion_tokens": 210,
+          "reasoning_tokens": 29,
+          "cost": 0.00014772
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2003,
+          "cached_tokens": 1767,
+          "completion_tokens": 544,
+          "reasoning_tokens": 491,
+          "cost": 0.00031327
+        }
+      ],
+      "prompt_tokens": 6705,
+      "cached_tokens": 4693,
+      "completion_tokens": 1011,
+      "reasoning_tokens": 678,
+      "cost": 0.00075363
+    }
+  ]
+}

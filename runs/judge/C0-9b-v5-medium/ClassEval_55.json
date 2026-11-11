@@ -1,0 +1,123 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v5",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented example returns 4, not the expected 2: the loop counts two matching pairs and then multiplies that count by 2. Change the return calculation to match the documented length (for this example, return `length`).",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "m=Manacher('ababa')\nfor args in [(2,1,'a|b|a|b|a'), (2,0,'a|b|a|b|a'), (0,1,'a|b|a|b|a'), (2,2,'a|b|a|b|a')]:\n print(args, m.palindromic_length(*args))",
+          "output": "exit code 0\nstdout:\n(2, 1, 'a|b|a|b|a') 4\n(2, 0, 'a|b|a|b|a') 6\n(0, 1, 'a|b|a|b|a') 0\n(2, 2, 'a|b|a|b|a') 2\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1072,
+          "cached_tokens": 0,
+          "completion_tokens": 106,
+          "reasoning_tokens": 0,
+          "cost": 0.0001602
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1278,
+          "cached_tokens": 1069,
+          "completion_tokens": 351,
+          "reasoning_tokens": 284,
+          "cost": 0.00020709
+        }
+      ],
+      "prompt_tokens": 2350,
+      "cached_tokens": 1069,
+      "completion_tokens": 457,
+      "reasoning_tokens": 284,
+      "cost": 0.00036729
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly handles empty input and uses Manacher\u2019s algorithm to return a longest palindromic substring. I ran the documented example and checked single-character, even-length, no-repeat, and delimiter-containing cases; they returned valid longest palindromes.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 4,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string()); print(Manacher('').palindromic_string()); print(Manacher('a').palindromic_string()); print(Manacher('abba').palindromic_string()); print(Manacher('a#b#a').palindromic_string()); print(Manacher('abc').palindromic_string())",
+          "output": "exit code 0\nstdout:\nababa\n\na\nabba\na#b#a\na\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute(s):\n    pals=[s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]]\n    return max(pals,key=len) if pals else ''\nfor n in range(1,7):\n for x in itertools.product('a#b', repeat=n):\n  s=''.join(x); out=Manacher(s).palindromic_string()\n  if len(out)!=len(brute(s)) or out!=out[::-1]:\n   print(repr(s),repr(out),repr(brute(s))); raise SystemExit\nprint('all matched')",
+          "output": "exit code 0\nstdout:\nall matched\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute_len(s): return max((j-i for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]), default=0)\nfor n in range(1,10):\n for x in itertools.product('a#b', repeat=n):\n  s=''.join(x); out=Manacher(s).palindromic_string()\n  if len(out)!=brute_len(s) or out!=out[::-1]:\n   print(repr(s),repr(out),brute_len(s)); raise SystemExit\nprint('all matched')",
+          "output": "exit code 0\nstdout:\nall matched\n\nstderr:\n"
+        },
+        {
+          "code": "import random\n\ndef brute(s):\n return max((s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]),key=len,default='')\nfor _ in range(10000):\n s=''.join(random.choice('ab#') for _ in range(random.randrange(0,25)))\n got=Manacher(s).palindromic_string(); want=brute(s)\n if len(got)!=len(want) or got!=got[::-1]: print(repr(s),repr(got),repr(want)); break\nelse: print('random cases passed')",
+          "output": "exit code 0\nstdout:\nrandom cases passed\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1459,
+          "cached_tokens": 0,
+          "completion_tokens": 101,
+          "reasoning_tokens": 0,
+          "cost": 0.0001964
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1594,
+          "cached_tokens": 1456,
+          "completion_tokens": 291,
+          "reasoning_tokens": 120,
+          "cost": 0.00017386000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1908,
+          "cached_tokens": 1591,
+          "completion_tokens": 498,
+          "reasoning_tokens": 341,
+          "cost": 0.00029661
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2429,
+          "cached_tokens": 1905,
+          "completion_tokens": 315,
+          "reasoning_tokens": 149,
+          "cost": 0.00022894999999999998
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2768,
+          "cached_tokens": 2426,
+          "completion_tokens": 129,
+          "reasoning_tokens": 60,
+          "cost": 0.00012296
+        }
+      ],
+      "prompt_tokens": 10158,
+      "cached_tokens": 7378,
+      "completion_tokens": 1334,
+      "reasoning_tokens": 670,
+      "cost": 0.00101878
+    }
+  ]
+}

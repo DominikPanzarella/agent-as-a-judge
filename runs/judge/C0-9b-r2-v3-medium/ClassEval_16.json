@@ -1,0 +1,125 @@
+{
+  "task_id": "ClassEval_16",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "precedence",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns priorities exactly as described: `+` and `-` have priority 1, `*` and `/` have priority 2, and `^` has priority 3. For any other operator it returns 0, as required.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1118,
+          "cached_tokens": 0,
+          "completion_tokens": 68,
+          "reasoning_tokens": 0,
+          "cost": 0.00014580000000000002
+        }
+      ],
+      "prompt_tokens": 1118,
+      "cached_tokens": 0,
+      "completion_tokens": 68,
+      "reasoning_tokens": 0,
+      "cost": 0.00014580000000000002
+    },
+    {
+      "method_name": "apply_operator",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "For the documented example, the method returns `([1, -1], ['+'])`, but the docstring specifies `([1, -1], ['-'])`. Fix the implementation or correct the example so the operator-stack behavior is consistent.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))",
+          "output": "exit code 0\nstdout:\n([1, -1], ['+'])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1341,
+          "cached_tokens": 0,
+          "completion_tokens": 246,
+          "reasoning_tokens": 207,
+          "cost": 0.0002571
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1616,
+          "cached_tokens": 1338,
+          "completion_tokens": 67,
+          "reasoning_tokens": 0,
+          "cost": 7.468000000000001e-05
+        }
+      ],
+      "prompt_tokens": 2957,
+      "cached_tokens": 1338,
+      "completion_tokens": 313,
+      "reasoning_tokens": 207,
+      "cost": 0.00033178000000000005
+    },
+    {
+      "method_name": "calculate",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The precedence loop reduces operators of equal precedence immediately, making exponentiation left-associative: I ran `calculate('2^3^2')` and it returned `64.0`, whereas the conventional exponentiation result is `512.0`. Handle `^` as right-associative by not reducing an equal-precedence `^` before pushing the next one.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.calculate('1+2-3')); print(c.calculate('2^3^2')); print(c.calculate('1+')); print(c.calculate('1+2)')); print(c.calculate('(1+2'))",
+          "output": "Stopped after 10 seconds."
+        },
+        {
+          "code": "c=Calculator(); print(c.calculate('2^3^2')); print(c.calculate('1+2-3'))",
+          "output": "exit code 0\nstdout:\n64.0\n0.0\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1780,
+          "cached_tokens": 0,
+          "completion_tokens": 65,
+          "reasoning_tokens": 0,
+          "cost": 0.0002105
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1862,
+          "cached_tokens": 1777,
+          "completion_tokens": 302,
+          "reasoning_tokens": 259,
+          "cost": 0.00017727000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2192,
+          "cached_tokens": 1859,
+          "completion_tokens": 377,
+          "reasoning_tokens": 283,
+          "cost": 0.00024039
+        }
+      ],
+      "prompt_tokens": 5834,
+      "cached_tokens": 3636,
+      "completion_tokens": 744,
+      "reasoning_tokens": 542,
+      "cost": 0.00062816
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "task_id": "ClassEval_85",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: It returns the target temperature, and the documented example produced 37.5. The return annotation text mentions current_temperature, but that conflicts with the method\u2019s stated purpose and example.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4, 37.5, 'cool')\nprint(thermostat.get_target_temperature())",
+          "output": "exit code 0\nstdout:\n37.5\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1235,
+          "cached_tokens": 0,
+          "completion_tokens": 114,
+          "reasoning_tokens": 65,
+          "cost": 0.0001805
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1373,
+          "cached_tokens": 1232,
+          "completion_tokens": 54,
+          "reasoning_tokens": 0,
+          "cost": 5.342e-05
+        }
+      ],
+      "prompt_tokens": 2608,
+      "cached_tokens": 1232,
+      "completion_tokens": 168,
+      "reasoning_tokens": 65,
+      "cost": 0.00023391999999999998
+    },
+    {
+      "method_name": "set_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: The method assigns the supplied temperature to `self.target_temperature`, and running the documented example left that attribute at `37.6`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4, 37.5, 'cool')\nprint(thermostat.set_target_temperature(37.6))\nprint(thermostat.target_temperature)",
+          "output": "exit code 0\nstdout:\nNone\n37.6\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1305,
+          "cached_tokens": 0,
+          "completion_tokens": 95,
+          "reasoning_tokens": 32,
+          "cost": 0.000178
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1426,
+          "cached_tokens": 1302,
+          "completion_tokens": 45,
+          "reasoning_tokens": 0,
+          "cost": 4.792e-05
+        }
+      ],
+      "prompt_tokens": 2731,
+      "cached_tokens": 1302,
+      "completion_tokens": 140,
+      "reasoning_tokens": 32,
+      "cost": 0.00022592
+    },
+    {
+      "method_name": "get_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns `self.mode`, which is initialized by the constructor and is the current work mode. It correctly implements the docstring.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1341,
+          "cached_tokens": 0,
+          "completion_tokens": 91,
+          "reasoning_tokens": 46,
+          "cost": 0.0001796
+        }
+      ],
+      "prompt_tokens": 1341,
+      "cached_tokens": 0,
+      "completion_tokens": 91,
+      "reasoning_tokens": 46,
+      "cost": 0.0001796
+    },
+    {
+      "method_name": "set_mode",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method sets `self.mode` for either allowed mode (`'heat'` or `'cool'`) and raises `ValueError` for other values, so it enforces the documented constraint.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1427,
+          "cached_tokens": 0,
+          "completion_tokens": 112,
+          "reasoning_tokens": 55,
+          "cost": 0.0001987
+        }
+      ],
+      "prompt_tokens": 1427,
+      "cached_tokens": 0,
+      "completion_tokens": 112,
+      "reasoning_tokens": 55,
+      "cost": 0.0001987
+    },
+    {
+      "method_name": "auto_set_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: The method sets the mode to 'heat' when the current temperature is below the target, and to 'cool' otherwise, as documented. The documented example returned None and left the mode as 'heat'.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4, 37.5, 'cool')\nprint(thermostat.auto_set_mode())\nprint(thermostat.mode)",
+          "output": "exit code 0\nstdout:\nNone\nheat\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1545,
+          "cached_tokens": 0,
+          "completion_tokens": 83,
+          "reasoning_tokens": 25,
+          "cost": 0.000196
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1652,
+          "cached_tokens": 1542,
+          "completion_tokens": 60,
+          "reasoning_tokens": 0,
+          "cost": 5.642e-05
+        }
+      ],
+      "prompt_tokens": 3197,
+      "cached_tokens": 1542,
+      "completion_tokens": 143,
+      "reasoning_tokens": 25,
+      "cost": 0.00025242
+    },
+    {
+      "method_name": "auto_check_conflict",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method correctly identifies the expected mode using the same comparison as `auto_set_mode`; if the current mode conflicts, it adjusts the mode and returns `False`, otherwise it returns `True`. The documented example returns `False` and changes the mode to `'heat'`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4,37.5,'cool'); print(thermostat.auto_check_conflict()); print(thermostat.mode)\nthermostat=Thermostat(20.4,37.5,'heat'); print(thermostat.auto_check_conflict()); print(thermostat.mode)\nthermostat=Thermostat(37.5,37.5,'heat'); print(thermostat.auto_check_conflict()); print(thermostat.mode)",
+          "output": "exit code 0\nstdout:\nFalse\nheat\nTrue\nheat\nFalse\ncool\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1702,
+          "cached_tokens": 0,
+          "completion_tokens": 123,
+          "reasoning_tokens": 0,
+          "cost": 0.00023170000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1857,
+          "cached_tokens": 1699,
+          "completion_tokens": 165,
+          "reasoning_tokens": 92,
+          "cost": 0.00011529
+        }
+      ],
+      "prompt_tokens": 3559,
+      "cached_tokens": 1699,
+      "completion_tokens": 288,
+      "reasoning_tokens": 92,
+      "cost": 0.00034699000000000004
+    },
+    {
+      "method_name": "simulate_operation",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "Serious: on the documented example, the method did not finish when run; its fixed 0.5-degree steps cannot reach the target from 20.4, so the `while` loop continues indefinitely. Stop when the temperature reaches or passes the target, and clamp the final step to avoid overshooting.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t = Thermostat(20.4, 37.5, 'cool')\nprint(t.simulate_operation())",
+          "output": "Stopped after 10 seconds."
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1912,
+          "cached_tokens": 0,
+          "completion_tokens": 106,
+          "reasoning_tokens": 62,
+          "cost": 0.0002442
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2035,
+          "cached_tokens": 1909,
+          "completion_tokens": 168,
+          "reasoning_tokens": 86,
+          "cost": 0.00011569
+        }
+      ],
+      "prompt_tokens": 3947,
+      "cached_tokens": 1909,
+      "completion_tokens": 274,
+      "reasoning_tokens": 148,
+      "cost": 0.00035989
+    }
+  ]
+}

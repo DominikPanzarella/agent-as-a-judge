@@ -1,0 +1,91 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method correctly computes Manacher radii in the transformed string, then converts the maximum radius back to the corresponding slice of the original string. The documented example and edge cases including empty, single-character, and even-length palindromes work.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 4,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse')\nprint(m.palindromic_string())\nfor s in ['', 'a', 'ab', 'abba', 'babad', 'cbbd', 'aaaa', 'abc']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'ab' 'a'\n'abba' 'abba'\n'babad' 'bab'\n'cbbd' 'bb'\n'aaaa' 'aaaa'\n'abc' 'a'\n\nstderr:\n"
+        },
+        {
+          "code": "for s in ['#a', 'a#b', '##', '#a#', 'a##b', 'a#b#c']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\n'#a' '#'\n'a#b' 'a'\n'##' '##'\n'#a#' '#a#'\n'a##b' '##'\n'a#b#c' '#b#'\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nfor n in range(1,8):\n for tup in itertools.product('a#b', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(got)!=len(exp) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\n\ndef brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nfor n in range(1,11):\n for tup in itertools.product('#ab', repeat=n):\n  s=''.join(tup); got=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(got)!=len(exp) or got!=got[::-1]:\n   print(repr(s),repr(got),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1066,
+          "cached_tokens": 0,
+          "completion_tokens": 86,
+          "reasoning_tokens": 0,
+          "cost": 0.00014960000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1219,
+          "cached_tokens": 1063,
+          "completion_tokens": 122,
+          "reasoning_tokens": 53,
+          "cost": 8.723e-05
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1404,
+          "cached_tokens": 1216,
+          "completion_tokens": 350,
+          "reasoning_tokens": 173,
+          "cost": 0.00020596
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1776,
+          "cached_tokens": 1401,
+          "completion_tokens": 478,
+          "reasoning_tokens": 303,
+          "cost": 0.00029051
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2276,
+          "cached_tokens": 1773,
+          "completion_tokens": 471,
+          "reasoning_tokens": 405,
+          "cost": 0.00030353
+        }
+      ],
+      "prompt_tokens": 7741,
+      "cached_tokens": 5453,
+      "completion_tokens": 1507,
+      "reasoning_tokens": 934,
+      "cost": 0.00103683
+    }
+  ]
+}

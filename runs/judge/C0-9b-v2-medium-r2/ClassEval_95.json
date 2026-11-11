@@ -1,0 +1,230 @@
+{
+  "task_id": "ClassEval_95",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "add_product",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "It creates the documented product entry for a new ID and adds the supplied quantity when the ID already exists. The examples produced the expected inventory values.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w = Warehouse(); w.add_product(1, 'product1', 3); print(w.inventory); w.add_product(1, 'other', 2); print(w.inventory)",
+          "output": "exit code 0\nstdout:\n{1: {'name': 'product1', 'quantity': 3}}\n{1: {'name': 'product1', 'quantity': 5}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1436,
+          "cached_tokens": 0,
+          "completion_tokens": 127,
+          "reasoning_tokens": 71,
+          "cost": 0.0002071
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1615,
+          "cached_tokens": 1433,
+          "completion_tokens": 45,
+          "reasoning_tokens": 0,
+          "cost": 5.503e-05
+        }
+      ],
+      "prompt_tokens": 3051,
+      "cached_tokens": 1433,
+      "completion_tokens": 172,
+      "reasoning_tokens": 71,
+      "cost": 0.00026213
+    },
+    {
+      "method_name": "update_product_quantity",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method adds the supplied quantity to the matching product, and the documented example leaves the inventory quantity at 2. If the product ID is absent, it does nothing; the docstring does not specify a different behavior for that case.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w = Warehouse()\nw.add_product(1, 'product1', 3)\nprint(w.update_product_quantity(1, -1))\nprint(w.inventory)\nw.update_product_quantity(2, 5)\nprint(w.inventory)",
+          "output": "exit code 0\nstdout:\nNone\n{1: {'name': 'product1', 'quantity': 2}}\n{1: {'name': 'product1', 'quantity': 2}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1549,
+          "cached_tokens": 0,
+          "completion_tokens": 124,
+          "reasoning_tokens": 55,
+          "cost": 0.00021690000000000001
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1727,
+          "cached_tokens": 1546,
+          "completion_tokens": 85,
+          "reasoning_tokens": 20,
+          "cost": 7.606e-05
+        }
+      ],
+      "prompt_tokens": 3276,
+      "cached_tokens": 1546,
+      "completion_tokens": 209,
+      "reasoning_tokens": 75,
+      "cost": 0.00029296
+    },
+    {
+      "method_name": "get_product_quantity",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns the stored quantity when the product ID is in inventory and returns `False` otherwise; I ran the docstring examples and observed `3` and `False`, respectively.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w = Warehouse(); w.add_product(1, 'product1', 3); print(w.get_product_quantity(1)); print(w.get_product_quantity(2))",
+          "output": "exit code 0\nstdout:\n3\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1665,
+          "cached_tokens": 0,
+          "completion_tokens": 84,
+          "reasoning_tokens": 32,
+          "cost": 0.0002085
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1773,
+          "cached_tokens": 1662,
+          "completion_tokens": 53,
+          "reasoning_tokens": 0,
+          "cost": 5.422e-05
+        }
+      ],
+      "prompt_tokens": 3438,
+      "cached_tokens": 1662,
+      "completion_tokens": 137,
+      "reasoning_tokens": 32,
+      "cost": 0.00026272
+    },
+    {
+      "method_name": "create_order",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method checks that the product exists and has enough quantity, then stores the order with the documented default status; it returns `False` for a missing product or insufficient stock. The examples run as documented, and the docstring does not require deducting the ordered quantity from inventory.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w=Warehouse(); w.add_product(1, 'product1', 3); print(w.create_order(1,1,2)); print(w.orders); print(w.create_order(1,2,2))",
+          "output": "exit code 0\nstdout:\nTrue\n{1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1903,
+          "cached_tokens": 0,
+          "completion_tokens": 60,
+          "reasoning_tokens": 0,
+          "cost": 0.00022030000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2010,
+          "cached_tokens": 1900,
+          "completion_tokens": 245,
+          "reasoning_tokens": 171,
+          "cost": 0.0001525
+        }
+      ],
+      "prompt_tokens": 3913,
+      "cached_tokens": 1900,
+      "completion_tokens": 305,
+      "reasoning_tokens": 171,
+      "cost": 0.0003728
+    },
+    {
+      "method_name": "change_order_status",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "It updates the status for an order that exists and returns `False` when the order ID is absent, as documented. The existing-order call returns `None`, which is consistent with the docstring\u2019s example, which does not specify a return value.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w=Warehouse(); w.add_product(1,'product1',3); print(w.create_order(1,1,2)); print(w.change_order_status(1,'done')); print(w.orders); print(w.change_order_status(2,'done'))",
+          "output": "exit code 0\nstdout:\nTrue\nNone\n{1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2072,
+          "cached_tokens": 0,
+          "completion_tokens": 67,
+          "reasoning_tokens": 0,
+          "cost": 0.00024070000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2187,
+          "cached_tokens": 2069,
+          "completion_tokens": 133,
+          "reasoning_tokens": 65,
+          "cost": 9.899000000000001e-05
+        }
+      ],
+      "prompt_tokens": 4259,
+      "cached_tokens": 2069,
+      "completion_tokens": 200,
+      "reasoning_tokens": 65,
+      "cost": 0.00033969
+    },
+    {
+      "method_name": "track_order",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns the order\u2019s status when the order ID is in `self.orders`, and returns `False` otherwise, as specified.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2178,
+          "cached_tokens": 0,
+          "completion_tokens": 65,
+          "reasoning_tokens": 20,
+          "cost": 0.0002503
+        }
+      ],
+      "prompt_tokens": 2178,
+      "cached_tokens": 0,
+      "completion_tokens": 65,
+      "reasoning_tokens": 20,
+      "cost": 0.0002503
+    }
+  ]
+}

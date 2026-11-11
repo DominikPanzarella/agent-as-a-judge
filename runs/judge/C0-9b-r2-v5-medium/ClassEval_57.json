@@ -1,0 +1,99 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v5",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For tuple input, `mrr` computes the reciprocal rank but never returns it, so the documented single-query example returns `None` (as does an empty list). Return the average and reciprocal-rank list after handling either input form.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)) )\nprint(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint(MetricsCalculator2.mrr([]))\nprint(MetricsCalculator2.mrr(([0,0], 2)))\nprint(MetricsCalculator2.mrr([([0,0],2),([1],1)]))",
+          "output": "exit code 0\nstdout:\nNone\n(0.75, [1.0, 0.5])\nNone\nNone\n(0.5, [0.0, 1.0])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1698,
+          "cached_tokens": 0,
+          "completion_tokens": 132,
+          "reasoning_tokens": 0,
+          "cost": 0.0002358
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1886,
+          "cached_tokens": 1695,
+          "completion_tokens": 172,
+          "reasoning_tokens": 105,
+          "cost": 0.00012205
+        }
+      ],
+      "prompt_tokens": 3584,
+      "cached_tokens": 1695,
+      "completion_tokens": 304,
+      "reasoning_tokens": 105,
+      "cost": 0.00035785
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For tuple input, the method falls through without returning a value: the documented single-query example returned `None`. For list input, the AP calculation is wrong: the documented example returned `(0.1875, [0.1875, 0.1875])` instead of `(0.3333333333333333, [0.41666666666666663, 0.25])`; sum precision at each relevant rank and divide by `num_gt`, then return the computed AP for tuple input too.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint(MetricsCalculator2.map(([1, 1, 0], 2)))\nprint(MetricsCalculator2.map(([0, 0], 2)))\nprint(MetricsCalculator2.map(([1], 0)))\nprint(MetricsCalculator2.map([]))",
+          "output": "exit code 0\nstdout:\nNone\n(0.1875, [0.1875, 0.1875])\nNone\nNone\nNone\nNone\n\nstderr:\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.map([([1, 1, 0], 2), ([0, 0], 2)]))\nprint(MetricsCalculator2.map([([1], 0)]))",
+          "output": "exit code 0\nstdout:\n(0.375, [0.75, 0.0])\n(0.0, [0.0])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2306,
+          "cached_tokens": 0,
+          "completion_tokens": 139,
+          "reasoning_tokens": 0,
+          "cost": 0.00030010000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2493,
+          "cached_tokens": 2303,
+          "completion_tokens": 417,
+          "reasoning_tokens": 353,
+          "cost": 0.00025053
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2955,
+          "cached_tokens": 2490,
+          "completion_tokens": 195,
+          "reasoning_tokens": 70,
+          "cost": 0.0001689
+        }
+      ],
+      "prompt_tokens": 7754,
+      "cached_tokens": 4793,
+      "completion_tokens": 751,
+      "reasoning_tokens": 423,
+      "cost": 0.00071953
+    }
+  ]
+}

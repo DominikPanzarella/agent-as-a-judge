@@ -1,0 +1,94 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: It returns weight divided by height squared, and the documented example produced 21.604938271604937 as a float. No serious problem found.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male').get_BMI(); print(x, type(x))",
+          "output": "exit code 0\nstdout:\n21.604938271604937 <class 'float'>\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1200,
+          "cached_tokens": 0,
+          "completion_tokens": 42,
+          "reasoning_tokens": 0,
+          "cost": 0.000141
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1275,
+          "cached_tokens": 1197,
+          "completion_tokens": 48,
+          "reasoning_tokens": 0,
+          "cost": 4.377e-05
+        }
+      ],
+      "prompt_tokens": 2475,
+      "cached_tokens": 1197,
+      "completion_tokens": 90,
+      "reasoning_tokens": 0,
+      "cost": 0.00018477
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "NOT OK \u2014 serious: `BMI_std` is a list of dictionaries, so indexing it as `self.BMI_std[\"male\"]` (or `\"female\"`) raises a `TypeError`; look up the appropriate dictionary in the list or change the field to a dictionary.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male')\ntry: print(x.condition_judge())\nexcept Exception as e: print(type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\nTypeError list indices must be integers or slices, not str\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1407,
+          "cached_tokens": 0,
+          "completion_tokens": 86,
+          "reasoning_tokens": 26,
+          "cost": 0.00018370000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1526,
+          "cached_tokens": 1404,
+          "completion_tokens": 75,
+          "reasoning_tokens": 0,
+          "cost": 6.374e-05
+        }
+      ],
+      "prompt_tokens": 2933,
+      "cached_tokens": 1404,
+      "completion_tokens": 161,
+      "reasoning_tokens": 26,
+      "cost": 0.00024744000000000003
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method creates the `tickets` table with the specified fields and types if it does not already exist, then commits the change. It returns `None` implicitly, as documented.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1135,
+          "cached_tokens": 0,
+          "completion_tokens": 117,
+          "reasoning_tokens": 63,
+          "cost": 0.000172
+        }
+      ],
+      "prompt_tokens": 1135,
+      "cached_tokens": 0,
+      "completion_tokens": 117,
+      "reasoning_tokens": 63,
+      "cost": 0.000172
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK \u2014 it inserts the four supplied values into the corresponding columns using parameterized SQL, commits the transaction, and returns None as documented. It works with the table created by the existing create_table method.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\nprint(db.insert_ticket('Movie A','Theater 1','A1','John Doe'))\nprint(db.cursor.execute('select * from tickets').fetchall())\ndb.connection.close(); os.unlink(p)",
+          "output": "exit code 0\nstdout:\nNone\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1289,
+          "cached_tokens": 0,
+          "completion_tokens": 81,
+          "reasoning_tokens": 0,
+          "cost": 0.0001694
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1414,
+          "cached_tokens": 1286,
+          "completion_tokens": 56,
+          "reasoning_tokens": 0,
+          "cost": 5.366e-05
+        }
+      ],
+      "prompt_tokens": 2703,
+      "cached_tokens": 1286,
+      "completion_tokens": 137,
+      "reasoning_tokens": 0,
+      "cost": 0.00022306
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK \u2014 it queries the existing `tickets` table for an exact customer-name match and returns the fetched rows as a list of tuples. The documented example returned one matching row when run.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\ndb.create_table(); db.insert_ticket('Movie A','Theater 1','A1','John Doe')\nresult=db.search_tickets_by_customer('John Doe')\nprint(result, len(result))\ndb.connection.close(); os.remove(p)",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')] 1\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1479,
+          "cached_tokens": 0,
+          "completion_tokens": 175,
+          "reasoning_tokens": 83,
+          "cost": 0.0002354
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1698,
+          "cached_tokens": 1476,
+          "completion_tokens": 100,
+          "reasoning_tokens": 45,
+          "cost": 8.696000000000001e-05
+        }
+      ],
+      "prompt_tokens": 3177,
+      "cached_tokens": 1476,
+      "completion_tokens": 275,
+      "reasoning_tokens": 128,
+      "cost": 0.00032236
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes the row whose `id` matches `ticket_id` and commits the change; the SQL uses the class\u2019s existing cursor and connection. It satisfies the documented behavior.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1546,
+          "cached_tokens": 0,
+          "completion_tokens": 140,
+          "reasoning_tokens": 86,
+          "cost": 0.0002246
+        }
+      ],
+      "prompt_tokens": 1546,
+      "cached_tokens": 0,
+      "completion_tokens": 140,
+      "reasoning_tokens": 86,
+      "cost": 0.0002246
+    }
+  ]
+}

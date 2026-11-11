@@ -1,0 +1,111 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "Serious: the documented single-query tuple `([1, 0, 1, 0], 4)` raises `ValueError: too many values to unpack (expected 2)` because it is mistaken for a list of queries. Detect a single `(result_list, count)` tuple separately before handling a list of query tuples.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpoibysw1_/snippet.py\", line 46, in <module>\n    print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpoibysw1_/snippet.py\", line 33, in mrr\n    rr_scores = [calculate_rr(qr) for qr, _ in data]\n                                      ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1681,
+          "cached_tokens": 0,
+          "completion_tokens": 80,
+          "reasoning_tokens": 0,
+          "cost": 0.00020810000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1948,
+          "cached_tokens": 1678,
+          "completion_tokens": 202,
+          "reasoning_tokens": 115,
+          "cost": 0.00014478
+        }
+      ],
+      "prompt_tokens": 3629,
+      "cached_tokens": 1678,
+      "completion_tokens": 282,
+      "reasoning_tokens": 115,
+      "cost": 0.00035288
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "Serious: the documented single-query tuple raises `ValueError: too many values to unpack (expected 2)`. For the documented list of queries, it returns `(0.6666666666666666, [0.8333333333333333, 0.5])` instead of the documented values; distinguish a single `(results, ground_truth_num)` tuple and use `ground_truth_num` as the AP denominator.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 3,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1, 0, 1, 0], 4))\nprint(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpxls6liev/snippet.py\", line 92\n    print(MetricsCalculator2.map(([1, 0, 1, 0], 4))\n         ^\nSyntaxError: '(' was never closed\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpo3m5o4cq/snippet.py\", line 92, in <module>\n    print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpo3m5o4cq/snippet.py\", line 80, in map\n    for qr, _ in data:\n        ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 0\nstdout:\n(np.float64(0.6666666666666666), [0.8333333333333333, 0.5])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2267,
+          "cached_tokens": 0,
+          "completion_tokens": 269,
+          "reasoning_tokens": 189,
+          "cost": 0.00036120000000000005
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2629,
+          "cached_tokens": 2264,
+          "completion_tokens": 89,
+          "reasoning_tokens": 9,
+          "cost": 0.00010364
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2898,
+          "cached_tokens": 2626,
+          "completion_tokens": 202,
+          "reasoning_tokens": 145,
+          "cost": 0.00015446
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 3148,
+          "cached_tokens": 2895,
+          "completion_tokens": 207,
+          "reasoning_tokens": 100,
+          "cost": 0.00015775
+        }
+      ],
+      "prompt_tokens": 10942,
+      "cached_tokens": 7785,
+      "completion_tokens": 767,
+      "reasoning_tokens": 443,
+      "cost": 0.00077705
+    }
+  ]
+}

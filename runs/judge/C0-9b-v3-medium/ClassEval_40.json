@@ -1,0 +1,94 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns weight divided by height squared, as the docstring specifies; for the documented example, it returns 21.604938271604937.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1151,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.00013410000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1217,
+          "cached_tokens": 1148,
+          "completion_tokens": 47,
+          "reasoning_tokens": 0,
+          "cost": 4.1880000000000006e-05
+        }
+      ],
+      "prompt_tokens": 2368,
+      "cached_tokens": 1148,
+      "completion_tokens": 85,
+      "reasoning_tokens": 0,
+      "cost": 0.00017598000000000003
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "`BMI_std` is a list of dictionaries, so indexing it with `\"male\"` or `\"female\"` raises a `TypeError` (the example call does). Find the appropriate dictionary in the list or change the field to a dictionary keyed by sex before looking up the BMI limits.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male')\ntry: print(x.condition_judge())\nexcept Exception as e: print(type(e).__name__, str(e))\nprint(x.BMI_std)",
+          "output": "exit code 0\nstdout:\nTypeError list indices must be integers or slices, not str\n[{'male': [20, 25]}, {'female': [19, 24]}]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1358,
+          "cached_tokens": 0,
+          "completion_tokens": 66,
+          "reasoning_tokens": 0,
+          "cost": 0.0001688
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1477,
+          "cached_tokens": 1355,
+          "completion_tokens": 78,
+          "reasoning_tokens": 0,
+          "cost": 6.475e-05
+        }
+      ],
+      "prompt_tokens": 2835,
+      "cached_tokens": 1355,
+      "completion_tokens": 144,
+      "reasoning_tokens": 0,
+      "cost": 0.00023355
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    }
+  ]
+}

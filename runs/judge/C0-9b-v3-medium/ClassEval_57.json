@@ -1,0 +1,99 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v3",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The single-query example `([1, 0, 1, 0], 4)` is misclassified as a list of queries, and running it raises `ValueError: too many values to unpack (expected 2)`. Detect a single `(result_list, ground_truth_count)` pair explicitly before treating the input as multiple queries.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpoqdkc7g9/snippet.py\", line 46, in <module>\n    print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpoqdkc7g9/snippet.py\", line 33, in mrr\n    rr_scores = [calculate_rr(qr) for qr, _ in data]\n                                      ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1632,
+          "cached_tokens": 0,
+          "completion_tokens": 80,
+          "reasoning_tokens": 0,
+          "cost": 0.0002032
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1901,
+          "cached_tokens": 1629,
+          "completion_tokens": 135,
+          "reasoning_tokens": 47,
+          "cost": 0.00011099
+        }
+      ],
+      "prompt_tokens": 3533,
+      "cached_tokens": 1629,
+      "completion_tokens": 215,
+      "reasoning_tokens": 47,
+      "cost": 0.00031419
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The single-query example raises `ValueError: too many values to unpack (expected 2)`, because the `(result_list, ground_truth_num)` tuple is mistaken for a list of queries. The multiple-query example returns `(0.6666666666666666, [0.8333333333333333, 0.5])` instead of the documented values; distinguish a single query correctly and divide each AP sum by its supplied ground-truth count.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpw77o4tu5/snippet.py\", line 92, in <module>\n    print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpw77o4tu5/snippet.py\", line 80, in map\n    for qr, _ in data:\n        ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))",
+          "output": "exit code 0\nstdout:\n(np.float64(0.6666666666666666), [0.8333333333333333, 0.5])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2218,
+          "cached_tokens": 0,
+          "completion_tokens": 224,
+          "reasoning_tokens": 144,
+          "cost": 0.00033380000000000004
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2620,
+          "cached_tokens": 2215,
+          "completion_tokens": 122,
+          "reasoning_tokens": 65,
+          "cost": 0.00012365
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2790,
+          "cached_tokens": 2617,
+          "completion_tokens": 174,
+          "reasoning_tokens": 61,
+          "cost": 0.00013047
+        }
+      ],
+      "prompt_tokens": 7628,
+      "cached_tokens": 4832,
+      "completion_tokens": 520,
+      "reasoning_tokens": 270,
+      "cost": 0.00058792
+    }
+  ]
+}

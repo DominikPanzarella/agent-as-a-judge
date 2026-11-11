@@ -1,0 +1,179 @@
+{
+  "task_id": "ClassEval_95",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "add_product",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: The example produces the documented inventory, and adding an existing product increases its quantity while keeping its existing name. No serious problem is evident.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "warehouse = Warehouse()\nwarehouse.add_product(1, \"product1\", 3)\nprint(warehouse.inventory)\nwarehouse.add_product(1, \"different\", 2)\nprint(warehouse.inventory)",
+          "output": "exit code 0\nstdout:\n{1: {'name': 'product1', 'quantity': 3}}\n{1: {'name': 'product1', 'quantity': 5}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1541,
+          "cached_tokens": 0,
+          "completion_tokens": 115,
+          "reasoning_tokens": 53,
+          "cost": 0.00021160000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1708,
+          "cached_tokens": 1538,
+          "completion_tokens": 45,
+          "reasoning_tokens": 0,
+          "cost": 5.488e-05
+        }
+      ],
+      "prompt_tokens": 3249,
+      "cached_tokens": 1538,
+      "completion_tokens": 160,
+      "reasoning_tokens": 53,
+      "cost": 0.00026648000000000004
+    },
+    {
+      "method_name": "update_product_quantity",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "get_product_quantity",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "create_order",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method checks that the product exists and has enough quantity, returns `False` when either check fails, and otherwise stores the order with the documented default status. The documented example behavior is satisfied.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w=Warehouse(); w.add_product(1,'product1',3); print(w.create_order(1,1,2)); print(w.orders); print(w.create_order(1,2,2))",
+          "output": "exit code 0\nstdout:\nTrue\n{1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1791,
+          "cached_tokens": 0,
+          "completion_tokens": 58,
+          "reasoning_tokens": 0,
+          "cost": 0.00020810000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1896,
+          "cached_tokens": 1788,
+          "completion_tokens": 228,
+          "reasoning_tokens": 171,
+          "cost": 0.00014268
+        }
+      ],
+      "prompt_tokens": 3687,
+      "cached_tokens": 1788,
+      "completion_tokens": 286,
+      "reasoning_tokens": 171,
+      "cost": 0.00035078
+    },
+    {
+      "method_name": "change_order_status",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "No serious problem: the method returns `False` when the order ID is absent and otherwise updates that order\u2019s status and returns `True`. The documented example produced the expected order with status `'done'`.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w=Warehouse(); w.add_product(1, 'product1',3); print(w.create_order(1,1,2)); print(w.change_order_status(1,'done')); print(w.orders); print(w.change_order_status(8,'done'))",
+          "output": "exit code 0\nstdout:\nTrue\nTrue\n{1: {'product_id': 1, 'quantity': 2, 'status': 'done'}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1962,
+          "cached_tokens": 0,
+          "completion_tokens": 68,
+          "reasoning_tokens": 0,
+          "cost": 0.0002302
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2078,
+          "cached_tokens": 1959,
+          "completion_tokens": 58,
+          "reasoning_tokens": 0,
+          "cost": 6.0490000000000005e-05
+        }
+      ],
+      "prompt_tokens": 4040,
+      "cached_tokens": 1959,
+      "completion_tokens": 126,
+      "reasoning_tokens": 0,
+      "cost": 0.00029069
+    },
+    {
+      "method_name": "track_order",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns `False` when the order ID is absent and otherwise returns that order\u2019s status; the example returned `Shipped`, and a missing ID returned `False`. This matches the docstring and uses the existing `orders` field and order structure.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "w=Warehouse(); w.add_product(1, 'product1', 3); print(w.create_order(1,1,2)); print(w.track_order(1)); print(w.track_order(99))",
+          "output": "exit code 0\nstdout:\nTrue\nShipped\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2069,
+          "cached_tokens": 0,
+          "completion_tokens": 111,
+          "reasoning_tokens": 50,
+          "cost": 0.0002624
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2207,
+          "cached_tokens": 2066,
+          "completion_tokens": 68,
+          "reasoning_tokens": 0,
+          "cost": 6.876e-05
+        }
+      ],
+      "prompt_tokens": 4276,
+      "cached_tokens": 2066,
+      "completion_tokens": 179,
+      "reasoning_tokens": 50,
+      "cost": 0.00033116
+    }
+  ]
+}

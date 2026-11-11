@@ -84,9 +84,8 @@ def run_c2(run, task, steps):
         record = {"method_name": name, "first": first, "review": None, "revision": None,
                   "final_code": first["code"] if first["valid"] else None}
         if first["valid"]:
-            review_method = judge.judge_method if run.version == "v1" else judge.judge_method_with_tools
-            review = run.logged(task, name, review_method(run.judge_client, task, written, name,
-                                                          first["code"], run.effort))
+            review = run.logged(task, name, judge.judge_any(run.judge_client, task, written, name,
+                                                            first["code"], run.version, run.effort))
             record["review"] = review
             if review["verdict"] == "NOT OK":
                 messages += [{"role": "assistant", "content": first["reply"]},
@@ -166,7 +165,7 @@ def main():
     parser.add_argument("setup", choices=SETUPS)
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
     parser.add_argument("--all", action="store_true", help="every kept class")
-    parser.add_argument("--judge", choices=judge.VERSIONS, default="v2", help="v2 can run code")
+    parser.add_argument("--judge", choices=judge.VERSIONS, default="v2", help="v2 to v5 can run code")
     parser.add_argument("--effort", choices=judge.EFFORTS, default=judge.EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--model", default=coder.MODEL, help="OpenRouter model of the coder")
     parser.add_argument("--name", help="name of the run and of its folder in runs/ (default: setup-judge-effort)")

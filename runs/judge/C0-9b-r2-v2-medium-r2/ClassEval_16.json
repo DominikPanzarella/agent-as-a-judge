@@ -1,0 +1,138 @@
+{
+  "task_id": "ClassEval_16",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "precedence",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns the documented priorities to all five operators and returns 0 for an unrecognized operator. The examples return 1 for '+' and 3 for '^'.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.precedence('+')); print(c.precedence('^')); print(c.precedence('?'))",
+          "output": "exit code 0\nstdout:\n1\n3\n0\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1075,
+          "cached_tokens": 0,
+          "completion_tokens": 90,
+          "reasoning_tokens": 48,
+          "cost": 0.0001525
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1191,
+          "cached_tokens": 1072,
+          "completion_tokens": 50,
+          "reasoning_tokens": 0,
+          "cost": 4.762e-05
+        }
+      ],
+      "prompt_tokens": 2266,
+      "cached_tokens": 1072,
+      "completion_tokens": 140,
+      "reasoning_tokens": 48,
+      "cost": 0.00020012
+    },
+    {
+      "method_name": "apply_operator",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The documented example expects `([1, -1], ['-'])`, but running it returns `([1, -1], ['+'])`: the method applies the top `'-'` operator and then removes it, leaving `'+'`. Fix the example\u2019s expected stack (or change the intended behavior if the example is authoritative).",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))",
+          "output": "exit code 0\nstdout:\n([1, -1], ['+'])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1298,
+          "cached_tokens": 0,
+          "completion_tokens": 37,
+          "reasoning_tokens": 0,
+          "cost": 0.0001483
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1364,
+          "cached_tokens": 1295,
+          "completion_tokens": 343,
+          "reasoning_tokens": 256,
+          "cost": 0.00019135
+        }
+      ],
+      "prompt_tokens": 2662,
+      "cached_tokens": 1295,
+      "completion_tokens": 380,
+      "reasoning_tokens": 256,
+      "cost": 0.00033965
+    },
+    {
+      "method_name": "calculate",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "`calculate('1+')` did not return; it timed out because the final loop repeatedly calls `apply_operator`, which leaves the stacks unchanged when there are too few operands. Validate the expression or detect that no operator was applied and return `None` instead of looping indefinitely.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "c=Calculator(); print(c.calculate('1+2-3'))",
+          "output": "exit code 0\nstdout:\n0.0\n\nstderr:\n"
+        },
+        {
+          "code": "print(Calculator().calculate('1+'))",
+          "output": "Stopped after 10 seconds."
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1737,
+          "cached_tokens": 0,
+          "completion_tokens": 31,
+          "reasoning_tokens": 0,
+          "cost": 0.00018920000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1792,
+          "cached_tokens": 1734,
+          "completion_tokens": 169,
+          "reasoning_tokens": 140,
+          "cost": 0.00010764
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1978,
+          "cached_tokens": 1789,
+          "completion_tokens": 151,
+          "reasoning_tokens": 77,
+          "cost": 0.00011229000000000001
+        }
+      ],
+      "prompt_tokens": 5507,
+      "cached_tokens": 3523,
+      "completion_tokens": 351,
+      "reasoning_tokens": 217,
+      "cost": 0.00040913000000000006
+    }
+  ]
+}

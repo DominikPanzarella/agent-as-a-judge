@@ -1,0 +1,191 @@
+{
+  "task_id": "ClassEval_85",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v1",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns `self.target_temperature`, which matches its stated purpose and the example value of 37.5. The `:return` annotation mistakenly names `current_temperature`, but that docstring typo does not make the implementation incorrect.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 928,
+          "cached_tokens": 0,
+          "completion_tokens": 63,
+          "reasoning_tokens": 0,
+          "cost": 0.0001243
+        }
+      ],
+      "prompt_tokens": 928,
+      "cached_tokens": 0,
+      "completion_tokens": 63,
+      "reasoning_tokens": 0,
+      "cost": 0.0001243
+    },
+    {
+      "method_name": "set_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns the supplied temperature to `self.target_temperature`, so the documented example and behavior are satisfied.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 998,
+          "cached_tokens": 0,
+          "completion_tokens": 37,
+          "reasoning_tokens": 0,
+          "cost": 0.00011830000000000002
+        }
+      ],
+      "prompt_tokens": 998,
+      "cached_tokens": 0,
+      "completion_tokens": 37,
+      "reasoning_tokens": 0,
+      "cost": 0.00011830000000000002
+    },
+    {
+      "method_name": "get_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`get_mode` returns `self.mode`, which is initialized by the constructor and is the current operating mode. This matches the docstring, assuming the mode is one of the documented values.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1034,
+          "cached_tokens": 0,
+          "completion_tokens": 54,
+          "reasoning_tokens": 0,
+          "cost": 0.0001304
+        }
+      ],
+      "prompt_tokens": 1034,
+      "cached_tokens": 0,
+      "completion_tokens": 54,
+      "reasoning_tokens": 0,
+      "cost": 0.0001304
+    },
+    {
+      "method_name": "set_mode",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method accepts only the two modes specified in the docstring, assigns a valid mode, and raises a clear `ValueError` for any other value. It correctly updates the existing `self.mode` field.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1120,
+          "cached_tokens": 0,
+          "completion_tokens": 58,
+          "reasoning_tokens": 0,
+          "cost": 0.000141
+        }
+      ],
+      "prompt_tokens": 1120,
+      "cached_tokens": 0,
+      "completion_tokens": 58,
+      "reasoning_tokens": 0,
+      "cost": 0.000141
+    },
+    {
+      "method_name": "auto_set_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method compares the current and target temperatures and sets the mode to 'heat' when the current temperature is lower, and 'cool' otherwise, as specified. Both values are valid modes, so no issue is apparent.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1238,
+          "cached_tokens": 0,
+          "completion_tokens": 60,
+          "reasoning_tokens": 0,
+          "cost": 0.0001538
+        }
+      ],
+      "prompt_tokens": 1238,
+      "cached_tokens": 0,
+      "completion_tokens": 60,
+      "reasoning_tokens": 0,
+      "cost": 0.0001538
+    },
+    {
+      "method_name": "auto_check_conflict",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method compares the current mode with the mode required by the temperature relationship, corrects a conflict using `auto_set_mode()`, and returns `False` for that conflict; it returns `True` when there was no conflict. This matches the docstring and example.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1395,
+          "cached_tokens": 0,
+          "completion_tokens": 180,
+          "reasoning_tokens": 108,
+          "cost": 0.0002295
+        }
+      ],
+      "prompt_tokens": 1395,
+      "cached_tokens": 0,
+      "completion_tokens": 180,
+      "reasoning_tokens": 108,
+      "cost": 0.0002295
+    },
+    {
+      "method_name": "simulate_operation",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The loop can run forever when the temperature is not reachable in 0.5-degree steps (for example, 20.4 to 37.5), because it overshoots the target and keeps oscillating. Clamp the final adjustment so it stops at the target, and calculate the simulation duration from the number of steps rather than wall-clock execution time.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1605,
+          "cached_tokens": 0,
+          "completion_tokens": 214,
+          "reasoning_tokens": 123,
+          "cost": 0.0002675
+        }
+      ],
+      "prompt_tokens": 1605,
+      "cached_tokens": 0,
+      "completion_tokens": 214,
+      "reasoning_tokens": 123,
+      "cost": 0.0002675
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "task_id": "ClassEval_57",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v5",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "mrr",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The first documented example raises `ValueError: too many values to unpack (expected 2)`: the single-query tuple is mistaken for a collection of queries because its first element is a list. Distinguish a `(results, ground_truth_count)` pair from a collection of such pairs before branching.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint(MetricsCalculator2.mrr(([0, 0], 2)))\nprint(MetricsCalculator2.mrr([([0, 0], 2), ([0, 1], 2)]))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmprt7jsypr/snippet.py\", line 46, in <module>\n    print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmprt7jsypr/snippet.py\", line 33, in mrr\n    rr_scores = [calculate_rr(qr) for qr, _ in data]\n                                      ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        },
+        {
+          "code": "print(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint(MetricsCalculator2.mrr([([0, 0], 2), ([0, 1], 2)]))",
+          "output": "exit code 0\nstdout:\n(np.float64(0.75), [1.0, 0.5])\n(np.float64(0.25), [0.0, 0.5])\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1654,
+          "cached_tokens": 0,
+          "completion_tokens": 239,
+          "reasoning_tokens": 110,
+          "cost": 0.0002849
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2082,
+          "cached_tokens": 1651,
+          "completion_tokens": 253,
+          "reasoning_tokens": 166,
+          "cost": 0.00018611000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2391,
+          "cached_tokens": 2079,
+          "completion_tokens": 250,
+          "reasoning_tokens": 171,
+          "cost": 0.00017699
+        }
+      ],
+      "prompt_tokens": 6127,
+      "cached_tokens": 3730,
+      "completion_tokens": 742,
+      "reasoning_tokens": 447,
+      "cost": 0.000648
+    },
+    {
+      "method_name": "map",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "NOT OK: The documented single-query input raises `ValueError` because it is mistaken for a collection of queries. For the documented multi-query example, the method returns `(0.6666666666666666, [0.8333333333333333, 0.5])`, rather than the documented result, because it divides by the number of retrieved relevant items and ignores the supplied ground-truth count. Fix the input-shape check and use that count as the AP denominator.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 2,
+      "runs": [
+        {
+          "code": "print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\nprint(MetricsCalculator2.map([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))\nprint('different gt', MetricsCalculator2.map(([1, 0, 1], 5)))\nprint('single query collection', MetricsCalculator2.map([([1, 0, 1, 0], 4)]))\nprint('no relevant', MetricsCalculator2.map(([0,0,0], 3)))",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpvwk4sc9z/snippet.py\", line 92, in <module>\n    print(MetricsCalculator2.map(([1, 0, 1, 0], 4)))\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpvwk4sc9z/snippet.py\", line 80, in map\n    for qr, _ in data:\n        ^^^^^\nValueError: too many values to unpack (expected 2)\n"
+        },
+        {
+          "code": "for label, data in [('doc single', ([1,0,1,0],4)), ('doc multiple', [([1,0,1,0],4),([0,1,0,1],4)]), ('different gt', ([1,0,1],5)), ('one-item query collection', [([1,0,1,0],4)]), ('no relevant', ([0,0,0],3))]:\n    try: print(label, MetricsCalculator2.map(data))\n    except Exception as e: print(label, type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\ndoc single ValueError too many values to unpack (expected 2)\ndoc multiple (np.float64(0.6666666666666666), [0.8333333333333333, 0.5])\ndifferent gt ValueError too many values to unpack (expected 2)\none-item query collection (0.0, [0.0])\nno relevant ValueError too many values to unpack (expected 2)\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2240,
+          "cached_tokens": 0,
+          "completion_tokens": 466,
+          "reasoning_tokens": 313,
+          "cost": 0.000457
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2884,
+          "cached_tokens": 2237,
+          "completion_tokens": 216,
+          "reasoning_tokens": 70,
+          "cost": 0.00019507
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 3207,
+          "cached_tokens": 2881,
+          "completion_tokens": 315,
+          "reasoning_tokens": 197,
+          "cost": 0.00021891
+        }
+      ],
+      "prompt_tokens": 8331,
+      "cached_tokens": 5118,
+      "completion_tokens": 997,
+      "reasoning_tokens": 580,
+      "cost": 0.0008709799999999999
+    }
+  ]
+}

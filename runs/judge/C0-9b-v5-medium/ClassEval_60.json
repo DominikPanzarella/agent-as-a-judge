@@ -1,0 +1,165 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v5",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method creates the `tickets` table if it does not already exist, with the specified ID and text fields, then commits the change. I verified that it returns `None` and that calling it again leaves the table intact.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\nprint(db.cursor.execute(\"PRAGMA table_info(tickets)\").fetchall())\nprint(db.create_table())\nprint(db.cursor.execute(\"PRAGMA table_info(tickets)\").fetchall())\ndb.connection.close(); os.unlink(p)",
+          "output": "exit code 0\nstdout:\n[(0, 'id', 'INTEGER', 0, None, 1), (1, 'movie_name', 'TEXT', 0, None, 0), (2, 'theater_name', 'TEXT', 0, None, 0), (3, 'seat_number', 'TEXT', 0, None, 0), (4, 'customer_name', 'TEXT', 0, None, 0)]\nNone\n[(0, 'id', 'INTEGER', 0, None, 1), (1, 'movie_name', 'TEXT', 0, None, 0), (2, 'theater_name', 'TEXT', 0, None, 0), (3, 'seat_number', 'TEXT', 0, None, 0), (4, 'customer_name', 'TEXT', 0, None, 0)]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1108,
+          "cached_tokens": 0,
+          "completion_tokens": 88,
+          "reasoning_tokens": 0,
+          "cost": 0.00015480000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1398,
+          "cached_tokens": 1105,
+          "completion_tokens": 107,
+          "reasoning_tokens": 43,
+          "cost": 9.384999999999999e-05
+        }
+      ],
+      "prompt_tokens": 2506,
+      "cached_tokens": 1105,
+      "completion_tokens": 195,
+      "reasoning_tokens": 43,
+      "cost": 0.00024865
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method inserts the four supplied values into the matching columns using parameterized SQL and commits the change; it returns `None` as documented. It works with the table created by `create_table` and does not rely on missing fields or methods.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import os, tempfile\np=tempfile.mktemp(suffix='.db')\ndb=MovieTicketDB(p)\nprint('before', db.cursor.execute('select * from tickets').fetchall())\nprint('insert return', db.insert_ticket('Movie A','Theater 1','A1','John Doe'))\nprint('after', db.cursor.execute('select * from tickets').fetchall())\nprint('insert nulls return', db.insert_ticket(None,None,None,None))\nprint('after nulls', db.cursor.execute('select * from tickets').fetchall())\ndb.connection.close(); os.unlink(p)",
+          "output": "exit code 0\nstdout:\nbefore []\ninsert return None\nafter [(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\ninsert nulls return None\nafter nulls [(1, 'Movie A', 'Theater 1', 'A1', 'John Doe'), (2, None, None, None, None)]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1262,
+          "cached_tokens": 0,
+          "completion_tokens": 148,
+          "reasoning_tokens": 0,
+          "cost": 0.0002002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1499,
+          "cached_tokens": 1259,
+          "completion_tokens": 122,
+          "reasoning_tokens": 55,
+          "cost": 9.759e-05
+        }
+      ],
+      "prompt_tokens": 2761,
+      "cached_tokens": 1259,
+      "completion_tokens": 270,
+      "reasoning_tokens": 55,
+      "cost": 0.00029779
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method executes a parameterized query for an exact customer-name match and returns all matching rows as a list of tuples. The documented example and searches for other, missing, and empty customer names behave as described.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\nf=tempfile.NamedTemporaryFile(delete=False); path=f.name; f.close()\ndb=MovieTicketDB(path)\ndb.create_table(); db.insert_ticket('Movie A','Theater 1','A1','John Doe'); result=db.search_tickets_by_customer('John Doe'); print(result, len(result))\nprint('missing:', db.search_tickets_by_customer('Nobody'))\ndb.insert_ticket('Movie B','Theater 2','B2','Jane'); print('other customer:',db.search_tickets_by_customer('Jane')); print('empty name:', db.search_tickets_by_customer(''))\ndb.connection.close(); os.unlink(path)",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')] 1\nmissing: []\nother customer: [(2, 'Movie B', 'Theater 2', 'B2', 'Jane')]\nempty name: []\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1452,
+          "cached_tokens": 0,
+          "completion_tokens": 157,
+          "reasoning_tokens": 0,
+          "cost": 0.00022370000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1683,
+          "cached_tokens": 1449,
+          "completion_tokens": 92,
+          "reasoning_tokens": 32,
+          "cost": 8.389e-05
+        }
+      ],
+      "prompt_tokens": 3135,
+      "cached_tokens": 1449,
+      "completion_tokens": 249,
+      "reasoning_tokens": 32,
+      "cost": 0.00030759
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes the row whose `id` matches `ticket_id` and commits the change; the tested ticket disappeared from searches, while deleting a nonexistent ID left other tickets unchanged. It uses the class\u2019s existing cursor and connection and implicitly returns `None`, as documented.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp(suffix='.db')\ndb=MovieTicketDB(p)\n# docstring-like flow, ensure table and insert; track deletion effects via search\nprint(db.search_tickets_by_customer('John Doe'))\ndb.insert_ticket('Movie A','Theater 1','A1','John Doe')\nprint(db.search_tickets_by_customer('John Doe'))\ndb.delete_ticket(1)\nprint(db.search_tickets_by_customer('John Doe'))\n# ticket id absent and another ticket ID test\ndb.insert_ticket('Movie B','Theater 2','B2','Jane')\nprint(db.search_tickets_by_customer('Jane'))\ndb.delete_ticket(999)\nprint(db.search_tickets_by_customer('Jane'))\ndb.delete_ticket(2)\nprint(db.search_tickets_by_customer('Jane'))\ndb.connection.close(); os.remove(p)",
+          "output": "exit code 0\nstdout:\n[]\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]\n[]\n[(2, 'Movie B', 'Theater 2', 'B2', 'Jane')]\n[(2, 'Movie B', 'Theater 2', 'B2', 'Jane')]\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1519,
+          "cached_tokens": 0,
+          "completion_tokens": 213,
+          "reasoning_tokens": 0,
+          "cost": 0.0002584
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1816,
+          "cached_tokens": 1516,
+          "completion_tokens": 116,
+          "reasoning_tokens": 44,
+          "cost": 0.00010316
+        }
+      ],
+      "prompt_tokens": 3335,
+      "cached_tokens": 1516,
+      "completion_tokens": 329,
+      "reasoning_tokens": 44,
+      "cost": 0.00036156
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method computes weight divided by height squared and returns the documented float. The example ran and returned 21.604938271604937, as specified.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male'); print(x.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1113,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.00013030000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1179,
+          "cached_tokens": 1110,
+          "completion_tokens": 47,
+          "reasoning_tokens": 0,
+          "cost": 4.15e-05
+        }
+      ],
+      "prompt_tokens": 2292,
+      "cached_tokens": 1110,
+      "completion_tokens": 85,
+      "reasoning_tokens": 0,
+      "cost": 0.00017180000000000003
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For the documented male example, the method returns `0`, not the documented `-1` (BMI 21.60 is within the configured male range of 20\u201325). It also raises `KeyError` for female users because it only looks up `self.sex` in the first dictionary; look up the entry matching the sex, and make the example consistent with the configured range.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male'); print(x.condition_judge()); y=FitnessTracker(1.8,70,20,'female'); print(y.condition_judge())",
+          "output": "exit code 1\nstdout:\n0\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmp78u8gnq_/snippet.py\", line 53, in <module>\n    x=FitnessTracker(1.8,70,20,'male'); print(x.condition_judge()); y=FitnessTracker(1.8,70,20,'female'); print(y.condition_judge())\n                                                                                                                ~~~~~~~~~~~~~~~~~^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmp78u8gnq_/snippet.py\", line 37, in condition_judge\n    lower = self.BMI_std[0][self.sex][0]\n            ~~~~~~~~~~~~~~~^^^^^^^^^^\nKeyError: 'female'\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1280,
+          "cached_tokens": 0,
+          "completion_tokens": 112,
+          "reasoning_tokens": 51,
+          "cost": 0.000184
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1593,
+          "cached_tokens": 1277,
+          "completion_tokens": 267,
+          "reasoning_tokens": 169,
+          "cost": 0.00017787
+        }
+      ],
+      "prompt_tokens": 2873,
+      "cached_tokens": 1277,
+      "completion_tokens": 379,
+      "reasoning_tokens": 220,
+      "cost": 0.00036187000000000003
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For the documented sample, this method returns 862.75, not 986.0: the existing `condition_judge()` returns 0, so the method uses the normal multiplier (1.4). Align the condition logic with the example\u2019s expected \u201ctoo thin\u201d result, or update the example to match the actual condition and output.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male'); print(x.get_BMI()); print(x.condition_judge()); print(x.calculate_calorie_intake())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n0\n862.75\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1670,
+          "cached_tokens": 0,
+          "completion_tokens": 213,
+          "reasoning_tokens": 159,
+          "cost": 0.0002735
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1917,
+          "cached_tokens": 1667,
+          "completion_tokens": 729,
+          "reasoning_tokens": 641,
+          "cost": 0.00040617
+        }
+      ],
+      "prompt_tokens": 3587,
+      "cached_tokens": 1667,
+      "completion_tokens": 942,
+      "reasoning_tokens": 800,
+      "cost": 0.0006796700000000001
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "task_id": "ClassEval_19",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v5",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "generate_primes",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented example returns `[2, 1, 3]` instead of the primes through 20; the method builds its sieve only to \u221an and its later filtering adds 1 while omitting primes. Sieve odd candidates through `self.n` and explicitly exclude 1 to produce the complete prime list.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "for n in [20, 0, 1, 2, 3, 4, 9, 10, 25, 49, 100]:\n    try:\n        cs=ChandrasekharSieve(n)\n        print(n, cs.generate_primes(), 'expected', [x for x in range(2,n+1) if all(x%p for p in range(2,int(x**0.5)+1))])\n    except Exception as e: print(n, type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\n20 [2, 1, 3] expected [2, 3, 5, 7, 11, 13, 17, 19]\n0 [] expected []\n1 [] expected []\n2 [2] expected [2]\n3 [2] expected [2, 3]\n4 [2, 1] expected [2, 3]\n9 [2, 1, 3] expected [2, 3, 5, 7]\n10 [2, 1, 3] expected [2, 3, 5, 7]\n25 [2, 1, 3, 5] expected [2, 3, 5, 7, 11, 13, 17, 19, 23]\n49 [2, 1, 3, 5, 7] expected [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]\n100 [2, 1, 3, 5, 7, 9] expected [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1211,
+          "cached_tokens": 0,
+          "completion_tokens": 168,
+          "reasoning_tokens": 30,
+          "cost": 0.00020510000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1719,
+          "cached_tokens": 1208,
+          "completion_tokens": 162,
+          "reasoning_tokens": 79,
+          "cost": 0.00014418000000000002
+        }
+      ],
+      "prompt_tokens": 2930,
+      "cached_tokens": 1208,
+      "completion_tokens": 330,
+      "reasoning_tokens": 109,
+      "cost": 0.00034928000000000004
+    },
+    {
+      "method_name": "get_primes",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "`get_primes()` returns `self.primes`, but the constructor fills that field using the existing `generate_primes()`, which produces `[2, 1, 3]` for 20; the documented example therefore fails. Fix `generate_primes()` so it stores the correct prime list, then this getter will return it.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "cs=ChandrasekharSieve(20); print(cs.get_primes()); print(ChandrasekharSieve(1).get_primes()); print(ChandrasekharSieve(2).get_primes()); print(ChandrasekharSieve(3).get_primes())",
+          "output": "exit code 0\nstdout:\n[2, 1, 3]\n[]\n[2]\n[2]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1304,
+          "cached_tokens": 0,
+          "completion_tokens": 83,
+          "reasoning_tokens": 0,
+          "cost": 0.0001719
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1423,
+          "cached_tokens": 1301,
+          "completion_tokens": 424,
+          "reasoning_tokens": 336,
+          "cost": 0.00023721000000000001
+        }
+      ],
+      "prompt_tokens": 2727,
+      "cached_tokens": 1301,
+      "completion_tokens": 507,
+      "reasoning_tokens": 336,
+      "cost": 0.00040911
+    }
+  ]
+}

@@ -41,7 +41,17 @@ Solid parts are built; orange, dashed parts are planned. The source is `architec
 
 - [ ] **The judge on the pilot classes** (11 to 13 Nov), the instructors' first step. The 9B's
   methods of the 10 pilot classes are already written and graded (runs `C0-9b`, `C0-9b-r2`); we
-  measure judge v2 on them (TPR, TNR, kappa) and try prompt variants, without the tests.
+  measure judge v2 on them (TPR, TNR, kappa) and try prompt variants, without the tests
+  (`judge.py --version v3`, `v4`, `v5`; `compare_judges.py`). v3 judges only what the docstring
+  asks, v4 fails only serious problems (after CodeJudge, Tong and Zhang 2024), v5 tries every
+  behaviour the docstring names; v1 stays as the fallback if the judge may not run code. Rule
+  fixed before the runs: a variant replaces v2 only if it gets more methods right than v2 by more
+  than v2 differs from its own repeat, and the gain does not come from requirements found only in
+  the tests (we read the changed verdicts). Otherwise v2 stays.
+  Round 1 (11 Nov, 0.11 $): kappa 0.50 to 0.54 for every prompt; no variant changes more than 5
+  of 71 verdicts, and the repeat of v2 changes 1. **v2 stays**; v1 is almost as good without
+  running code. 11 of the 18 methods with a disagreement are wrong for every judge: mostly
+  docstring and tests saying different things. Next: label them by hand on the 9B's code.
 - [ ] **One full run of C2** (14 to 15 Nov) on the 61 test classes, with the 9B and the chosen
   judge prompt; then we tell the instructors the budget spent.
 - [ ] **Analysis** (15 to 16 Nov). Pass rates with and without the weak methods, the judge's TPR

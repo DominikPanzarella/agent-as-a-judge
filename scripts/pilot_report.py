@@ -15,7 +15,7 @@ DEV = ROOT / "data/selection/dev_classes.csv"
 DISAGREEMENTS = ROOT / "runs/pilot_disagreements.csv"
 ADJUDICATION = ROOT / "runs/pilot_adjudication.csv"
 N_METHODS = 289  # all kept methods, for the cost projection
-CONFIGS = [(v, e) for v in judge.VERSIONS for e in judge.EFFORTS]
+CONFIGS = [(v, e) for v in ("v1", "v2") for e in judge.EFFORTS]  # the judges tried on run C0
 
 
 def dev_classes():

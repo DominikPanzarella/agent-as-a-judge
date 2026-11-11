@@ -1,0 +1,103 @@
+{
+  "task_id": "ClassEval_55",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "palindromic_length",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "palindromic_string",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: The method expands around each center in the transformed string, tracks the largest palindrome, and maps its range back to the input; it handles the empty string as well. The documented example returned `'ababa'` when run.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 5,
+      "runs": [
+        {
+          "code": "m=Manacher('ababaxse'); print(m.palindromic_string());\nfor s in ['', 'a','abba','abacdfgdcaba','cbbd','aaaa']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\nababa\n'' ''\n'a' 'a'\n'abba' 'abba'\n'abacdfgdcaba' 'aba'\n'cbbd' 'bb'\n'aaaa' 'aaaa'\n\nstderr:\n"
+        },
+        {
+          "code": "for s in ['#a#','a#b','##','a##a','x#a#x','##a##']:\n print(repr(s), repr(Manacher(s).palindromic_string()))",
+          "output": "exit code 0\nstdout:\n'#a#' '#a#'\n'a#b' 'a'\n'##' '##'\n'a##a' 'a##a'\n'x#a#x' 'x#a#x'\n'##a##' '##a##'\n\nstderr:\n"
+        },
+        {
+          "code": "def brute(s):\n best=''\n for i in range(len(s)):\n  for j in range(i+1,len(s)+1):\n   x=s[i:j]\n   if x==x[::-1] and len(x)>len(best): best=x\n return best\nimport itertools\nfor n in range(1,8):\n for q in itertools.product('a#b', repeat=n):\n  s=''.join(q); out=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(out)!=len(exp) or out!=out[::-1]:\n   print(repr(s),repr(out),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        },
+        {
+          "code": "import itertools\nfor n in range(1,11):\n for q in itertools.product('a#', repeat=n):\n  s=''.join(q); out=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(out)!=len(exp) or out!=out[::-1]:\n   print(repr(s),repr(out),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 1\nstdout:\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpicw4skf8/snippet.py\", line 59, in <module>\n    s=''.join(q); out=Manacher(s).palindromic_string(); exp=brute(s)\n                                                            ^^^^^\nNameError: name 'brute' is not defined. Did you mean: 'True'?\n"
+        },
+        {
+          "code": "def brute(s):\n return max((s[i:j] for i in range(len(s)) for j in range(i+1,len(s)+1) if s[i:j]==s[i:j][::-1]), key=len, default='')\nimport itertools\nfor n in range(1,11):\n for q in itertools.product('a#', repeat=n):\n  s=''.join(q); out=Manacher(s).palindromic_string(); exp=brute(s)\n  if len(out)!=len(exp) or out!=out[::-1]:\n   print(repr(s),repr(out),repr(exp)); raise SystemExit\nprint('none')",
+          "output": "exit code 0\nstdout:\nnone\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1158,
+          "cached_tokens": 0,
+          "completion_tokens": 78,
+          "reasoning_tokens": 0,
+          "cost": 0.00015480000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1296,
+          "cached_tokens": 1155,
+          "completion_tokens": 250,
+          "reasoning_tokens": 185,
+          "cost": 0.00015065
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1617,
+          "cached_tokens": 1293,
+          "completion_tokens": 226,
+          "reasoning_tokens": 53,
+          "cost": 0.00015832999999999998
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1865,
+          "cached_tokens": 1614,
+          "completion_tokens": 256,
+          "reasoning_tokens": 146,
+          "cost": 0.00016924
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2245,
+          "cached_tokens": 1862,
+          "completion_tokens": 172,
+          "reasoning_tokens": 10,
+          "cost": 0.00014292000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2439,
+          "cached_tokens": 2170,
+          "completion_tokens": 581,
+          "reasoning_tokens": 516,
+          "cost": 0.0003391
+        }
+      ],
+      "prompt_tokens": 10620,
+      "cached_tokens": 8094,
+      "completion_tokens": 1563,
+      "reasoning_tokens": 910,
+      "cost": 0.00111504
+    }
+  ]
+}

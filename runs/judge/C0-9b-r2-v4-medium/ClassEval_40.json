@@ -1,0 +1,126 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v4",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "OK: It computes weight divided by height squared and returns a float; the documented example produces 21.604938271604937. No serious problem is present.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male').get_BMI(); print(x, type(x))",
+          "output": "exit code 0\nstdout:\n21.604938271604937 <class 'float'>\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1205,
+          "cached_tokens": 0,
+          "completion_tokens": 42,
+          "reasoning_tokens": 0,
+          "cost": 0.0001415
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1280,
+          "cached_tokens": 1202,
+          "completion_tokens": 49,
+          "reasoning_tokens": 0,
+          "cost": 4.432e-05
+        }
+      ],
+      "prompt_tokens": 2485,
+      "cached_tokens": 1202,
+      "completion_tokens": 91,
+      "reasoning_tokens": 0,
+      "cost": 0.00018582
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "Serious\u2014wrong result and exception: the documented male example returns `0` (observed), not `-1`, and a female instance raises `KeyError` because the code always indexes `BMI_std[0]`. Look up the standard for `self.sex`, and reconcile the example\u2019s expected result with the stated male range and calculated BMI.",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male')\nprint(x.condition_judge())\ntry:\n print(FitnessTracker(1.8,70,20,'female').condition_judge())\nexcept Exception as e: print(type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\n0\nKeyError 'female'\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1372,
+          "cached_tokens": 0,
+          "completion_tokens": 80,
+          "reasoning_tokens": 0,
+          "cost": 0.00017720000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1479,
+          "cached_tokens": 1369,
+          "completion_tokens": 292,
+          "reasoning_tokens": 202,
+          "cost": 0.00017069
+        }
+      ],
+      "prompt_tokens": 2851,
+      "cached_tokens": 1369,
+      "completion_tokens": 372,
+      "reasoning_tokens": 202,
+      "cost": 0.00034789
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "Serious \u2014 on the documented example, this returns 862.75, not 986.0: the existing `condition_judge()` classifies BMI 21.6 as normal, so this method applies the 1.4 multiplier. Reconcile the example with the condition logic (or update the condition logic if the example is intended).",
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male'); print(x.calculate_calorie_intake())",
+          "output": "exit code 0\nstdout:\n862.75\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1762,
+          "cached_tokens": 0,
+          "completion_tokens": 205,
+          "reasoning_tokens": 163,
+          "cost": 0.00027870000000000005
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1991,
+          "cached_tokens": 1759,
+          "completion_tokens": 549,
+          "reasoning_tokens": 460,
+          "cost": 0.00031529
+        }
+      ],
+      "prompt_tokens": 3753,
+      "cached_tokens": 1759,
+      "completion_tokens": 754,
+      "reasoning_tokens": 623,
+      "cost": 0.0005939900000000001
+    }
+  ]
+}
