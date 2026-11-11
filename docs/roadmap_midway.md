@@ -51,7 +51,8 @@ Solid parts are built; orange, dashed parts are planned. The source is `architec
   Round 1 (11 Nov, 0.11 $): kappa 0.50 to 0.54 for every prompt; no variant changes more than 5
   of 71 verdicts, and the repeat of v2 changes 1. **v2 stays**; v1 is almost as good without
   running code. 11 of the 18 methods with a disagreement are wrong for every judge: mostly
-  docstring and tests saying different things. Next: label them by hand on the 9B's code.
+  docstring and tests saying different things. Next: label them by hand on the 9B's code
+  (`label_sheet.py`: the 18 disagreements and 10 sampled agreements, two raters, then consensus).
 - [ ] **One full run of C2** (14 to 15 Nov) on the 61 test classes, with the 9B and the chosen
   judge prompt; then we tell the instructors the budget spent.
 - [ ] **Analysis** (15 to 16 Nov). Pass rates with and without the weak methods, the judge's TPR
@@ -98,10 +99,10 @@ Each comes with its reason and source.
 - [ ] **Feedback with evidence.** The coder also gets the code the judge ran and its output.
   Grounded critiques work better (CRITIC, Gou et al. 2024), and the judge's medium-effort claims
   were all true.
-- [ ] **Judge v3, one docstring requirement at a time**, like the paper's ask module, with a third
-  verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
+- [ ] **A judge that checks one docstring requirement at a time**, like the paper's ask module,
+  with a third verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
   rejected for behaviour the docstring does not describe. Telling an underspecified task apart from
-  a wrong solution works better as a separate step (Edwards and Schuster 2026). v3 also writes its
+  a wrong solution works better as a separate step (Edwards and Schuster 2026). It also writes its
   checks from the docstring before reading the code, because tests written by a model carry a bias
   that can mislead the feedback (Chen et al., ACL 2025).
 - [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The

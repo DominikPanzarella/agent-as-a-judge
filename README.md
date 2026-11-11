@@ -89,8 +89,8 @@ harness runs all its tests on the first and on the final versions: that is the g
   deciding on repetitions.
 - **C3** if time and budget allow.
 
-Later variants (judge v3, our labels, controls, other ways to fill the judge's memory) are in the
-[roadmap](docs/roadmap_midway.md).
+Later variants (a judge with a third verdict, our labels, controls, other ways to fill the judge's
+memory) are in the [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
