@@ -1,7 +1,7 @@
 """The judge: GPT-6 Luna says whether a method, or a whole class, does what its docstring says.
 
-It sees the class skeleton, the methods written before and the new one, never the tests; in the
-base version, not built yet, it will also get the tests of the method and run them itself. It
+It sees the class skeleton, the methods written before and the new one, never the tests, which
+only give the grade. It
 answers in JSON with a reason and a verdict, OK or NOT OK. Judge v1 only reads the code; v2 can
 also run Python up to 5 times on the class written so far. Both use the Responses API, because
 Chat Completions does not accept tools with a reasoning effort for this model.

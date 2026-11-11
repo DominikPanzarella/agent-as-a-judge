@@ -6,8 +6,7 @@ title, the team, the changes to the plan, the status with numbers, and a schedul
 
 ![Architecture](architecture_base.png)
 
-Solid parts are built. Orange parts are new in the base version, or planned when dashed. The
-source is `architecture_base.svg`.
+Solid parts are built; orange, dashed parts are planned. The source is `architecture_base.svg`.
 
 ## Course dates
 
@@ -40,13 +39,14 @@ source is `architecture_base.svg`.
 
 ## Week 2 (9 to 15 November)
 
-- [ ] **Base judge** (10 to 12 Nov). `judge.py` gets the tests of the method and a tool that runs
-  them on the class written so far, next to `run_python`; `loop.py` tells the judge which methods
-  are still missing. A dry run on the development classes first.
-- [ ] **Full runs** (12 to 13 Nov). C1 and C2 on the 71 classes, after the instructors' answer.
-- [ ] **Analysis** (14 to 15 Nov). Pass rates with and without the weak methods, the judge's TPR
+- [ ] **The judge on the pilot classes** (11 to 13 Nov), the instructors' first step. The 9B's
+  methods of the 10 pilot classes are already written and graded (runs `C0-9b`, `C0-9b-r2`); we
+  measure judge v2 on them (TPR, TNR, kappa) and try prompt variants, without the tests.
+- [ ] **One full run of C2** (14 to 15 Nov) on the 61 test classes, with the 9B and the chosen
+  judge prompt; then we tell the instructors the budget spent.
+- [ ] **Analysis** (15 to 16 Nov). Pass rates with and without the weak methods, the judge's TPR
   and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
-- [ ] **Error analysis** (14 to 15 Nov). 20 disagreements between judge and tests, grouped into
+- [ ] **Error analysis** (15 to 16 Nov). 20 disagreements between judge and tests, grouped into
   kinds, deciding each time who is right (`analyze.py --sample 20`).
 
 ## 16 to 19 November: midway report
@@ -56,43 +56,31 @@ source is `architecture_base.svg`.
 
 ## After the midway (20 November to 17 December)
 
-- [ ] **C3, the flywheel** (20 to 29 Nov). Three rounds of classes; between rounds the judge keeps
-  a memory of its mistakes.
+- [ ] **C3, the flywheel** (20 to 29 Nov), if time and budget allow. Rounds of classes; between
+  rounds the judge keeps a memory of its mistakes, confirmed by hand.
 - [ ] **Later variants** (30 Nov to 6 Dec), the ones the instructors accept.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
 
-## Base version (decided on 9 and 10 November)
+## Decisions of 11 November (the instructors' answer)
 
-- [ ] **Coder unchanged.** It writes one method at a time, never sees the tests and runs no code;
-  it improves only inside the conversation, after the judge's feedback.
-- [ ] **Judge with the tests.** The judge gets the docstring and all the ClassEval tests of the
-  method, runs the method and the tests on the class written so far, and checks what the tests do
-  not cover. In practice tests exist but are incomplete, and this is the case we want to study.
-- [ ] **Methods not written yet.** The tests of 14 of the 289 methods call a method that comes
-  later in the order (68 call some other method of the class). The judge is told which methods are
-  still stubs.
-- [ ] **Feedback after every method (C2) and at the end of the class (C1)**, as for RQ1. The grade is
-  always all the ClassEval tests on the finished class.
-- [ ] **Always a coder and a judge** (10 Nov). C0 and C4 are dropped. The baseline is the first
+- [x] **C1 is dropped**: the study is about feedback given step by step. C2 first, C3 if time and
+  budget allow; the budget of C1 goes to more prompt trials for the judge.
+- [x] **The judge never sees the tests.** It works only with what exists when the code is written:
+  the docstring and the code so far. The tests only give the grade.
+- [x] **The coder never sees the tests and runs no code.** Its memory is the judge's verdict in the
+  prompt of the second attempt, which C2 already does.
+- [x] **Coder: `qwen/qwen3.5-9b`**, which leaves more room for the feedback.
+- [x] **One full run first**, then a report of the budget, then a decision on repetitions.
+- [x] **Always a coder and a judge** (10 Nov). C0 and C4 are dropped. The baseline is the first
   version of each method, written before any feedback, against the final one.
 
 ## Later variants, to discuss with the instructors
 
 Each comes with its reason and source.
 
-- [ ] **A memory for the coder.** In the base version the coder carries nothing from one class to
-  the next. A short list of the corrections it received, in its prompt, would let it improve over
-  time (Reflexion, Shinn et al. 2023).
-- [ ] **A coder that runs its own code**, on the docstring examples and without the ClassEval tests,
-  before handing the method in (Self-Debug, Chen, Lin et al. 2024). Whether the coder may also see
-  the tests is a question for the instructors.
-- [ ] **Test cases split between the judge and the grade.** Some test cases of each method go to the
-  judge, the others give the grade (224 of the 289 methods have five), so the grade does not use
-  the tests the judge has seen.
-
-- [ ] **Same first versions in every setup.** C1 and C2 start from the same first versions, written
+- [ ] **Same first versions in every setup.** C2 and C3 start from the same first versions, written
   once with the same prompt, since two identical runs differ by 3 methods, as much as the feedback.
 - [ ] **Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
   experts, and our tests and docstrings often disagree. We write the labelling criteria first,
@@ -119,9 +107,6 @@ Each comes with its reason and source.
 - [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
   written again without feedback). They separate the effect of the reason from that of a second
   attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).
-- [ ] **Up to three revision rounds for RQ3**, on the development classes only, recording the
-  judge's OK and the tests at each round. A coder learns to please a judge only under repeated
-  feedback (Gao et al. 2023; Pan et al. 2024), and one revision is too little to show it.
 - [ ] **Count the revisions that change behaviour.** The coder must always rewrite, so it also
   follows wrong reviews (sycophancy, Sharma et al. 2024).
 - [ ] **The judge as an evaluator.** TPR and TNR from the development classes correct the judge's
@@ -140,13 +125,15 @@ Engineering AI Systems, USI
 
 ## Open decisions
 
-- [ ] **Coder.** qwen3.8-27b passes 82% of the methods and leaves little room for feedback;
-  qwen3.5-9b passes fewer but is less stable, and the judge catches more of its failures (15 of 22
-  against 5 of 19).
-- [ ] **Repetitions.** One run per setup, or two or three. A simulation on the 251 test methods: an
-  effect like the pilot's (3 fixed and 2 broken per 38) is detected 16% of the time with one run
-  and about 48% with three; an 8-point gain 94% of the time with one run.
-- [ ] **Same budget across setups.** For now: one revision per method in C2, one per class in C1.
-- [ ] **The lab note "classes with the 1st methods implemented".** To ask Alessandro.
-- [ ] **Coder memory and tests for the coder** in the later versions. To ask the instructors.
+- [x] **Coder** (11 Nov): qwen3.5-9b. In the pilot it passed 61 to 68% of the methods (the 27B
+  82%), and the judge caught 15 of its 22 failures.
+- [x] **Repetitions** (11 Nov): one full run, then we decide with the instructors. A simulation on
+  the 251 test methods: an effect like the pilot's is detected 16% of the time with one run, about
+  48% with three.
+- [x] **Same budget across setups**: one revision per method in C2.
+- [x] **The lab note "classes with the 1st methods implemented"** meant the method order, already
+  done.
+- [x] **Coder memory and tests for the coder** (11 Nov): neither; see the decisions above.
+- [ ] **Can the judge run code of its own (`run_python`)** on the class written so far? To ask at the
+  lab of 12 November.
 - [x] **Judge effort** (7 Nov). Medium: its claims were all true.

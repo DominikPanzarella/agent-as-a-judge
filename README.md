@@ -6,8 +6,9 @@ Dominik Panzarella and Daniele Buser, Neural Code Analysis, USI, autumn 2026.
 
 A coding agent writes a Python class one method at a time, and a judge agent reviews the work. We
 measure whether the judge's feedback makes the code pass more tests, and how often the judge is
-wrong. The tasks come from ClassEval. The coder never sees the tests and runs no code; in the base
-version the judge reads the docstring and the tests, and runs both.
+wrong. The tasks come from ClassEval. Neither agent sees the tests: the judge works only with what
+exists when the code is written (the docstring and the code so far), and the tests only give the
+grade.
 
 ## Contents
 
@@ -25,35 +26,36 @@ Agent-as-a-Judge (Zhuge et al., ICML 2025) uses an agent to judge another agent 
 future work suggests using the judge's verdicts as feedback during the work, and letting judge and
 worker improve each other (a "flywheel"). We test both ideas on tasks with real tests:
 
-- RQ1: Does the coder write better code with feedback after every method, at the end, or never?
+- RQ1: Does the judge's feedback after every method make the coder write better code?
 - RQ2: If the judge remembers its past mistakes, do judge and coder improve over time?
-- RQ3: How often is the judge wrong inside the loop, and does the coder learn to please it?
+- RQ3: How often is the judge wrong inside the loop?
 
 ## 2. How it works
 
 ![Architecture](docs/architecture_base.png)
 
-Solid parts are built and were tried in the pilot. Orange parts are new in the base version, or
-planned when dashed.
+Solid parts are built and were tried in the pilot; orange, dashed parts are planned.
 The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
-Every setup has a coder and a judge; they differ in when and how the judge gives its feedback:
+Both setups have a coder and a judge:
 
 | Setup | Feedback to the coder | Status |
 |---|---|---|
-| C1 | the coder writes the whole class, then the judge runs its tests and reviews it; one revision of the class | piloted without tests |
-| C2 | after each method the judge runs its tests and reviews it; one revision of that method, then the next method | piloted without tests |
-| C3 | as C2, in rounds of classes; from the second round the judge has a memory of its mistakes that we confirm by hand | planned |
+| C2 | after each method the judge reviews it; one revision of that method, then the next method | piloted |
+| C3 | as C2, in rounds of classes; from the second round the judge has a memory of its mistakes that we confirm by hand | planned, if time and budget allow |
+
+C1, with one review of the finished class, was piloted but is dropped (11 November): the study is
+about feedback given step by step.
 
 There is no setup without the judge: the baseline is inside each setup, in the first version of
 each method, written before any feedback.
 
-**One method in C2.** (1) The coder writes the method; it never sees or runs the tests. (2) The
-judge gets the docstring, the code and the ClassEval tests of that method, and runs the tests itself
-on the class written so far, plus code of its own if needed. (3) It answers OK or NOT OK with a
-reason. (4) After a NOT OK the coder rewrites the method once. (5) The final version joins the
-methods already written, and the next method starts. When the class is finished, the harness runs
-all its tests on the first and on the final versions: that is the grade.
+**One method in C2.** (1) The coder writes the method. (2) The judge gets the skeleton with the
+docstrings, the methods written so far and the new one, never the tests; v2 may also run code of its
+own on the class written so far. (3) It answers OK or NOT OK with a reason. (4) After a NOT OK the
+coder gets the reason in the same conversation and rewrites the method once. (5) The final version
+joins the methods already written, and the next method starts. When the class is finished, the
+harness runs all its tests on the first and on the final versions: that is the grade.
 
 **Built**
 
@@ -63,12 +65,13 @@ all its tests on the first and on the final versions: that is the grade.
   called method comes before its caller.
 - **Prompt.** The class skeleton with all the docstrings, the methods written so far and the name
   of the next method.
-- **Coder.** `qwen/qwen3.8-27b` on OpenRouter, in bf16, with low reasoning effort and 4000 output
-  tokens per request. It writes one method at a time and rewrites it after a NOT OK. The tests stay
-  hidden from it and it runs no code, so it improves only inside the conversation.
+- **Coder.** `qwen/qwen3.5-9b` on OpenRouter (chosen on 11 November; the pilot also used
+  `qwen3.8-27b`, which already passes 82% of the methods), with low reasoning effort and 4000 output
+  tokens per request. It writes one method at a time and rewrites it after a NOT OK, without ever
+  seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
-  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. Neither sees
-  the tests yet.
+  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. It never sees
+  the tests.
 - **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
   stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
@@ -77,20 +80,17 @@ all its tests on the first and on the final versions: that is the grade.
   disagreements that we check by hand.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
-**Base version** (decided on 9 November, not built yet)
+**Plan after the instructors' answer** (11 November)
 
-- **Judge with the tests.** The judge reads the docstring and all the ClassEval tests of the
-  method, runs the method and the tests on the class written so far, and checks what the tests do
-  not cover. In practice tests exist but are incomplete, and this is the case we want to study. The
-  feedback lists the tests that fail and the problems found beyond them.
-- **Methods not written yet.** The tests of 14 of the 289 methods also call a method that comes
-  later in the order, which is still a stub. The judge is told which methods are missing, so it does
-  not blame the method for them.
-- **The grade** stays the same in every setup: all the ClassEval tests on the finished class, with
-  the first and with the final versions of the methods.
+- **First, the judge.** On the 10 pilot classes, which stay out of the study, we grade the 9B's
+  methods with the tests and measure the judge on them (TPR, TNR, kappa), trying prompt variants
+  until it works as well as it can with only the docstring and the code.
+- **Then one full run of C2** on the 61 test classes, and a report of the budget spent before
+  deciding on repetitions.
+- **C3** if time and budget allow.
 
-Later variants (a memory for the coder, a coder that runs its own code, test cases split between
-the judge and the grade, judge v3, our labels, controls) are in the [roadmap](docs/roadmap_midway.md).
+Later variants (judge v3, our labels, controls, other ways to fill the judge's memory) are in the
+[roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -127,14 +127,14 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 # the judge on a finished run (v1 reads, v2 can also run code)
 .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
 
-# C1 and C2: coder and judge together
+# C2: coder and judge together (C1 was only piloted)
 .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --all
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot
 .venv/bin/python scripts/pilot_controls.py             # resampling control, judge TNR, power
 .venv/bin/python scripts/plot_results.py               # charts -> docs/figures/
-.venv/bin/python scripts/analyze.py --classes test C0 C1-v2-medium C2-v2-medium --sample 20
+.venv/bin/python scripts/analyze.py --classes test C0 C2-v2-medium --sample 20
 ```
 
 `analyze.py` reports pass rates, the judge's TPR and TNR, McNemar tests and bootstrap intervals

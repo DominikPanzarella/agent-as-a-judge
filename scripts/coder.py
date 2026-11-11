@@ -1,6 +1,6 @@
 """The coder alone: Qwen writes each class one method at a time, with no feedback.
 
-The pilot ran this as setup C0. In the base version every setup has a judge, and these are the
+The pilot ran this as setup C0. In the study every setup has a judge, and these are the
 first versions, written before any feedback. For each method it gets the class skeleton, the
 methods written so far and the method's name, never the tests. A reply without a usable method
 leaves a stub and is not asked again. Results go to runs/<name>/<task_id>.json and every request to
