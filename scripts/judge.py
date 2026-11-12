@@ -8,12 +8,17 @@ judges only what the docstring asks, v4 sorts each problem by kind and fails onl
 ones, v5 tries every behaviour the docstring describes. All use the Responses API, because Chat
 Completions does not accept tools with a reasoning effort for this model.
 
+Three options work with every version. With a memory (setup C3) the judge also reads its earlier
+reviews of the same class. With --confidence it adds to the verdict how sure it is, from 0 to 100.
+With --min-confidence a verdict below the threshold sends it to look again, at most twice.
+
 Run as a script, it judges a finished run and compares the verdicts with the tests.
 
     .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55
     .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
     .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
     .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --tag r2 --all   # a repeat
+    .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --confidence --tag conf --all
 """
 import argparse
 import json
@@ -36,7 +41,8 @@ MODEL = "gpt-6-luna"
 VERSIONS = ["v1", "v2", "v3", "v4", "v5"]
 EFFORTS = ["low", "medium"]  # the course allows low or medium reasoning effort
 EFFORT = "low"  # with "low", GPT-6 Luna used no reasoning tokens in the first test
-MAX_RUNS = 5  # code runs that judge v2 may ask for on one method
+MAX_RUNS = 5  # code runs that judge v2 may ask for on one method, and again on each new look
+MAX_LOOKS = 2  # times an unsure judge is sent to look again at one method
 OUTPUT_LIMIT = 2000  # characters of stdout and of stderr shown to the judge
 # OpenAI does not return the cost of a request, so we compute it. Standard tier, dollars per
 # million tokens, as OpenRouter lists it on 6 Nov 2026. The OpenAI dashboard has the real spend.
@@ -102,7 +108,11 @@ SYSTEM_CLASS_TOOLS = SYSTEM_CLASS + TOOLS_NOTE
 
 # Structured output: the reply is always this JSON object. The reason comes first, so the
 # verdict follows from it.
-def verdict_format(reason):
+def verdict_format(reason, confidence=False):
+    properties = {"reason": {"type": "string", "description": reason},
+                  "verdict": {"type": "string", "enum": ["OK", "NOT OK"]}}
+    if confidence:
+        properties["confidence"] = {"type": "integer", "description": CONFIDENCE}
     return {
         "format": {
             "type": "json_schema",
@@ -110,19 +120,21 @@ def verdict_format(reason):
             "strict": True,
             "schema": {
                 "type": "object",
-                "properties": {
-                    "reason": {"type": "string", "description": reason},
-                    "verdict": {"type": "string", "enum": ["OK", "NOT OK"]},
-                },
-                "required": ["reason", "verdict"],
+                "properties": properties,
+                "required": list(properties),
                 "additionalProperties": False,
             },
         },
     }
 
 
-VERDICT_FORMAT = verdict_format("One or two sentences: what is wrong and how to fix it, "
-                                "or why the method is correct. Not the verdict alone.")
+# The confidence is only one more field of the answer, after the verdict: the instructions of
+# the judge stay the same.
+CONFIDENCE = "How sure you are that the verdict is right, from 0 (a guess) to 100 (certain)."
+METHOD_REASON = ("One or two sentences: what is wrong and how to fix it, "
+                 "or why the method is correct. Not the verdict alone.")
+VERDICT_FORMAT = verdict_format(METHOD_REASON)
+VERDICT_FORMAT_CONFIDENCE = verdict_format(METHOD_REASON, confidence=True)
 CLASS_VERDICT_FORMAT = verdict_format("Each method with a problem, what is wrong and how to fix it, "
                                       "or why the class is correct. Not the verdict alone.")
 
@@ -149,12 +161,22 @@ RUN_PYTHON = {
 }
 
 
-def prompt(task, written, name, code):
+def memory_line(name, review, rewritten):
+    """One line of the judge's memory in setup C3: its review of an earlier method of the class."""
+    line = f"- `{name}`: {review['verdict']}. {review['reason']}"
+    return line + (" The developer then rewrote the method; the code above is the new version."
+                   if rewritten else "")
+
+
+def prompt(task, written, name, code, memory=None):
+    """The judge's message. `memory` holds the lines of its earlier reviews of this class (C3)."""
     parts = [f"This is the skeleton of the class {task['class_name']}:", "",
              "```python", coder.skeleton(task), "```"]
     if written:
         parts += ["", "These methods were written before:", "",
                   "```python", "\n\n".join(written.values()), "```"]
+    if memory:
+        parts += ["", "These are your earlier reviews of the methods of this class:", "", *memory]
     parts += ["", f"The developer has just written the method `{name}`:", "",
               "```python", code, "```", "", f"Is `{name}` correct?"]
     return "\n".join(parts)
@@ -198,9 +220,29 @@ def parse_verdict(content):
         return None, content  # counted apart in the summary
 
 
-def judge_method(client, task, written, name, code, effort=EFFORT):
+def parse_confidence(content):
+    """The confidence in the judge's answer, or None when it was not asked for."""
+    try:
+        return json.loads(content or "").get("confidence")
+    except (ValueError, AttributeError):
+        return None
+
+
+def method_format(confidence):
+    return VERDICT_FORMAT_CONFIDENCE if confidence else VERDICT_FORMAT
+
+
+def look_again(tools):
+    """The message to a judge whose confidence is below the threshold."""
+    return ("You are not sure of this verdict. Look again at the cases you doubt"
+            + (", running code if it helps," if tools else "") + " and answer again.")
+
+
+def judge_method(client, task, written, name, code, effort=EFFORT, memory=None, confidence=False,
+                 min_confidence=None):
     """Judge v1 on one method: one request, the judge only reads the code."""
-    return review(client, task, SYSTEM, prompt(task, written, name, code), None, "v1", effort)
+    return review(client, task, SYSTEM, prompt(task, written, name, code, memory), None, "v1", effort,
+                  method_format(confidence or min_confidence is not None), min_confidence)
 
 
 def run_python(source, code):
@@ -216,19 +258,23 @@ def run_python(source, code):
             f"\nstderr:\n{proc.stderr[-OUTPUT_LIMIT:]}")
 
 
-def judge_method_with_tools(client, task, written, name, code, effort=EFFORT, version="v2"):
+def judge_method_with_tools(client, task, written, name, code, effort=EFFORT, version="v2",
+                            memory=None, confidence=False, min_confidence=None):
     """Judge v2 (or a variant of it) on one method: it may run code on the class written so far,
     then answers."""
     source = harness.build_class(task, {**written, name: code})
-    return review(client, task, INSTRUCTIONS[version], prompt(task, written, name, code), source,
-                  version, effort)
+    return review(client, task, INSTRUCTIONS[version], prompt(task, written, name, code, memory),
+                  source, version, effort, method_format(confidence or min_confidence is not None),
+                  min_confidence)
 
 
-def judge_any(client, task, written, name, code, version="v1", effort=EFFORT):
+def judge_any(client, task, written, name, code, version="v1", effort=EFFORT, memory=None,
+              confidence=False, min_confidence=None):
     """One method with any version of the judge."""
     if version == "v1":
-        return judge_method(client, task, written, name, code, effort)
-    return judge_method_with_tools(client, task, written, name, code, effort, version)
+        return judge_method(client, task, written, name, code, effort, memory, confidence, min_confidence)
+    return judge_method_with_tools(client, task, written, name, code, effort, version, memory,
+                                   confidence, min_confidence)
 
 
 def judge_class(client, task, written, version="v1", effort=EFFORT):
@@ -239,50 +285,61 @@ def judge_class(client, task, written, version="v1", effort=EFFORT):
                   CLASS_VERDICT_FORMAT)
 
 
-def review(client, task, instructions, content, source, version, effort, text_format=VERDICT_FORMAT):
+def review(client, task, instructions, content, source, version, effort, text_format=VERDICT_FORMAT,
+           min_confidence=None):
     """One review by the judge. v1 answers at once; v2 may first run code on `source`, up to
-    MAX_RUNS times, and then gives its verdict."""
+    MAX_RUNS times, and then gives its verdict. With `min_confidence`, a verdict below it sends
+    the judge to look again, at most MAX_LOOKS times; the last answer counts."""
     tools = [RUN_PYTHON] if version != "v1" else None
-    runs, requests = [], []
-    response = ask(client, instructions, [{"role": "user", "content": content}], effort,
-                   tools, "auto" if tools else None, text_format=text_format)
+    runs, requests, looks = [], [], []
+    message, previous = content, None
     while True:
-        requests.append(usage_of(response))
-        calls = [item for item in response.output if item.type == "function_call"] if tools else []
-        # The second condition only guards against a model that ignores tool_choice="none".
-        if not calls or len(requests) > MAX_RUNS + 1:
-            break
-        outputs = []
-        for call in calls:
-            # Every call needs an answer, also the ones beyond the limit.
-            if len(runs) >= MAX_RUNS:
-                output = "No more runs are allowed. Give your verdict now."
-            else:
-                try:
-                    snippet = json.loads(call.arguments)["code"]
-                except (ValueError, KeyError, TypeError):
-                    snippet, output = call.arguments, "The arguments were not valid JSON."
+        first_run, first_request = len(runs), len(requests)
+        response = ask(client, instructions, [{"role": "user", "content": message}], effort,
+                       tools, "auto" if tools else None, previous, text_format)
+        while True:
+            requests.append(usage_of(response))
+            calls = [item for item in response.output if item.type == "function_call"] if tools else []
+            # The second condition only guards against a model that ignores tool_choice="none".
+            if not calls or len(requests) - first_request > MAX_RUNS + 1:
+                break
+            outputs = []
+            for call in calls:
+                # Every call needs an answer, also the ones beyond the limit.
+                if len(runs) - first_run >= MAX_RUNS:
+                    output = "No more runs are allowed. Give your verdict now."
                 else:
-                    # In the first tests the judge copied the class into its code. A copy can
-                    # differ from the developer's code, so we do not run it.
-                    if re.search(r"^\s*class\s+" + re.escape(task["class_name"]) + r"\b", snippet, flags=re.M):
-                        output = (f"Not run: do not redefine the class {task['class_name']}. It is "
-                                  "already defined with the developer's code, so call it directly.")
+                    try:
+                        snippet = json.loads(call.arguments)["code"]
+                    except (ValueError, KeyError, TypeError):
+                        snippet, output = call.arguments, "The arguments were not valid JSON."
                     else:
-                        output = run_python(source, snippet)
-                runs.append({"code": snippet, "output": output})
-            outputs.append({"type": "function_call_output", "call_id": call.call_id, "output": output})
-        response = ask(client, instructions, outputs, effort, tools,
-                       "auto" if len(runs) < MAX_RUNS else "none", previous=response.id,
-                       text_format=text_format)
-    verdict, reason = parse_verdict(response.output_text)
+                        # In the first tests the judge copied the class into its code. A copy can
+                        # differ from the developer's code, so we do not run it.
+                        if re.search(r"^\s*class\s+" + re.escape(task["class_name"]) + r"\b", snippet, flags=re.M):
+                            output = (f"Not run: do not redefine the class {task['class_name']}. It is "
+                                      "already defined with the developer's code, so call it directly.")
+                        else:
+                            output = run_python(source, snippet)
+                    runs.append({"code": snippet, "output": output})
+                outputs.append({"type": "function_call_output", "call_id": call.call_id, "output": output})
+            response = ask(client, instructions, outputs, effort, tools,
+                           "auto" if len(runs) - first_run < MAX_RUNS else "none", response.id, text_format)
+        verdict, reason = parse_verdict(response.output_text)
+        confidence = parse_confidence(response.output_text)
+        looks.append({"verdict": verdict, "reason": reason, "confidence": confidence})
+        if (min_confidence is None or confidence is None or confidence >= min_confidence
+                or len(looks) > MAX_LOOKS):
+            break
+        message, previous = look_again(tools), response.id
     totals = {k: sum(r[k] for r in requests)
               for k in ("prompt_tokens", "cached_tokens", "completion_tokens", "reasoning_tokens", "cost")}
-    return {"verdict": verdict, "reason": reason, "status": response.status, "provider": "OpenAI",
+    return {"verdict": verdict, "reason": reason, "confidence": confidence, "looks": looks,
+            "status": response.status, "provider": "OpenAI",
             "n_runs": len(runs), "runs": runs, "requests": requests, **totals}
 
 
-def judge_run(client, task, run, version="v1", effort=EFFORT):
+def judge_run(client, task, run, version="v1", effort=EFFORT, confidence=False, min_confidence=None):
     """Verdicts on every method of a finished class, each judged with the methods before it."""
     written, records = {}, []
     for m in run["methods"]:
@@ -293,7 +350,8 @@ def judge_run(client, task, run, version="v1", effort=EFFORT):
                             "reason": "The reply did not contain a method that compiles.",
                             "passed": m["passed"]})
             continue
-        r = judge_any(client, task, written, name, m["code"], version, effort)
+        r = judge_any(client, task, written, name, m["code"], version, effort, confidence=confidence,
+                      min_confidence=min_confidence)
         for request in r["requests"]:
             budget.log(setup=run["setup"], task_id=task["task_id"], method_name=name,
                        role=f"judge-{version}", service="openai", model=MODEL, **request)
@@ -362,6 +420,8 @@ def main():
     parser.add_argument("--version", choices=VERSIONS, default="v1", help="v2 to v5 can run code")
     parser.add_argument("--effort", choices=EFFORTS, default=EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--tag", default="", help="suffix of the folder, such as r2 for a repeat")
+    parser.add_argument("--confidence", action="store_true", help="the judge also says how sure it is, 0 to 100")
+    parser.add_argument("--min-confidence", type=int, help="below this confidence the judge looks again")
     parser.add_argument("--all", action="store_true", help="every class of the run")
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")
     parser.add_argument("--force", action="store_true", help="judge again classes that already have verdicts")
@@ -385,6 +445,8 @@ def main():
               + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
         if args.version != "v1":
             print("\nTOOL:\n" + json.dumps(RUN_PYTHON, indent=2))
+        if args.confidence or args.min_confidence is not None:
+            print("\nANSWER:\n" + json.dumps(VERDICT_FORMAT_CONFIDENCE["format"]["schema"], indent=2))
         return
 
     load_dotenv(ROOT / ".env")
@@ -402,7 +464,8 @@ def main():
             print(f"Stopped before {task_id}: {stop}")
             sys.exit(1)
         run = json.loads((runs / f"{task_id}.json").read_text(encoding="utf-8"))
-        result = judge_run(client, tasks[task_id], run, args.version, args.effort)
+        result = judge_run(client, tasks[task_id], run, args.version, args.effort, args.confidence,
+                           args.min_confidence)
         out.write_text(json.dumps(result, indent=2), encoding="utf-8")
         verdicts = ", ".join(f"{m['method_name']} {m['verdict']} (tests {'pass' if m['passed'] else 'fail'})"
                              for m in result["methods"])

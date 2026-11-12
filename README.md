@@ -27,14 +27,14 @@ future work suggests using the judge's verdicts as feedback during the work, and
 worker improve each other (a "flywheel"). We test both ideas on tasks with real tests:
 
 - RQ1: Does the judge's feedback after every method make the coder write better code?
-- RQ2: If the judge remembers its past mistakes, do judge and coder improve over time?
+- RQ2: If the judge remembers its earlier reviews of the class, does the code get better?
 - RQ3: How often is the judge wrong inside the loop?
 
 ## 2. How it works
 
 ![Architecture](docs/architecture_base.png)
 
-Solid parts are built and were tried in the pilot; orange, dashed parts are planned.
+Blue parts are built and were tried in the pilot; the orange part is built for C3 and not run yet.
 The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
 Both setups have a coder and a judge:
@@ -42,7 +42,7 @@ Both setups have a coder and a judge:
 | Setup | Feedback to the coder | Status |
 |---|---|---|
 | C2 | after each method the judge reviews it; one revision of that method, then the next method | piloted |
-| C3 | as C2, in rounds of classes; from the second round the judge has a memory of its mistakes that we confirm by hand | planned, if time and budget allow |
+| C3 | as C2, and the judge also reads its earlier reviews of the same class (its memory); nothing from the tests reaches it | built, not run yet |
 
 C1, with one review of the finished class, was piloted but is dropped (11 November): the study is
 about feedback given step by step.
@@ -71,26 +71,32 @@ harness runs all its tests on the first and on the final versions: that is the g
   seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
   the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. It never sees
-  the tests.
+  the tests. Two options, still to check on the pilot classes: it adds to the verdict how sure it
+  is, from 0 to 100 (`--confidence`), and below a threshold it looks at the method again, at most
+  twice (`--min-confidence`).
+- **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
+  reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
+  memory module of the paper, which stores past judgments and no ground truth.
 - **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
   stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
 - **Judge vs tests.** Not part of the loop: after a run, the judge's verdict on each first version is
   set next to the grade of the same version. It gives TPR, TNR and Cohen's kappa, and the list of
-  disagreements that we check by hand.
+  disagreements. We check them by hand after the midway report.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
-**Plan after the instructors' answer** (11 November)
+**Plan for the midway report** (12 November)
 
-- **First, the judge.** On the 10 pilot classes, which stay out of the study, we grade the 9B's
-  methods with the tests and measure the judge on them (TPR, TNR, kappa), trying prompt variants
-  until it works as well as it can with only the docstring and the code.
-- **Then one full run of C2** on the 61 test classes, and a report of the budget spent before
-  deciding on repetitions.
-- **C3** if time and budget allow.
+- **The judge on the pilot classes** (done). Five prompts tried on the 9B's methods of the 10 pilot
+  classes; none beats v2 by more than v2 differs from its own repeat, so v2 stays.
+- **One full run of C2** on the 61 test classes, then a report of the budget spent.
+- **One full run of C3** on the same classes. It takes from C2 every first version and review
+  whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
+  verdict.
 
-Later variants (a judge with a third verdict, our labels, controls, other ways to fill the judge's
-memory) are in the [roadmap](docs/roadmap_midway.md).
+After the midway: our labels and the error analysis, a judge that writes tests of its own from
+the docstring and runs them, more than one rewrite when the judge is sure, and the other variants
+in the [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -127,18 +133,21 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 # the judge on a finished run (v1 reads, v2 can also run code)
 .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
 
-# C2: coder and judge together (C1 was only piloted)
-.venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --all
+# C2 and C3: coder and judge together (C1 was only piloted)
+.venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --model qwen/qwen3.5-9b --name C2-9b --all
+.venv/bin/python scripts/loop.py C3 --judge v2 --effort medium --model qwen/qwen3.5-9b --name C3-9b --reuse C2-9b --all
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot
 .venv/bin/python scripts/pilot_controls.py             # resampling control, judge TNR, power
 .venv/bin/python scripts/plot_results.py               # charts -> docs/figures/
-.venv/bin/python scripts/analyze.py --classes test C0 C2-v2-medium --sample 20
+.venv/bin/python scripts/compare_judges.py             # the judge's prompts on the pilot classes
+.venv/bin/python scripts/analyze.py --classes test C2-9b C3-9b
 ```
 
-`analyze.py` reports pass rates, the judge's TPR and TNR, McNemar tests and bootstrap intervals
-between runs; `--sample 20` draws disagreements for the error analysis.
+`analyze.py` reports pass rates before and after the feedback, the judge's TPR and TNR, McNemar
+tests and bootstrap intervals between runs; `--sample 20` draws disagreements for the error
+analysis.
 
 ## 5. Project layout
 
@@ -148,8 +157,8 @@ scripts/
   download_data.sh, select_classes.py, order_methods.py, pick_dev_classes.py   data
   harness.py, check_docstring_examples.py, check_field_order.py               checks
   coder.py, judge.py, loop.py, budget.py, check_api.py                         runs
-  pilot_report.py, pilot_controls.py, check_claims.py, plot_results.py,
-  analyze.py                                                                   results
+  pilot_report.py, pilot_controls.py, check_claims.py, compare_judges.py,
+  label_sheet.py, plot_results.py, analyze.py                                  results
 data/selection/  the kept classes, method order, development classes, weak tests
 runs/            one folder per run with a JSON file per class, plus cost_log.csv
 ```

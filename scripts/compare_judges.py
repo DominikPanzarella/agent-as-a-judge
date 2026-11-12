@@ -3,9 +3,10 @@
 Every judge found in runs/judge for both pilot runs of the 9B (C0-9b and C0-9b-r2) is compared
 with the tests: TPR, TNR, kappa and cost. Each judge is also compared with v2 on the same methods:
 how many methods only one of the two gets right, with an exact McNemar test. The repeat of v2
-(tag r2) shows how much v2 changes on its own, the noise a variant has to beat. Disagreements with
-the tests go to runs/judge_variants_disagreements.csv, to read by hand; the chart goes to
-docs/figures/judge_variants.png.
+(tag r2) shows how much v2 changes on its own, the noise a variant has to beat. For a judge that
+gives a confidence, it also says whether the confidence is lower on the verdicts the tests
+contradict. Disagreements with the tests go to runs/judge_variants_disagreements.csv, to read by
+hand; the chart goes to docs/figures/judge_variants.png.
 
     .venv/bin/python scripts/compare_judges.py
 """
@@ -52,6 +53,21 @@ def verdicts(name):
 
 def right(m):
     return (m["verdict"] == "OK") == bool(m["passed"])
+
+
+def confidence(name, v):
+    """Is the judge less sure of the verdicts the tests contradict? Printed only if it gave a confidence."""
+    scored = [(m["confidence"], right(m)) for m in v.values() if m.get("confidence") is not None]
+    good, bad = [c for c, r in scored if r], [c for c, r in scored if not r]
+    if not good or not bad:
+        return
+    pairs = [(g > b) + 0.5 * (g == b) for g in good for b in bad]
+    again = [m for m in v.values() if len(m.get("looks", [])) > 1]
+    changed = sum(m["looks"][0]["verdict"] != m["verdict"] for m in again)
+    print(f"  {name}: confidence {min(good + bad)} to {max(good + bad)}; mean {sum(good) / len(good):.0f} on the "
+          f"{len(good)} verdicts the tests confirm, {sum(bad) / len(bad):.0f} on the {len(bad)} they contradict; "
+          f"the confirmed one has the higher confidence in {sum(pairs) / len(pairs):.0%} of the pairs (50% is chance)"
+          + (f"; looked again at {len(again)} methods, {changed} verdicts changed" if again else ""))
 
 
 def chart(rows):
@@ -114,6 +130,8 @@ def main():
     print(f"  {len(shared)} of {len(per_method)} methods with a disagreement are wrong for every judge:")
     for run, t, n in shared:
         print(f"    {run} {t}.{n}")
+    for name in names:
+        confidence(name, verdicts(name))
     chart(rows)
 
 

@@ -60,7 +60,7 @@ def judge_rows(results):
     """The judge's verdicts on first versions, with the tests on the same versions."""
     rows = []
     for t, r in results.items():
-        if r.get("setup") == "C2":
+        if r.get("setup") in ("C2", "C3"):
             rows += [{"task_id": t, "method_name": m["method_name"], "verdict": m["review"]["verdict"],
                       "passed": m["passed_first"], "reason": m["review"]["reason"],
                       "revised": m["revision"] is not None, "passed_final": m["passed"]}

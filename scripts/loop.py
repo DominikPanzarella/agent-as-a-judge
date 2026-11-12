@@ -1,13 +1,17 @@
-"""Setups C1 and C2: coder and judge together, with one revision.
+"""Setups C2 and C3 (and C1 of the pilot): coder and judge together, with one revision.
 
 C2: the judge reviews each method; after a NOT OK the coder rewrites that method once, and the
-next methods see the new version. C1: the judge reviews the finished class; after a NOT OK the
-coder rewrites the class once. The tests run on the first and on the final version of every
-method. Results go to runs/<setup>-<judge>-<effort>/<task_id>.json.
+next methods see the new version. C3: as C2, and the judge also reads its earlier reviews of the
+same class, its memory. C1: the judge reviews the finished class; after a NOT OK the coder
+rewrites the class once. The tests run on the first and on the final version of every method.
+Results go to runs/<setup>-<judge>-<effort>/<task_id>.json.
+
+--reuse takes from another run every first version and review whose input is the same, so two
+setups differ only where the judge does, and not because the coder writes a method differently.
 
     .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --dry-run ClassEval_19
-    .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --all
-    .venv/bin/python scripts/loop.py C1 --judge v2 --effort medium --all
+    .venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --all --name C2-9b
+    .venv/bin/python scripts/loop.py C3 --judge v2 --effort medium --all --name C3-9b --reuse C2-9b
 """
 import argparse
 import json
@@ -23,7 +27,7 @@ import harness
 import judge
 
 ROOT = harness.ROOT
-SETUPS = ["C1", "C2"]
+SETUPS = ["C1", "C2", "C3"]
 
 CLASS_SYSTEM = (
     "You are revising a Python class. Write the whole class again, with every method, in a "
@@ -52,10 +56,34 @@ def usable(code):
 class Run:
     """The two clients and the settings of one run, plus the calls that log their cost."""
 
-    def __init__(self, coder_client, judge_client, setup, name, model, version, effort):
+    def __init__(self, coder_client, judge_client, setup, name, model, version, effort,
+                 confidence=False, min_confidence=None, reuse=None):
         self.coder_client, self.judge_client = coder_client, judge_client
         self.setup, self.name, self.model = setup, name, model
         self.version, self.effort = version, effort
+        self.confidence, self.min_confidence = confidence, min_confidence
+        self.reuse = reuse  # name of the run to take equal first versions and reviews from
+
+    def settings(self):
+        """What must be equal in another run before one of its results can be reused."""
+        return {"coder_model": self.model, "judge": self.version, "effort": self.effort,
+                "confidence": self.confidence, "min_confidence": self.min_confidence}
+
+    def earlier(self, task, written, name):
+        """The record of this method in the reused run, if it was written after the same methods."""
+        f = ROOT / "runs" / (self.reuse or "") / f"{task['task_id']}.json"
+        if not self.reuse or not f.exists():
+            return None
+        old = json.loads(f.read_text(encoding="utf-8"))
+        if any(old.get(k) != v for k, v in self.settings().items()):
+            return None
+        before = {}
+        for record in old["methods"]:
+            if record["method_name"] == name:
+                return record if before == written else None
+            if record["final_code"] is not None:
+                before[record["method_name"]] = record["final_code"]
+        return None
 
     def write(self, task, messages, method_name, role, max_tokens=coder.MAX_TOKENS):
         r = coder.ask(self.coder_client, messages, self.model, max_tokens)
@@ -72,20 +100,33 @@ class Run:
     def first_version(self, task, written, name):
         messages = [{"role": "system", "content": coder.SYSTEM},
                     {"role": "user", "content": coder.prompt(task, written, name)}]
+        old = self.earlier(task, written, name)
+        if old:
+            return messages, {**old["first"], "cost": 0.0, "reused": self.reuse}
         r = self.write(task, messages, name, "coder")
         code = coder.extract_method(r["reply"], name)
         return messages, {"code": code, "valid": usable(code), **r}
 
+    def review(self, task, written, name, code, memory):
+        """The judge on one method. Without a memory the judge's input is the one of C2, so an
+        equal review of the reused run is taken as it is."""
+        old = self.earlier(task, written, name)
+        if old and not memory and old["review"] and old["first"]["code"] == code:
+            return {**old["review"], "cost": 0.0, "reused": self.reuse}
+        return self.logged(task, name, judge.judge_any(
+            self.judge_client, task, written, name, code, self.version, self.effort,
+            memory if self.setup == "C3" else None, self.confidence, self.min_confidence))
+
 
 def run_c2(run, task, steps):
-    written, records = {}, []
+    """C2, and C3: there `memory` holds the judge's reviews of the methods written so far."""
+    written, records, memory = {}, [], []
     for name in steps:
         messages, first = run.first_version(task, written, name)
         record = {"method_name": name, "first": first, "review": None, "revision": None,
                   "final_code": first["code"] if first["valid"] else None}
         if first["valid"]:
-            review = run.logged(task, name, judge.judge_any(run.judge_client, task, written, name,
-                                                            first["code"], run.version, run.effort))
+            review = run.review(task, written, name, first["code"], memory)
             record["review"] = review
             if review["verdict"] == "NOT OK":
                 messages += [{"role": "assistant", "content": first["reply"]},
@@ -95,6 +136,8 @@ def run_c2(run, task, steps):
                 record["revision"] = {"code": code, "valid": usable(code), **r}
                 if usable(code):
                     record["final_code"] = code  # an unusable revision keeps the first version
+            if run.setup == "C3" and review["verdict"] in ("OK", "NOT OK"):
+                memory.append(judge.memory_line(name, review, record["final_code"] != first["code"]))
         if record["final_code"] is not None:
             written[name] = record["final_code"]
         records.append(record)
@@ -141,8 +184,7 @@ def run_class(run, task, steps):
     for r in records:
         r["passed_first"], r["passed"] = passed_first[r["method_name"]], passed[r["method_name"]]
     return {"task_id": task["task_id"], "class_name": task["class_name"], "setup": run.setup,
-            "name": run.name, "coder_model": run.model, "judge": run.version, "effort": run.effort,
-            "methods": records, **extra,
+            "name": run.name, **run.settings(), "reuse": run.reuse, "methods": records, **extra,
             "class_passed_first": harness.class_passed(tests_first),
             "class_passed": harness.class_passed(tests),
             "tests_first": tests_first, "tests": tests, "source_first": source_first, "source": source}
@@ -161,7 +203,7 @@ def costs(result):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Setups C1 and C2: coder, judge and one revision.")
+    parser = argparse.ArgumentParser(description="Setups C2 and C3 (and C1): coder, judge and one revision.")
     parser.add_argument("setup", choices=SETUPS)
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
     parser.add_argument("--all", action="store_true", help="every kept class")
@@ -169,6 +211,9 @@ def main():
     parser.add_argument("--effort", choices=judge.EFFORTS, default=judge.EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--model", default=coder.MODEL, help="OpenRouter model of the coder")
     parser.add_argument("--name", help="name of the run and of its folder in runs/ (default: setup-judge-effort)")
+    parser.add_argument("--confidence", action="store_true", help="the judge also says how sure it is, 0 to 100")
+    parser.add_argument("--min-confidence", type=int, help="below this confidence the judge looks again")
+    parser.add_argument("--reuse", help="run to take equal first versions and reviews from, such as C2-9b")
     parser.add_argument("--dry-run", action="store_true", help="print the feedback prompts and send nothing")
     parser.add_argument("--force", action="store_true", help="run again classes that already have a result")
     args = parser.parse_args()
@@ -183,9 +228,15 @@ def main():
 
     if args.dry_run:
         task = tasks[chosen[0]]
-        if args.setup == "C2":
+        if args.setup != "C1":
             print("After a NOT OK, the coder's conversation goes on with this message:\n")
             print(method_feedback(order[task["task_id"]][0], "<the judge's reason>"))
+            if args.setup == "C3" and len(order[task["task_id"]]) > 1:
+                first, second = order[task["task_id"]][:2]
+                memory = [judge.memory_line(first, {"verdict": "NOT OK", "reason": "<the judge's reason>"}, True)]
+                print("\nFrom the second method, the judge's message has its earlier reviews:\n")
+                print(judge.prompt(task, {first: f"<the final version of {first}>"}, second,
+                                   f"<the first version of {second}>", memory))
         else:
             print("After a NOT OK on the class, the coder gets:\n\nSYSTEM:\n" + CLASS_SYSTEM + "\n\nUSER:\n"
                   + class_revision_prompt(task, "<the class written by the coder>", "<the judge's reason>"))
@@ -194,7 +245,8 @@ def main():
     load_dotenv(ROOT / ".env")
     run = Run(OpenAI(api_key=os.environ["OPENROUTER_API_KEY"], base_url="https://openrouter.ai/api/v1", max_retries=5),
               OpenAI(api_key=os.environ["OPENAI_API_KEY"], max_retries=5),
-              args.setup, name, args.model, args.judge, args.effort)
+              args.setup, name, args.model, args.judge, args.effort,
+              args.confidence or args.min_confidence is not None, args.min_confidence, args.reuse)
     out_dir = ROOT / "runs" / name
     out_dir.mkdir(parents=True, exist_ok=True)
     for task_id in chosen:
@@ -212,7 +264,7 @@ def main():
         out.write_text(json.dumps(result, indent=2), encoding="utf-8")
         ms = result["methods"]
         coder_cost, judge_cost = costs(result)
-        if run.setup == "C2":
+        if run.setup != "C1":
             feedback = (f"{sum((r['review'] or {}).get('verdict') == 'NOT OK' for r in ms)} NOT OK, "
                         f"{sum(r['revision'] is not None for r in ms)} revisions")
         else:

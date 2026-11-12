@@ -6,7 +6,8 @@ title, the team, the changes to the plan, the status with numbers, and a schedul
 
 ![Architecture](architecture_base.png)
 
-Solid parts are built; orange, dashed parts are planned. The source is `architecture_base.svg`.
+Blue parts are built and piloted; the orange part is built for C3 and not run yet. The source is
+`architecture_base.svg`.
 
 ## Course dates
 
@@ -39,7 +40,7 @@ Solid parts are built; orange, dashed parts are planned. The source is `architec
 
 ## Week 2 (9 to 15 November)
 
-- [ ] **The judge on the pilot classes** (11 to 13 Nov), the instructors' first step. The 9B's
+- [x] **The judge on the pilot classes** (11 Nov), the instructors' first step. The 9B's
   methods of the 10 pilot classes are already written and graded (runs `C0-9b`, `C0-9b-r2`); we
   measure judge v2 on them (TPR, TNR, kappa) and try prompt variants, without the tests
   (`judge.py --version v3`, `v4`, `v5`; `compare_judges.py`). v3 judges only what the docstring
@@ -51,14 +52,25 @@ Solid parts are built; orange, dashed parts are planned. The source is `architec
   Round 1 (11 Nov, 0.11 $): kappa 0.50 to 0.54 for every prompt; no variant changes more than 5
   of 71 verdicts, and the repeat of v2 changes 1. **v2 stays**; v1 is almost as good without
   running code. 11 of the 18 methods with a disagreement are wrong for every judge: mostly
-  docstring and tests saying different things. Next: label them by hand on the 9B's code
-  (`label_sheet.py`: the 18 disagreements and 10 sampled agreements, two raters, then consensus).
-- [ ] **One full run of C2** (14 to 15 Nov) on the 61 test classes, with the 9B and the chosen
-  judge prompt; then we tell the instructors the budget spent.
-- [ ] **Analysis** (15 to 16 Nov). Pass rates with and without the weak methods, the judge's TPR
-  and TNR, McNemar tests and bootstrap intervals (`analyze.py`).
-- [ ] **Error analysis** (15 to 16 Nov). 20 disagreements between judge and tests, grouped into
-  kinds, deciding each time who is right (`analyze.py --sample 20`).
+  docstring and tests saying different things. The labels by hand (`label_sheet.py`) come after
+  the midway.
+- [x] **C3 and the judge's confidence, built** (12 Nov, no request sent). C3 is C2 where the
+  judge also reads its earlier reviews of the same class. The judge can add a confidence from 0
+  to 100 to its verdict, and below a threshold look at the method again, at most twice.
+- [ ] **The confidence on the pilot classes** (12 to 13 Nov, about 0.02 $ a run). Rules fixed
+  before the run. The field stays in the full runs only if v2 with it gets no more than one
+  method fewer right than v2, the difference between v2 and its repeat, and if the verdict the
+  tests confirm has the higher confidence in at least 65% of the pairs (50% is chance). The
+  second look is then tried with a threshold taken from the pilot's confidences, under the rule
+  of the prompt variants. If a rule fails, the full runs use v2 as it is.
+- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes, with the 9B and judge v2;
+  then we tell the instructors the budget spent.
+- [ ] **One full run of C3** (14 to 15 Nov) on the same classes, taking from C2 every first
+  version and review whose input is the same (`loop.py --reuse`): between two runs of the 9B,
+  18% of the pilot methods change result, more than any effect we expect from the memory.
+- [ ] **Analysis** (15 to 16 Nov). Pass rates before and after the feedback in C2, C3 against C2
+  on the same methods, with and without the weak methods, McNemar tests and bootstrap intervals;
+  the judge's TPR and TNR come from the same files (`analyze.py`).
 
 ## 16 to 19 November: midway report
 
@@ -67,12 +79,27 @@ Solid parts are built; orange, dashed parts are planned. The source is `architec
 
 ## After the midway (20 November to 17 December)
 
-- [ ] **C3, the flywheel** (20 to 29 Nov), if time and budget allow. Rounds of classes; between
-  rounds the judge keeps a memory of its mistakes, confirmed by hand.
+- [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of the pilot methods
+  (`label_sheet.py`, two raters, then consensus) and the error analysis of 20 disagreements of C2
+  (`analyze.py --sample 20`).
+- [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
+- [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
+  the same number of attempts, and with rewriting without feedback.
+- [ ] **C3 as a flywheel**, if time and budget allow. Rounds of classes; between rounds the judge
+  keeps a memory of its mistakes, confirmed by hand.
 - [ ] **Later variants** (30 Nov to 6 Dec), the ones the instructors accept.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
+
+## Decisions of 12 November (the simplest version for the midway)
+
+- [x] **Only C2 and C3 before the midway.** The checks by hand of judge against tests, and a
+  judge that writes tests of its own, come after.
+- [x] **C3: the memory is the judge's earlier reviews of the same class**, as in the paper's
+  memory module. No rounds and no checks by hand, and nothing from the tests reaches the judge.
+- [x] **The judge's confidence** as one more field of its answer; an unsure judge looks again.
+  The coder still rewrites a method at most once, so the budget of C2 does not change.
 
 ## Decisions of 11 November (the instructors' answer)
 
