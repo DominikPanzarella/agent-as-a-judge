@@ -1,0 +1,244 @@
+{
+  "task_id": "ClassEval_94",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "restock_item",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "It increases the quantity for an item already in the inventory and returns True, and returns False for an item that is not present. The documented examples run as expected.",
+      "confidence": 98,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "It increases the quantity for an item already in the inventory and returns True, and returns False for an item that is not present. The documented examples run as expected.",
+          "confidence": 98
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "vendingMachine = VendingMachine(); vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}; print(vendingMachine.restock_item('Coke', 10)); print(vendingMachine.inventory); print(vendingMachine.restock_item('Pizza', 10))",
+          "output": "exit code 0\nstdout:\nTrue\n{'Coke': {'price': 1.25, 'quantity': 20}}\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1405,
+          "cached_tokens": 0,
+          "completion_tokens": 138,
+          "reasoning_tokens": 55,
+          "cost": 0.0002095
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1585,
+          "cached_tokens": 1402,
+          "completion_tokens": 53,
+          "reasoning_tokens": 0,
+          "cost": 5.882e-05
+        }
+      ],
+      "prompt_tokens": 2990,
+      "cached_tokens": 1402,
+      "completion_tokens": 191,
+      "reasoning_tokens": 55,
+      "cost": 0.00026832
+    },
+    {
+      "method_name": "add_item",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method stores the item under its name with the specified price and quantity, and the example returns None while producing the documented inventory. It uses the existing inventory field correctly.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method stores the item under its name with the specified price and quantity, and the example returns None while producing the documented inventory. It uses the existing inventory field correctly.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v = VendingMachine(); print(v.add_item('Coke', 1.25, 10)); print(v.inventory)",
+          "output": "exit code 0\nstdout:\nNone\n{'Coke': {'price': 1.25, 'quantity': 10}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1570,
+          "cached_tokens": 0,
+          "completion_tokens": 94,
+          "reasoning_tokens": 49,
+          "cost": 0.000204
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1704,
+          "cached_tokens": 1567,
+          "completion_tokens": 54,
+          "reasoning_tokens": 0,
+          "cost": 5.6370000000000004e-05
+        }
+      ],
+      "prompt_tokens": 3274,
+      "cached_tokens": 1567,
+      "completion_tokens": 148,
+      "reasoning_tokens": 49,
+      "cost": 0.00026037
+    },
+    {
+      "method_name": "insert_coin",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method adds the inserted amount to the existing balance and returns the updated balance; the documented example returns 1.25. It uses the balance field initialized by the constructor, so it is correct.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method adds the inserted amount to the existing balance and returns the updated balance; the documented example returns 1.25. It uses the balance field initialized by the constructor, so it is correct.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v = VendingMachine()\nprint(v.insert_coin(1.25))\nprint(v.balance)",
+          "output": "exit code 0\nstdout:\n1.25\n1.25\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1659,
+          "cached_tokens": 0,
+          "completion_tokens": 68,
+          "reasoning_tokens": 27,
+          "cost": 0.0001999
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1755,
+          "cached_tokens": 1656,
+          "completion_tokens": 60,
+          "reasoning_tokens": 0,
+          "cost": 5.646e-05
+        }
+      ],
+      "prompt_tokens": 3414,
+      "cached_tokens": 1656,
+      "completion_tokens": 128,
+      "reasoning_tokens": 27,
+      "cost": 0.00025636
+    },
+    {
+      "method_name": "purchase_item",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The purchase and missing-item examples return the expected values, but when a product is out of stock the method only returns `False`; it does not display \u201cpurchase unsuccessful\u201d as the docstring requires. Add a message for the out-of-stock case.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "The purchase and missing-item examples return the expected values, but when a product is out of stock the method only returns `False`; it does not display \u201cpurchase unsuccessful\u201d as the docstring requires. Add a message for the out-of-stock case.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "m=VendingMachine(); m.inventory={'Coke': {'price':1.25,'quantity':10}}; m.balance=1.25; print(m.purchase_item('Coke')); print(m.purchase_item('Pizza')); m.inventory['Coke']['quantity']=0; print(m.purchase_item('Coke'))",
+          "output": "exit code 0\nstdout:\n0.0\nFalse\nFalse\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1891,
+          "cached_tokens": 0,
+          "completion_tokens": 187,
+          "reasoning_tokens": 104,
+          "cost": 0.00028260000000000004
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2106,
+          "cached_tokens": 1888,
+          "completion_tokens": 71,
+          "reasoning_tokens": 0,
+          "cost": 7.618e-05
+        }
+      ],
+      "prompt_tokens": 3997,
+      "cached_tokens": 1888,
+      "completion_tokens": 258,
+      "reasoning_tokens": 104,
+      "cost": 0.00035878000000000006
+    },
+    {
+      "method_name": "display_items",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method returns `False` for empty inventory and formats the sample product exactly as shown. For multiple products it returns their display strings joined by commas, consistent with displaying the products as a string.",
+      "confidence": 82,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method returns `False` for empty inventory and formats the sample product exactly as shown. For multiple products it returns their display strings joined by commas, consistent with displaying the products as a string.",
+          "confidence": 82
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); print(repr(v.display_items())); v.inventory={'Coke': {'price':1.25,'quantity':10}}; print(repr(v.display_items()))",
+          "output": "exit code 0\nstdout:\nFalse\n'Coke - $1.25 [10]'\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2055,
+          "cached_tokens": 0,
+          "completion_tokens": 55,
+          "reasoning_tokens": 0,
+          "cost": 0.000233
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2143,
+          "cached_tokens": 2052,
+          "completion_tokens": 547,
+          "reasoning_tokens": 486,
+          "cost": 0.00030312
+        }
+      ],
+      "prompt_tokens": 4198,
+      "cached_tokens": 2052,
+      "completion_tokens": 602,
+      "reasoning_tokens": 486,
+      "cost": 0.00053612
+    }
+  ]
+}

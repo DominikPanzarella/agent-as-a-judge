@@ -1,0 +1,171 @@
+{
+  "task_id": "ClassEval_60",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method creates the `tickets` table only if it does not already exist, with an autoincrementing integer ID and text columns for the four stated fields, then commits the change. It uses the connection and cursor initialized by the constructor and implicitly returns `None`.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method creates the `tickets` table only if it does not already exist, with an autoincrementing integer ID and text columns for the four stated fields, then commits the change. It uses the connection and cursor initialized by the constructor and implicitly returns `None`.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1075,
+          "cached_tokens": 0,
+          "completion_tokens": 115,
+          "reasoning_tokens": 38,
+          "cost": 0.000165
+        }
+      ],
+      "prompt_tokens": 1075,
+      "cached_tokens": 0,
+      "completion_tokens": 115,
+      "reasoning_tokens": 38,
+      "cost": 0.000165
+    },
+    {
+      "method_name": "insert_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method inserts the four supplied values into the matching ticket columns using parameterized SQL, then commits the transaction. It correctly returns None implicitly, as documented.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method inserts the four supplied values into the matching ticket columns using parameterized SQL, then commits the transaction. It correctly returns None implicitly, as documented.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1229,
+          "cached_tokens": 0,
+          "completion_tokens": 144,
+          "reasoning_tokens": 91,
+          "cost": 0.0001949
+        }
+      ],
+      "prompt_tokens": 1229,
+      "cached_tokens": 0,
+      "completion_tokens": 144,
+      "reasoning_tokens": 91,
+      "cost": 0.0001949
+    },
+    {
+      "method_name": "search_tickets_by_customer",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method filters tickets by the supplied customer name, fetches all matching rows, and returns them as a list of tuples. The documented example returned one matching row, as expected.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method filters tickets by the supplied customer name, fetches all matching rows, and returns them as a list of tuples. The documented example returned one matching row, as expected.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "db=MovieTicketDB(':memory:')\ndb.create_table()\ndb.insert_ticket('Movie A','Theater 1','A1','John Doe')\nr=db.search_tickets_by_customer('John Doe')\nprint(r, len(r))",
+          "output": "exit code 0\nstdout:\n[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')] 1\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1419,
+          "cached_tokens": 0,
+          "completion_tokens": 71,
+          "reasoning_tokens": 0,
+          "cost": 0.0001774
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1534,
+          "cached_tokens": 1416,
+          "completion_tokens": 56,
+          "reasoning_tokens": 0,
+          "cost": 5.396e-05
+        }
+      ],
+      "prompt_tokens": 2953,
+      "cached_tokens": 1416,
+      "completion_tokens": 127,
+      "reasoning_tokens": 0,
+      "cost": 0.00023136
+    },
+    {
+      "method_name": "delete_ticket",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method deletes rows whose `id` matches `ticket_id` and commits the change, so the deletion is persisted; it also returns `None` as documented. I ran it with an inserted ticket and confirmed it was removed.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method deletes rows whose `id` matches `ticket_id` and commits the change, so the deletion is persisted; it also returns `None` as documented. I ran it with an inserted ticket and confirmed it was removed.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "import tempfile, os\np=tempfile.mktemp()\ndb=MovieTicketDB(p)\ndb.insert_ticket('M','T','A1','C')\nprint(db.search_tickets_by_customer('C'))\nprint(db.delete_ticket(1))\nprint(db.search_tickets_by_customer('C'))\ndb.connection.close()\nos.unlink(p)",
+          "output": "exit code 0\nstdout:\n[(1, 'M', 'T', 'A1', 'C')]\nNone\n[]\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1486,
+          "cached_tokens": 0,
+          "completion_tokens": 154,
+          "reasoning_tokens": 59,
+          "cost": 0.00022559999999999998
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1679,
+          "cached_tokens": 1483,
+          "completion_tokens": 66,
+          "reasoning_tokens": 0,
+          "cost": 6.743000000000001e-05
+        }
+      ],
+      "prompt_tokens": 3165,
+      "cached_tokens": 1483,
+      "completion_tokens": 220,
+      "reasoning_tokens": 59,
+      "cost": 0.00029303
+    }
+  ]
+}

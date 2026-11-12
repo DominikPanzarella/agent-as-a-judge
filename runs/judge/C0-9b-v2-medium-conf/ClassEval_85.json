@@ -1,0 +1,325 @@
+{
+  "task_id": "ClassEval_85",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns `self.target_temperature`, and the documented example returns 37.5 for a thermostat initialized with target temperature 37.5. The `:return self.current_temperature` text is a docstring typo; the method correctly returns the target temperature.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method returns `self.target_temperature`, and the documented example returns 37.5 for a thermostat initialized with target temperature 37.5. The `:return self.current_temperature` text is a docstring typo; the method correctly returns the target temperature.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4, 37.5, 'cool')\nprint(thermostat.get_target_temperature())",
+          "output": "exit code 0\nstdout:\n37.5\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1175,
+          "cached_tokens": 0,
+          "completion_tokens": 141,
+          "reasoning_tokens": 92,
+          "cost": 0.000188
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1340,
+          "cached_tokens": 1172,
+          "completion_tokens": 72,
+          "reasoning_tokens": 0,
+          "cost": 6.452000000000001e-05
+        }
+      ],
+      "prompt_tokens": 2515,
+      "cached_tokens": 1172,
+      "completion_tokens": 213,
+      "reasoning_tokens": 92,
+      "cost": 0.00025252
+    },
+    {
+      "method_name": "set_target_temperature",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method assigns the supplied temperature to `self.target_temperature`, so the documented example works and it updates the target as requested.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method assigns the supplied temperature to `self.target_temperature`, so the documented example works and it updates the target as requested.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 0,
+      "runs": [],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1245,
+          "cached_tokens": 0,
+          "completion_tokens": 77,
+          "reasoning_tokens": 30,
+          "cost": 0.000163
+        }
+      ],
+      "prompt_tokens": 1245,
+      "cached_tokens": 0,
+      "completion_tokens": 77,
+      "reasoning_tokens": 30,
+      "cost": 0.000163
+    },
+    {
+      "method_name": "get_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "`get_mode` returns `self.mode`, which is the instance\u2019s current operating mode; for the documented example it returns `'cool'`.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "`get_mode` returns `self.mode`, which is the instance\u2019s current operating mode; for the documented example it returns `'cool'`.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t = Thermostat(20.4, 37.5, 'cool')\nprint(t.get_mode())",
+          "output": "exit code 0\nstdout:\ncool\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1281,
+          "cached_tokens": 0,
+          "completion_tokens": 156,
+          "reasoning_tokens": 113,
+          "cost": 0.0002061
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1459,
+          "cached_tokens": 1278,
+          "completion_tokens": 49,
+          "reasoning_tokens": 0,
+          "cost": 5.538e-05
+        }
+      ],
+      "prompt_tokens": 2740,
+      "cached_tokens": 1278,
+      "completion_tokens": 205,
+      "reasoning_tokens": 113,
+      "cost": 0.00026148
+    },
+    {
+      "method_name": "set_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The example works, but `set_mode` accepts any string; setting `mode` to `'invalid'` leaves that value in the instance, despite the documented restriction to `'heat'` or `'cool'`. Validate the input and reject values outside those two modes.",
+      "confidence": 96,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "The example works, but `set_mode` accepts any string; setting `mode` to `'invalid'` leaves that value in the instance, despite the documented restriction to `'heat'` or `'cool'`. Validate the input and reject values outside those two modes.",
+          "confidence": 96
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t = Thermostat(20.4, 37.5, 'heat')\nt.set_mode('cool')\nprint(t.mode)\nt.set_mode('invalid')\nprint(t.mode)",
+          "output": "exit code 0\nstdout:\ncool\ninvalid\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1339,
+          "cached_tokens": 0,
+          "completion_tokens": 160,
+          "reasoning_tokens": 99,
+          "cost": 0.0002139
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1523,
+          "cached_tokens": 1336,
+          "completion_tokens": 75,
+          "reasoning_tokens": 0,
+          "cost": 6.956e-05
+        }
+      ],
+      "prompt_tokens": 2862,
+      "cached_tokens": 1336,
+      "completion_tokens": 235,
+      "reasoning_tokens": 99,
+      "cost": 0.00028346
+    },
+    {
+      "method_name": "auto_set_mode",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method sets `mode` to `'heat'` when the current temperature is below the target and to `'cool'` otherwise, matching the docstring (including the equal-temperature case).",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method sets `mode` to `'heat'` when the current temperature is below the target and to `'cool'` otherwise, matching the docstring (including the equal-temperature case).",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t = Thermostat(20.4, 37.5, 'cool'); print(t.auto_set_mode(), t.mode); t = Thermostat(37.5, 37.5, 'heat'); print(t.auto_set_mode(), t.mode)",
+          "output": "exit code 0\nstdout:\nNone heat\nNone cool\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1457,
+          "cached_tokens": 0,
+          "completion_tokens": 110,
+          "reasoning_tokens": 39,
+          "cost": 0.00020070000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1593,
+          "cached_tokens": 1454,
+          "completion_tokens": 59,
+          "reasoning_tokens": 0,
+          "cost": 5.794e-05
+        }
+      ],
+      "prompt_tokens": 3050,
+      "cached_tokens": 1454,
+      "completion_tokens": 169,
+      "reasoning_tokens": 39,
+      "cost": 0.00025864000000000003
+    },
+    {
+      "method_name": "auto_check_conflict",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "The method derives the expected mode using the same comparison as `auto_set_mode`, updates the mode when it differs, and returns `False` for that conflict or `True` otherwise. The documented example ran and returned `False`, then left the mode as `'heat'`.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method derives the expected mode using the same comparison as `auto_set_mode`, updates the mode when it differs, and returns `False` for that conflict or `True` otherwise. The documented example ran and returned `False`, then left the mode as `'heat'`.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "thermostat = Thermostat(20.4, 37.5, 'cool')\nprint(thermostat.auto_check_conflict())\nprint(thermostat.mode)",
+          "output": "exit code 0\nstdout:\nFalse\nheat\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1622,
+          "cached_tokens": 0,
+          "completion_tokens": 79,
+          "reasoning_tokens": 20,
+          "cost": 0.00020170000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1725,
+          "cached_tokens": 1619,
+          "completion_tokens": 160,
+          "reasoning_tokens": 82,
+          "cost": 0.00010679000000000001
+        }
+      ],
+      "prompt_tokens": 3347,
+      "cached_tokens": 1619,
+      "completion_tokens": 239,
+      "reasoning_tokens": 102,
+      "cost": 0.00030849
+    },
+    {
+      "method_name": "simulate_operation",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "The documented example did not finish in the test run, which stopped after 10 seconds: the loop requires exact equality, but repeated 0.9 increments can miss the target and then continue past it indefinitely. Use a crossing condition (and clamp the temperature to the target) instead of `!=`.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "The documented example did not finish in the test run, which stopped after 10 seconds: the loop requires exact equality, but repeated 0.9 increments can miss the target and then continue past it indefinitely. Use a crossing condition (and clamp the temperature to the target) instead of `!=`.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "t = Thermostat(20.4,37.5,'cool')\nprint(t.simulate_operation(), t.current_temperature, t.mode)",
+          "output": "Stopped after 10 seconds."
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1792,
+          "cached_tokens": 0,
+          "completion_tokens": 47,
+          "reasoning_tokens": 0,
+          "cost": 0.00020270000000000002
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1856,
+          "cached_tokens": 1789,
+          "completion_tokens": 241,
+          "reasoning_tokens": 157,
+          "cost": 0.00014509
+        }
+      ],
+      "prompt_tokens": 3648,
+      "cached_tokens": 1789,
+      "completion_tokens": 288,
+      "reasoning_tokens": 157,
+      "cost": 0.00034779000000000006
+    }
+  ]
+}

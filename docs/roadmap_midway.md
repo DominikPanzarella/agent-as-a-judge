@@ -57,12 +57,18 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
 - [x] **C3 and the judge's confidence, built** (12 Nov, no request sent). C3 is C2 where the
   judge also reads its earlier reviews of the same class. The judge can add a confidence from 0
   to 100 to its verdict, and below a threshold look at the method again, at most twice.
-- [ ] **The confidence on the pilot classes** (12 to 13 Nov, about 0.02 $ a run). Rules fixed
+- [x] **The confidence on the pilot classes** (12 Nov, 0.02 $). Rules fixed
   before the run. The field stays in the full runs only if v2 with it gets no more than one
   method fewer right than v2, the difference between v2 and its repeat, and if the verdict the
   tests confirm has the higher confidence in at least 65% of the pairs (50% is chance). The
   second look is then tried with a threshold taken from the pilot's confidences, under the rule
   of the prompt variants. If a rule fails, the full runs use v2 as it is.
+  Result: the field does not move the verdicts (1 of 71 changes, as in the repeat of v2), but
+  the confidence says little. It goes from 82 to 100, 68 of 71 verdicts have 95 or more, and 11
+  of the 15 verdicts the tests contradict have 99 or 100; the confirmed verdict has the higher
+  one in 64% of the pairs. The second rule fails: **the full runs use v2 without the
+  confidence**, and the second look is not tried, since any threshold would send back 3 methods
+  at most.
 - [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes, with the 9B and judge v2;
   then we tell the instructors the budget spent.
 - [ ] **One full run of C3** (14 to 15 Nov) on the same classes, taking from C2 every first

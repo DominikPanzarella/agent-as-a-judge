@@ -1,0 +1,110 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method returns weight divided by height squared, matching the docstring; the documented example returns 21.604938271604937.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method returns weight divided by height squared, matching the docstring; the documented example returns 21.604938271604937.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male'); print(x.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1140,
+          "cached_tokens": 0,
+          "completion_tokens": 38,
+          "reasoning_tokens": 0,
+          "cost": 0.000133
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1206,
+          "cached_tokens": 1137,
+          "completion_tokens": 47,
+          "reasoning_tokens": 0,
+          "cost": 4.177e-05
+        }
+      ],
+      "prompt_tokens": 2346,
+      "cached_tokens": 1137,
+      "completion_tokens": 85,
+      "reasoning_tokens": 0,
+      "cost": 0.00017477
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "`BMI_std` is a list of dictionaries, so indexing it with `\"male\"` or `\"female\"` raises `TypeError: list indices must be integers or slices, not str` (as observed when running the example). Use the list\u2019s matching dictionary, or change `BMI_std` to a dictionary keyed by sex.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "`BMI_std` is a list of dictionaries, so indexing it with `\"male\"` or `\"female\"` raises `TypeError: list indices must be integers or slices, not str` (as observed when running the example). Use the list\u2019s matching dictionary, or change `BMI_std` to a dictionary keyed by sex.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "x=FitnessTracker(1.8,70,20,'male')\nprint(x.BMI_std)\ntry: print(x.condition_judge())\nexcept Exception as e: print(type(e).__name__, str(e))",
+          "output": "exit code 0\nstdout:\n[{'male': [20, 25]}, {'female': [19, 24]}]\nTypeError list indices must be integers or slices, not str\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1347,
+          "cached_tokens": 0,
+          "completion_tokens": 65,
+          "reasoning_tokens": 0,
+          "cost": 0.00016720000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1465,
+          "cached_tokens": 1344,
+          "completion_tokens": 90,
+          "reasoning_tokens": 0,
+          "cost": 7.053999999999999e-05
+        }
+      ],
+      "prompt_tokens": 2812,
+      "cached_tokens": 1344,
+      "completion_tokens": 155,
+      "reasoning_tokens": 0,
+      "cost": 0.00023774
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "task_id": "ClassEval_40",
+  "setup": "C0-9b-r2",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "get_BMI",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method calculates weight divided by height squared, matching the docstring, and the documented example returns 21.604938271604937 when run.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method calculates weight divided by height squared, matching the docstring, and the documented example returns 21.604938271604937 when run.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "ft = FitnessTracker(1.8, 70, 20, 'male'); print(ft.get_BMI())",
+          "output": "exit code 0\nstdout:\n21.604938271604937\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1145,
+          "cached_tokens": 0,
+          "completion_tokens": 41,
+          "reasoning_tokens": 0,
+          "cost": 0.000135
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1214,
+          "cached_tokens": 1142,
+          "completion_tokens": 50,
+          "reasoning_tokens": 0,
+          "cost": 4.3620000000000006e-05
+        }
+      ],
+      "prompt_tokens": 2359,
+      "cached_tokens": 1142,
+      "completion_tokens": 91,
+      "reasoning_tokens": 0,
+      "cost": 0.00017862
+    },
+    {
+      "method_name": "condition_judge",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For a female user, `self.BMI_std[0][self.sex]` raises `KeyError` because the female range is in `self.BMI_std[1]`; select the range matching the user's sex. Also, the documented male example returns `0` when run, not `-1`, because its BMI is within the stated 20\u201325 normal range, so the example should be corrected.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "For a female user, `self.BMI_std[0][self.sex]` raises `KeyError` because the female range is in `self.BMI_std[1]`; select the range matching the user's sex. Also, the documented male example returns `0` when run, not `-1`, because its BMI is within the stated 20\u201325 normal range, so the example should be corrected.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f = FitnessTracker(1.8,70,20,'male')\nprint(f.condition_judge())\nprint(f.BMI_std)\nprint(FitnessTracker(1.8,70,20,'female').condition_judge())",
+          "output": "exit code 1\nstdout:\n0\n[{'male': [20, 25]}, {'female': [19, 24]}]\n\nstderr:\nTraceback (most recent call last):\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpwr1n67u5/snippet.py\", line 56, in <module>\n    print(FitnessTracker(1.8,70,20,'female').condition_judge())\n          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/private/var/folders/dt/f8khr15j22ddb6ygsl5sxx440000gn/T/tmpwr1n67u5/snippet.py\", line 37, in condition_judge\n    lower = self.BMI_std[0][self.sex][0]\n            ~~~~~~~~~~~~~~~^^^^^^^^^^\nKeyError: 'female'\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1312,
+          "cached_tokens": 0,
+          "completion_tokens": 68,
+          "reasoning_tokens": 0,
+          "cost": 0.0001652
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1581,
+          "cached_tokens": 1309,
+          "completion_tokens": 297,
+          "reasoning_tokens": 190,
+          "cost": 0.00018879000000000001
+        }
+      ],
+      "prompt_tokens": 2893,
+      "cached_tokens": 1309,
+      "completion_tokens": 365,
+      "reasoning_tokens": 190,
+      "cost": 0.00035399
+    },
+    {
+      "method_name": "calculate_calorie_intake",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For the documented male example, it returns 862.75, not 986.0: the existing `condition_judge()` returns 0, so this method applies the 1.4 multiplier. For female users, the call to `condition_judge()` raises a `KeyError` because that method only looks up male BMI standards; fix the lookup and reconcile the example with the intended condition/multiplier.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "For the documented male example, it returns 862.75, not 986.0: the existing `condition_judge()` returns 0, so this method applies the 1.4 multiplier. For female users, the call to `condition_judge()` raises a `KeyError` because that method only looks up male BMI standards; fix the lookup and reconcile the example with the intended condition/multiplier.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "f=FitnessTracker(1.8,70,20,'male'); print(f.get_BMI(), f.condition_judge(), f.calculate_calorie_intake())",
+          "output": "exit code 0\nstdout:\n21.604938271604937 0 862.75\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1702,
+          "cached_tokens": 0,
+          "completion_tokens": 271,
+          "reasoning_tokens": 219,
+          "cost": 0.00030570000000000006
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 2007,
+          "cached_tokens": 1699,
+          "completion_tokens": 768,
+          "reasoning_tokens": 661,
+          "cost": 0.00043179000000000004
+        }
+      ],
+      "prompt_tokens": 3709,
+      "cached_tokens": 1699,
+      "completion_tokens": 1039,
+      "reasoning_tokens": 880,
+      "cost": 0.0007374900000000002
+    }
+  ]
+}

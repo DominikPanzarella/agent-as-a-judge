@@ -71,9 +71,10 @@ harness runs all its tests on the first and on the final versions: that is the g
   seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
   the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. It never sees
-  the tests. Two options, still to check on the pilot classes: it adds to the verdict how sure it
-  is, from 0 to 100 (`--confidence`), and below a threshold it looks at the method again, at most
-  twice (`--min-confidence`).
+  the tests. Two options are built and not used in the full runs: it adds to the verdict how sure
+  it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the method again, at
+  most twice (`--min-confidence`). On the pilot classes the confidence was 95 or more for 68 of
+  71 verdicts, right or wrong.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.

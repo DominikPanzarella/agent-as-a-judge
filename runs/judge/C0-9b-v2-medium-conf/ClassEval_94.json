@@ -1,0 +1,204 @@
+{
+  "task_id": "ClassEval_94",
+  "setup": "C0-9b",
+  "model": "gpt-6-luna",
+  "version": "v2",
+  "effort": "medium",
+  "methods": [
+    {
+      "method_name": "restock_item",
+      "verdict": "NOT OK",
+      "auto": true,
+      "reason": "The reply did not contain a method that compiles.",
+      "passed": false
+    },
+    {
+      "method_name": "add_item",
+      "auto": false,
+      "passed": false,
+      "verdict": "OK",
+      "reason": "`add_item` stores the product under its name with the specified price and quantity, and returns `None`, matching the documented example. It uses the existing `inventory` field correctly.",
+      "confidence": 100,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "`add_item` stores the product under its name with the specified price and quantity, and returns `None`, matching the documented example. It uses the existing `inventory` field correctly.",
+          "confidence": 100
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); print(v.add_item('Coke',1.25,10)); print(v.inventory)",
+          "output": "exit code 0\nstdout:\nNone\n{'Coke': {'price': 1.25, 'quantity': 10}}\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1371,
+          "cached_tokens": 0,
+          "completion_tokens": 41,
+          "reasoning_tokens": 0,
+          "cost": 0.00015759999999999998
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1452,
+          "cached_tokens": 1368,
+          "completion_tokens": 57,
+          "reasoning_tokens": 0,
+          "cost": 5.058e-05
+        }
+      ],
+      "prompt_tokens": 2823,
+      "cached_tokens": 1368,
+      "completion_tokens": 98,
+      "reasoning_tokens": 0,
+      "cost": 0.00020817999999999998
+    },
+    {
+      "method_name": "insert_coin",
+      "auto": false,
+      "passed": true,
+      "verdict": "OK",
+      "reason": "The method adds the inserted amount to the existing balance and returns the updated balance, as the docstring specifies; the example returns 1.25. No concrete problem is evident for the documented float amount.",
+      "confidence": 98,
+      "looks": [
+        {
+          "verdict": "OK",
+          "reason": "The method adds the inserted amount to the existing balance and returns the updated balance, as the docstring specifies; the example returns 1.25. No concrete problem is evident for the documented float amount.",
+          "confidence": 98
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "vm=VendingMachine(); print(vm.insert_coin(1.25)); print(vm.balance)",
+          "output": "exit code 0\nstdout:\n1.25\n1.25\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1471,
+          "cached_tokens": 0,
+          "completion_tokens": 36,
+          "reasoning_tokens": 0,
+          "cost": 0.0001651
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1535,
+          "cached_tokens": 1468,
+          "completion_tokens": 61,
+          "reasoning_tokens": 0,
+          "cost": 5.188e-05
+        }
+      ],
+      "prompt_tokens": 3006,
+      "cached_tokens": 1468,
+      "completion_tokens": 97,
+      "reasoning_tokens": 0,
+      "cost": 0.00021698
+    },
+    {
+      "method_name": "purchase_item",
+      "auto": false,
+      "passed": true,
+      "verdict": "NOT OK",
+      "reason": "The purchase and insufficient-funds checks work, but when an item is out of stock the method returns `False` without displaying the \u201cpurchase unsuccessful\u201d message required by the docstring. Add a message display on that failure path.",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "The purchase and insufficient-funds checks work, but when an item is out of stock the method returns `False` without displaying the \u201cpurchase unsuccessful\u201d message required by the docstring. Add a message display on that failure path.",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':10}}; v.balance=1.25; print(v.purchase_item('Coke')); print(v.purchase_item('Pizza')); v.inventory['Coke']['quantity']=0; print('outstock:', v.purchase_item('Coke'))",
+          "output": "exit code 0\nstdout:\n0.0\nFalse\noutstock: False\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1698,
+          "cached_tokens": 0,
+          "completion_tokens": 215,
+          "reasoning_tokens": 128,
+          "cost": 0.0002773
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1944,
+          "cached_tokens": 1695,
+          "completion_tokens": 67,
+          "reasoning_tokens": 0,
+          "cost": 7.534999999999999e-05
+        }
+      ],
+      "prompt_tokens": 3642,
+      "cached_tokens": 1695,
+      "completion_tokens": 282,
+      "reasoning_tokens": 128,
+      "cost": 0.00035265000000000003
+    },
+    {
+      "method_name": "display_items",
+      "auto": false,
+      "passed": false,
+      "verdict": "NOT OK",
+      "reason": "For a nonempty inventory, the method returns a list of formatted product strings, but the docstring\u2019s example expects the string `'Coke - $1.25 [10]'`. Return a single string (or update the documented return type and example if a list is intended).",
+      "confidence": 99,
+      "looks": [
+        {
+          "verdict": "NOT OK",
+          "reason": "For a nonempty inventory, the method returns a list of formatted product strings, but the docstring\u2019s example expects the string `'Coke - $1.25 [10]'`. Return a single string (or update the documented return type and example if a list is intended).",
+          "confidence": 99
+        }
+      ],
+      "status": "completed",
+      "provider": "OpenAI",
+      "n_runs": 1,
+      "runs": [
+        {
+          "code": "v=VendingMachine(); print(v.display_items()); v.inventory={'Coke': {'price': 1.25, 'quantity': 10}}; print(v.display_items())",
+          "output": "exit code 0\nstdout:\nFalse\n['Coke - $1.25 [10]']\n\nstderr:\n"
+        }
+      ],
+      "requests": [
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1872,
+          "cached_tokens": 0,
+          "completion_tokens": 54,
+          "reasoning_tokens": 0,
+          "cost": 0.00021420000000000003
+        },
+        {
+          "provider": "OpenAI",
+          "prompt_tokens": 1960,
+          "cached_tokens": 1869,
+          "completion_tokens": 78,
+          "reasoning_tokens": 0,
+          "cost": 6.678999999999999e-05
+        }
+      ],
+      "prompt_tokens": 3832,
+      "cached_tokens": 1869,
+      "completion_tokens": 132,
+      "reasoning_tokens": 0,
+      "cost": 0.00028099
+    }
+  ]
+}
