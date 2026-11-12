@@ -31,9 +31,8 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
   to chance (kappa at most 0.21). Against our labels of the 15 disputed methods it reaches 0.60,
   because the tests often check things the docstring does not say. With medium effort all the
   judge's concrete claims were true, so we keep the judge with medium effort.
-- [x] **Setups C1 and C2 on the development classes** (7 Nov). C2: 3 methods fixed, 2 broken. C1:
-  no change. Both start from worse first versions than C0, so the coder's randomness hides the
-  effect of the feedback.
+- [x] **Setup C2 on the development classes** (7 Nov). 3 methods fixed, 2 broken. It starts from
+  worse first versions than C0, so the coder's randomness hides the effect of the feedback.
 - [x] **Checks after the literature review** (8 Nov, `pilot_controls.py`). Rewriting the rejected
   methods without feedback does about as well as C2's revisions. The judge catches 15 of 22 failing
   methods of the 9B and 5 of 19 of the 27B, whose failures are mostly hidden requirements.
@@ -50,8 +49,9 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
   than v2 differs from its own repeat, and the gain does not come from requirements found only in
   the tests (we read the changed verdicts). Otherwise v2 stays.
   Round 1 (11 Nov, 0.11 $): kappa 0.50 to 0.54 for every prompt; no variant changes more than 5
-  of 71 verdicts, and the repeat of v2 changes 1. **v2 stays**; v1 is almost as good without
-  running code. 11 of the 18 methods with a disagreement are wrong for every judge: mostly
+  of 71 verdicts, and the repeat of v2 changes 1. No variant replaces v2, and v1 is almost as
+  good without running code (kappa 0.52 against 0.54): on 12 November **v1 became the judge of
+  the study**. 11 of the 18 methods with a disagreement are wrong for every judge: mostly
   docstring and tests saying different things. The labels by hand (`label_sheet.py`) come after
   the midway.
 - [x] **C3 and the judge's confidence, built** (12 Nov, no request sent). C3 is C2 where the
@@ -66,10 +66,10 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
   Result: the field does not move the verdicts (1 of 71 changes, as in the repeat of v2), but
   the confidence says little. It goes from 82 to 100, 68 of 71 verdicts have 95 or more, and 11
   of the 15 verdicts the tests contradict have 99 or 100; the confirmed verdict has the higher
-  one in 64% of the pairs. The second rule fails: **the full runs use v2 without the
+  one in 64% of the pairs. The second rule fails: **the full runs do not use the
   confidence**, and the second look is not tried, since any threshold would send back 3 methods
   at most.
-- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes, with the 9B and judge v2;
+- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes, with the 9B and judge v1;
   then we tell the instructors the budget spent.
 - [ ] **One full run of C3** (14 to 15 Nov) on the same classes, taking from C2 every first
   version and review whose input is the same (`loop.py --reuse`): between two runs of the 9B,
@@ -100,6 +100,8 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
 
 ## Decisions of 12 November (the simplest version for the midway)
 
+- [x] **The judge of the study is v1**: it only reads the code and runs nothing. On the pilot it
+  agrees with the tests about as often as the judges that run code (kappa 0.52 against 0.54).
 - [x] **Only C2 and C3 before the midway.** The checks by hand of judge against tests, and a
   judge that writes tests of its own, come after.
 - [x] **C3: the memory is the judge's earlier reviews of the same class**, as in the paper's
@@ -110,7 +112,8 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
 ## Decisions of 11 November (the instructors' answer)
 
 - [x] **C1 is dropped**: the study is about feedback given step by step. C2 first, C3 if time and
-  budget allow; the budget of C1 goes to more prompt trials for the judge.
+  budget allow; the budget of C1 goes to more prompt trials for the judge. Its code and its pilot
+  runs were removed on 12 November.
 - [x] **The judge never sees the tests.** It works only with what exists when the code is written:
   the docstring and the code so far. The tests only give the grade.
 - [x] **The coder never sees the tests and runs no code.** Its memory is the judge's verdict in the
@@ -178,6 +181,5 @@ Engineering AI Systems, USI
 - [x] **The lab note "classes with the 1st methods implemented"** meant the method order, already
   done.
 - [x] **Coder memory and tests for the coder** (11 Nov): neither; see the decisions above.
-- [ ] **Can the judge run code of its own (`run_python`)** on the class written so far? To ask at the
-  lab of 12 November.
+- [x] **Can the judge run code of its own (`run_python`)?** (12 Nov) No: the study uses judge v1.
 - [x] **Judge effort** (7 Nov). Medium: its claims were all true.

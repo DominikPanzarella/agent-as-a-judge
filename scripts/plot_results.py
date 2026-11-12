@@ -152,7 +152,7 @@ def disagreements():
 
 
 def setups_first_final(task_ids):
-    runs = [("C0, run 1", "C0"), ("C0, run 2", "C0-r2"), ("C1", "C1-v2-medium"), ("C2", "C2-v2-medium")]
+    runs = [("C0, run 1", "C0"), ("C0, run 2", "C0-r2"), ("C2", "C2-v2-medium")]
     rows = []
     for label, name in runs:
         results = pilot_report.load(ROOT / "runs" / name, task_ids)

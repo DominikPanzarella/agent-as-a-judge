@@ -1,12 +1,14 @@
 """Analysis of the runs: pass rates, judge scores and comparisons between setups. Sends no request.
 
 For each run: methods and classes passing (with and without the weak methods) and, when there is a
-judge, its agreement, kappa, TPR and TNR on the first versions. For each pair of runs: an exact
-McNemar test and a bootstrap interval over classes. --sample N writes N disagreements per run to
+judge, its agreement, kappa, TPR and TNR on the first versions, and the final versions against
+the first ones. For each pair of runs, and for final against first versions: an exact McNemar
+test and a bootstrap interval over classes. --sample N writes N disagreements per run to
 runs/error_analysis_<run>.csv, to classify by hand.
 
-    .venv/bin/python scripts/analyze.py --classes dev C0 C1-v2-medium C2-v2-medium
-    .venv/bin/python scripts/analyze.py --classes test C0 C2-v2-medium --sample 20
+    .venv/bin/python scripts/analyze.py --classes dev C0 C2-v2-medium
+    .venv/bin/python scripts/analyze.py --classes test C2-9b C3-9b
+    .venv/bin/python scripts/analyze.py --classes test C2-9b --sample 20
 """
 import argparse
 import csv
@@ -65,10 +67,6 @@ def judge_rows(results):
                       "passed": m["passed_first"], "reason": m["review"]["reason"],
                       "revised": m["revision"] is not None, "passed_final": m["passed"]}
                      for m in r["methods"] if m.get("review")]
-        elif r.get("setup") == "C1" and r.get("review"):
-            rows.append({"task_id": t, "method_name": "(whole class)", "verdict": r["review"]["verdict"],
-                         "passed": r["class_passed_first"], "reason": r["review"]["reason"],
-                         "revised": r["revision"] is not None, "passed_final": r["class_passed"]})
     return rows
 
 
@@ -81,22 +79,25 @@ def describe(name, results, weak):
     rows = judge_rows(results)
     if not rows:
         return
-    unit = "classes" if rows[0]["method_name"] == "(whole class)" else "methods"
     a = judge.agreement(rows)
-    print(f"  judge on first versions ({a['n']} {unit}): agreement {a['accuracy']:.2f}, kappa {a['kappa']:.2f}, "
+    print(f"  judge on first versions ({a['n']} methods): agreement {a['accuracy']:.2f}, kappa {a['kappa']:.2f}, "
           f"TPR {a['tpr']:.2f} of {a['n_passing']} passing, TNR {a['tnr']:.2f} of {a['n_failing']} failing")
     first = {(t, m["method_name"]): bool(m["passed_first"]) for t, r in results.items() for m in r["methods"]}
     fixed = sum(not first[k] and out[k] for k in out)
     broken = sum(first[k] and not out[k] for k in out)
-    p = binomtest(min(fixed, broken), fixed + broken).pvalue if fixed + broken else 1.0
-    print(f"  revisions: {sum(r['revised'] for r in rows)} after a NOT OK; methods fixed {fixed}, "
-          f"broken {broken} (McNemar p = {p:.3f})")
+    print(f"  revisions: {sum(r['revised'] for r in rows)} after a NOT OK; methods fixed {fixed}, broken {broken}")
+    paired("first versions", first, "final versions", out)
 
 
 def compare(name_a, a, name_b, b):
-    common = sorted(set(a) & set(b))
-    oa, ob = outcomes({t: a[t] for t in common}), outcomes({t: b[t] for t in common})
+    common = set(a) & set(b)
+    paired(name_a, outcomes({t: a[t] for t in common}), name_b, outcomes({t: b[t] for t in common}))
+
+
+def paired(name_a, oa, name_b, ob):
+    """The same methods under two conditions: exact McNemar test and bootstrap over classes."""
     keys = sorted(set(oa) & set(ob))
+    common = sorted({k[0] for k in keys})
     only_a = sum(oa[k] and not ob[k] for k in keys)
     only_b = sum(ob[k] and not oa[k] for k in keys)
     p = binomtest(min(only_a, only_b), only_a + only_b).pvalue if only_a + only_b else 1.0
@@ -132,7 +133,7 @@ def sample_disagreements(name, results, n):
 
 def main():
     parser = argparse.ArgumentParser(description="Pass rates, judge scores and comparisons between runs.")
-    parser.add_argument("runs", nargs="+", help="folders in runs/, such as C0 C1-v2-medium C2-v2-medium")
+    parser.add_argument("runs", nargs="+", help="folders in runs/, such as C2-9b C3-9b")
     parser.add_argument("--classes", choices=["dev", "test", "all"], default="test",
                         help="dev: the 10 development classes; test: the other 61 (default); all: the 71")
     parser.add_argument("--sample", type=int, default=0, help="disagreements to write for the error analysis")

@@ -29,6 +29,8 @@ CASES = OUT / "pilot_9b_cases.md"
 RATERS = [OUT / "pilot_9b_rater1.csv", OUT / "pilot_9b_rater2.csv"]
 CONSENSUS = OUT / "pilot_9b_consensus.csv"
 N_AGREEMENTS = 10
+# The judges of round 1 (11 November). A judge tried later must not change the cases.
+JUDGES = ["v1-medium", "v2-medium", "v2-medium-r2", "v3-medium", "v4-medium", "v5-medium"]
 SEED = 2026
 LABELS = ["correct", "wrong", "unclear"]
 FIELDS = ["case", "run", "task_id", "method_name", "label", "kind", "note"]
@@ -80,7 +82,7 @@ def failing_tests(task, source, name):
 
 def cases():
     """The disagreements of any judge, plus a sample of the methods where v2 agrees with the tests."""
-    names = compare_judges.judges()
+    names = JUDGES
     verdicts = {name: compare_judges.verdicts(name) for name in names}
     keys = sorted({k for v in verdicts.values() for k, m in v.items() if not compare_judges.right(m)})
     agree = sorted(k for k, m in verdicts[compare_judges.BASE].items()

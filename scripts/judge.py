@@ -1,4 +1,4 @@
-"""The judge: GPT-6 Luna says whether a method, or a whole class, does what its docstring says.
+"""The judge: GPT-6 Luna says whether a method does what its docstring says.
 
 It sees the class skeleton, the methods written before and the new one, never the tests, which
 only give the grade. It answers in JSON with a reason and a verdict, OK or NOT OK. Judge v1 only
@@ -94,18 +94,6 @@ PLAN_NOTE = (
 INSTRUCTIONS = {"v1": SYSTEM, "v2": SYSTEM_TOOLS, "v3": SYSTEM_TOOLS + SCOPE_NOTE,
                 "v4": SYSTEM_TOOLS + SEVERITY_NOTE, "v5": SYSTEM_TOOLS + PLAN_NOTE}
 
-# Setup C1: the judge reads the finished class instead of one method.
-SYSTEM_CLASS = (
-    "You review Python code. A developer has written a whole class, one method at a time. Decide "
-    "whether every method does what its docstring says, given the rest of the class. Look for "
-    "wrong results, exceptions, cases in the docstrings that the code does not handle, and uses "
-    "of fields or methods that the class does not have. Answer OK if all methods are correct and "
-    "NOT OK if you find a concrete problem. In the reason, name each method with a problem and "
-    "say briefly what is wrong and how to fix it, or say why the class is correct. The reason "
-    "must explain the verdict: never write only OK or NOT OK there."
-)
-SYSTEM_CLASS_TOOLS = SYSTEM_CLASS + TOOLS_NOTE
-
 # Structured output: the reply is always this JSON object. The reason comes first, so the
 # verdict follows from it.
 def verdict_format(reason, confidence=False):
@@ -135,8 +123,6 @@ METHOD_REASON = ("One or two sentences: what is wrong and how to fix it, "
                  "or why the method is correct. Not the verdict alone.")
 VERDICT_FORMAT = verdict_format(METHOD_REASON)
 VERDICT_FORMAT_CONFIDENCE = verdict_format(METHOD_REASON, confidence=True)
-CLASS_VERDICT_FORMAT = verdict_format("Each method with a problem, what is wrong and how to fix it, "
-                                      "or why the class is correct. Not the verdict alone.")
 
 RUN_PYTHON = {
     "type": "function",
@@ -180,13 +166,6 @@ def prompt(task, written, name, code, memory=None):
     parts += ["", f"The developer has just written the method `{name}`:", "",
               "```python", code, "```", "", f"Is `{name}` correct?"]
     return "\n".join(parts)
-
-
-def class_prompt(task, source):
-    return "\n".join([f"This is the skeleton of the class {task['class_name']}:", "",
-                      "```python", coder.skeleton(task), "```", "",
-                      "The developer has written the whole class:", "",
-                      "```python", source, "```", "", f"Is the class {task['class_name']} correct?"])
 
 
 def ask(client, instructions, input, effort, tools=None, tool_choice=None, previous=None,
@@ -275,14 +254,6 @@ def judge_any(client, task, written, name, code, version="v1", effort=EFFORT, me
         return judge_method(client, task, written, name, code, effort, memory, confidence, min_confidence)
     return judge_method_with_tools(client, task, written, name, code, effort, version, memory,
                                    confidence, min_confidence)
-
-
-def judge_class(client, task, written, version="v1", effort=EFFORT):
-    """Setup C1: one verdict on the finished class, with v1 or v2."""
-    source = harness.build_class(task, written)
-    instructions = SYSTEM_CLASS if version == "v1" else SYSTEM_CLASS_TOOLS
-    return review(client, task, instructions, class_prompt(task, source), source, version, effort,
-                  CLASS_VERDICT_FORMAT)
 
 
 def review(client, task, instructions, content, source, version, effort, text_format=VERDICT_FORMAT,

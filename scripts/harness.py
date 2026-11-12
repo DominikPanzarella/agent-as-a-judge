@@ -10,7 +10,6 @@ data/selection/weak_tests.csv).
 import ast
 import csv
 import json
-import os
 import re
 import subprocess
 import sys

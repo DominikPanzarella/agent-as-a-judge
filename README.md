@@ -35,7 +35,6 @@ worker improve each other (a "flywheel"). We test both ideas on tasks with real 
 ![Architecture](docs/architecture_base.png)
 
 Blue parts are built and were tried in the pilot; the orange part is built for C3 and not run yet.
-The first diagram, from before the pilot, is in `docs/architecture.svg`.
 
 Both setups have a coder and a judge:
 
@@ -44,15 +43,12 @@ Both setups have a coder and a judge:
 | C2 | after each method the judge reviews it; one revision of that method, then the next method | piloted |
 | C3 | as C2, and the judge also reads its earlier reviews of the same class (its memory); nothing from the tests reaches it | built, not run yet |
 
-C1, with one review of the finished class, was piloted but is dropped (11 November): the study is
-about feedback given step by step.
-
 There is no setup without the judge: the baseline is inside each setup, in the first version of
 each method, written before any feedback.
 
 **One method in C2.** (1) The coder writes the method. (2) The judge gets the skeleton with the
-docstrings, the methods written so far and the new one, never the tests; v2 may also run code of its
-own on the class written so far. (3) It answers OK or NOT OK with a reason. (4) After a NOT OK the
+docstrings, the methods written so far and the new one, never the tests, and it runs no code.
+(3) It answers OK or NOT OK with a reason. (4) After a NOT OK the
 coder gets the reason in the same conversation and rewrites the method once. (5) The final version
 joins the methods already written, and the next method starts. When the class is finished, the
 harness runs all its tests on the first and on the final versions: that is the grade.
@@ -70,11 +66,12 @@ harness runs all its tests on the first and on the final versions: that is the g
   tokens per request. It writes one method at a time and rewrites it after a NOT OK, without ever
   seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
-  the reason is the feedback. v1 only reads the code; v2 can also run it up to 5 times. It never sees
-  the tests. Two options are built and not used in the full runs: it adds to the verdict how sure
-  it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the method again, at
-  most twice (`--min-confidence`). On the pilot classes the confidence was 95 or more for 68 of
-  71 verdicts, right or wrong.
+  the reason is the feedback. The judge of the study is v1: it only reads the code and never sees
+  the tests. The pilot also tried judges that run code of their own (v2 to v5), which agreed with
+  the tests about as often (kappa 0.50 to 0.54, v1 0.52). Two options are built and not used in
+  the full runs: the judge adds to the verdict how sure it is, from 0 to 100 (`--confidence`),
+  and below a threshold it looks at the method again, at most twice (`--min-confidence`). On the
+  pilot classes the confidence was 95 or more for 68 of 71 verdicts, right or wrong.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.
@@ -89,7 +86,8 @@ harness runs all its tests on the first and on the final versions: that is the g
 **Plan for the midway report** (12 November)
 
 - **The judge on the pilot classes** (done). Five prompts tried on the 9B's methods of the 10 pilot
-  classes; none beats v2 by more than v2 differs from its own repeat, so v2 stays.
+  classes; the ones that run code do not beat v1 by more than a judge differs from its own
+  repeat, so the study uses v1.
 - **One full run of C2** on the 61 test classes, then a report of the budget spent.
 - **One full run of C3** on the same classes. It takes from C2 every first version and review
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
@@ -131,12 +129,12 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_55
 .venv/bin/python scripts/coder.py --all
 
-# the judge on a finished run (v1 reads, v2 can also run code)
-.venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
+# the judge on a finished run (v1 reads; v2 to v5, tried in the pilot, can also run code)
+.venv/bin/python scripts/judge.py C0-9b --version v1 --effort medium --all
 
-# C2 and C3: coder and judge together (C1 was only piloted)
-.venv/bin/python scripts/loop.py C2 --judge v2 --effort medium --model qwen/qwen3.5-9b --name C2-9b --all
-.venv/bin/python scripts/loop.py C3 --judge v2 --effort medium --model qwen/qwen3.5-9b --name C3-9b --reuse C2-9b --all
+# C2 and C3: coder and judge together
+.venv/bin/python scripts/loop.py C2 --name C2-9b --all
+.venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --all
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot
