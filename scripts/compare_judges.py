@@ -1,15 +1,18 @@
 """The prompt variants of the judge on the pilot classes, from saved verdicts. Sends no request.
 
 Every judge found in runs/judge for both pilot runs of the 9B (C0-9b and C0-9b-r2) is compared
-with the tests: TPR, TNR, kappa and cost. Each judge is also compared with v2 on the same methods:
-how many methods only one of the two gets right, with an exact McNemar test. The repeat of v2
-(tag r2) shows how much v2 changes on its own, the noise a variant has to beat. For a judge that
-gives a confidence, it also says whether the confidence is lower on the verdicts the tests
-contradict. Disagreements with the tests go to runs/judge_variants_disagreements.csv, to read by
-hand; the chart goes to docs/figures/judge_variants.png.
+with the tests: TPR, TNR, kappa and cost. Each judge is also compared with the judge of the study
+(v1; --base names another one) on the same methods: how many methods only one of the two gets
+right, with an exact McNemar test. A repeat (tag r2) shows how much a judge changes on its own,
+the noise a variant has to beat. For a judge that gives a confidence, it also says whether the
+confidence is lower on the verdicts the tests contradict. Disagreements with the tests go to
+runs/judge_variants_disagreements.csv, to read by hand; the chart goes to
+docs/figures/judge_variants.png.
 
     .venv/bin/python scripts/compare_judges.py
+    .venv/bin/python scripts/compare_judges.py --base v2-medium    # the comparison of 11 November
 """
+import argparse
 import csv
 
 from scipy.stats import binomtest
@@ -21,7 +24,7 @@ import plot_results as plot
 
 ROOT = harness.ROOT
 RUNS = ["C0-9b", "C0-9b-r2"]
-BASE = "v2-medium"
+BASE = "v1-medium"  # the judge of the study
 DISAGREEMENTS = ROOT / "runs/judge_variants_disagreements.csv"
 
 
@@ -93,14 +96,17 @@ def chart(rows):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="The prompt variants of the judge on the pilot classes.")
+    parser.add_argument("--base", default=BASE, help="the judge every other one is compared with")
+    base_name = parser.parse_args().base
     names = judges()
-    if BASE not in names:
-        print(f"no verdicts of {BASE} for {', '.join(RUNS)}")
+    if base_name not in names:
+        print(f"no verdicts of {base_name} for {', '.join(RUNS)}")
         return
-    base, n_test = verdicts(BASE), test_methods()
+    base, n_test = verdicts(base_name), test_methods()
     print(f"Judges on the 9B's methods of {' and '.join(RUNS)}, against the tests")
     print(f"  {'judge':<14} {'methods':>7} {'TPR':>5} {'TNR':>5} {'kappa':>6} {'runs/m':>7} {'$/method':>9} "
-          f"{f'$ for {n_test}':>10}   vs {BASE}: only it right / only {BASE} right, McNemar p")
+          f"{f'$ for {n_test}':>10}   vs {base_name}: only it right / only {base_name} right, McNemar p")
     rows, wrong = [], []
     for name in names:
         v = verdicts(name)
@@ -111,7 +117,7 @@ def main():
         only_it = sum(right(v[k]) and not right(base[k]) for k in common)
         only_base = sum(right(base[k]) and not right(v[k]) for k in common)
         p = binomtest(min(only_it, only_base), only_it + only_base).pvalue if only_it + only_base else 1.0
-        versus = "" if name == BASE else f"{only_it:>3} / {only_base:<3} p = {p:.2f}"
+        versus = "" if name == base_name else f"{only_it:>3} / {only_base:<3} p = {p:.2f}"
         print(f"  {name:<14} {a['n']:>7} {a['tpr']:>5.2f} {a['tnr']:>5.2f} {a['kappa']:>6.2f} {runs:>7.1f} "
               f"{cost:>9.5f} {cost * n_test:>10.3f}   {versus}")
         rows.append({"judge": name, **a})

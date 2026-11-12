@@ -27,14 +27,6 @@ SEED = 2026
 N_BOOT = 10000
 
 
-def class_ids(which):
-    kept = [t["task_id"] for t in harness.load_tasks()]
-    with (ROOT / "data/selection/dev_classes.csv").open(encoding="utf-8") as f:
-        dev = {r["task_id"] for r in csv.DictReader(f)}
-    return {"dev": [t for t in kept if t in dev], "test": [t for t in kept if t not in dev],
-            "all": kept}[which]
-
-
 def weak_methods():
     with (ROOT / "data/selection/weak_tests.csv").open(encoding="utf-8") as f:
         return {(r["task_id"], r["method_name"]) for r in csv.DictReader(f)}
@@ -139,7 +131,7 @@ def main():
     parser.add_argument("--sample", type=int, default=0, help="disagreements to write for the error analysis")
     args = parser.parse_args()
 
-    task_ids, weak = class_ids(args.classes), weak_methods()
+    task_ids, weak = harness.class_ids(args.classes), weak_methods()
     runs = {name: load_run(name, task_ids) for name in args.runs}
     print(f"{args.classes} classes: {len(task_ids)}")
     for name, results in runs.items():

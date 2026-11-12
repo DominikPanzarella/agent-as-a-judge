@@ -68,10 +68,12 @@ harness runs all its tests on the first and on the final versions: that is the g
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
   the reason is the feedback. The judge of the study is v1: it only reads the code and never sees
   the tests. The pilot also tried judges that run code of their own (v2 to v5), which agreed with
-  the tests about as often (kappa 0.50 to 0.54, v1 0.52). Two options are built and not used in
-  the full runs: the judge adds to the verdict how sure it is, from 0 to 100 (`--confidence`),
-  and below a threshold it looks at the method again, at most twice (`--min-confidence`). On the
-  pilot classes the confidence was 95 or more for 68 of 71 verdicts, right or wrong.
+  the tests about as often (kappa 0.50 to 0.54, v1 0.52), and two variants of v1 itself (v6, v7),
+  which did not beat it: between two passes of v1, 7 of 71 verdicts change, more than either
+  variant gains. Two options are built and not used in the full runs: the judge adds to the
+  verdict how sure it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the
+  method again, at most twice (`--min-confidence`). On the pilot classes the confidence was 95
+  or more for 68 of 71 verdicts, right or wrong.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.
@@ -85,9 +87,8 @@ harness runs all its tests on the first and on the final versions: that is the g
 
 **Plan for the midway report** (12 November)
 
-- **The judge on the pilot classes** (done). Five prompts tried on the 9B's methods of the 10 pilot
-  classes; the ones that run code do not beat v1 by more than a judge differs from its own
-  repeat, so the study uses v1.
+- **The judge on the pilot classes** (done). Seven prompts tried on the 9B's methods of the 10 pilot
+  classes; none beats v1 by more than a judge differs from its own repeat, so the study uses v1.
 - **One full run of C2** on the 61 test classes, then a report of the budget spent.
 - **One full run of C3** on the same classes. It takes from C2 every first version and review
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
@@ -129,12 +130,12 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_55
 .venv/bin/python scripts/coder.py --all
 
-# the judge on a finished run (v1 reads; v2 to v5, tried in the pilot, can also run code)
+# the judge on a finished run (v1, v6 and v7 only read; v2 to v5, tried in the pilot, can also run code)
 .venv/bin/python scripts/judge.py C0-9b --version v1 --effort medium --all
 
 # C2 and C3: coder and judge together
-.venv/bin/python scripts/loop.py C2 --name C2-9b --all
-.venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --all
+.venv/bin/python scripts/loop.py C2 --name C2-9b --classes test
+.venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --classes test
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot

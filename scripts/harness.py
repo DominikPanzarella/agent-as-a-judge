@@ -22,6 +22,7 @@ CLASSEVAL = ROOT / "data/raw/classeval/ClassEval_data.json"
 CLASSES = ROOT / "data/selection/classes.csv"
 REFERENCE_CHECK = ROOT / "data/selection/reference_check.csv"
 WEAK_TESTS = ROOT / "data/selection/weak_tests.csv"
+DEV_CLASSES = ROOT / "data/selection/dev_classes.csv"
 
 TIMEOUT = 10  # seconds for one test class
 MARK = "@@RESULT@@"
@@ -53,6 +54,15 @@ def load_tasks(kept_only=True):
         return tasks
     kept = {r["task_id"] for r in csv.DictReader(CLASSES.open(encoding="utf-8")) if r["kept"] == "1"}
     return [t for t in tasks if t["task_id"] in kept]
+
+
+def class_ids(which):
+    """Kept task ids: the 10 development classes ("dev"), the other 61 ("test") or all 71 ("all")."""
+    kept = [t["task_id"] for t in load_tasks()]
+    with DEV_CLASSES.open(encoding="utf-8") as f:
+        dev = {r["task_id"] for r in csv.DictReader(f)}
+    return {"dev": [t for t in kept if t in dev], "test": [t for t in kept if t not in dev],
+            "all": kept}[which]
 
 
 def parses_in_class(member):

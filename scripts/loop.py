@@ -11,8 +11,8 @@ setups differ only where the judge does, and not because the coder writes a meth
 The defaults are the study's: coder qwen3.5-9b, judge v1 with medium effort.
 
     .venv/bin/python scripts/loop.py C3 --dry-run ClassEval_19
-    .venv/bin/python scripts/loop.py C2 --name C2-9b --all
-    .venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --all
+    .venv/bin/python scripts/loop.py C2 --name C2-9b --classes test
+    .venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --classes test
 """
 import argparse
 import json
@@ -163,9 +163,11 @@ def main():
     parser = argparse.ArgumentParser(description="Setups C2 and C3: coder, judge and one revision.")
     parser.add_argument("setup", choices=SETUPS)
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
-    parser.add_argument("--all", action="store_true", help="every kept class")
+    parser.add_argument("--classes", choices=["dev", "test"],
+                        help="dev: the 10 development classes; test: the other 61, the ones of the study")
+    parser.add_argument("--all", action="store_true", help="every kept class, development ones included")
     parser.add_argument("--judge", choices=judge.VERSIONS, default="v1",
-                        help="v1 only reads the code (the judge of the study); v2 to v5 can run it")
+                        help="v1 only reads the code (the judge of the study), as v6 and v7; v2 to v5 can run it")
     parser.add_argument("--effort", choices=judge.EFFORTS, default=EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--model", default=CODER, help="OpenRouter model of the coder")
     parser.add_argument("--name", help="name of the run and of its folder in runs/ (default: setup-judge-effort)")
@@ -179,10 +181,10 @@ def main():
 
     tasks = {t["task_id"]: t for t in harness.load_tasks()}
     order = coder.method_order()
-    chosen = list(tasks) if args.all else args.tasks
+    chosen = harness.class_ids(args.classes) if args.classes else list(tasks) if args.all else args.tasks
     unknown = [t for t in chosen if t not in tasks]
     if not chosen or unknown:
-        parser.error(f"give kept task ids or --all (not kept or unknown: {unknown})")
+        parser.error(f"give kept task ids, --classes or --all (not kept or unknown: {unknown})")
 
     if args.dry_run:
         task = tasks[chosen[0]]

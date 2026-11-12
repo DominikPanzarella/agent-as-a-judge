@@ -69,8 +69,20 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
   one in 64% of the pairs. The second rule fails: **the full runs do not use the
   confidence**, and the second look is not tried, since any threshold would send back 3 methods
   at most.
-- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes, with the 9B and judge v1;
-  then we tell the instructors the budget spent.
+- [x] **Prompt variants of the judge that only reads** (12 Nov, 0.05 $). The variants of
+  11 November were tried on v2, which runs code; v1 has one prompt so far. v6 is v1 with the
+  paragraph of v3 (judge only what the docstring asks) and v7 is v1 with the paragraph of v4
+  (fail only serious problems); neither needs to run code. Rule fixed before the runs, the one of
+  11 November: a variant replaces v1 only if the methods it gets right and v1 gets wrong, minus
+  the opposite ones, are more than the verdicts that change between v1 and its own repeat, and
+  the gain does not come from requirements found only in the tests (we read the changed
+  verdicts). If both pass, the one with more methods right. Otherwise v1 stays.
+  Result: the repeat of v1 changes 7 of 71 verdicts. v6 gets 2 methods right that v1 gets wrong
+  and 3 the other way; v7 gets 5 and 4. Neither gain is more than 7, so **v1 stays**. Kappa
+  goes from 0.47 (v6) to 0.59 (the repeat of v1). v1 changes more between two passes than v2
+  did (1 of 71): about one verdict in ten of the judge is noise.
+- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes (`loop.py --classes test`),
+  with the 9B and judge v1; then we tell the instructors the budget spent.
 - [ ] **One full run of C3** (14 to 15 Nov) on the same classes, taking from C2 every first
   version and review whose input is the same (`loop.py --reuse`): between two runs of the 9B,
   18% of the pilot methods change result, more than any effect we expect from the memory.

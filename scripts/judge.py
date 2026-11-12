@@ -5,8 +5,10 @@ only give the grade. It answers in JSON with a reason and a verdict, OK or NOT O
 reads the code; v2 can also run Python up to 5 times on the class written so far. v3, v4 and v5
 are v2 with one more paragraph, the prompt variants tried on the pilot classes (11 November): v3
 judges only what the docstring asks, v4 sorts each problem by kind and fails only the serious
-ones, v5 tries every behaviour the docstring describes. All use the Responses API, because Chat
-Completions does not accept tools with a reasoning effort for this model.
+ones, v5 tries every behaviour the docstring describes. v6 and v7 are v1 with the paragraph of v3
+and of v4: the same two variants for the judge that only reads (12 November). All use the
+Responses API, because Chat Completions does not accept tools with a reasoning effort for this
+model.
 
 Three options work with every version. With a memory (setup C3) the judge also reads its earlier
 reviews of the same class. With --confidence it adds to the verdict how sure it is, from 0 to 100.
@@ -19,6 +21,7 @@ Run as a script, it judges a finished run and compares the verdicts with the tes
     .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
     .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --tag r2 --all   # a repeat
     .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --confidence --tag conf --all
+    .venv/bin/python scripts/judge.py C0-9b --version v6 --effort medium --all
 """
 import argparse
 import json
@@ -38,7 +41,8 @@ import harness
 
 ROOT = harness.ROOT
 MODEL = "gpt-6-luna"
-VERSIONS = ["v1", "v2", "v3", "v4", "v5"]
+VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7"]
+READ_ONLY = ("v1", "v6", "v7")  # these judges get no tool: they only read the code
 EFFORTS = ["low", "medium"]  # the course allows low or medium reasoning effort
 EFFORT = "low"  # with "low", GPT-6 Luna used no reasoning tokens in the first test
 MAX_RUNS = 5  # code runs that judge v2 may ask for on one method, and again on each new look
@@ -70,6 +74,7 @@ TOOLS_NOTE = (
 SYSTEM_TOOLS = SYSTEM + TOOLS_NOTE
 
 # The prompt variants, each added to v2. Each one targets an error of v2 on the pilot of the 9B.
+# The first two need no tool, so v6 and v7 add them to v1.
 # v3: the judge failed correct methods for checks or messages the docstring does not ask for
 # (CodeJudge, Tong and Zhang 2024, found the same over-strict error handling).
 SCOPE_NOTE = (
@@ -92,7 +97,8 @@ PLAN_NOTE = (
     "check several cases in one run."
 )
 INSTRUCTIONS = {"v1": SYSTEM, "v2": SYSTEM_TOOLS, "v3": SYSTEM_TOOLS + SCOPE_NOTE,
-                "v4": SYSTEM_TOOLS + SEVERITY_NOTE, "v5": SYSTEM_TOOLS + PLAN_NOTE}
+                "v4": SYSTEM_TOOLS + SEVERITY_NOTE, "v5": SYSTEM_TOOLS + PLAN_NOTE,
+                "v6": SYSTEM + SCOPE_NOTE, "v7": SYSTEM + SEVERITY_NOTE}
 
 # Structured output: the reply is always this JSON object. The reason comes first, so the
 # verdict follows from it.
@@ -218,10 +224,10 @@ def look_again(tools):
 
 
 def judge_method(client, task, written, name, code, effort=EFFORT, memory=None, confidence=False,
-                 min_confidence=None):
-    """Judge v1 on one method: one request, the judge only reads the code."""
-    return review(client, task, SYSTEM, prompt(task, written, name, code, memory), None, "v1", effort,
-                  method_format(confidence or min_confidence is not None), min_confidence)
+                 min_confidence=None, version="v1"):
+    """Judge v1 (or v6, v7) on one method: one request, the judge only reads the code."""
+    return review(client, task, INSTRUCTIONS[version], prompt(task, written, name, code, memory), None,
+                  version, effort, method_format(confidence or min_confidence is not None), min_confidence)
 
 
 def run_python(source, code):
@@ -250,8 +256,9 @@ def judge_method_with_tools(client, task, written, name, code, effort=EFFORT, ve
 def judge_any(client, task, written, name, code, version="v1", effort=EFFORT, memory=None,
               confidence=False, min_confidence=None):
     """One method with any version of the judge."""
-    if version == "v1":
-        return judge_method(client, task, written, name, code, effort, memory, confidence, min_confidence)
+    if version in READ_ONLY:
+        return judge_method(client, task, written, name, code, effort, memory, confidence, min_confidence,
+                            version)
     return judge_method_with_tools(client, task, written, name, code, effort, version, memory,
                                    confidence, min_confidence)
 
@@ -261,7 +268,7 @@ def review(client, task, instructions, content, source, version, effort, text_fo
     """One review by the judge. v1 answers at once; v2 may first run code on `source`, up to
     MAX_RUNS times, and then gives its verdict. With `min_confidence`, a verdict below it sends
     the judge to look again, at most MAX_LOOKS times; the last answer counts."""
-    tools = [RUN_PYTHON] if version != "v1" else None
+    tools = [RUN_PYTHON] if version not in READ_ONLY else None
     runs, requests, looks = [], [], []
     message, previous = content, None
     while True:
@@ -388,7 +395,8 @@ def main():
     parser = argparse.ArgumentParser(description="The judge on the methods of a finished run.")
     parser.add_argument("setup", help="the run to judge, such as C0")
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
-    parser.add_argument("--version", choices=VERSIONS, default="v1", help="v2 to v5 can run code")
+    parser.add_argument("--version", choices=VERSIONS, default="v1",
+                        help="v1, v6 and v7 only read the code; v2 to v5 can run it")
     parser.add_argument("--effort", choices=EFFORTS, default=EFFORT, help="reasoning effort of the judge")
     parser.add_argument("--tag", default="", help="suffix of the folder, such as r2 for a repeat")
     parser.add_argument("--confidence", action="store_true", help="the judge also says how sure it is, 0 to 100")
@@ -414,7 +422,7 @@ def main():
         m = next(m for m in run["methods"] if m["valid"])
         print("SYSTEM:\n" + INSTRUCTIONS[args.version] + "\n\nUSER:\n"
               + prompt(tasks[chosen[0]], {}, m["method_name"], m["code"]))
-        if args.version != "v1":
+        if args.version not in READ_ONLY:
             print("\nTOOL:\n" + json.dumps(RUN_PYTHON, indent=2))
         if args.confidence or args.min_confidence is not None:
             print("\nANSWER:\n" + json.dumps(VERDICT_FORMAT_CONFIDENCE["format"]["schema"], indent=2))
