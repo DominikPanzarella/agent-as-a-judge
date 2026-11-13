@@ -34,14 +34,14 @@ worker improve each other (a "flywheel"). We test both ideas on tasks with real 
 
 ![Architecture](docs/architecture_base.png)
 
-Blue parts are built and were tried in the pilot; the orange part is built for C3 and not run yet.
+Blue parts are in both setups; the orange part is only in C3.
 
 Both setups have a coder and a judge:
 
 | Setup | Feedback to the coder | Status |
 |---|---|---|
-| C2 | after each method the judge reviews it; one revision of that method, then the next method | piloted |
-| C3 | as C2, and the judge also reads its earlier reviews of the same class (its memory); nothing from the tests reaches it | built, not run yet |
+| C2 | after each method the judge reviews it; one revision of that method, then the next method | run on the 61 test classes |
+| C3 | as C2, and the judge also reads its earlier reviews of the same class (its memory); nothing from the tests reaches it | run on the 61 test classes |
 
 There is no setup without the judge: the baseline is inside each setup, in the first version of
 each method, written before any feedback.
@@ -89,8 +89,8 @@ harness runs all its tests on the first and on the final versions: that is the g
 
 - **The judge on the pilot classes** (done). Seven prompts tried on the 9B's methods of the 10 pilot
   classes; none beats v1 by more than a judge differs from its own repeat, so the study uses v1.
-- **One full run of C2** on the 61 test classes, then a report of the budget spent.
-- **One full run of C3** on the same classes. It takes from C2 every first version and review
+- **One full run of C2** (done) on the 61 test classes, then a report of the budget spent.
+- **One full run of C3** (done) on the same classes. It takes from C2 every first version and review
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
   verdict.
 
@@ -168,7 +168,37 @@ is one, the token counts, the cost and the test result.
 
 ## 6. Results so far
 
-[TODO] Completing...
+One full run of each setup on the 61 test classes (251 methods), on 12 November: coder
+`qwen3.5-9b`, judge v1 with medium effort.
+
+| | C2 | C3 |
+|---|---|---|
+| Methods passing, first versions | 165 (65.7%) | 169 (67.3%) |
+| Methods passing, final versions | 186 (74.1%) | 182 (72.5%) |
+| Final minus first, in points, with 95% interval | +8.4 [+4.4, +12.9] | +5.2 [+1.7, +9.4] |
+| Methods fixed, broken | 22, 1 | 14, 1 |
+| NOT OK and revisions | 75 | 75 |
+| Judge on first versions: TPR, TNR, kappa | 0.76, 0.55, 0.30 | 0.77, 0.59, 0.33 |
+| Cost | 0.18 $ | 0.09 $ |
+
+![Methods passing before and after the feedback](docs/figures/full_first_final.png)
+
+- **RQ1.** After the feedback more methods pass in both setups. In the pilot, rewriting a
+  rejected method without feedback did about as well, so the gain is feedback and second
+  attempt together; the full runs have no such control yet.
+- **RQ2.** C3 against C2 on the final versions: -1.6 points [-4.7, +1.5], McNemar p = 0.42.
+  With the memory the judge changes 10 of 95 verdicts on the same code, as many as between two
+  passes of the same judge on the pilot (7 of 71).
+
+![Differences with their intervals](docs/figures/full_differences.png)
+
+- **RQ3.** Against the tests the judge has a kappa of 0.30 on the test classes and 0.52 on the
+  pilot ones. Who is wrong, the judge or the tests, needs our labels, after the midway.
+
+![The judge against the tests](docs/figures/full_judge.png)
+
+In C2, 21 of the 251 first replies (8%) had no usable method: the coder spent its 4000 tokens
+on reasoning. They get no review and count as failing before and after.
 
 ## 7. References and data
 

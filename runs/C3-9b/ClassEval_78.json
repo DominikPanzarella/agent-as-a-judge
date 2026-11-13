@@ -1,0 +1,263 @@
+{
+  "task_id": "ClassEval_78",
+  "class_name": "SplitSentence",
+  "setup": "C3",
+  "name": "C3-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": "C2-9b",
+  "methods": [
+    {
+      "method_name": "split_sentences",
+      "first": {
+        "code": "def split_sentences(self, sentences_string):\n    \"\"\"\n    Split a string into a list of sentences. Sentences end with . or ? and with a space after that. Please note that Mr. also end with . but are not sentences.\n    :param sentences_string: string, string to split\n    :return:list, split sentence list\n    >>> ss = SplitSentence()\n    >>> ss.split_sentences(\"aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?\")\n    ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']\n    \"\"\"\n\n    # Split on sentence-ending punctuation followed by space\n    return re.split(r'[.!?] ', sentences_string)",
+        "valid": true,
+        "reply": "```python\nimport re\n\nclass SplitSentence:\n    \"\"\"\n    The class allows to split sentences, count words in a sentence, and process a text file to find the maximum word count.\n    \"\"\"\n\n\n    def split_sentences(self, sentences_string):\n        \"\"\"\n        Split a string into a list of sentences. Sentences end with . or ? and with a space after that. Please note that Mr. also end with . but are not sentences.\n        :param sentences_string: string, string to split\n        :return:list, split sentence list\n        >>> ss = SplitSentence()\n        >>> ss.split_sentences(\"aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?\")\n        ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']\n        \"\"\"\n\n        # Split on sentence-ending punctuation followed by space\n        return re.split(r'[.!?] ', sentences_string)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 484,
+        "cached_tokens": 0,
+        "completion_tokens": 807,
+        "reasoning_tokens": 688,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "NOT OK: `re.split(r'[.!?] ', ...)` removes the punctuation and following space, so it does not return the sentences shown in the example; it can also split at `Mr.` despite the docstring\u2019s exception. Use a split pattern or logic that preserves sentence-ending punctuation and excludes `Mr.`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "NOT OK: `re.split(r'[.!?] ', ...)` removes the punctuation and following space, so it does not return the sentences shown in the example; it can also split at `Mr.` despite the docstring\u2019s exception. Use a split pattern or logic that preserves sentence-ending punctuation and excludes `Mr.`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 757,
+            "cached_tokens": 0,
+            "completion_tokens": 162,
+            "reasoning_tokens": 78,
+            "cost": 0.0001567
+          }
+        ],
+        "prompt_tokens": 757,
+        "cached_tokens": 0,
+        "completion_tokens": 162,
+        "reasoning_tokens": 78,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "DeepInfra",
+        "prompt_tokens": 795,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 4290,
+        "cost": 0.0006795
+      },
+      "final_code": "def split_sentences(self, sentences_string):\n    \"\"\"\n    Split a string into a list of sentences. Sentences end with . or ? and with a space after that. Please note that Mr. also end with . but are not sentences.\n    :param sentences_string: string, string to split\n    :return:list, split sentence list\n    >>> ss = SplitSentence()\n    >>> ss.split_sentences(\"aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?\")\n    ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']\n    \"\"\"\n\n    # Split on sentence-ending punctuation followed by space\n    return re.split(r'[.!?] ', sentences_string)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "count_words",
+      "first": {
+        "code": "def count_words(self, sentence):\n    \"\"\"\n    Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n    :param sentence:string, sentence to be counted, where words are separated by spaces\n    :return:int, number of words in the sentence\n    >>> ss.count_words(\"abc def\")\n    2\n    \"\"\"\n    words = sentence.split()\n    count = 0\n    for word in words:\n        stripped = word.strip('.,!?;:\"\\'()[]{}' + '!')\n        if stripped and not stripped.isdigit():\n            count += 1\n    return count",
+        "valid": true,
+        "reply": "\n\n```python\ndef count_words(self, sentence):\n    \"\"\"\n    Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n    :param sentence:string, sentence to be counted, where words are separated by spaces\n    :return:int, number of words in the sentence\n    >>> ss.count_words(\"abc def\")\n    2\n    \"\"\"\n    words = sentence.split()\n    count = 0\n    for word in words:\n        stripped = word.strip('.,!?;:\"\\'()[]{}' + '!')\n        if stripped and not stripped.isdigit():\n            count += 1\n    return count\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 656,
+        "cached_tokens": 0,
+        "completion_tokens": 798,
+        "reasoning_tokens": 730,
+        "cost": 0.0001853
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "NOT OK: It only strips a limited set of punctuation from token edges and only excludes tokens for which `isdigit()` is true, so punctuation-only tokens such as `\u2014` and numeric tokens such as `12.5` are counted. Use broader punctuation handling and a numeric check that also recognizes decimal numbers.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "NOT OK: It only strips a limited set of punctuation from token edges and only excludes tokens for which `isdigit()` is true, so punctuation-only tokens such as `\u2014` and numeric tokens such as `12.5` are counted. Use broader punctuation handling and a numeric check that also recognizes decimal numbers.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 990,
+            "cached_tokens": 0,
+            "completion_tokens": 381,
+            "reasoning_tokens": 300,
+            "cost": 0.0002895
+          }
+        ],
+        "prompt_tokens": 990,
+        "cached_tokens": 0,
+        "completion_tokens": 381,
+        "reasoning_tokens": 300,
+        "cost": 0.0002895
+      },
+      "revision": {
+        "code": "def count_words(self, sentence):\n    \"\"\"\n    Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n    :param sentence:string, sentence to be counted, where words are separated by spaces\n    :return:int, number of words in the sentence\n    >>> ss.count_words(\"abc def\")\n    2\n    \"\"\"\n    from string import punctuation\n    words = sentence.split()\n    count = 0\n    for word in words:\n        stripped = word.strip(punctuation)\n        if stripped and any(c.isalpha() for c in stripped):\n            count += 1\n    return count",
+        "valid": true,
+        "reply": "\n\n```python\ndef count_words(self, sentence):\n    \"\"\"\n    Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n    :param sentence:string, sentence to be counted, where words are separated by spaces\n    :return:int, number of words in the sentence\n    >>> ss.count_words(\"abc def\")\n    2\n    \"\"\"\n    from string import punctuation\n    words = sentence.split()\n    count = 0\n    for word in words:\n        stripped = word.strip(punctuation)\n        if stripped and any(c.isalpha() for c in stripped):\n            count += 1\n    return count\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 909,
+        "cached_tokens": 0,
+        "completion_tokens": 405,
+        "reasoning_tokens": 272,
+        "cost": 0.00015165
+      },
+      "final_code": "def count_words(self, sentence):\n    \"\"\"\n    Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n    :param sentence:string, sentence to be counted, where words are separated by spaces\n    :return:int, number of words in the sentence\n    >>> ss.count_words(\"abc def\")\n    2\n    \"\"\"\n    from string import punctuation\n    words = sentence.split()\n    count = 0\n    for word in words:\n        stripped = word.strip(punctuation)\n        if stripped and any(c.isalpha() for c in stripped):\n            count += 1\n    return count",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "process_text_file",
+      "first": {
+        "code": "def process_text_file(self, sentences_string):\n    \"\"\"\n    Given a text, return the number of words in the longest sentence\n    :param sentences_string: string, undivided long sentence\n    :return:int, the number of words in the longest sentence\n    >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n    4\n    \"\"\"\n    sentences = self.split_sentences(sentences_string)\n    if not sentences:\n        return 0\n    return max(self.count_words(sentence) for sentence in sentences)",
+        "valid": true,
+        "reply": "\n\n```python\ndef process_text_file(self, sentences_string):\n    \"\"\"\n    Given a text, return the number of words in the longest sentence\n    :param sentences_string: string, undivided long sentence\n    :return:int, the number of words in the longest sentence\n    >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n    4\n    \"\"\"\n    sentences = self.split_sentences(sentences_string)\n    if not sentences:\n        return 0\n    return max(self.count_words(sentence) for sentence in sentences)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 805,
+        "cached_tokens": 0,
+        "completion_tokens": 1110,
+        "reasoning_tokens": 923,
+        "cost": 0.000247
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`process_text_file` relies on `split_sentences`, which splits at `Mr.` and can therefore divide one sentence and return too small a maximum word count (for example, \u201cMr. Smith greeted everyone today.\u201d). Fix the sentence splitting to exclude that abbreviation, or otherwise handle it before counting.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`process_text_file` relies on `split_sentences`, which splits at `Mr.` and can therefore divide one sentence and return too small a maximum word count (for example, \u201cMr. Smith greeted everyone today.\u201d). Fix the sentence splitting to exclude that abbreviation, or otherwise handle it before counting.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1203,
+            "cached_tokens": 0,
+            "completion_tokens": 535,
+            "reasoning_tokens": 455,
+            "cost": 0.0003878
+          }
+        ],
+        "prompt_tokens": 1203,
+        "cached_tokens": 0,
+        "completion_tokens": 535,
+        "reasoning_tokens": 455,
+        "cost": 0.0003878
+      },
+      "revision": {
+        "code": "def process_text_file(self, sentences_string):\n    \"\"\"\n    Given a text, return the number of words in the longest sentence\n    :param sentences_string: string, undivided long sentence\n    :return:int, the number of words in the longest sentence\n    >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n    4\n    \"\"\"\n    import re\n\n    # Protect common abbreviations before splitting\n    protected = re.sub(r'\\b(Mr\\.|Mrs\\.|Ms\\.|Dr\\.|Prof\\.|etc\\.|Inc\\.|Ltd\\.|vs\\.|i\\.e\\.|e\\.g\\.|\\.){1}\\.?([a-z])\\s', 'PROTECTED.', sentences_string)\n\n    # Split sentences\n    sentences = re.split(r'[.!?] ', protected)\n\n    if not sentences:\n        return 0\n\n    # Count words in each sentence and find maximum\n    return max(self.count_words(sentence.strip()) for sentence in sentences)",
+        "valid": true,
+        "reply": "\n\n```python\ndef process_text_file(self, sentences_string):\n    \"\"\"\n    Given a text, return the number of words in the longest sentence\n    :param sentences_string: string, undivided long sentence\n    :return:int, the number of words in the longest sentence\n    >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n    4\n    \"\"\"\n    import re\n    \n    # Protect common abbreviations before splitting\n    protected = re.sub(r'\\b(Mr\\.|Mrs\\.|Ms\\.|Dr\\.|Prof\\.|etc\\.|Inc\\.|Ltd\\.|vs\\.|i\\.e\\.|e\\.g\\.|\\.){1}\\.?([a-z])\\s', 'PROTECTED.', sentences_string)\n    \n    # Split sentences\n    sentences = re.split(r'[.!?] ', protected)\n    \n    if not sentences:\n        return 0\n    \n    # Count words in each sentence and find maximum\n    return max(self.count_words(sentence.strip()) for sentence in sentences)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1042,
+        "cached_tokens": 0,
+        "completion_tokens": 659,
+        "reasoning_tokens": 471,
+        "cost": 0.00020305
+      },
+      "final_code": "def process_text_file(self, sentences_string):\n    \"\"\"\n    Given a text, return the number of words in the longest sentence\n    :param sentences_string: string, undivided long sentence\n    :return:int, the number of words in the longest sentence\n    >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n    4\n    \"\"\"\n    import re\n\n    # Protect common abbreviations before splitting\n    protected = re.sub(r'\\b(Mr\\.|Mrs\\.|Ms\\.|Dr\\.|Prof\\.|etc\\.|Inc\\.|Ltd\\.|vs\\.|i\\.e\\.|e\\.g\\.|\\.){1}\\.?([a-z])\\s', 'PROTECTED.', sentences_string)\n\n    # Split sentences\n    sentences = re.split(r'[.!?] ', protected)\n\n    if not sentences:\n        return 0\n\n    # Count words in each sentence and find maximum\n    return max(self.count_words(sentence.strip()) for sentence in sentences)",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "SplitSentenceTestSplitSentences": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "SplitSentenceTestCountWords": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SplitSentenceTestProcessTextFile": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "SplitSentenceTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "SplitSentenceTestSplitSentences": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "SplitSentenceTestCountWords": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SplitSentenceTestProcessTextFile": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "SplitSentenceTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import re\n\nclass SplitSentence:\n\n    def split_sentences(self, sentences_string):\n        \"\"\"\n        Split a string into a list of sentences. Sentences end with . or ? and with a space after that. Please note that Mr. also end with . but are not sentences.\n        :param sentences_string: string, string to split\n        :return:list, split sentence list\n        >>> ss = SplitSentence()\n        >>> ss.split_sentences(\"aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?\")\n        ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']\n        \"\"\"\n\n        # Split on sentence-ending punctuation followed by space\n        return re.split(r'[.!?] ', sentences_string)\n\n    def count_words(self, sentence):\n        \"\"\"\n        Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n        :param sentence:string, sentence to be counted, where words are separated by spaces\n        :return:int, number of words in the sentence\n        >>> ss.count_words(\"abc def\")\n        2\n        \"\"\"\n        words = sentence.split()\n        count = 0\n        for word in words:\n            stripped = word.strip('.,!?;:\"\\'()[]{}' + '!')\n            if stripped and not stripped.isdigit():\n                count += 1\n        return count\n\n    def process_text_file(self, sentences_string):\n        \"\"\"\n        Given a text, return the number of words in the longest sentence\n        :param sentences_string: string, undivided long sentence\n        :return:int, the number of words in the longest sentence\n        >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n        4\n        \"\"\"\n        sentences = self.split_sentences(sentences_string)\n        if not sentences:\n            return 0\n        return max(self.count_words(sentence) for sentence in sentences)\n",
+  "source": "import re\n\nclass SplitSentence:\n\n    def split_sentences(self, sentences_string):\n        \"\"\"\n        Split a string into a list of sentences. Sentences end with . or ? and with a space after that. Please note that Mr. also end with . but are not sentences.\n        :param sentences_string: string, string to split\n        :return:list, split sentence list\n        >>> ss = SplitSentence()\n        >>> ss.split_sentences(\"aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?\")\n        ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']\n        \"\"\"\n\n        # Split on sentence-ending punctuation followed by space\n        return re.split(r'[.!?] ', sentences_string)\n\n    def count_words(self, sentence):\n        \"\"\"\n        Count the number of words in a sentence. Note that words are separated by spaces and that punctuation marks and numbers are not counted as words.\n        :param sentence:string, sentence to be counted, where words are separated by spaces\n        :return:int, number of words in the sentence\n        >>> ss.count_words(\"abc def\")\n        2\n        \"\"\"\n        from string import punctuation\n        words = sentence.split()\n        count = 0\n        for word in words:\n            stripped = word.strip(punctuation)\n            if stripped and any(c.isalpha() for c in stripped):\n                count += 1\n        return count\n\n    def process_text_file(self, sentences_string):\n        \"\"\"\n        Given a text, return the number of words in the longest sentence\n        :param sentences_string: string, undivided long sentence\n        :return:int, the number of words in the longest sentence\n        >>> ss.process_text_file(\"aaa aaaa. bb bbbb bbb? cccc ccccccc cc ccc. dd ddd?\")\n        4\n        \"\"\"\n        import re\n\n        # Protect common abbreviations before splitting\n        protected = re.sub(r'\\b(Mr\\.|Mrs\\.|Ms\\.|Dr\\.|Prof\\.|etc\\.|Inc\\.|Ltd\\.|vs\\.|i\\.e\\.|e\\.g\\.|\\.){1}\\.?([a-z])\\s', 'PROTECTED.', sentences_string)\n\n        # Split sentences\n        sentences = re.split(r'[.!?] ', protected)\n\n        if not sentences:\n            return 0\n\n        # Count words in each sentence and find maximum\n        return max(self.count_words(sentence.strip()) for sentence in sentences)\n"
+}

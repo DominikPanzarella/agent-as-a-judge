@@ -1,0 +1,239 @@
+{
+  "task_id": "ClassEval_41",
+  "class_name": "GomokuGame",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "make_move",
+      "first": {
+        "code": "def make_move(self, row, col):\n    \"\"\"\n    Makes a move at the given row and column.\n    If the move is valid, it places the current player's symbol on the board\n    and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).\n    :param row: int, the row index of this move\n    :param col: int, the column index\n    return: True if the move is valid, or False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> gomokuGame.make_move(5, 5)\n    True\n    >>> gomokuGame.make_move(5, 5)\n    False\n    \"\"\"\n    # Check if the move is within bounds\n    if not (0 <= row < self.board_size and 0 <= col < self.board_size):\n        return False\n\n    # Check if the cell is already occupied\n    if self.board[row][col] != ' ':\n        return False\n\n    # Make the move by placing the current player's symbol\n    self.board[row][col] = self.current_player\n\n    # Switch to the other player\n    self.current_player = 'O' if self.current_player == 'X' else 'X'\n\n    return True",
+        "valid": true,
+        "reply": "```python\ndef make_move(self, row, col):\n    \"\"\"\n    Makes a move at the given row and column.\n    If the move is valid, it places the current player's symbol on the board\n    and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).\n    :param row: int, the row index of this move\n    :param col: int, the column index\n    return: True if the move is valid, or False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> gomokuGame.make_move(5, 5)\n    True\n    >>> gomokuGame.make_move(5, 5)\n    False\n    \"\"\"\n    # Check if the move is within bounds\n    if not (0 <= row < self.board_size and 0 <= col < self.board_size):\n        return False\n    \n    # Check if the cell is already occupied\n    if self.board[row][col] != ' ':\n        return False\n    \n    # Make the move by placing the current player's symbol\n    self.board[row][col] = self.current_player\n    \n    # Switch to the other player\n    self.current_player = 'O' if self.current_player == 'X' else 'X'\n    \n    return True\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 905,
+        "cached_tokens": 0,
+        "completion_tokens": 807,
+        "reasoning_tokens": 485,
+        "cost": 0.000263325
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that the coordinates are within the board and the cell is empty, then places the current player's symbol and switches players only for a valid move. This matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks that the coordinates are within the board and the cell is empty, then places the current player's symbol and switches players only for a valid move. This matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1269,
+            "cached_tokens": 0,
+            "completion_tokens": 113,
+            "reasoning_tokens": 58,
+            "cost": 0.0001834
+          }
+        ],
+        "prompt_tokens": 1269,
+        "cached_tokens": 0,
+        "completion_tokens": 113,
+        "reasoning_tokens": 58,
+        "cost": 0.0001834
+      },
+      "revision": null,
+      "final_code": "def make_move(self, row, col):\n    \"\"\"\n    Makes a move at the given row and column.\n    If the move is valid, it places the current player's symbol on the board\n    and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).\n    :param row: int, the row index of this move\n    :param col: int, the column index\n    return: True if the move is valid, or False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> gomokuGame.make_move(5, 5)\n    True\n    >>> gomokuGame.make_move(5, 5)\n    False\n    \"\"\"\n    # Check if the move is within bounds\n    if not (0 <= row < self.board_size and 0 <= col < self.board_size):\n        return False\n\n    # Check if the cell is already occupied\n    if self.board[row][col] != ' ':\n        return False\n\n    # Make the move by placing the current player's symbol\n    self.board[row][col] = self.current_player\n\n    # Switch to the other player\n    self.current_player = 'O' if self.current_player == 'X' else 'X'\n\n    return True",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "_check_five_in_a_row",
+      "first": {
+        "code": "def _check_five_in_a_row(self, row, col, direction):\n    \"\"\"\n    checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n    Counts the number of consecutive symbols in that direction starting from the given cell,\n    :param row: int, row of the given cell\n    :param col: int, column of the given cell\n    :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n    :return: True if there are five consecutive symbols of the same player, and False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n    True\n    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n    False\n    \"\"\"\n    dr, dc = direction\n\n    # Get the symbol at the starting position\n    start_symbol = self.board[row][col]\n\n    # Count consecutive symbols in the given direction\n    count = 0\n\n    # Check starting position first\n    if start_symbol != ' ':\n        count += 1\n\n    # Continue counting in the direction\n    r, c = row + dr, col + dc\n    while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n        count += 1\n        r += dr\n        c += dc\n\n    return count >= 5",
+        "valid": true,
+        "reply": "```python\ndef _check_five_in_a_row(self, row, col, direction):\n    \"\"\"\n    checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n    Counts the number of consecutive symbols in that direction starting from the given cell,\n    :param row: int, row of the given cell\n    :param col: int, column of the given cell\n    :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n    :return: True if there are five consecutive symbols of the same player, and False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n    True\n    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n    False\n    \"\"\"\n    dr, dc = direction\n    \n    # Get the symbol at the starting position\n    start_symbol = self.board[row][col]\n    \n    # Count consecutive symbols in the given direction\n    count = 0\n    \n    # Check starting position first\n    if start_symbol != ' ':\n        count += 1\n    \n    # Continue counting in the direction\n    r, c = row + dr, col + dc\n    while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n        count += 1\n        r += dr\n        c += dc\n    \n    return count >= 5\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1204,
+        "cached_tokens": 0,
+        "completion_tokens": 1048,
+        "reasoning_tokens": 667,
+        "cost": 0.000345584
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When the starting cell is empty, the loop counts consecutive empty cells and can return True for a run of five blanks. Return False immediately if `start_symbol == ' '` before counting in the direction.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When the starting cell is empty, the loop counts consecutive empty cells and can return True for a run of five blanks. Return False immediately if `start_symbol == ' '` before counting in the direction.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1718,
+            "cached_tokens": 0,
+            "completion_tokens": 205,
+            "reasoning_tokens": 146,
+            "cost": 0.0002743
+          }
+        ],
+        "prompt_tokens": 1718,
+        "cached_tokens": 0,
+        "completion_tokens": 205,
+        "reasoning_tokens": 146,
+        "cost": 0.0002743
+      },
+      "revision": {
+        "code": "def _check_five_in_a_row(self, row, col, direction):\n    \"\"\"\n    checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n    Counts the number of consecutive symbols in that direction starting from the given cell,\n    :param row: int, row of the given cell\n    :param col: int, column of the given cell\n    :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n    :return: True if there are five consecutive symbols of the same player, and False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n    True\n    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n    False\n    \"\"\"\n    dr, dc = direction\n\n    # Get the symbol at the starting position\n    start_symbol = self.board[row][col]\n\n    # Return False immediately if the starting cell is empty\n    if start_symbol == ' ':\n        return False\n\n    # Count consecutive symbols in the given direction (starting from 1 since we already have one)\n    count = 1\n\n    # Continue counting in the direction\n    r, c = row + dr, col + dc\n    while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n        count += 1\n        r += dr\n        c += dc\n\n    return count >= 5",
+        "valid": true,
+        "reply": "```python\ndef _check_five_in_a_row(self, row, col, direction):\n    \"\"\"\n    checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n    Counts the number of consecutive symbols in that direction starting from the given cell,\n    :param row: int, row of the given cell\n    :param col: int, column of the given cell\n    :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n    :return: True if there are five consecutive symbols of the same player, and False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n    True\n    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n    False\n    \"\"\"\n    dr, dc = direction\n    \n    # Get the symbol at the starting position\n    start_symbol = self.board[row][col]\n    \n    # Return False immediately if the starting cell is empty\n    if start_symbol == ' ':\n        return False\n    \n    # Count consecutive symbols in the given direction (starting from 1 since we already have one)\n    count = 1\n    \n    # Continue counting in the direction\n    r, c = row + dr, col + dc\n    while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n        count += 1\n        r += dr\n        c += dc\n    \n    return count >= 5\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1738,
+        "cached_tokens": 0,
+        "completion_tokens": 1038,
+        "reasoning_tokens": 543,
+        "cost": 0.000411018
+      },
+      "final_code": "def _check_five_in_a_row(self, row, col, direction):\n    \"\"\"\n    checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n    Counts the number of consecutive symbols in that direction starting from the given cell,\n    :param row: int, row of the given cell\n    :param col: int, column of the given cell\n    :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n    :return: True if there are five consecutive symbols of the same player, and False otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n    True\n    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n    False\n    \"\"\"\n    dr, dc = direction\n\n    # Get the symbol at the starting position\n    start_symbol = self.board[row][col]\n\n    # Return False immediately if the starting cell is empty\n    if start_symbol == ' ':\n        return False\n\n    # Count consecutive symbols in the given direction (starting from 1 since we already have one)\n    count = 1\n\n    # Continue counting in the direction\n    r, c = row + dr, col + dc\n    while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n        count += 1\n        r += dr\n        c += dc\n\n    return count >= 5",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "check_winner",
+      "first": {
+        "code": "def check_winner(self):\n    \"\"\"\n    Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).\n    return: the symbol of the winning player (either 'X' or 'O') if there is a winner, or None otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame.check_winner()\n    'X'\n    \"\"\"\n    # Define all directions to check (horizontal, vertical, two diagonals)\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n    # Check each cell on the board\n    for row in range(self.board_size):\n        for col in range(self.board_size):\n            # Only check cells that have been played\n            if self.board[row][col] != ' ':\n                symbol = self.board[row][col]\n                # Check all directions\n                for dr, dc in directions:\n                    if self._check_five_in_a_row(row, col, (dr, dc)):\n                        return symbol\n\n    return None",
+        "valid": true,
+        "reply": "```python\ndef check_winner(self):\n    \"\"\"\n    Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).\n    return: the symbol of the winning player (either 'X' or 'O') if there is a winner, or None otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame.check_winner()\n    'X'\n    \"\"\"\n    # Define all directions to check (horizontal, vertical, two diagonals)\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n    \n    # Check each cell on the board\n    for row in range(self.board_size):\n        for col in range(self.board_size):\n            # Only check cells that have been played\n            if self.board[row][col] != ' ':\n                symbol = self.board[row][col]\n                # Check all directions\n                for dr, dc in directions:\n                    if self._check_five_in_a_row(row, col, (dr, dc)):\n                        return symbol\n    \n    return None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1658,
+        "cached_tokens": 0,
+        "completion_tokens": 1030,
+        "reasoning_tokens": 697,
+        "cost": 0.000399458
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks every occupied cell in all four unique line directions, which is sufficient because any five-in-a-row has a starting cell in one of those directions. It returns that cell\u2019s symbol when the helper finds a run, and returns `None` if no run exists.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks every occupied cell in all four unique line directions, which is sufficient because any five-in-a-row has a starting cell in one of those directions. It returns that cell\u2019s symbol when the helper finds a run, and returns `None` if no run exists.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2035,
+            "cached_tokens": 0,
+            "completion_tokens": 223,
+            "reasoning_tokens": 150,
+            "cost": 0.000315
+          }
+        ],
+        "prompt_tokens": 2035,
+        "cached_tokens": 0,
+        "completion_tokens": 223,
+        "reasoning_tokens": 150,
+        "cost": 0.000315
+      },
+      "revision": null,
+      "final_code": "def check_winner(self):\n    \"\"\"\n    Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).\n    return: the symbol of the winning player (either 'X' or 'O') if there is a winner, or None otherwise.\n    >>> gomokuGame = GomokuGame(10)\n    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n    >>> for move in moves:\n    ...     gomokuGame.make_move(move[0], move[1])\n    >>> gomokuGame.check_winner()\n    'X'\n    \"\"\"\n    # Define all directions to check (horizontal, vertical, two diagonals)\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n    # Check each cell on the board\n    for row in range(self.board_size):\n        for col in range(self.board_size):\n            # Only check cells that have been played\n            if self.board[row][col] != ' ':\n                symbol = self.board[row][col]\n                # Check all directions\n                for dr, dc in directions:\n                    if self._check_five_in_a_row(row, col, (dr, dc)):\n                        return symbol\n\n    return None",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "GomokuGameTestMakeMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestCheckWinner": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestCheckFiveInARow": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "GomokuGameTestMakeMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestCheckWinner": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestCheckFiveInARow": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "GomokuGameTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass GomokuGame: \n    def __init__(self, board_size):\n        \"\"\"\n        Initializes the game with a given board size.\n        It initializes the board with empty spaces and sets the current player symble as 'X'.\n        \"\"\"\n        self.board_size = board_size\n        self.board = [[' ' for _ in range(board_size)] for _ in range(board_size)]\n        self.current_player = 'X'\n\n    def make_move(self, row, col):\n        \"\"\"\n        Makes a move at the given row and column.\n        If the move is valid, it places the current player's symbol on the board\n        and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).\n        :param row: int, the row index of this move\n        :param col: int, the column index\n        return: True if the move is valid, or False otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> gomokuGame.make_move(5, 5)\n        True\n        >>> gomokuGame.make_move(5, 5)\n        False\n        \"\"\"\n        # Check if the move is within bounds\n        if not (0 <= row < self.board_size and 0 <= col < self.board_size):\n            return False\n\n        # Check if the cell is already occupied\n        if self.board[row][col] != ' ':\n            return False\n\n        # Make the move by placing the current player's symbol\n        self.board[row][col] = self.current_player\n\n        # Switch to the other player\n        self.current_player = 'O' if self.current_player == 'X' else 'X'\n\n        return True\n\n    def check_winner(self):\n        \"\"\"\n        Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).\n        return: the symbol of the winning player (either 'X' or 'O') if there is a winner, or None otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n        >>> for move in moves:\n        ...     gomokuGame.make_move(move[0], move[1])\n        >>> gomokuGame.check_winner()\n        'X'\n        \"\"\"\n        # Define all directions to check (horizontal, vertical, two diagonals)\n        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n        # Check each cell on the board\n        for row in range(self.board_size):\n            for col in range(self.board_size):\n                # Only check cells that have been played\n                if self.board[row][col] != ' ':\n                    symbol = self.board[row][col]\n                    # Check all directions\n                    for dr, dc in directions:\n                        if self._check_five_in_a_row(row, col, (dr, dc)):\n                            return symbol\n\n        return None\n\n    def _check_five_in_a_row(self, row, col, direction):\n        \"\"\"\n        checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n        Counts the number of consecutive symbols in that direction starting from the given cell,\n        :param row: int, row of the given cell\n        :param col: int, column of the given cell\n        :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n        :return: True if there are five consecutive symbols of the same player, and False otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n        >>> for move in moves:\n        ...     gomokuGame.make_move(move[0], move[1])\n        >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n        True\n        >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n        False\n        \"\"\"\n        dr, dc = direction\n\n        # Get the symbol at the starting position\n        start_symbol = self.board[row][col]\n\n        # Count consecutive symbols in the given direction\n        count = 0\n\n        # Check starting position first\n        if start_symbol != ' ':\n            count += 1\n\n        # Continue counting in the direction\n        r, c = row + dr, col + dc\n        while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n            count += 1\n            r += dr\n            c += dc\n\n        return count >= 5\n",
+  "source": "\n\nclass GomokuGame: \n    def __init__(self, board_size):\n        \"\"\"\n        Initializes the game with a given board size.\n        It initializes the board with empty spaces and sets the current player symble as 'X'.\n        \"\"\"\n        self.board_size = board_size\n        self.board = [[' ' for _ in range(board_size)] for _ in range(board_size)]\n        self.current_player = 'X'\n\n    def make_move(self, row, col):\n        \"\"\"\n        Makes a move at the given row and column.\n        If the move is valid, it places the current player's symbol on the board\n        and changes the current player to the other player (if the current player is 'X', then it becomes 'O' and vice versa).\n        :param row: int, the row index of this move\n        :param col: int, the column index\n        return: True if the move is valid, or False otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> gomokuGame.make_move(5, 5)\n        True\n        >>> gomokuGame.make_move(5, 5)\n        False\n        \"\"\"\n        # Check if the move is within bounds\n        if not (0 <= row < self.board_size and 0 <= col < self.board_size):\n            return False\n\n        # Check if the cell is already occupied\n        if self.board[row][col] != ' ':\n            return False\n\n        # Make the move by placing the current player's symbol\n        self.board[row][col] = self.current_player\n\n        # Switch to the other player\n        self.current_player = 'O' if self.current_player == 'X' else 'X'\n\n        return True\n\n    def check_winner(self):\n        \"\"\"\n        Checks if there is a winner by looking for five in a row in all directions (horizontal, vertical, diagonal).\n        return: the symbol of the winning player (either 'X' or 'O') if there is a winner, or None otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n        >>> for move in moves:\n        ...     gomokuGame.make_move(move[0], move[1])\n        >>> gomokuGame.check_winner()\n        'X'\n        \"\"\"\n        # Define all directions to check (horizontal, vertical, two diagonals)\n        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n        # Check each cell on the board\n        for row in range(self.board_size):\n            for col in range(self.board_size):\n                # Only check cells that have been played\n                if self.board[row][col] != ' ':\n                    symbol = self.board[row][col]\n                    # Check all directions\n                    for dr, dc in directions:\n                        if self._check_five_in_a_row(row, col, (dr, dc)):\n                            return symbol\n\n        return None\n\n    def _check_five_in_a_row(self, row, col, direction):\n        \"\"\"\n        checks if there are five consecutive symbols of the same player in a row starting from a given cell in a given direction (horizontal, vertical, diagonal).\n        Counts the number of consecutive symbols in that direction starting from the given cell,\n        :param row: int, row of the given cell\n        :param col: int, column of the given cell\n        :param direction: tuple, (int, int), named as (dx, dy). Row and col will plus several dx and dy repectively.\n        :return: True if there are five consecutive symbols of the same player, and False otherwise.\n        >>> gomokuGame = GomokuGame(10)\n        >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]\n        >>> for move in moves:\n        ...     gomokuGame.make_move(move[0], move[1])\n        >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))\n        True\n        >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))\n        False\n        \"\"\"\n        dr, dc = direction\n\n        # Get the symbol at the starting position\n        start_symbol = self.board[row][col]\n\n        # Return False immediately if the starting cell is empty\n        if start_symbol == ' ':\n            return False\n\n        # Count consecutive symbols in the given direction (starting from 1 since we already have one)\n        count = 1\n\n        # Continue counting in the direction\n        r, c = row + dr, col + dc\n        while 0 <= r < self.board_size and 0 <= c < self.board_size and self.board[r][c] == start_symbol:\n            count += 1\n            r += dr\n            c += dc\n\n        return count >= 5\n"
+}

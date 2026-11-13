@@ -1,0 +1,240 @@
+{
+  "task_id": "ClassEval_9",
+  "class_name": "BigNumCalculator",
+  "setup": "C3",
+  "name": "C3-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": "C2-9b",
+  "methods": [
+    {
+      "method_name": "add",
+      "first": {
+        "code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    d1, d2 = to_digits(num1), to_digits(num2)\n    carry = 0\n    i, j = 0, 0\n    result = []\n\n    while i < len(d1) or j < len(d2) or carry:\n        val = carry\n        if i < len(d1):\n            val += d1[i]\n        if j < len(d2):\n            val += d2[j]\n\n        result.append(val % 10)\n        carry = val // 10\n        i += 1\n        if j < len(d2):\n            continue\n        j += 1\n\n    # Convert result to string, removing leading zeros if non-zero\n    while len(result) > 1 and result[0] == 0:\n        result.pop(0)\n\n    return ''.join(str(d) for d in result[::-1])",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n    \n    d1, d2 = to_digits(num1), to_digits(num2)\n    carry = 0\n    i, j = 0, 0\n    result = []\n    \n    while i < len(d1) or j < len(d2) or carry:\n        val = carry\n        if i < len(d1):\n            val += d1[i]\n        if j < len(d2):\n            val += d2[j]\n        \n        result.append(val % 10)\n        carry = val // 10\n        i += 1\n        if j < len(d2):\n            continue\n        j += 1\n    \n    # Convert result to string, removing leading zeros if non-zero\n    while len(result) > 1 and result[0] == 0:\n        result.pop(0)\n    \n    return ''.join(str(d) for d in result[::-1])\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 633,
+        "cached_tokens": 0,
+        "completion_tokens": 813,
+        "reasoning_tokens": 493,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The loop increments `i` but never increments `j` while `j < len(d2)`, so it repeatedly adds only the first digit of `num2` and returns an incorrect sum for multi-digit inputs. Increment `j` on each iteration when it is within `d2`, just as `i` is incremented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The loop increments `i` but never increments `j` while `j < len(d2)`, so it repeatedly adds only the first digit of `num2` and returns an incorrect sum for multi-digit inputs. Increment `j` on each iteration when it is within `d2`, just as `i` is incremented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 907,
+            "cached_tokens": 0,
+            "completion_tokens": 207,
+            "reasoning_tokens": 120,
+            "cost": 0.00019419999999999998
+          }
+        ],
+        "prompt_tokens": 907,
+        "cached_tokens": 0,
+        "completion_tokens": 207,
+        "reasoning_tokens": 120,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1113,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 3706,
+        "cost": 0.00062817
+      },
+      "final_code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    d1, d2 = to_digits(num1), to_digits(num2)\n    carry = 0\n    i, j = 0, 0\n    result = []\n\n    while i < len(d1) or j < len(d2) or carry:\n        val = carry\n        if i < len(d1):\n            val += d1[i]\n        if j < len(d2):\n            val += d2[j]\n\n        result.append(val % 10)\n        carry = val // 10\n        i += 1\n        if j < len(d2):\n            continue\n        j += 1\n\n    # Convert result to string, removing leading zeros if non-zero\n    while len(result) > 1 and result[0] == 0:\n        result.pop(0)\n\n    return ''.join(str(d) for d in result[::-1])",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "subtract",
+      "first": {
+        "code": "@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    def compare_digits(d1, d2):\n        \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n        if len(d1) > len(d2):\n            return 1\n        elif len(d1) < len(d2):\n            return -1\n        else:\n            for di1, di2 in zip(d1, d2):\n                if di1 > di2:\n                    return 1\n                elif di1 < di2:\n                    return -1\n            return 0\n\n    def sub_digits(d1, d2):\n        \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n        result = []\n        borrow = 0\n\n        max_len = max(len(d1), len(d2))\n        for i in range(max_len):\n            v1 = d1[i] if i < len(d1) else 0\n            v2 = d2[i] if i < len(d2) else 0\n\n            val = v1 - v2 - borrow\n\n            if val < 0:\n                val += 10\n                borrow = 1\n            else:\n                borrow = 0\n\n            result.append(val)\n\n        # Remove trailing zeros\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n\n        return result\n\n    d1 = to_digits(num1)\n    d2 = to_digits(num2)\n\n    cmp = compare_digits(d1, d2)\n\n    if cmp == 0:\n        return \"0\"\n    elif cmp > 0:\n        diff = sub_digits(d1, d2)\n        return ''.join(str(x) for x in diff[::-1])\n    else:\n        diff = sub_digits(d2, d1)\n        return '-' + ''.join(str(x) for x in diff[::-1])",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n    \n    def compare_digits(d1, d2):\n        \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n        if len(d1) > len(d2):\n            return 1\n        elif len(d1) < len(d2):\n            return -1\n        else:\n            for di1, di2 in zip(d1, d2):\n                if di1 > di2:\n                    return 1\n                elif di1 < di2:\n                    return -1\n            return 0\n    \n    def sub_digits(d1, d2):\n        \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n        result = []\n        borrow = 0\n        \n        max_len = max(len(d1), len(d2))\n        for i in range(max_len):\n            v1 = d1[i] if i < len(d1) else 0\n            v2 = d2[i] if i < len(d2) else 0\n            \n            val = v1 - v2 - borrow\n            \n            if val < 0:\n                val += 10\n                borrow = 1\n            else:\n                borrow = 0\n            \n            result.append(val)\n        \n        # Remove trailing zeros\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n        \n        return result\n    \n    d1 = to_digits(num1)\n    d2 = to_digits(num2)\n    \n    cmp = compare_digits(d1, d2)\n    \n    if cmp == 0:\n        return \"0\"\n    elif cmp > 0:\n        diff = sub_digits(d1, d2)\n        return ''.join(str(x) for x in diff[::-1])\n    else:\n        diff = sub_digits(d2, d1)\n        return '-' + ''.join(str(x) for x in diff[::-1])\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1012,
+        "cached_tokens": 0,
+        "completion_tokens": 1674,
+        "reasoning_tokens": 972,
+        "cost": 0.000312048
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For equal-length numbers, `compare_digits` compares the least-significant digits first, which can choose the wrong subtraction order; for example, `subtract(\"21\", \"12\")` returns `\"-91\"` instead of `\"9\"`. Compare digits from most significant to least significant (and account for leading zeros if they are allowed).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For equal-length numbers, `compare_digits` compares the least-significant digits first, which can choose the wrong subtraction order; for example, `subtract(\"21\", \"12\")` returns `\"-91\"` instead of `\"9\"`. Compare digits from most significant to least significant (and account for leading zeros if they are allowed).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1529,
+            "cached_tokens": 0,
+            "completion_tokens": 310,
+            "reasoning_tokens": 220,
+            "cost": 0.0003079
+          }
+        ],
+        "prompt_tokens": 1529,
+        "cached_tokens": 0,
+        "completion_tokens": 310,
+        "reasoning_tokens": 220,
+        "cost": 0.0003079
+      },
+      "revision": {
+        "code": "@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    def compare_digits(d1, d2):\n        \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n        # Compare lengths first (most significant position indicator)\n        if len(d1) > len(d2):\n            return 1\n        elif len(d1) < len(d2):\n            return -1\n\n        # Equal length: compare from most significant (end of list) to least significant (start)\n        i = len(d1) - 1\n        while i >= 0:\n            if d1[i] > d2[i]:\n                return 1\n            elif d1[i] < d2[i]:\n                return -1\n            i -= 1\n\n        return 0\n\n    def sub_digits(d1, d2):\n        \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n        result = []\n        borrow = 0\n        max_len = len(d1)  # d1 >= d2 by comparison\n\n        for i in range(max_len):\n            idx = len(d1) - 1 - i  # Convert from least-to-most to correct indexing\n\n            v1 = d1[idx] if idx < len(d1) else 0\n            v2 = d2[idx] if idx < len(d2) else 0\n\n            val = v1 - v2 - borrow\n\n            if val < 0:\n                val += 10\n                borrow = 1\n            else:\n                borrow = 0\n\n            result.append(val)\n\n        # Remove trailing zeros (leading zeros before reversal)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n\n        return result\n\n    d1 = to_digits(num1)\n    d2 = to_digits(num2)\n\n    cmp = compare_digits(d1, d2)\n\n    if cmp == 0:\n        return \"0\"\n    elif cmp > 0:\n        diff = sub_digits(d1, d2)\n        return ''.join(str(x) for x in diff[::-1])\n    else:\n        diff = sub_digits(d2, d1)\n        return '-' + ''.join(str(x) for x in diff[::-1])",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n    \n    def compare_digits(d1, d2):\n        \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n        # Compare lengths first (most significant position indicator)\n        if len(d1) > len(d2):\n            return 1\n        elif len(d1) < len(d2):\n            return -1\n        \n        # Equal length: compare from most significant (end of list) to least significant (start)\n        i = len(d1) - 1\n        while i >= 0:\n            if d1[i] > d2[i]:\n                return 1\n            elif d1[i] < d2[i]:\n                return -1\n            i -= 1\n        \n        return 0\n    \n    def sub_digits(d1, d2):\n        \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n        result = []\n        borrow = 0\n        max_len = len(d1)  # d1 >= d2 by comparison\n        \n        for i in range(max_len):\n            idx = len(d1) - 1 - i  # Convert from least-to-most to correct indexing\n            \n            v1 = d1[idx] if idx < len(d1) else 0\n            v2 = d2[idx] if idx < len(d2) else 0\n            \n            val = v1 - v2 - borrow\n            \n            if val < 0:\n                val += 10\n                borrow = 1\n            else:\n                borrow = 0\n            \n            result.append(val)\n        \n        # Remove trailing zeros (leading zeros before reversal)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n        \n        return result\n    \n    d1 = to_digits(num1)\n    d2 = to_digits(num2)\n    \n    cmp = compare_digits(d1, d2)\n    \n    if cmp == 0:\n        return \"0\"\n    elif cmp > 0:\n        diff = sub_digits(d1, d2)\n        return ''.join(str(x) for x in diff[::-1])\n    else:\n        diff = sub_digits(d2, d1)\n        return '-' + ''.join(str(x) for x in diff[::-1])\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1734,
+        "cached_tokens": 0,
+        "completion_tokens": 1585,
+        "reasoning_tokens": 833,
+        "cost": 0.000292858
+      },
+      "final_code": "@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    def compare_digits(d1, d2):\n        \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n        # Compare lengths first (most significant position indicator)\n        if len(d1) > len(d2):\n            return 1\n        elif len(d1) < len(d2):\n            return -1\n\n        # Equal length: compare from most significant (end of list) to least significant (start)\n        i = len(d1) - 1\n        while i >= 0:\n            if d1[i] > d2[i]:\n                return 1\n            elif d1[i] < d2[i]:\n                return -1\n            i -= 1\n\n        return 0\n\n    def sub_digits(d1, d2):\n        \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n        result = []\n        borrow = 0\n        max_len = len(d1)  # d1 >= d2 by comparison\n\n        for i in range(max_len):\n            idx = len(d1) - 1 - i  # Convert from least-to-most to correct indexing\n\n            v1 = d1[idx] if idx < len(d1) else 0\n            v2 = d2[idx] if idx < len(d2) else 0\n\n            val = v1 - v2 - borrow\n\n            if val < 0:\n                val += 10\n                borrow = 1\n            else:\n                borrow = 0\n\n            result.append(val)\n\n        # Remove trailing zeros (leading zeros before reversal)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n\n        return result\n\n    d1 = to_digits(num1)\n    d2 = to_digits(num2)\n\n    cmp = compare_digits(d1, d2)\n\n    if cmp == 0:\n        return \"0\"\n    elif cmp > 0:\n        diff = sub_digits(d1, d2)\n        return ''.join(str(x) for x in diff[::-1])\n    else:\n        diff = sub_digits(d2, d1)\n        return '-' + ''.join(str(x) for x in diff[::-1])",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "multiply",
+      "first": {
+        "code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    d1, d2 = to_digits(num1), to_digits(num2)\n    len1, len2 = len(d1), len(d2)\n\n    if len1 == 0 or len2 == 0:\n        return \"0\"\n\n    result = [0] * (len1 + len2)\n\n    for i in range(len1):\n        carry = 0\n        for j in range(len2):\n            prod = d1[i] * d2[j] + result[i + j] + carry\n            result[i + j] = prod % 10\n            carry = prod // 10\n\n        result[i + len2] += carry\n\n    # Remove trailing zeros (leading zeros before reversal)\n    while len(result) > 1 and result[-1] == 0:\n        result.pop()\n\n    return ''.join(str(d) for d in result[::-1])",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n    \n    d1, d2 = to_digits(num1), to_digits(num2)\n    len1, len2 = len(d1), len(d2)\n    \n    if len1 == 0 or len2 == 0:\n        return \"0\"\n    \n    result = [0] * (len1 + len2)\n    \n    for i in range(len1):\n        carry = 0\n        for j in range(len2):\n            prod = d1[i] * d2[j] + result[i + j] + carry\n            result[i + j] = prod % 10\n            carry = prod // 10\n        \n        result[i + len2] += carry\n    \n    # Remove trailing zeros (leading zeros before reversal)\n    while len(result) > 1 and result[-1] == 0:\n        result.pop()\n    \n    return ''.join(str(d) for d in result[::-1])\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1694,
+        "cached_tokens": 0,
+        "completion_tokens": 1144,
+        "reasoning_tokens": 746,
+        "cost": 0.000243232
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly performs grade-school multiplication on decimal digit strings, propagates carries, and removes leading zeros; it also returns \"0\" for zero-valued inputs. No concrete correctness issue is apparent for the inputs described.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly performs grade-school multiplication on decimal digit strings, propagates carries, and removes leading zeros; it also returns \"0\" for zero-valued inputs. No concrete correctness issue is apparent for the inputs described.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2008,
+            "cached_tokens": 0,
+            "completion_tokens": 716,
+            "reasoning_tokens": 654,
+            "cost": 0.0005587999999999999
+          }
+        ],
+        "prompt_tokens": 2008,
+        "cached_tokens": 0,
+        "completion_tokens": 716,
+        "reasoning_tokens": 654,
+        "cost": 0.0005587999999999999
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    def to_digits(n):\n        return [int(c) for c in n[::-1]]\n\n    d1, d2 = to_digits(num1), to_digits(num2)\n    len1, len2 = len(d1), len(d2)\n\n    if len1 == 0 or len2 == 0:\n        return \"0\"\n\n    result = [0] * (len1 + len2)\n\n    for i in range(len1):\n        carry = 0\n        for j in range(len2):\n            prod = d1[i] * d2[j] + result[i + j] + carry\n            result[i + j] = prod % 10\n            carry = prod // 10\n\n        result[i + len2] += carry\n\n    # Remove trailing zeros (leading zeros before reversal)\n    while len(result) > 1 and result[-1] == 0:\n        result.pop()\n\n    return ''.join(str(d) for d in result[::-1])",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "BigNumCalculatorTestAdd": {
+      "status": "timeout",
+      "passed": false
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "timeout",
+      "passed": false
+    }
+  },
+  "tests": {
+    "BigNumCalculatorTestAdd": {
+      "status": "timeout",
+      "passed": false
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "timeout",
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        d1, d2 = to_digits(num1), to_digits(num2)\n        carry = 0\n        i, j = 0, 0\n        result = []\n\n        while i < len(d1) or j < len(d2) or carry:\n            val = carry\n            if i < len(d1):\n                val += d1[i]\n            if j < len(d2):\n                val += d2[j]\n\n            result.append(val % 10)\n            carry = val // 10\n            i += 1\n            if j < len(d2):\n                continue\n            j += 1\n\n        # Convert result to string, removing leading zeros if non-zero\n        while len(result) > 1 and result[0] == 0:\n            result.pop(0)\n\n        return ''.join(str(d) for d in result[::-1])\n\n    @staticmethod\n    def subtract(num1, num2):\n        \"\"\"\n        Subtracts two big numbers.\n        :param num1: The first number to subtract,str.\n        :param num2: The second number to subtract,str.\n        :return: The difference of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n        '-86419753208641975320'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        def compare_digits(d1, d2):\n            \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n            if len(d1) > len(d2):\n                return 1\n            elif len(d1) < len(d2):\n                return -1\n            else:\n                for di1, di2 in zip(d1, d2):\n                    if di1 > di2:\n                        return 1\n                    elif di1 < di2:\n                        return -1\n                return 0\n\n        def sub_digits(d1, d2):\n            \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n            result = []\n            borrow = 0\n\n            max_len = max(len(d1), len(d2))\n            for i in range(max_len):\n                v1 = d1[i] if i < len(d1) else 0\n                v2 = d2[i] if i < len(d2) else 0\n\n                val = v1 - v2 - borrow\n\n                if val < 0:\n                    val += 10\n                    borrow = 1\n                else:\n                    borrow = 0\n\n                result.append(val)\n\n            # Remove trailing zeros\n            while len(result) > 1 and result[-1] == 0:\n                result.pop()\n\n            return result\n\n        d1 = to_digits(num1)\n        d2 = to_digits(num2)\n\n        cmp = compare_digits(d1, d2)\n\n        if cmp == 0:\n            return \"0\"\n        elif cmp > 0:\n            diff = sub_digits(d1, d2)\n            return ''.join(str(x) for x in diff[::-1])\n        else:\n            diff = sub_digits(d2, d1)\n            return '-' + ''.join(str(x) for x in diff[::-1])\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        d1, d2 = to_digits(num1), to_digits(num2)\n        len1, len2 = len(d1), len(d2)\n\n        if len1 == 0 or len2 == 0:\n            return \"0\"\n\n        result = [0] * (len1 + len2)\n\n        for i in range(len1):\n            carry = 0\n            for j in range(len2):\n                prod = d1[i] * d2[j] + result[i + j] + carry\n                result[i + j] = prod % 10\n                carry = prod // 10\n\n            result[i + len2] += carry\n\n        # Remove trailing zeros (leading zeros before reversal)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n\n        return ''.join(str(d) for d in result[::-1])\n",
+  "source": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        d1, d2 = to_digits(num1), to_digits(num2)\n        carry = 0\n        i, j = 0, 0\n        result = []\n\n        while i < len(d1) or j < len(d2) or carry:\n            val = carry\n            if i < len(d1):\n                val += d1[i]\n            if j < len(d2):\n                val += d2[j]\n\n            result.append(val % 10)\n            carry = val // 10\n            i += 1\n            if j < len(d2):\n                continue\n            j += 1\n\n        # Convert result to string, removing leading zeros if non-zero\n        while len(result) > 1 and result[0] == 0:\n            result.pop(0)\n\n        return ''.join(str(d) for d in result[::-1])\n\n    @staticmethod\n    def subtract(num1, num2):\n        \"\"\"\n        Subtracts two big numbers.\n        :param num1: The first number to subtract,str.\n        :param num2: The second number to subtract,str.\n        :return: The difference of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n        '-86419753208641975320'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        def compare_digits(d1, d2):\n            \"\"\"Compare two digit lists as numbers (1 if d1 > d2, -1 if d1 < d2, 0 if equal)\"\"\"\n            # Compare lengths first (most significant position indicator)\n            if len(d1) > len(d2):\n                return 1\n            elif len(d1) < len(d2):\n                return -1\n\n            # Equal length: compare from most significant (end of list) to least significant (start)\n            i = len(d1) - 1\n            while i >= 0:\n                if d1[i] > d2[i]:\n                    return 1\n                elif d1[i] < d2[i]:\n                    return -1\n                i -= 1\n\n            return 0\n\n        def sub_digits(d1, d2):\n            \"\"\"Subtract d2 from d1 (assumes d1 >= d2) and return digit list\"\"\"\n            result = []\n            borrow = 0\n            max_len = len(d1)  # d1 >= d2 by comparison\n\n            for i in range(max_len):\n                idx = len(d1) - 1 - i  # Convert from least-to-most to correct indexing\n\n                v1 = d1[idx] if idx < len(d1) else 0\n                v2 = d2[idx] if idx < len(d2) else 0\n\n                val = v1 - v2 - borrow\n\n                if val < 0:\n                    val += 10\n                    borrow = 1\n                else:\n                    borrow = 0\n\n                result.append(val)\n\n            # Remove trailing zeros (leading zeros before reversal)\n            while len(result) > 1 and result[-1] == 0:\n                result.pop()\n\n            return result\n\n        d1 = to_digits(num1)\n        d2 = to_digits(num2)\n\n        cmp = compare_digits(d1, d2)\n\n        if cmp == 0:\n            return \"0\"\n        elif cmp > 0:\n            diff = sub_digits(d1, d2)\n            return ''.join(str(x) for x in diff[::-1])\n        else:\n            diff = sub_digits(d2, d1)\n            return '-' + ''.join(str(x) for x in diff[::-1])\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n        \"\"\"\n        def to_digits(n):\n            return [int(c) for c in n[::-1]]\n\n        d1, d2 = to_digits(num1), to_digits(num2)\n        len1, len2 = len(d1), len(d2)\n\n        if len1 == 0 or len2 == 0:\n            return \"0\"\n\n        result = [0] * (len1 + len2)\n\n        for i in range(len1):\n            carry = 0\n            for j in range(len2):\n                prod = d1[i] * d2[j] + result[i + j] + carry\n                result[i + j] = prod % 10\n                carry = prod // 10\n\n            result[i + len2] += carry\n\n        # Remove trailing zeros (leading zeros before reversal)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n\n        return ''.join(str(d) for d in result[::-1])\n"
+}

@@ -1,0 +1,303 @@
+{
+  "task_id": "ClassEval_27",
+  "class_name": "CurrencyConverter",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "convert",
+      "first": {
+        "code": "def convert(self, amount, from_currency, to_currency):\n    \"\"\"\n    Convert the value of a given currency to another currency type\n    :param amount: float, The value of a given currency\n    :param from_currency: string, source currency type\n    :param to_currency: string, target currency type\n    :return: float, value converted to another currency type\n    >>> cc = CurrencyConverter()\n    >>> cc.convert(64, 'CNY','USD')\n    10.0\n    \"\"\"\n    if from_currency not in self.rates or to_currency not in self.rates:\n        return None\n    return amount * (self.rates[to_currency] / self.rates[from_currency])",
+        "valid": true,
+        "reply": "```python\n    def convert(self, amount, from_currency, to_currency):\n        \"\"\"\n        Convert the value of a given currency to another currency type\n        :param amount: float, The value of a given currency\n        :param from_currency: string, source currency type\n        :param to_currency: string, target currency type\n        :return: float, value converted to another currency type\n        >>> cc = CurrencyConverter()\n        >>> cc.convert(64, 'CNY','USD')\n        10.0\n        \"\"\"\n        if from_currency not in self.rates or to_currency not in self.rates:\n            return None\n        return amount * (self.rates[to_currency] / self.rates[from_currency])\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 694,
+        "cached_tokens": 0,
+        "completion_tokens": 648,
+        "reasoning_tokens": 397,
+        "cost": 0.000278638
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The rates are expressed as units of each currency per USD, so converting from CNY to USD requires dividing by the CNY rate; the implementation instead multiplies by that ratio and returns the wrong result for the documented example. Use `amount * self.rates[to_currency] / self.rates[from_currency]` only if rates are defined as currency units per USD; for this example, the correct conversion is `amount * self.rates['USD'] / self.rates['CNY']` (equivalently, `amount * self.rates[from_currency] / self.rates[to_currency]`).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The rates are expressed as units of each currency per USD, so converting from CNY to USD requires dividing by the CNY rate; the implementation instead multiplies by that ratio and returns the wrong result for the documented example. Use `amount * self.rates[to_currency] / self.rates[from_currency]` only if rates are defined as currency units per USD; for this example, the correct conversion is `amount * self.rates['USD'] / self.rates['CNY']` (equivalently, `amount * self.rates[from_currency] / self.rates[to_currency]`).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 922,
+            "cached_tokens": 0,
+            "completion_tokens": 140,
+            "reasoning_tokens": 0,
+            "cost": 0.00016219999999999999
+          }
+        ],
+        "prompt_tokens": 922,
+        "cached_tokens": 0,
+        "completion_tokens": 140,
+        "reasoning_tokens": 0,
+        "cost": 0.00016219999999999999
+      },
+      "revision": {
+        "code": "def convert(self, amount, from_currency, to_currency):\n    \"\"\"\n    Convert the value of a given currency to another currency type\n    :param amount: float, The value of a given currency\n    :param from_currency: string, source currency type\n    :param to_currency: string, target currency type\n    :return: float, value converted to another currency type\n    >>> cc = CurrencyConverter()\n    >>> cc.convert(64, 'CNY','USD')\n    10.0\n    \"\"\"\n    if from_currency not in self.rates or to_currency not in self.rates:\n        return None\n    # Convert via USD base: amount / from_currency_rate * to_currency_rate\n    # Since rates are defined as units per USD\n    return amount * self.rates[to_currency] / self.rates[from_currency]",
+        "valid": true,
+        "reply": "```python\n    def convert(self, amount, from_currency, to_currency):\n        \"\"\"\n        Convert the value of a given currency to another currency type\n        :param amount: float, The value of a given currency\n        :param from_currency: string, source currency type\n        :param to_currency: string, target currency type\n        :return: float, value converted to another currency type\n        >>> cc = CurrencyConverter()\n        >>> cc.convert(64, 'CNY','USD')\n        10.0\n        \"\"\"\n        if from_currency not in self.rates or to_currency not in self.rates:\n            return None\n        # Convert via USD base: amount / from_currency_rate * to_currency_rate\n        # Since rates are defined as units per USD\n        return amount * self.rates[to_currency] / self.rates[from_currency]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1014,
+        "cached_tokens": 0,
+        "completion_tokens": 1037,
+        "reasoning_tokens": 659,
+        "cost": 0.000429579
+      },
+      "final_code": "def convert(self, amount, from_currency, to_currency):\n    \"\"\"\n    Convert the value of a given currency to another currency type\n    :param amount: float, The value of a given currency\n    :param from_currency: string, source currency type\n    :param to_currency: string, target currency type\n    :return: float, value converted to another currency type\n    >>> cc = CurrencyConverter()\n    >>> cc.convert(64, 'CNY','USD')\n    10.0\n    \"\"\"\n    if from_currency not in self.rates or to_currency not in self.rates:\n        return None\n    # Convert via USD base: amount / from_currency_rate * to_currency_rate\n    # Since rates are defined as units per USD\n    return amount * self.rates[to_currency] / self.rates[from_currency]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_supported_currencies",
+      "first": {
+        "code": "def get_supported_currencies(self):\n    \"\"\"\n    Returns a list of supported currency types\n    :return:list, All supported currency types\n    >>> cc = CurrencyConverter()\n    >>> cc.get_supported_currencies()\n    ['USD','EUR','GBP','JPY','CAD','AUD','CNY']\n    \"\"\"\n    return list(self.rates.keys())",
+        "valid": true,
+        "reply": "```python\ndef get_supported_currencies(self):\n    \"\"\"\n    Returns a list of supported currency types\n    :return:list, All supported currency types\n    >>> cc = CurrencyConverter()\n    >>> cc.get_supported_currencies()\n    ['USD','EUR','GBP','JPY','CAD','AUD','CNY']\n    \"\"\"\n    return list(self.rates.keys())\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 891,
+        "cached_tokens": 0,
+        "completion_tokens": 241,
+        "reasoning_tokens": 159,
+        "cost": 0.0002017
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`self.rates` contains the supported currencies, and converting its keys to a list returns them in insertion order, matching the documented example. The method is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`self.rates` contains the supported currencies, and converting its keys to a list returns them in insertion order, matching the documented example. The method is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1036,
+            "cached_tokens": 0,
+            "completion_tokens": 49,
+            "reasoning_tokens": 0,
+            "cost": 0.00012810000000000002
+          }
+        ],
+        "prompt_tokens": 1036,
+        "cached_tokens": 0,
+        "completion_tokens": 49,
+        "reasoning_tokens": 0,
+        "cost": 0.00012810000000000002
+      },
+      "revision": null,
+      "final_code": "def get_supported_currencies(self):\n    \"\"\"\n    Returns a list of supported currency types\n    :return:list, All supported currency types\n    >>> cc = CurrencyConverter()\n    >>> cc.get_supported_currencies()\n    ['USD','EUR','GBP','JPY','CAD','AUD','CNY']\n    \"\"\"\n    return list(self.rates.keys())",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "add_currency_rate",
+      "first": {
+        "code": "def add_currency_rate(self, currency, rate):\n    \"\"\"\n    Add a new supported currency type, return False if the currency type is already in the support list\n    :param currency:string, currency type to be added\n    :param rate:float, exchange rate for this type of currency\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.add_currency_rate('KRW', 1308.84)\n    self.rates['KRW'] = 1308.84\n    \"\"\"\n    if currency in self.rates:\n        return False\n    self.rates[currency] = rate\n    return None",
+        "valid": true,
+        "reply": "```python\ndef add_currency_rate(self, currency, rate):\n    \"\"\"\n    Add a new supported currency type, return False if the currency type is already in the support list\n    :param currency:string, currency type to be added\n    :param rate:float, exchange rate for this type of currency\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.add_currency_rate('KRW', 1308.84)\n    self.rates['KRW'] = 1308.84\n    \"\"\"\n    if currency in self.rates:\n        return False\n    self.rates[currency] = rate\n    return None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 968,
+        "cached_tokens": 0,
+        "completion_tokens": 612,
+        "reasoning_tokens": 469,
+        "cost": 0.000302472
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns `False` when the currency is already supported; otherwise, it stores the supplied rate and returns `None`, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns `False` when the currency is already supported; otherwise, it stores the supplied rate and returns `None`, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1176,
+            "cached_tokens": 0,
+            "completion_tokens": 115,
+            "reasoning_tokens": 69,
+            "cost": 0.00017510000000000003
+          }
+        ],
+        "prompt_tokens": 1176,
+        "cached_tokens": 0,
+        "completion_tokens": 115,
+        "reasoning_tokens": 69,
+        "cost": 0.00017510000000000003
+      },
+      "revision": null,
+      "final_code": "def add_currency_rate(self, currency, rate):\n    \"\"\"\n    Add a new supported currency type, return False if the currency type is already in the support list\n    :param currency:string, currency type to be added\n    :param rate:float, exchange rate for this type of currency\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.add_currency_rate('KRW', 1308.84)\n    self.rates['KRW'] = 1308.84\n    \"\"\"\n    if currency in self.rates:\n        return False\n    self.rates[currency] = rate\n    return None",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update_currency_rate",
+      "first": {
+        "code": "def update_currency_rate(self, currency, new_rate):\n    \"\"\"\n    Update the exchange rate for a certain currency\n    :param currency:string\n    :param new_rate:float\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.update_currency_rate('CNY', 7.18)\n    self.rates['CNY'] = 7.18\n    \"\"\"\n    if currency not in self.rates:\n        return False\n    self.rates[currency] = new_rate\n    return None",
+        "valid": true,
+        "reply": "```python\ndef update_currency_rate(self, currency, new_rate):\n    \"\"\"\n    Update the exchange rate for a certain currency\n    :param currency:string\n    :param new_rate:float\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.update_currency_rate('CNY', 7.18)\n    self.rates['CNY'] = 7.18\n    \"\"\"\n    if currency not in self.rates:\n        return False\n    self.rates[currency] = new_rate\n    return None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1122,
+        "cached_tokens": 0,
+        "completion_tokens": 542,
+        "reasoning_tokens": 427,
+        "cost": 0.00031076
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns False when the currency is unsupported and otherwise updates its rate and returns None, matching the documented behavior and using the class\u2019s existing `rates` field.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns False when the currency is unsupported and otherwise updates its rate and returns None, matching the documented behavior and using the class\u2019s existing `rates` field.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1295,
+            "cached_tokens": 0,
+            "completion_tokens": 49,
+            "reasoning_tokens": 0,
+            "cost": 0.000154
+          }
+        ],
+        "prompt_tokens": 1295,
+        "cached_tokens": 0,
+        "completion_tokens": 49,
+        "reasoning_tokens": 0,
+        "cost": 0.000154
+      },
+      "revision": null,
+      "final_code": "def update_currency_rate(self, currency, new_rate):\n    \"\"\"\n    Update the exchange rate for a certain currency\n    :param currency:string\n    :param new_rate:float\n    :return:If successful, returns None; if unsuccessful, returns False\n    >>> cc = CurrencyConverter()\n    >>> cc.update_currency_rate('CNY', 7.18)\n    self.rates['CNY'] = 7.18\n    \"\"\"\n    if currency not in self.rates:\n        return False\n    self.rates[currency] = new_rate\n    return None",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "CurrencyConverterTestConvert": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestGetSupportedCurrencies": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestAddCurrencyRate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestUpdateCurrencyRate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "CurrencyConverterTestConvert": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestGetSupportedCurrencies": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestAddCurrencyRate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTestUpdateCurrencyRate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CurrencyConverterTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass CurrencyConverter: \n    def __init__(self):\n        \"\"\"\n        Initialize the exchange rate of the US dollar against various currencies\n        \"\"\"\n        self.rates = {\n            'USD': 1.0,\n            'EUR': 0.85,\n            'GBP': 0.72,\n            'JPY': 110.15,\n            'CAD': 1.23,\n            'AUD': 1.34,\n            'CNY': 6.40,\n        }\n\n    def convert(self, amount, from_currency, to_currency):\n        \"\"\"\n        Convert the value of a given currency to another currency type\n        :param amount: float, The value of a given currency\n        :param from_currency: string, source currency type\n        :param to_currency: string, target currency type\n        :return: float, value converted to another currency type\n        >>> cc = CurrencyConverter()\n        >>> cc.convert(64, 'CNY','USD')\n        10.0\n        \"\"\"\n        if from_currency not in self.rates or to_currency not in self.rates:\n            return None\n        return amount * (self.rates[to_currency] / self.rates[from_currency])\n\n    def get_supported_currencies(self):\n        \"\"\"\n        Returns a list of supported currency types\n        :return:list, All supported currency types\n        >>> cc = CurrencyConverter()\n        >>> cc.get_supported_currencies()\n        ['USD','EUR','GBP','JPY','CAD','AUD','CNY']\n        \"\"\"\n        return list(self.rates.keys())\n\n    def add_currency_rate(self, currency, rate):\n        \"\"\"\n        Add a new supported currency type, return False if the currency type is already in the support list\n        :param currency:string, currency type to be added\n        :param rate:float, exchange rate for this type of currency\n        :return:If successful, returns None; if unsuccessful, returns False\n        >>> cc = CurrencyConverter()\n        >>> cc.add_currency_rate('KRW', 1308.84)\n        self.rates['KRW'] = 1308.84\n        \"\"\"\n        if currency in self.rates:\n            return False\n        self.rates[currency] = rate\n        return None\n\n    def update_currency_rate(self, currency, new_rate):\n        \"\"\"\n        Update the exchange rate for a certain currency\n        :param currency:string\n        :param new_rate:float\n        :return:If successful, returns None; if unsuccessful, returns False\n        >>> cc = CurrencyConverter()\n        >>> cc.update_currency_rate('CNY', 7.18)\n        self.rates['CNY'] = 7.18\n        \"\"\"\n        if currency not in self.rates:\n            return False\n        self.rates[currency] = new_rate\n        return None\n",
+  "source": "\n\nclass CurrencyConverter: \n    def __init__(self):\n        \"\"\"\n        Initialize the exchange rate of the US dollar against various currencies\n        \"\"\"\n        self.rates = {\n            'USD': 1.0,\n            'EUR': 0.85,\n            'GBP': 0.72,\n            'JPY': 110.15,\n            'CAD': 1.23,\n            'AUD': 1.34,\n            'CNY': 6.40,\n        }\n\n    def convert(self, amount, from_currency, to_currency):\n        \"\"\"\n        Convert the value of a given currency to another currency type\n        :param amount: float, The value of a given currency\n        :param from_currency: string, source currency type\n        :param to_currency: string, target currency type\n        :return: float, value converted to another currency type\n        >>> cc = CurrencyConverter()\n        >>> cc.convert(64, 'CNY','USD')\n        10.0\n        \"\"\"\n        if from_currency not in self.rates or to_currency not in self.rates:\n            return None\n        # Convert via USD base: amount / from_currency_rate * to_currency_rate\n        # Since rates are defined as units per USD\n        return amount * self.rates[to_currency] / self.rates[from_currency]\n\n    def get_supported_currencies(self):\n        \"\"\"\n        Returns a list of supported currency types\n        :return:list, All supported currency types\n        >>> cc = CurrencyConverter()\n        >>> cc.get_supported_currencies()\n        ['USD','EUR','GBP','JPY','CAD','AUD','CNY']\n        \"\"\"\n        return list(self.rates.keys())\n\n    def add_currency_rate(self, currency, rate):\n        \"\"\"\n        Add a new supported currency type, return False if the currency type is already in the support list\n        :param currency:string, currency type to be added\n        :param rate:float, exchange rate for this type of currency\n        :return:If successful, returns None; if unsuccessful, returns False\n        >>> cc = CurrencyConverter()\n        >>> cc.add_currency_rate('KRW', 1308.84)\n        self.rates['KRW'] = 1308.84\n        \"\"\"\n        if currency in self.rates:\n            return False\n        self.rates[currency] = rate\n        return None\n\n    def update_currency_rate(self, currency, new_rate):\n        \"\"\"\n        Update the exchange rate for a certain currency\n        :param currency:string\n        :param new_rate:float\n        :return:If successful, returns None; if unsuccessful, returns False\n        >>> cc = CurrencyConverter()\n        >>> cc.update_currency_rate('CNY', 7.18)\n        self.rates['CNY'] = 7.18\n        \"\"\"\n        if currency not in self.rates:\n            return False\n        self.rates[currency] = new_rate\n        return None\n"
+}

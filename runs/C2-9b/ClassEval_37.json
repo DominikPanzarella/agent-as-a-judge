@@ -1,0 +1,220 @@
+{
+  "task_id": "ClassEval_37",
+  "class_name": "EncryptionUtils",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "caesar_cipher",
+      "first": {
+        "code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n    \"\"\"\n    result = \"\"\n    for char in plaintext:\n        if char.isalpha():\n            base = ord('A') if char.isupper() else ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        else:\n            result += char\n    return result",
+        "valid": true,
+        "reply": "```python\ndef caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n    \"\"\"\n    result = \"\"\n    for char in plaintext:\n        if char.isalpha():\n            base = ord('A') if char.isupper() else ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        else:\n            result += char\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 470,
+        "cached_tokens": 0,
+        "completion_tokens": 600,
+        "reasoning_tokens": 447,
+        "cost": 0.00017022
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method works for ASCII letters, but `isalpha()` also accepts Unicode letters and then incorrectly shifts them relative to the ASCII `A`/`a` base (for example, `\u00e9` becomes an unrelated ASCII letter). Restrict the shifting condition to ASCII letters, or explicitly define and implement how other alphabets are handled.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method works for ASCII letters, but `isalpha()` also accepts Unicode letters and then incorrectly shifts them relative to the ASCII `A`/`a` base (for example, `\u00e9` becomes an unrelated ASCII letter). Restrict the shifting condition to ASCII letters, or explicitly define and implement how other alphabets are handled.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 734,
+            "cached_tokens": 0,
+            "completion_tokens": 337,
+            "reasoning_tokens": 251,
+            "cost": 0.0002419
+          }
+        ],
+        "prompt_tokens": 734,
+        "cached_tokens": 0,
+        "completion_tokens": 337,
+        "reasoning_tokens": 251,
+        "cost": 0.0002419
+      },
+      "revision": {
+        "code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n    \"\"\"\n    result = \"\"\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        else:\n            result += char\n    return result",
+        "valid": true,
+        "reply": "```python\ndef caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n    \"\"\"\n    result = \"\"\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        else:\n            result += char\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 759,
+        "cached_tokens": 0,
+        "completion_tokens": 795,
+        "reasoning_tokens": 573,
+        "cost": 0.000242709
+      },
+      "final_code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n    \"\"\"\n    result = \"\"\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n        else:\n            result += char\n    return result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "vigenere_cipher",
+      "first": {
+        "code": "def vigenere_cipher(self, plaintext):\n    \"\"\"\n    Encrypts the plaintext using the Vigenere cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.vigenere_cipher(\"abc\")\n    'kfa'\n    \"\"\"\n    result = \"\"\n    key = self.key.lower()\n    key_length = len(key)\n    key_index = 0\n\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shift = ord(key[key_index % key_length].upper()) - ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shift = ord(key[key_index % key_length]) - ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        else:\n            result += char\n    return result",
+        "valid": true,
+        "reply": "```python\ndef vigenere_cipher(self, plaintext):\n    \"\"\"\n    Encrypts the plaintext using the Vigenere cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.vigenere_cipher(\"abc\")\n    'kfa'\n    \"\"\"\n    result = \"\"\n    key = self.key.lower()\n    key_length = len(key)\n    key_index = 0\n    \n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shift = ord(key[key_index % key_length].upper()) - ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shift = ord(key[key_index % key_length]) - ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        else:\n            result += char\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 699,
+        "cached_tokens": 0,
+        "completion_tokens": 955,
+        "reasoning_tokens": 608,
+        "cost": 0.000264749
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method works for the example, but an empty key causes a division-by-zero error when plaintext contains a letter. Reject empty keys or handle them explicitly before encrypting.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method works for the example, but an empty key causes a division-by-zero error when plaintext contains a letter. Reject empty keys or handle them explicitly before encrypting.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1029,
+            "cached_tokens": 0,
+            "completion_tokens": 432,
+            "reasoning_tokens": 379,
+            "cost": 0.0003189
+          }
+        ],
+        "prompt_tokens": 1029,
+        "cached_tokens": 0,
+        "completion_tokens": 432,
+        "reasoning_tokens": 379,
+        "cost": 0.0003189
+      },
+      "revision": {
+        "code": "def vigenere_cipher(self, plaintext):\n    \"\"\"\n    Encrypts the plaintext using the Vigenere cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.vigenere_cipher(\"abc\")\n    'kfa'\n    \"\"\"\n    # Handle empty key case to prevent division-by-zero error\n    if not self.key:\n        return plaintext\n\n    result = \"\"\n    key = self.key.lower()\n    key_length = len(key)\n    key_index = 0\n\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shift = ord(key[key_index % key_length].upper()) - ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shift = ord(key[key_index % key_length]) - ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        else:\n            result += char\n    return result",
+        "valid": true,
+        "reply": "```python\ndef vigenere_cipher(self, plaintext):\n    \"\"\"\n    Encrypts the plaintext using the Vigenere cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.vigenere_cipher(\"abc\")\n    'kfa'\n    \"\"\"\n    # Handle empty key case to prevent division-by-zero error\n    if not self.key:\n        return plaintext\n    \n    result = \"\"\n    key = self.key.lower()\n    key_length = len(key)\n    key_index = 0\n    \n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shift = ord(key[key_index % key_length].upper()) - ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shift = ord(key[key_index % key_length]) - ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        else:\n            result += char\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1050,
+        "cached_tokens": 0,
+        "completion_tokens": 802,
+        "reasoning_tokens": 509,
+        "cost": 0.00028067
+      },
+      "final_code": "def vigenere_cipher(self, plaintext):\n    \"\"\"\n    Encrypts the plaintext using the Vigenere cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.vigenere_cipher(\"abc\")\n    'kfa'\n    \"\"\"\n    # Handle empty key case to prevent division-by-zero error\n    if not self.key:\n        return plaintext\n\n    result = \"\"\n    key = self.key.lower()\n    key_length = len(key)\n    key_index = 0\n\n    for char in plaintext:\n        if 'A' <= char <= 'Z':\n            base = ord('A')\n            shift = ord(key[key_index % key_length].upper()) - ord('A')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        elif 'a' <= char <= 'z':\n            base = ord('a')\n            shift = ord(key[key_index % key_length]) - ord('a')\n            shifted = (ord(char) - base + shift) % 26\n            result += chr(base + shifted)\n            key_index += 1\n        else:\n            result += char\n    return result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "rail_fence_cipher",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 991,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 4297,
+        "cost": 0.000864866
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "EncryptionUtilsTestCaesarCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestVigenereCipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestRailFenceCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 6,
+      "errors": 0,
+      "passed": false
+    },
+    "EncryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "EncryptionUtilsTestCaesarCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestVigenereCipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestRailFenceCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 6,
+      "errors": 0,
+      "passed": false
+    },
+    "EncryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass EncryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the class with a key.\n        :param key: The key to use for encryption, str.\n        \"\"\"\n        self.key = key\n\n    def caesar_cipher(self, plaintext, shift):\n        \"\"\"\n        Encrypts the plaintext using the Caesar cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :param shift: The number of characters to shift each character in the plaintext, int.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.caesar_cipher(\"abc\", 1)\n        'bcd'\n        \"\"\"\n        result = \"\"\n        for char in plaintext:\n            if char.isalpha():\n                base = ord('A') if char.isupper() else ord('a')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n            else:\n                result += char\n        return result\n\n    def vigenere_cipher(self, plaintext):\n        \"\"\"\n        Encrypts the plaintext using the Vigenere cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.vigenere_cipher(\"abc\")\n        'kfa'\n        \"\"\"\n        result = \"\"\n        key = self.key.lower()\n        key_length = len(key)\n        key_index = 0\n\n        for char in plaintext:\n            if 'A' <= char <= 'Z':\n                base = ord('A')\n                shift = ord(key[key_index % key_length].upper()) - ord('A')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n                key_index += 1\n            elif 'a' <= char <= 'z':\n                base = ord('a')\n                shift = ord(key[key_index % key_length]) - ord('a')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n                key_index += 1\n            else:\n                result += char\n        return result\n\n    def rail_fence_cipher(self,plain_text, rails):\n        return None\n",
+  "source": "\n\nclass EncryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the class with a key.\n        :param key: The key to use for encryption, str.\n        \"\"\"\n        self.key = key\n\n    def caesar_cipher(self, plaintext, shift):\n        \"\"\"\n        Encrypts the plaintext using the Caesar cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :param shift: The number of characters to shift each character in the plaintext, int.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.caesar_cipher(\"abc\", 1)\n        'bcd'\n        \"\"\"\n        result = \"\"\n        for char in plaintext:\n            if 'A' <= char <= 'Z':\n                base = ord('A')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n            elif 'a' <= char <= 'z':\n                base = ord('a')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n            else:\n                result += char\n        return result\n\n    def vigenere_cipher(self, plaintext):\n        \"\"\"\n        Encrypts the plaintext using the Vigenere cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.vigenere_cipher(\"abc\")\n        'kfa'\n        \"\"\"\n        # Handle empty key case to prevent division-by-zero error\n        if not self.key:\n            return plaintext\n\n        result = \"\"\n        key = self.key.lower()\n        key_length = len(key)\n        key_index = 0\n\n        for char in plaintext:\n            if 'A' <= char <= 'Z':\n                base = ord('A')\n                shift = ord(key[key_index % key_length].upper()) - ord('A')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n                key_index += 1\n            elif 'a' <= char <= 'z':\n                base = ord('a')\n                shift = ord(key[key_index % key_length]) - ord('a')\n                shifted = (ord(char) - base + shift) % 26\n                result += chr(base + shifted)\n                key_index += 1\n            else:\n                result += char\n        return result\n\n    def rail_fence_cipher(self,plain_text, rails):\n        return None\n"
+}

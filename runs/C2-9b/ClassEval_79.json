@@ -1,0 +1,464 @@
+{
+  "task_id": "ClassEval_79",
+  "class_name": "SQLGenerator",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "select",
+      "first": {
+        "code": "def select(self, fields=None, condition=None):\n    \"\"\"\n    Generates a SELECT SQL statement based on the specified fields and conditions.\n    :param fields: list, optional. Default is None. The list of fields to be queried.\n    :param condition: str, optional. Default is None. The condition expression for the query.\n    :return: str. The generated SQL statement.\n    >>> sql = SQLGenerator('table1')\n    >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n    'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n    \"\"\"\n    if fields is None:\n        fields_clause = '*'\n    else:\n        fields_clause = ', '.join(fields)\n\n    result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef select(self, fields=None, condition=None):\n    \"\"\"\n    Generates a SELECT SQL statement based on the specified fields and conditions.\n    :param fields: list, optional. Default is None. The list of fields to be queried.\n    :param condition: str, optional. Default is None. The condition expression for the query.\n    :return: str. The generated SQL statement.\n    >>> sql = SQLGenerator('table1')\n    >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n    'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n    \"\"\"\n    if fields is None:\n        fields_clause = '*'\n    else:\n        fields_clause = ', '.join(fields)\n    \n    result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n    \n    if condition:\n        result += f\" WHERE {condition}\"\n    \n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 871,
+        "cached_tokens": 0,
+        "completion_tokens": 681,
+        "reasoning_tokens": 464,
+        "cost": 0.000278918
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When `fields` is an empty list, joining it produces an empty clause and the method returns invalid SQL (`SELECT  FROM ...;`). Treat an empty list like `None` and select `*`, or reject it explicitly with a clear error.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When `fields` is an empty list, joining it produces an empty clause and the method returns invalid SQL (`SELECT  FROM ...;`). Treat an empty list like `None` and select `*`, or reject it explicitly with a clear error.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1136,
+            "cached_tokens": 0,
+            "completion_tokens": 297,
+            "reasoning_tokens": 228,
+            "cost": 0.00026210000000000003
+          }
+        ],
+        "prompt_tokens": 1136,
+        "cached_tokens": 0,
+        "completion_tokens": 297,
+        "reasoning_tokens": 228,
+        "cost": 0.00026210000000000003
+      },
+      "revision": {
+        "code": "def select(self, fields=None, condition=None):\n    \"\"\"\n    Generates a SELECT SQL statement based on the specified fields and conditions.\n    :param fields: list, optional. Default is None. The list of fields to be queried.\n    :param condition: str, optional. Default is None. The condition expression for the query.\n    :return: str. The generated SQL statement.\n    >>> sql = SQLGenerator('table1')\n    >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n    'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n    \"\"\"\n    if fields is None or len(fields) == 0:\n        fields_clause = '*'\n    else:\n        fields_clause = ', '.join(fields)\n\n    result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef select(self, fields=None, condition=None):\n    \"\"\"\n    Generates a SELECT SQL statement based on the specified fields and conditions.\n    :param fields: list, optional. Default is None. The list of fields to be queried.\n    :param condition: str, optional. Default is None. The condition expression for the query.\n    :return: str. The generated SQL statement.\n    >>> sql = SQLGenerator('table1')\n    >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n    'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n    \"\"\"\n    if fields is None or len(fields) == 0:\n        fields_clause = '*'\n    else:\n        fields_clause = ', '.join(fields)\n    \n    result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n    \n    if condition:\n        result += f\" WHERE {condition}\"\n    \n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1169,
+        "cached_tokens": 0,
+        "completion_tokens": 537,
+        "reasoning_tokens": 321,
+        "cost": 0.000291784
+      },
+      "final_code": "def select(self, fields=None, condition=None):\n    \"\"\"\n    Generates a SELECT SQL statement based on the specified fields and conditions.\n    :param fields: list, optional. Default is None. The list of fields to be queried.\n    :param condition: str, optional. Default is None. The condition expression for the query.\n    :return: str. The generated SQL statement.\n    >>> sql = SQLGenerator('table1')\n    >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n    'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n    \"\"\"\n    if fields is None or len(fields) == 0:\n        fields_clause = '*'\n    else:\n        fields_clause = ', '.join(fields)\n\n    result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert",
+      "first": {
+        "code": "def insert(self, data):\n    \"\"\"\n    Generates an INSERT SQL statement based on the given data.\n    :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n    :return: str. The generated SQL statement.\n    >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n    \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n    \"\"\"\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n\n    return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({values});\"",
+        "valid": true,
+        "reply": "```python\ndef insert(self, data):\n    \"\"\"\n    Generates an INSERT SQL statement based on the given data.\n    :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n    :return: str. The generated SQL statement.\n    >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n    \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n    \"\"\"\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n\n    return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({values});\"\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1093,
+        "cached_tokens": 0,
+        "completion_tokens": 383,
+        "reasoning_tokens": 223,
+        "cost": 0.000246734
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "It quotes every value, so numeric, boolean, and null values are emitted as string literals rather than their intended SQL values; an empty dictionary also produces invalid empty column and value lists. Format values according to their types (and handle or reject empty data), while escaping string literals safely.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "It quotes every value, so numeric, boolean, and null values are emitted as string literals rather than their intended SQL values; an empty dictionary also produces invalid empty column and value lists. Format values according to their types (and handle or reject empty data), while escaping string literals safely.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1303,
+            "cached_tokens": 0,
+            "completion_tokens": 249,
+            "reasoning_tokens": 173,
+            "cost": 0.0002548
+          }
+        ],
+        "prompt_tokens": 1303,
+        "cached_tokens": 0,
+        "completion_tokens": 249,
+        "reasoning_tokens": 173,
+        "cost": 0.0002548
+      },
+      "revision": {
+        "code": "def insert(self, data):\n    \"\"\"\n    Generates an INSERT SQL statement based on the given data.\n    :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n    :return: str. The generated SQL statement.\n    >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n    \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot insert data from an empty dictionary\")\n\n    columns = ', '.join(data.keys())\n    values = []\n\n    for value in data.values():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n        elif value is None:\n            values.append(\"NULL\")\n        elif isinstance(value, bool):\n            values.append(\"TRUE\" if value else \"FALSE\")\n        elif isinstance(value, (int, float)):\n            values.append(str(value))\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n\n    return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({', '.join(values)});\"",
+        "valid": true,
+        "reply": "```python\ndef insert(self, data):\n    \"\"\"\n    Generates an INSERT SQL statement based on the given data.\n    :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n    :return: str. The generated SQL statement.\n    >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n    \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot insert data from an empty dictionary\")\n    \n    columns = ', '.join(data.keys())\n    values = []\n    \n    for value in data.values():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n        elif value is None:\n            values.append(\"NULL\")\n        elif isinstance(value, bool):\n            values.append(\"TRUE\" if value else \"FALSE\")\n        elif isinstance(value, (int, float)):\n            values.append(str(value))\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n    \n    return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({', '.join(values)});\"\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1351,
+        "cached_tokens": 1088,
+        "completion_tokens": 997,
+        "reasoning_tokens": 761,
+        "cost": 0.000403322
+      },
+      "final_code": "def insert(self, data):\n    \"\"\"\n    Generates an INSERT SQL statement based on the given data.\n    :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n    :return: str. The generated SQL statement.\n    >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n    \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot insert data from an empty dictionary\")\n\n    columns = ', '.join(data.keys())\n    values = []\n\n    for value in data.values():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n        elif value is None:\n            values.append(\"NULL\")\n        elif isinstance(value, bool):\n            values.append(\"TRUE\" if value else \"FALSE\")\n        elif isinstance(value, (int, float)):\n            values.append(str(value))\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            values.append(f\"'{escaped_value}'\")\n\n    return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({', '.join(values)});\"",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update",
+      "first": {
+        "code": "def update(self, data, condition):\n    \"\"\"\n    Generates an UPDATE SQL statement based on the given data and condition.\n    :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n    :param condition: str. The condition expression for the update.\n    :return: str. The generated SQL statement.\n    >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n    \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot update with empty data\")\n\n    # Build the SET clause\n    set_items = []\n    for key, value in data.items():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n        elif value is None:\n            set_items.append(f\"{key} = NULL\")\n        elif isinstance(value, bool):\n            set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n        elif isinstance(value, (int, float)):\n            set_items.append(f\"{key} = {value}\")\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n\n    set_clause = ', '.join(set_items)\n    result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef update(self, data, condition):\n    \"\"\"\n    Generates an UPDATE SQL statement based on the given data and condition.\n    :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n    :param condition: str. The condition expression for the update.\n    :return: str. The generated SQL statement.\n    >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n    \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot update with empty data\")\n\n    # Build the SET clause\n    set_items = []\n    for key, value in data.items():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n        elif value is None:\n            set_items.append(f\"{key} = NULL\")\n        elif isinstance(value, bool):\n            set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n        elif isinstance(value, (int, float)):\n            set_items.append(f\"{key} = {value}\")\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n\n    set_clause = ', '.join(set_items)\n    result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1379,
+        "cached_tokens": 0,
+        "completion_tokens": 984,
+        "reasoning_tokens": 627,
+        "cost": 0.000420967
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method omits the WHERE clause when `condition` is empty, which can generate an UPDATE affecting every row even though the docstring requires an update condition. Reject an empty condition (or otherwise ensure the required condition is included).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method omits the WHERE clause when `condition` is empty, which can generate an UPDATE affecting every row even though the docstring requires an update condition. Reject an empty condition (or otherwise ensure the required condition is included).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1765,
+            "cached_tokens": 0,
+            "completion_tokens": 171,
+            "reasoning_tokens": 105,
+            "cost": 0.000262
+          }
+        ],
+        "prompt_tokens": 1765,
+        "cached_tokens": 0,
+        "completion_tokens": 171,
+        "reasoning_tokens": 105,
+        "cost": 0.000262
+      },
+      "revision": {
+        "code": "def update(self, data, condition):\n    \"\"\"\n    Generates an UPDATE SQL statement based on the given data and condition.\n    :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n    :param condition: str. The condition expression for the update.\n    :return: str. The generated SQL statement.\n    >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n    \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot update with empty data\")\n\n    if not condition:\n        raise ValueError(\"Condition cannot be empty for UPDATE statement\")\n\n    # Build the SET clause\n    set_items = []\n    for key, value in data.items():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n        elif value is None:\n            set_items.append(f\"{key} = NULL\")\n        elif isinstance(value, bool):\n            set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n        elif isinstance(value, (int, float)):\n            set_items.append(f\"{key} = {value}\")\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n\n    set_clause = ', '.join(set_items)\n    result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef update(self, data, condition):\n    \"\"\"\n    Generates an UPDATE SQL statement based on the given data and condition.\n    :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n    :param condition: str. The condition expression for the update.\n    :return: str. The generated SQL statement.\n    >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n    \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot update with empty data\")\n    \n    if not condition:\n        raise ValueError(\"Condition cannot be empty for UPDATE statement\")\n\n    # Build the SET clause\n    set_items = []\n    for key, value in data.items():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n        elif value is None:\n            set_items.append(f\"{key} = NULL\")\n        elif isinstance(value, bool):\n            set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n        elif isinstance(value, (int, float)):\n            set_items.append(f\"{key} = {value}\")\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n\n    set_clause = ', '.join(set_items)\n    result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1839,
+        "cached_tokens": 1344,
+        "completion_tokens": 508,
+        "reasoning_tokens": 120,
+        "cost": 0.000365103
+      },
+      "final_code": "def update(self, data, condition):\n    \"\"\"\n    Generates an UPDATE SQL statement based on the given data and condition.\n    :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n    :param condition: str. The condition expression for the update.\n    :return: str. The generated SQL statement.\n    >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n    \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot update with empty data\")\n\n    if not condition:\n        raise ValueError(\"Condition cannot be empty for UPDATE statement\")\n\n    # Build the SET clause\n    set_items = []\n    for key, value in data.items():\n        if isinstance(value, str):\n            escaped_value = value.replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n        elif value is None:\n            set_items.append(f\"{key} = NULL\")\n        elif isinstance(value, bool):\n            set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n        elif isinstance(value, (int, float)):\n            set_items.append(f\"{key} = {value}\")\n        else:\n            escaped_value = str(value).replace(\"'\", \"''\")\n            set_items.append(f\"{key} = '{escaped_value}'\")\n\n    set_clause = ', '.join(set_items)\n    result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "delete",
+      "first": {
+        "code": "def delete(self, condition):\n    \"\"\"\n    Generates a DELETE SQL statement based on the given condition.\n    :param condition: str. The condition expression for the delete.\n    :return: str. The generated SQL statement.\n    >>> sql.delete(\"field1 = value1\")\n    'DELETE FROM table1 WHERE field1 = value1;'\n    \"\"\"\n    result = f\"DELETE FROM {self.table_name}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef delete(self, condition):\n    \"\"\"\n    Generates a DELETE SQL statement based on the given condition.\n    :param condition: str. The condition expression for the delete.\n    :return: str. The generated SQL statement.\n    >>> sql.delete(\"field1 = value1\")\n    'DELETE FROM table1 WHERE field1 = value1;'\n    \"\"\"\n    result = f\"DELETE FROM {self.table_name}\"\n\n    if condition:\n        result += f\" WHERE {condition}\"\n\n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1770,
+        "cached_tokens": 0,
+        "completion_tokens": 585,
+        "reasoning_tokens": 529,
+        "cost": 0.000391845
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If `condition` is empty or `None`, this generates `DELETE FROM table` and deletes every row instead of restricting the deletion by a condition. Reject an empty condition, as `update` does, before building the statement.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If `condition` is empty or `None`, this generates `DELETE FROM table` and deletes every row instead of restricting the deletion by a condition. Reject an empty condition, as `update` does, before building the statement.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1886,
+            "cached_tokens": 0,
+            "completion_tokens": 244,
+            "reasoning_tokens": 179,
+            "cost": 0.0003106
+          }
+        ],
+        "prompt_tokens": 1886,
+        "cached_tokens": 0,
+        "completion_tokens": 244,
+        "reasoning_tokens": 179,
+        "cost": 0.0003106
+      },
+      "revision": {
+        "code": "def delete(self, condition):\n    \"\"\"\n    Generates a DELETE SQL statement based on the given condition.\n    :param condition: str. The condition expression for the delete.\n    :return: str. The generated SQL statement.\n    >>> sql.delete(\"field1 = value1\")\n    'DELETE FROM table1 WHERE field1 = value1;'\n    \"\"\"\n    if not condition:\n        raise ValueError(\"Condition cannot be empty for DELETE statement\")\n\n    result = f\"DELETE FROM {self.table_name}\"\n    result += f\" WHERE {condition}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef delete(self, condition):\n    \"\"\"\n    Generates a DELETE SQL statement based on the given condition.\n    :param condition: str. The condition expression for the delete.\n    :return: str. The generated SQL statement.\n    >>> sql.delete(\"field1 = value1\")\n    'DELETE FROM table1 WHERE field1 = value1;'\n    \"\"\"\n    if not condition:\n        raise ValueError(\"Condition cannot be empty for DELETE statement\")\n\n    result = f\"DELETE FROM {self.table_name}\"\n    result += f\" WHERE {condition}\"\n\n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1971,
+        "cached_tokens": 1728,
+        "completion_tokens": 417,
+        "reasoning_tokens": 309,
+        "cost": 0.000359082
+      },
+      "final_code": "def delete(self, condition):\n    \"\"\"\n    Generates a DELETE SQL statement based on the given condition.\n    :param condition: str. The condition expression for the delete.\n    :return: str. The generated SQL statement.\n    >>> sql.delete(\"field1 = value1\")\n    'DELETE FROM table1 WHERE field1 = value1;'\n    \"\"\"\n    if not condition:\n        raise ValueError(\"Condition cannot be empty for DELETE statement\")\n\n    result = f\"DELETE FROM {self.table_name}\"\n    result += f\" WHERE {condition}\"\n\n    return result + ';'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "select_female_under_age",
+      "first": {
+        "code": "def select_female_under_age(self, age):\n    \"\"\"\n    Generates a SQL statement to select females under a specified age.\n    :param age: int. The specified age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_female_under_age(30)\n    \"SELECT * FROM table1 WHERE age < 30 AND gender = 'female';\"\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age < {age} AND gender = 'female'\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef select_female_under_age(self, age):\n    \"\"\"\n    Generates a SQL statement to select females under a specified age.\n    :param age: int. The specified age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_female_under_age(30)\n    \"SELECT * FROM table1 WHERE age < 30 AND gender = 'female';\"\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age < {age} AND gender = 'female'\"\n    \n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1900,
+        "cached_tokens": 0,
+        "completion_tokens": 350,
+        "reasoning_tokens": 234,
+        "cost": 0.00035975
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method builds the query in the format specified by its docstring, using the instance\u2019s `table_name` and the supplied age, then appends a semicolon. It is correct for the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method builds the query in the format specified by its docstring, using the instance\u2019s `table_name` and the supplied age, then appends a semicolon. It is correct for the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2019,
+            "cached_tokens": 0,
+            "completion_tokens": 58,
+            "reasoning_tokens": 0,
+            "cost": 0.0002309
+          }
+        ],
+        "prompt_tokens": 2019,
+        "cached_tokens": 0,
+        "completion_tokens": 58,
+        "reasoning_tokens": 0,
+        "cost": 0.0002309
+      },
+      "revision": null,
+      "final_code": "def select_female_under_age(self, age):\n    \"\"\"\n    Generates a SQL statement to select females under a specified age.\n    :param age: int. The specified age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_female_under_age(30)\n    \"SELECT * FROM table1 WHERE age < 30 AND gender = 'female';\"\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age < {age} AND gender = 'female'\"\n\n    return result + ';'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "select_by_age_range",
+      "first": {
+        "code": "def select_by_age_range(self, min_age, max_age):\n    \"\"\"\n    Generates a SQL statement to select records within a specified age range.\n    :param min_age: int. The minimum age.\n    :param max_age: int. The maximum age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_by_age_range(20, 30)\n    'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age BETWEEN {min_age} AND {max_age}\"\n\n    return result + ';'",
+        "valid": true,
+        "reply": "```python\ndef select_by_age_range(self, min_age, max_age):\n    \"\"\"\n    Generates a SQL statement to select records within a specified age range.\n    :param min_age: int. The minimum age.\n    :param max_age: int. The maximum age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_by_age_range(20, 30)\n    'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age BETWEEN {min_age} AND {max_age}\"\n\n    return result + ';'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2019,
+        "cached_tokens": 0,
+        "completion_tokens": 342,
+        "reasoning_tokens": 199,
+        "cost": 0.000375729
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method formats the table name and both age bounds into the `BETWEEN` clause and appends the semicolon, matching the documented example and using an existing field. It correctly generates the specified SQL statement.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method formats the table name and both age bounds into the `BETWEEN` clause and appends the semicolon, matching the documented example and using an existing field. It correctly generates the specified SQL statement.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2144,
+            "cached_tokens": 0,
+            "completion_tokens": 58,
+            "reasoning_tokens": 0,
+            "cost": 0.0002434
+          }
+        ],
+        "prompt_tokens": 2144,
+        "cached_tokens": 0,
+        "completion_tokens": 58,
+        "reasoning_tokens": 0,
+        "cost": 0.0002434
+      },
+      "revision": null,
+      "final_code": "def select_by_age_range(self, min_age, max_age):\n    \"\"\"\n    Generates a SQL statement to select records within a specified age range.\n    :param min_age: int. The minimum age.\n    :param max_age: int. The maximum age.\n    :return: str. The generated SQL statement.\n    >>> sql.select_by_age_range(20, 30)\n    'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'\n    \"\"\"\n    result = f\"SELECT * FROM {self.table_name} WHERE age BETWEEN {min_age} AND {max_age}\"\n\n    return result + ';'",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "SQLGeneratorTestSelect": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestDelete": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestSelectFemaleUnderAge": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestSelectByAgeRange": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "SQLGeneratorTestSelect": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestDelete": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestSelectFemaleUnderAge": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestSelectByAgeRange": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLGeneratorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass SQLGenerator: \n    def __init__(self, table_name):\n        \"\"\"\n        Initialize the table name.\n        :param table_name: str\n        \"\"\"\n        self.table_name = table_name\n\n    def select(self, fields=None, condition=None):\n        \"\"\"\n        Generates a SELECT SQL statement based on the specified fields and conditions.\n        :param fields: list, optional. Default is None. The list of fields to be queried.\n        :param condition: str, optional. Default is None. The condition expression for the query.\n        :return: str. The generated SQL statement.\n        >>> sql = SQLGenerator('table1')\n        >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n        'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n        \"\"\"\n        if fields is None:\n            fields_clause = '*'\n        else:\n            fields_clause = ', '.join(fields)\n\n        result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n\n        if condition:\n            result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def insert(self, data):\n        \"\"\"\n        Generates an INSERT SQL statement based on the given data.\n        :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n        :return: str. The generated SQL statement.\n        >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n        \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n        \"\"\"\n        columns = ', '.join(data.keys())\n        values = ', '.join(f\"'{value}'\" for value in data.values())\n\n        return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({values});\"\n\n    def update(self, data, condition):\n        \"\"\"\n        Generates an UPDATE SQL statement based on the given data and condition.\n        :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n        :param condition: str. The condition expression for the update.\n        :return: str. The generated SQL statement.\n        >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n        \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot update with empty data\")\n\n        # Build the SET clause\n        set_items = []\n        for key, value in data.items():\n            if isinstance(value, str):\n                escaped_value = value.replace(\"'\", \"''\")\n                set_items.append(f\"{key} = '{escaped_value}'\")\n            elif value is None:\n                set_items.append(f\"{key} = NULL\")\n            elif isinstance(value, bool):\n                set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n            elif isinstance(value, (int, float)):\n                set_items.append(f\"{key} = {value}\")\n            else:\n                escaped_value = str(value).replace(\"'\", \"''\")\n                set_items.append(f\"{key} = '{escaped_value}'\")\n\n        set_clause = ', '.join(set_items)\n        result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n        if condition:\n            result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def delete(self, condition):\n        \"\"\"\n        Generates a DELETE SQL statement based on the given condition.\n        :param condition: str. The condition expression for the delete.\n        :return: str. The generated SQL statement.\n        >>> sql.delete(\"field1 = value1\")\n        'DELETE FROM table1 WHERE field1 = value1;'\n        \"\"\"\n        result = f\"DELETE FROM {self.table_name}\"\n\n        if condition:\n            result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def select_female_under_age(self, age):\n        \"\"\"\n        Generates a SQL statement to select females under a specified age.\n        :param age: int. The specified age.\n        :return: str. The generated SQL statement.\n        >>> sql.select_female_under_age(30)\n        \"SELECT * FROM table1 WHERE age < 30 AND gender = 'female';\"\n        \"\"\"\n        result = f\"SELECT * FROM {self.table_name} WHERE age < {age} AND gender = 'female'\"\n\n        return result + ';'\n\n    def select_by_age_range(self, min_age, max_age):\n        \"\"\"\n        Generates a SQL statement to select records within a specified age range.\n        :param min_age: int. The minimum age.\n        :param max_age: int. The maximum age.\n        :return: str. The generated SQL statement.\n        >>> sql.select_by_age_range(20, 30)\n        'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'\n        \"\"\"\n        result = f\"SELECT * FROM {self.table_name} WHERE age BETWEEN {min_age} AND {max_age}\"\n\n        return result + ';'\n",
+  "source": "\n\nclass SQLGenerator: \n    def __init__(self, table_name):\n        \"\"\"\n        Initialize the table name.\n        :param table_name: str\n        \"\"\"\n        self.table_name = table_name\n\n    def select(self, fields=None, condition=None):\n        \"\"\"\n        Generates a SELECT SQL statement based on the specified fields and conditions.\n        :param fields: list, optional. Default is None. The list of fields to be queried.\n        :param condition: str, optional. Default is None. The condition expression for the query.\n        :return: str. The generated SQL statement.\n        >>> sql = SQLGenerator('table1')\n        >>> sql.select(['field1', 'field2'], 'filed3 = value1')\n        'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'\n        \"\"\"\n        if fields is None or len(fields) == 0:\n            fields_clause = '*'\n        else:\n            fields_clause = ', '.join(fields)\n\n        result = f\"SELECT {fields_clause} FROM {self.table_name}\"\n\n        if condition:\n            result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def insert(self, data):\n        \"\"\"\n        Generates an INSERT SQL statement based on the given data.\n        :param data: dict. The data to be inserted, in dictionary form where keys are field names and values are field values.\n        :return: str. The generated SQL statement.\n        >>> sql.insert({'key1': 'value1', 'key2': 'value2'})\n        \"INSERT INTO table1 (key1, key2) VALUES ('value1', 'value2');\"\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot insert data from an empty dictionary\")\n\n        columns = ', '.join(data.keys())\n        values = []\n\n        for value in data.values():\n            if isinstance(value, str):\n                escaped_value = value.replace(\"'\", \"''\")\n                values.append(f\"'{escaped_value}'\")\n            elif value is None:\n                values.append(\"NULL\")\n            elif isinstance(value, bool):\n                values.append(\"TRUE\" if value else \"FALSE\")\n            elif isinstance(value, (int, float)):\n                values.append(str(value))\n            else:\n                escaped_value = str(value).replace(\"'\", \"''\")\n                values.append(f\"'{escaped_value}'\")\n\n        return f\"INSERT INTO {self.table_name} ({columns}) VALUES ({', '.join(values)});\"\n\n    def update(self, data, condition):\n        \"\"\"\n        Generates an UPDATE SQL statement based on the given data and condition.\n        :param data: dict. The data to be updated, in dictionary form where keys are field names and values are new field values.\n        :param condition: str. The condition expression for the update.\n        :return: str. The generated SQL statement.\n        >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, \"field3 = value1\")\n        \"UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;\"\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot update with empty data\")\n\n        if not condition:\n            raise ValueError(\"Condition cannot be empty for UPDATE statement\")\n\n        # Build the SET clause\n        set_items = []\n        for key, value in data.items():\n            if isinstance(value, str):\n                escaped_value = value.replace(\"'\", \"''\")\n                set_items.append(f\"{key} = '{escaped_value}'\")\n            elif value is None:\n                set_items.append(f\"{key} = NULL\")\n            elif isinstance(value, bool):\n                set_items.append(f\"{key} = {'TRUE' if value else 'FALSE'}\")\n            elif isinstance(value, (int, float)):\n                set_items.append(f\"{key} = {value}\")\n            else:\n                escaped_value = str(value).replace(\"'\", \"''\")\n                set_items.append(f\"{key} = '{escaped_value}'\")\n\n        set_clause = ', '.join(set_items)\n        result = f\"UPDATE {self.table_name} SET {set_clause}\"\n\n        if condition:\n            result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def delete(self, condition):\n        \"\"\"\n        Generates a DELETE SQL statement based on the given condition.\n        :param condition: str. The condition expression for the delete.\n        :return: str. The generated SQL statement.\n        >>> sql.delete(\"field1 = value1\")\n        'DELETE FROM table1 WHERE field1 = value1;'\n        \"\"\"\n        if not condition:\n            raise ValueError(\"Condition cannot be empty for DELETE statement\")\n\n        result = f\"DELETE FROM {self.table_name}\"\n        result += f\" WHERE {condition}\"\n\n        return result + ';'\n\n    def select_female_under_age(self, age):\n        \"\"\"\n        Generates a SQL statement to select females under a specified age.\n        :param age: int. The specified age.\n        :return: str. The generated SQL statement.\n        >>> sql.select_female_under_age(30)\n        \"SELECT * FROM table1 WHERE age < 30 AND gender = 'female';\"\n        \"\"\"\n        result = f\"SELECT * FROM {self.table_name} WHERE age < {age} AND gender = 'female'\"\n\n        return result + ';'\n\n    def select_by_age_range(self, min_age, max_age):\n        \"\"\"\n        Generates a SQL statement to select records within a specified age range.\n        :param min_age: int. The minimum age.\n        :param max_age: int. The maximum age.\n        :return: str. The generated SQL statement.\n        >>> sql.select_by_age_range(20, 30)\n        'SELECT * FROM table1 WHERE age BETWEEN 20 AND 30;'\n        \"\"\"\n        result = f\"SELECT * FROM {self.table_name} WHERE age BETWEEN {min_age} AND {max_age}\"\n\n        return result + ';'\n"
+}

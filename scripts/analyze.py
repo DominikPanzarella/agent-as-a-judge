@@ -46,6 +46,11 @@ def outcomes(results):
     return {(t, m["method_name"]): bool(m["passed"]) for t, r in results.items() for m in r["methods"]}
 
 
+def first_outcomes(results):
+    """(task_id, method_name) -> True if the first version passes its tests."""
+    return {(t, m["method_name"]): bool(m["passed_first"]) for t, r in results.items() for m in r["methods"]}
+
+
 def share(values):
     return f"{sum(values)} of {len(values)} ({sum(values) / len(values):.1%})" if values else "none"
 
@@ -74,7 +79,7 @@ def describe(name, results, weak):
     a = judge.agreement(rows)
     print(f"  judge on first versions ({a['n']} methods): agreement {a['accuracy']:.2f}, kappa {a['kappa']:.2f}, "
           f"TPR {a['tpr']:.2f} of {a['n_passing']} passing, TNR {a['tnr']:.2f} of {a['n_failing']} failing")
-    first = {(t, m["method_name"]): bool(m["passed_first"]) for t, r in results.items() for m in r["methods"]}
+    first = first_outcomes(results)
     fixed = sum(not first[k] and out[k] for k in out)
     broken = sum(first[k] and not out[k] for k in out)
     print(f"  revisions: {sum(r['revised'] for r in rows)} after a NOT OK; methods fixed {fixed}, broken {broken}")
@@ -86,8 +91,9 @@ def compare(name_a, a, name_b, b):
     paired(name_a, outcomes({t: a[t] for t in common}), name_b, outcomes({t: b[t] for t in common}))
 
 
-def paired(name_a, oa, name_b, ob):
-    """The same methods under two conditions: exact McNemar test and bootstrap over classes."""
+def difference(oa, ob):
+    """The same methods under two conditions, b against a: exact McNemar test and bootstrap over
+    classes of the difference in the share of passing methods."""
     keys = sorted(set(oa) & set(ob))
     common = sorted({k[0] for k in keys})
     only_a = sum(oa[k] and not ob[k] for k in keys)
@@ -101,9 +107,16 @@ def paired(name_a, oa, name_b, ob):
     diffs = per_class[idx, 0].sum(axis=1) / per_class[idx, 1].sum(axis=1)
     low, high = np.percentile(diffs, [2.5, 97.5])
     diff = per_class[:, 0].sum() / per_class[:, 1].sum()
-    print(f"  {name_b} vs {name_a} on {len(keys)} methods of {len(common)} classes: "
-          f"passes only in {name_b} {only_b}, only in {name_a} {only_a}, McNemar p = {p:.3f}; "
-          f"difference {diff:+.1%}, 95% bootstrap interval [{low:+.1%}, {high:+.1%}]")
+    return {"n_methods": len(keys), "n_classes": len(common), "only_a": only_a, "only_b": only_b,
+            "p": p, "diff": diff, "low": low, "high": high}
+
+
+def paired(name_a, oa, name_b, ob):
+    d = difference(oa, ob)
+    p = f"p = {d['p']:.3f}" if d["p"] >= 0.001 else "p < 0.001"
+    print(f"  {name_b} vs {name_a} on {d['n_methods']} methods of {d['n_classes']} classes: "
+          f"passes only in {name_b} {d['only_b']}, only in {name_a} {d['only_a']}, McNemar {p}; "
+          f"difference {d['diff']:+.1%}, 95% bootstrap interval [{d['low']:+.1%}, {d['high']:+.1%}]")
 
 
 def sample_disagreements(name, results, n):

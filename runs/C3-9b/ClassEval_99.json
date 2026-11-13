@@ -1,0 +1,317 @@
+{
+  "task_id": "ClassEval_99",
+  "class_name": "ZipFileProcessor",
+  "setup": "C3",
+  "name": "C3-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": "C2-9b",
+  "methods": [
+    {
+      "method_name": "read_zip_file",
+      "first": {
+        "code": "def read_zip_file(self):\n    \"\"\"\n    Get open file object\n    :return:If successful, returns the open file object; otherwise, returns None\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> file = zfp.read_zip_file()\n    \"\"\"\n    try:\n        return zipfile.ZipFile(self.file_name, 'r')\n    except Exception:\n        return None",
+        "valid": true,
+        "reply": "\n\n```python\nimport zipfile\n\nclass ZipFileProcessor:\n    \"\"\"\n    This is a compressed file processing class that provides the ability to read and decompress compressed files\n    \"\"\"\n\n    def __init__(self, file_name):\n        \"\"\"\n        Initialize file name\n        :param file_name:string\n        \"\"\"\n        self.file_name = file_name\n\n    def read_zip_file(self):\n        \"\"\"\n        Get open file object\n        :return:If successful, returns the open file object; otherwise, returns None\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> file = zfp.read_zip_file()\n        \"\"\"\n        try:\n            return zipfile.ZipFile(self.file_name, 'r')\n        except Exception:\n            return None\n\n    def extract_all(self, output_path):\n        \"\"\"\n        Extract all zip files and place them in the specified path\n        :param output_path: string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_all(\"result/aaa\")\n        \"\"\"\n\n    def extract_file(self, file_name, output_path):\n        \"\"\"\n        Extract the file with the specified name from the zip file and place it in the specified path\n        :param file_name:string, The name of the file to be uncompressed\n        :param output_path:string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n        \"\"\"\n\n    def create_zip_file(self, files, output_file_name):\n        \"\"\"\n        Compress the specified file list into a zip file and place it in the specified path\n        :param files:list of string, List of files to compress\n        :param output_file_name: string, Specified output path\n        :return:True or False, representing whether the compression operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n        \"\"\"\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 579,
+        "cached_tokens": 0,
+        "completion_tokens": 623,
+        "reasoning_tokens": 135,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method opens the ZIP archive in read mode and returns the resulting `ZipFile` object; if opening it raises an exception, it returns `None`, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method opens the ZIP archive in read mode and returns the resulting `ZipFile` object; if opening it raises an exception, it returns `None`, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 771,
+            "cached_tokens": 0,
+            "completion_tokens": 122,
+            "reasoning_tokens": 70,
+            "cost": 0.00013810000000000002
+          }
+        ],
+        "prompt_tokens": 771,
+        "cached_tokens": 0,
+        "completion_tokens": 122,
+        "reasoning_tokens": 70,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": null,
+      "final_code": "def read_zip_file(self):\n    \"\"\"\n    Get open file object\n    :return:If successful, returns the open file object; otherwise, returns None\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> file = zfp.read_zip_file()\n    \"\"\"\n    try:\n        return zipfile.ZipFile(self.file_name, 'r')\n    except Exception:\n        return None",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "extract_all",
+      "first": {
+        "code": "def extract_all(self, output_path):\n    \"\"\"\n    Extract all zip files and place them in the specified path\n    :param output_path: string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_all(\"result/aaa\")\n    \"\"\"\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extractall(output_path)\n        zip_file.close()\n        return True\n    except Exception:\n        return False",
+        "valid": true,
+        "reply": "```python\ndef extract_all(self, output_path):\n    \"\"\"\n    Extract all zip files and place them in the specified path\n    :param output_path: string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_all(\"result/aaa\")\n    \"\"\"\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extractall(output_path)\n        zip_file.close()\n        return True\n    except Exception:\n        return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 677,
+        "cached_tokens": 0,
+        "completion_tokens": 562,
+        "reasoning_tokens": 456,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If `extractall` raises an exception, the method returns `False` without closing the opened ZIP file. Close it in a `finally` block so the archive is released on both success and failure.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If `extractall` raises an exception, the method returns `False` without closing the opened ZIP file. Close it in a `finally` block so the archive is released on both success and failure.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 961,
+            "cached_tokens": 0,
+            "completion_tokens": 235,
+            "reasoning_tokens": 175,
+            "cost": 0.00021360000000000001
+          }
+        ],
+        "prompt_tokens": 961,
+        "cached_tokens": 0,
+        "completion_tokens": 235,
+        "reasoning_tokens": 175,
+        "cost": 0.00021360000000000001
+      },
+      "revision": {
+        "code": "def extract_all(self, output_path):\n    \"\"\"\n    Extract all zip files and place them in the specified path\n    :param output_path: string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_all(\"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extractall(output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef extract_all(self, output_path):\n    \"\"\"\n    Extract all zip files and place them in the specified path\n    :param output_path: string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_all(\"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extractall(output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 900,
+        "cached_tokens": 0,
+        "completion_tokens": 666,
+        "reasoning_tokens": 554,
+        "cost": 0.0001899
+      },
+      "final_code": "def extract_all(self, output_path):\n    \"\"\"\n    Extract all zip files and place them in the specified path\n    :param output_path: string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_all(\"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extractall(output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "extract_file",
+      "first": {
+        "code": "def extract_file(self, file_name, output_path):\n    \"\"\"\n    Extract the file with the specified name from the zip file and place it in the specified path\n    :param file_name:string, The name of the file to be uncompressed\n    :param output_path:string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extract(file_name, output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef extract_file(self, file_name, output_path):\n    \"\"\"\n    Extract the file with the specified name from the zip file and place it in the specified path\n    :param file_name:string, The name of the file to be uncompressed\n    :param output_path:string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extract(file_name, output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 834,
+        "cached_tokens": 0,
+        "completion_tokens": 1298,
+        "reasoning_tokens": 1213,
+        "cost": 0.0002781
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method opens the ZIP archive, returns `False` if opening or extraction fails, returns `True` when extraction succeeds, and closes the archive in `finally` on every path. This matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method opens the ZIP archive, returns `False` if opening or extraction fails, returns `True` when extraction succeeds, and closes the archive in `finally` on every path. This matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1219,
+            "cached_tokens": 0,
+            "completion_tokens": 149,
+            "reasoning_tokens": 88,
+            "cost": 0.0001964
+          }
+        ],
+        "prompt_tokens": 1219,
+        "cached_tokens": 0,
+        "completion_tokens": 149,
+        "reasoning_tokens": 88,
+        "cost": 0.0001964
+      },
+      "revision": null,
+      "final_code": "def extract_file(self, file_name, output_path):\n    \"\"\"\n    Extract the file with the specified name from the zip file and place it in the specified path\n    :param file_name:string, The name of the file to be uncompressed\n    :param output_path:string, The location of the extracted file\n    :return: True or False, representing whether the extraction operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = self.read_zip_file()\n        if zip_file is None:\n            return False\n        zip_file.extract(file_name, output_path)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "create_zip_file",
+      "first": {
+        "code": "def create_zip_file(self, files, output_file_name):\n    \"\"\"\n    Compress the specified file list into a zip file and place it in the specified path\n    :param files:list of string, List of files to compress\n    :param output_file_name: string, Specified output path\n    :return:True or False, representing whether the compression operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = zipfile.ZipFile(output_file_name, 'w')\n        for file in files:\n            zip_file.write(file)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_zip_file(self, files, output_file_name):\n    \"\"\"\n    Compress the specified file list into a zip file and place it in the specified path\n    :param files:list of string, List of files to compress\n    :param output_file_name: string, Specified output path\n    :return:True or False, representing whether the compression operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = zipfile.ZipFile(output_file_name, 'w')\n        for file in files:\n            zip_file.write(file)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1023,
+        "cached_tokens": 0,
+        "completion_tokens": 705,
+        "reasoning_tokens": 542,
+        "cost": 0.00020805
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`ZipFile` defaults to `ZIP_STORED`, so the files are added to the archive without compression. Pass `compression=zipfile.ZIP_DEFLATED` when opening the archive to perform compression as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`ZipFile` defaults to `ZIP_STORED`, so the files are added to the archive without compression. Pass `compression=zipfile.ZIP_DEFLATED` when opening the archive to perform compression as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1450,
+            "cached_tokens": 0,
+            "completion_tokens": 563,
+            "reasoning_tokens": 499,
+            "cost": 0.0004265
+          }
+        ],
+        "prompt_tokens": 1450,
+        "cached_tokens": 0,
+        "completion_tokens": 563,
+        "reasoning_tokens": 499,
+        "cost": 0.0004265
+      },
+      "revision": {
+        "code": "def create_zip_file(self, files, output_file_name):\n    \"\"\"\n    Compress the specified file list into a zip file and place it in the specified path\n    :param files:list of string, List of files to compress\n    :param output_file_name: string, Specified output path\n    :return:True or False, representing whether the compression operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = zipfile.ZipFile(output_file_name, 'w', compression=zipfile.ZIP_DEFLATED)\n        for file in files:\n            zip_file.write(file)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_zip_file(self, files, output_file_name):\n    \"\"\"\n    Compress the specified file list into a zip file and place it in the specified path\n    :param files:list of string, List of files to compress\n    :param output_file_name: string, Specified output path\n    :return:True or False, representing whether the compression operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = zipfile.ZipFile(output_file_name, 'w', compression=zipfile.ZIP_DEFLATED)\n        for file in files:\n            zip_file.write(file)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1305,
+        "cached_tokens": 0,
+        "completion_tokens": 278,
+        "reasoning_tokens": 77,
+        "cost": 0.0001722
+      },
+      "final_code": "def create_zip_file(self, files, output_file_name):\n    \"\"\"\n    Compress the specified file list into a zip file and place it in the specified path\n    :param files:list of string, List of files to compress\n    :param output_file_name: string, Specified output path\n    :return:True or False, representing whether the compression operation was successful\n    >>> zfp = ZipFileProcessor(\"aaa.zip\")\n    >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n    \"\"\"\n    zip_file = None\n    try:\n        zip_file = zipfile.ZipFile(output_file_name, 'w', compression=zipfile.ZIP_DEFLATED)\n        for file in files:\n            zip_file.write(file)\n        return True\n    except Exception:\n        return False\n    finally:\n        if zip_file is not None:\n            zip_file.close()",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "ZipFileProcessorTestReadZipFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestExtractAll": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestExtractFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestCreateZipFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "ZipFileProcessorTestReadZipFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestExtractAll": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestExtractFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTestCreateZipFile": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ZipFileProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import zipfile\n\nclass ZipFileProcessor: \n    def __init__(self, file_name):\n        \"\"\"\n        Initialize file name\n        :param file_name:string\n        \"\"\"\n        self.file_name = file_name\n\n    def read_zip_file(self):\n        \"\"\"\n        Get open file object\n        :return:If successful, returns the open file object; otherwise, returns None\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> file = zfp.read_zip_file()\n        \"\"\"\n        try:\n            return zipfile.ZipFile(self.file_name, 'r')\n        except Exception:\n            return None\n\n    def extract_all(self, output_path):\n        \"\"\"\n        Extract all zip files and place them in the specified path\n        :param output_path: string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_all(\"result/aaa\")\n        \"\"\"\n        try:\n            zip_file = self.read_zip_file()\n            if zip_file is None:\n                return False\n            zip_file.extractall(output_path)\n            zip_file.close()\n            return True\n        except Exception:\n            return False\n\n    def extract_file(self, file_name, output_path):\n        \"\"\"\n        Extract the file with the specified name from the zip file and place it in the specified path\n        :param file_name:string, The name of the file to be uncompressed\n        :param output_path:string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n        \"\"\"\n        zip_file = None\n        try:\n            zip_file = self.read_zip_file()\n            if zip_file is None:\n                return False\n            zip_file.extract(file_name, output_path)\n            return True\n        except Exception:\n            return False\n        finally:\n            if zip_file is not None:\n                zip_file.close()\n\n    def create_zip_file(self, files, output_file_name):\n        \"\"\"\n        Compress the specified file list into a zip file and place it in the specified path\n        :param files:list of string, List of files to compress\n        :param output_file_name: string, Specified output path\n        :return:True or False, representing whether the compression operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n        \"\"\"\n        zip_file = None\n        try:\n            zip_file = zipfile.ZipFile(output_file_name, 'w')\n            for file in files:\n                zip_file.write(file)\n            return True\n        except Exception:\n            return False\n        finally:\n            if zip_file is not None:\n                zip_file.close()\n",
+  "source": "import zipfile\n\nclass ZipFileProcessor: \n    def __init__(self, file_name):\n        \"\"\"\n        Initialize file name\n        :param file_name:string\n        \"\"\"\n        self.file_name = file_name\n\n    def read_zip_file(self):\n        \"\"\"\n        Get open file object\n        :return:If successful, returns the open file object; otherwise, returns None\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> file = zfp.read_zip_file()\n        \"\"\"\n        try:\n            return zipfile.ZipFile(self.file_name, 'r')\n        except Exception:\n            return None\n\n    def extract_all(self, output_path):\n        \"\"\"\n        Extract all zip files and place them in the specified path\n        :param output_path: string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_all(\"result/aaa\")\n        \"\"\"\n        zip_file = None\n        try:\n            zip_file = self.read_zip_file()\n            if zip_file is None:\n                return False\n            zip_file.extractall(output_path)\n            return True\n        except Exception:\n            return False\n        finally:\n            if zip_file is not None:\n                zip_file.close()\n\n    def extract_file(self, file_name, output_path):\n        \"\"\"\n        Extract the file with the specified name from the zip file and place it in the specified path\n        :param file_name:string, The name of the file to be uncompressed\n        :param output_path:string, The location of the extracted file\n        :return: True or False, representing whether the extraction operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.extract_file(\"bbb.txt\", \"result/aaa\")\n        \"\"\"\n        zip_file = None\n        try:\n            zip_file = self.read_zip_file()\n            if zip_file is None:\n                return False\n            zip_file.extract(file_name, output_path)\n            return True\n        except Exception:\n            return False\n        finally:\n            if zip_file is not None:\n                zip_file.close()\n\n    def create_zip_file(self, files, output_file_name):\n        \"\"\"\n        Compress the specified file list into a zip file and place it in the specified path\n        :param files:list of string, List of files to compress\n        :param output_file_name: string, Specified output path\n        :return:True or False, representing whether the compression operation was successful\n        >>> zfp = ZipFileProcessor(\"aaa.zip\")\n        >>> zfp.create_zip_file([\"bbb.txt\", \"ccc,txt\", \"ddd.txt\"], \"output/bcd\")\n        \"\"\"\n        zip_file = None\n        try:\n            zip_file = zipfile.ZipFile(output_file_name, 'w', compression=zipfile.ZIP_DEFLATED)\n            for file in files:\n                zip_file.write(file)\n            return True\n        except Exception:\n            return False\n        finally:\n            if zip_file is not None:\n                zip_file.close()\n"
+}

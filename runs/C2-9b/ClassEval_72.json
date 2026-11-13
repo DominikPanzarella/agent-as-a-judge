@@ -1,0 +1,709 @@
+{
+  "task_id": "ClassEval_72",
+  "class_name": "RegexUtils",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "match",
+      "first": {
+        "code": "def match(self, pattern, text):\n    \"\"\"\n    Check if the text matches the regular expression\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: True or False, representing whether the text matches the regular expression or not\n    >>> ru = RegexUtils()\n    >>> ru.match(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    return bool(re.fullmatch(pattern, text))",
+        "valid": true,
+        "reply": "```python\ndef match(self, pattern, text):\n    \"\"\"\n    Check if the text matches the regular expression\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: True or False, representing whether the text matches the regular expression or not\n    >>> ru = RegexUtils()\n    >>> ru.match(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    return bool(re.fullmatch(pattern, text))\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1382,
+        "cached_tokens": 0,
+        "completion_tokens": 737,
+        "reasoning_tokens": 616,
+        "cost": 0.00040924
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns `True` only when the entire text matches the pattern, which fits the docstring and example; the local `re` import is valid.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns `True` only when the entire text matches the pattern, which fits the docstring and example; the local `re` import is valid.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1480,
+            "cached_tokens": 0,
+            "completion_tokens": 120,
+            "reasoning_tokens": 70,
+            "cost": 0.000208
+          }
+        ],
+        "prompt_tokens": 1480,
+        "cached_tokens": 0,
+        "completion_tokens": 120,
+        "reasoning_tokens": 70,
+        "cost": 0.000208
+      },
+      "revision": null,
+      "final_code": "def match(self, pattern, text):\n    \"\"\"\n    Check if the text matches the regular expression\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: True or False, representing whether the text matches the regular expression or not\n    >>> ru = RegexUtils()\n    >>> ru.match(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    return bool(re.fullmatch(pattern, text))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "findall",
+      "first": {
+        "code": "def findall(self, pattern, text):\n    \"\"\"\n    Find all matching substrings and return a list of all matching substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: list of string, List of all matching substrings\n    >>> ru = RegexUtils()\n    >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['123-456-7890', '876-286-9876', '987-762-9767']\n    \"\"\"\n    return re.findall(pattern, text)",
+        "valid": true,
+        "reply": "```python\n    def findall(self, pattern, text):\n        \"\"\"\n        Find all matching substrings and return a list of all matching substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: list of string, List of all matching substrings\n        >>> ru = RegexUtils()\n        >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['123-456-7890', '876-286-9876', '987-762-9767']\n        \"\"\"\n        return re.findall(pattern, text)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1525,
+        "cached_tokens": 0,
+        "completion_tokens": 704,
+        "reasoning_tokens": 458,
+        "cost": 0.000424926
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`re.findall` returns captured groups rather than the full matching substrings when `pattern` contains capturing groups (and tuples when it has multiple groups), contrary to the documented list of matching substrings. Use `re.finditer` and return each match\u2019s `group(0)` to consistently return full matches.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`re.findall` returns captured groups rather than the full matching substrings when `pattern` contains capturing groups (and tuples when it has multiple groups), contrary to the documented list of matching substrings. Use `re.finditer` and return each match\u2019s `group(0)` to consistently return full matches.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1654,
+            "cached_tokens": 0,
+            "completion_tokens": 214,
+            "reasoning_tokens": 133,
+            "cost": 0.00027239999999999995
+          }
+        ],
+        "prompt_tokens": 1654,
+        "cached_tokens": 0,
+        "completion_tokens": 214,
+        "reasoning_tokens": 133,
+        "cost": 0.00027239999999999995
+      },
+      "revision": {
+        "code": "def findall(self, pattern, text):\n    \"\"\"\n    Find all matching substrings and return a list of all matching substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: list of string, List of all matching substrings\n    >>> ru = RegexUtils()\n    >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['123-456-7890', '876-286-9876', '987-762-9767']\n    \"\"\"\n    import re\n    return [match.group(0) for match in re.finditer(pattern, text)]",
+        "valid": true,
+        "reply": "```python\n    def findall(self, pattern, text):\n        \"\"\"\n        Find all matching substrings and return a list of all matching substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: list of string, List of all matching substrings\n        >>> ru = RegexUtils()\n        >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['123-456-7890', '876-286-9876', '987-762-9767']\n        \"\"\"\n        import re\n        return [match.group(0) for match in re.finditer(pattern, text)]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1837,
+        "cached_tokens": 1472,
+        "completion_tokens": 587,
+        "reasoning_tokens": 322,
+        "cost": 0.000346037
+      },
+      "final_code": "def findall(self, pattern, text):\n    \"\"\"\n    Find all matching substrings and return a list of all matching substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to match\n    :return: list of string, List of all matching substrings\n    >>> ru = RegexUtils()\n    >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['123-456-7890', '876-286-9876', '987-762-9767']\n    \"\"\"\n    import re\n    return [match.group(0) for match in re.finditer(pattern, text)]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "split",
+      "first": {
+        "code": "def split(self, pattern, text):\n    \"\"\"\n    Split text based on regular expression patterns and return a list of substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to be split\n    :return: list of string, List of substrings after splitting\n    >>> ru = RegexUtils()\n    >>> ru.split(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['', ' abiguygusu ', ' kjgufwycs ', '']\n    \"\"\"\n    import re\n    return re.split(pattern, text)",
+        "valid": true,
+        "reply": "```python\ndef split(self, pattern, text):\n    \"\"\"\n    Split text based on regular expression patterns and return a list of substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to be split\n    :return: list of string, List of substrings after splitting\n    >>> ru = RegexUtils()\n    >>> ru.split(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['', ' abiguygusu ', ' kjgufwycs ', '']\n    \"\"\"\n    import re\n    return re.split(pattern, text)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1743,
+        "cached_tokens": 1472,
+        "completion_tokens": 651,
+        "reasoning_tokens": 362,
+        "cost": 0.000345989
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "OK. `re.split(pattern, text)` splits the text at each match of the regular expression and returns the substrings in the documented example, including empty strings at the beginning and end.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "OK. `re.split(pattern, text)` splits the text at each match of the regular expression and returns the substrings in the documented example, including empty strings at the beginning and end.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1824,
+            "cached_tokens": 0,
+            "completion_tokens": 54,
+            "reasoning_tokens": 0,
+            "cost": 0.0002094
+          }
+        ],
+        "prompt_tokens": 1824,
+        "cached_tokens": 0,
+        "completion_tokens": 54,
+        "reasoning_tokens": 0,
+        "cost": 0.0002094
+      },
+      "revision": null,
+      "final_code": "def split(self, pattern, text):\n    \"\"\"\n    Split text based on regular expression patterns and return a list of substrings\n    :param pattern: string, Regular expression pattern\n    :param text: string, Text to be split\n    :return: list of string, List of substrings after splitting\n    >>> ru = RegexUtils()\n    >>> ru.split(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    ['', ' abiguygusu ', ' kjgufwycs ', '']\n    \"\"\"\n    import re\n    return re.split(pattern, text)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "sub",
+      "first": {
+        "code": "def sub(self, pattern, replacement, text):\n    \"\"\"\n    Replace the substring matched by a regular expression with the specified string\n    :param pattern: string, Regular expression pattern\n    :param replacement: Text to replace with\n    :param text: string, Text to be replaced\n    :return: string, Text after replacement\n    >>> ru = RegexUtils()\n    >>> ru.sub(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', 'phone num',  \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    'phone num abiguygusu phone num kjgufwycs phone num'\n    \"\"\"\n    import re\n    return re.sub(pattern, replacement, text)",
+        "valid": true,
+        "reply": "```python\ndef sub(self, pattern, replacement, text):\n    \"\"\"\n    Replace the substring matched by a regular expression with the specified string\n    :param pattern: string, Regular expression pattern\n    :param replacement: Text to replace with\n    :param text: string, Text to be replaced\n    :return: string, Text after replacement\n    >>> ru = RegexUtils()\n    >>> ru.sub(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', 'phone num',  \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    'phone num abiguygusu phone num kjgufwycs phone num'\n    \"\"\"\n    import re\n    return re.sub(pattern, replacement, text)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1928,
+        "cached_tokens": 0,
+        "completion_tokens": 719,
+        "reasoning_tokens": 443,
+        "cost": 0.000405289
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`re.sub` replaces every non-overlapping match of the pattern in `text` with `replacement`, producing the string shown in the example. This matches the method\u2019s documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`re.sub` replaces every non-overlapping match of the pattern in `text` with `replacement`, producing the string shown in the example. This matches the method\u2019s documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1995,
+            "cached_tokens": 0,
+            "completion_tokens": 105,
+            "reasoning_tokens": 50,
+            "cost": 0.000252
+          }
+        ],
+        "prompt_tokens": 1995,
+        "cached_tokens": 0,
+        "completion_tokens": 105,
+        "reasoning_tokens": 50,
+        "cost": 0.000252
+      },
+      "revision": null,
+      "final_code": "def sub(self, pattern, replacement, text):\n    \"\"\"\n    Replace the substring matched by a regular expression with the specified string\n    :param pattern: string, Regular expression pattern\n    :param replacement: Text to replace with\n    :param text: string, Text to be replaced\n    :return: string, Text after replacement\n    >>> ru = RegexUtils()\n    >>> ru.sub(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', 'phone num',  \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n    'phone num abiguygusu phone num kjgufwycs phone num'\n    \"\"\"\n    import re\n    return re.sub(pattern, replacement, text)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "generate_email_pattern",
+      "first": {
+        "code": "def generate_email_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match email addresses\n    :return: string, regular expression patterns that match email addresses\n    >>> ru = RegexUtils()\n    >>> ru.generate_email_pattern()\n    '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'\n    \"\"\"\n    return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'",
+        "valid": true,
+        "reply": "```python\n    def generate_email_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match email addresses\n        :return: string, regular expression patterns that match email addresses\n        >>> ru = RegexUtils()\n        >>> ru.generate_email_pattern()\n        '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'\n        \"\"\"\n        return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2128,
+        "cached_tokens": 0,
+        "completion_tokens": 684,
+        "reasoning_tokens": 602,
+        "cost": 0.000425524
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The pattern includes `|` in `[A-Z|a-z]`, where it is treated as a literal character, so it can match invalid addresses with a pipe in the domain suffix. Use `[A-Za-z]` instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The pattern includes `|` in `[A-Z|a-z]`, where it is treated as a literal character, so it can match invalid addresses with a pipe in the domain suffix. Use `[A-Za-z]` instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2117,
+            "cached_tokens": 0,
+            "completion_tokens": 405,
+            "reasoning_tokens": 339,
+            "cost": 0.00041420000000000004
+          }
+        ],
+        "prompt_tokens": 2117,
+        "cached_tokens": 0,
+        "completion_tokens": 405,
+        "reasoning_tokens": 339,
+        "cost": 0.00041420000000000004
+      },
+      "revision": {
+        "code": "def generate_email_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match email addresses\n    :return: string, regular expression patterns that match email addresses\n    >>> ru = RegexUtils()\n    >>> ru.generate_email_pattern()\n    '\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}\\\\b'\n    \"\"\"\n    return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b'",
+        "valid": true,
+        "reply": "```python\n    def generate_email_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match email addresses\n        :return: string, regular expression patterns that match email addresses\n        >>> ru = RegexUtils()\n        >>> ru.generate_email_pattern()\n        '\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}\\\\b'\n        \"\"\"\n        return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2347,
+        "cached_tokens": 2112,
+        "completion_tokens": 311,
+        "reasoning_tokens": 157,
+        "cost": 0.000351513
+      },
+      "final_code": "def generate_email_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match email addresses\n    :return: string, regular expression patterns that match email addresses\n    >>> ru = RegexUtils()\n    >>> ru.generate_email_pattern()\n    '\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}\\\\b'\n    \"\"\"\n    return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "generate_phone_number_pattern",
+      "first": {
+        "code": "def generate_phone_number_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match phone numbers\n    :return: string, regular expression patterns that match phone numbers\n    >>> ru = RegexUtils()\n    >>> ru.generate_phone_number_pattern()\n    '\\\\b\\\\d{3}-\\\\d{3}-\\\\d{4}\\\\b'\n    \"\"\"\n    return r'\\b\\d{3}-\\d{3}-\\d{4}\\b'",
+        "valid": true,
+        "reply": "```python\ndef generate_phone_number_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match phone numbers\n    :return: string, regular expression patterns that match phone numbers\n    >>> ru = RegexUtils()\n    >>> ru.generate_phone_number_pattern()\n    '\\\\b\\\\d{3}-\\\\d{3}-\\\\d{4}\\\\b'\n    \"\"\"\n    return r'\\b\\d{3}-\\d{3}-\\d{4}\\b'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2251,
+        "cached_tokens": 0,
+        "completion_tokens": 579,
+        "reasoning_tokens": 422,
+        "cost": 0.000421357
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns the documented regular expression for phone numbers, `\\b\\d{3}-\\d{3}-\\d{4}\\b`, and does not depend on any missing class fields or methods.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns the documented regular expression for phone numbers, `\\b\\d{3}-\\d{3}-\\d{4}\\b`, and does not depend on any missing class fields or methods.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2207,
+            "cached_tokens": 0,
+            "completion_tokens": 59,
+            "reasoning_tokens": 0,
+            "cost": 0.0002502
+          }
+        ],
+        "prompt_tokens": 2207,
+        "cached_tokens": 0,
+        "completion_tokens": 59,
+        "reasoning_tokens": 0,
+        "cost": 0.0002502
+      },
+      "revision": null,
+      "final_code": "def generate_phone_number_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match phone numbers\n    :return: string, regular expression patterns that match phone numbers\n    >>> ru = RegexUtils()\n    >>> ru.generate_phone_number_pattern()\n    '\\\\b\\\\d{3}-\\\\d{3}-\\\\d{4}\\\\b'\n    \"\"\"\n    return r'\\b\\d{3}-\\d{3}-\\d{4}\\b'",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "generate_split_sentences_pattern",
+      "first": {
+        "code": "def generate_split_sentences_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match the middle characters of two sentences\n    :return: string, regular expression patterns that match the middle characters of two sentences\n    >>> ru = RegexUtils()\n    >>> ru.generate_split_sentences_pattern()\n    '\\\\[.!?\\\\][\\\\\\\\s]{1,2}(?=\\\\[A-Z\\\\])'\n    \"\"\"\n    return r'[.!?][\\s]{1,2}(?=[A-Z])'",
+        "valid": true,
+        "reply": "```python\ndef generate_split_sentences_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match the middle characters of two sentences\n    :return: string, regular expression patterns that match the middle characters of two sentences\n    >>> ru = RegexUtils()\n    >>> ru.generate_split_sentences_pattern()\n    '\\\\[.!?\\\\][\\\\\\\\s]{1,2}(?=\\\\[A-Z\\\\])'\n    \"\"\"\n    return r'[.!?][\\s]{1,2}(?=[A-Z])'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2349,
+        "cached_tokens": 0,
+        "completion_tokens": 529,
+        "reasoning_tokens": 430,
+        "cost": 0.000424735
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The returned regex matches a sentence-ending punctuation mark, one or two whitespace characters, and then requires an uppercase letter without consuming it. That matches the intended sentence-splitting pattern.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The returned regex matches a sentence-ending punctuation mark, one or two whitespace characters, and then requires an uppercase letter without consuming it. That matches the intended sentence-splitting pattern.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2312,
+            "cached_tokens": 0,
+            "completion_tokens": 1462,
+            "reasoning_tokens": 1408,
+            "cost": 0.0009622000000000001
+          }
+        ],
+        "prompt_tokens": 2312,
+        "cached_tokens": 0,
+        "completion_tokens": 1462,
+        "reasoning_tokens": 1408,
+        "cost": 0.0009622000000000001
+      },
+      "revision": null,
+      "final_code": "def generate_split_sentences_pattern(self):\n    \"\"\"\n    Generate regular expression patterns that match the middle characters of two sentences\n    :return: string, regular expression patterns that match the middle characters of two sentences\n    >>> ru = RegexUtils()\n    >>> ru.generate_split_sentences_pattern()\n    '\\\\[.!?\\\\][\\\\\\\\s]{1,2}(?=\\\\[A-Z\\\\])'\n    \"\"\"\n    return r'[.!?][\\s]{1,2}(?=[A-Z])'",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "split_sentences",
+      "first": {
+        "code": "def split_sentences(self, text):\n    \"\"\"\n    Split the text into a list of sentences without Punctuation except the last sentence\n    :param text: Text to be split\n    :return: Split Text List\n    >>> ru = RegexUtils()\n    >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n    ['Aaa', 'Bbbb', 'Ccc!']\n    \"\"\"\n    import re\n    pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n    parts = re.split(pattern, text)\n    result = [part.strip() for part in parts if part.strip()]\n    if result:\n        result[-1] = result[-1].rstrip('.!?')\n    return result",
+        "valid": true,
+        "reply": "```python\ndef split_sentences(self, text):\n    \"\"\"\n    Split the text into a list of sentences without Punctuation except the last sentence\n    :param text: Text to be split\n    :return: Split Text List\n    >>> ru = RegexUtils()\n    >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n    ['Aaa', 'Bbbb', 'Ccc!']\n    \"\"\"\n    import re\n    pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n    parts = re.split(pattern, text)\n    result = [part.strip() for part in parts if part.strip()]\n    if result:\n        result[-1] = result[-1].rstrip('.!?')\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2454,
+        "cached_tokens": 0,
+        "completion_tokens": 734,
+        "reasoning_tokens": 560,
+        "cost": 0.00047981
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method removes trailing `.`, `!`, or `?` from the final sentence with `rstrip`, but the docstring says to keep punctuation on the last sentence (as in `Ccc!`). Remove that `rstrip` step.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method removes trailing `.`, `!`, or `?` from the final sentence with `rstrip`, but the docstring says to keep punctuation on the last sentence (as in `Ccc!`). Remove that `rstrip` step.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2463,
+            "cached_tokens": 0,
+            "completion_tokens": 131,
+            "reasoning_tokens": 64,
+            "cost": 0.0003118
+          }
+        ],
+        "prompt_tokens": 2463,
+        "cached_tokens": 0,
+        "completion_tokens": 131,
+        "reasoning_tokens": 64,
+        "cost": 0.0003118
+      },
+      "revision": {
+        "code": "def split_sentences(self, text):\n    \"\"\"\n    Split the text into a list of sentences without Punctuation except the last sentence\n    :param text: Text to be split\n    :return: Split Text List\n    >>> ru = RegexUtils()\n    >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n    ['Aaa', 'Bbbb', 'Ccc!']\n    \"\"\"\n    import re\n    pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n    parts = re.split(pattern, text)\n    result = [part.strip() for part in parts if part.strip()]\n    return result",
+        "valid": true,
+        "reply": "```python\ndef split_sentences(self, text):\n    \"\"\"\n    Split the text into a list of sentences without Punctuation except the last sentence\n    :param text: Text to be split\n    :return: Split Text List\n    >>> ru = RegexUtils()\n    >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n    ['Aaa', 'Bbbb', 'Ccc!']\n    \"\"\"\n    import re\n    pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n    parts = re.split(pattern, text)\n    result = [part.strip() for part in parts if part.strip()]\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2710,
+        "cached_tokens": 2432,
+        "completion_tokens": 453,
+        "reasoning_tokens": 300,
+        "cost": 0.000424659
+      },
+      "final_code": "def split_sentences(self, text):\n    \"\"\"\n    Split the text into a list of sentences without Punctuation except the last sentence\n    :param text: Text to be split\n    :return: Split Text List\n    >>> ru = RegexUtils()\n    >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n    ['Aaa', 'Bbbb', 'Ccc!']\n    \"\"\"\n    import re\n    pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n    parts = re.split(pattern, text)\n    result = [part.strip() for part in parts if part.strip()]\n    return result",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "validate_phone_number",
+      "first": {
+        "code": "def validate_phone_number(self, phone_number):\n    \"\"\"\n    Verify if the phone number is valid\n    :param phone_number: Phone number to be verified\n    :return: True or False, indicating whether the phone number is valid\n    >>> ru = RegexUtils()\n    >>> ru.validate_phone_number(\"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    pattern = self.generate_phone_number_pattern()\n    return bool(re.fullmatch(pattern, phone_number))",
+        "valid": true,
+        "reply": "```python\ndef validate_phone_number(self, phone_number):\n    \"\"\"\n    Verify if the phone number is valid\n    :param phone_number: Phone number to be verified\n    :return: True or False, indicating whether the phone number is valid\n    >>> ru = RegexUtils()\n    >>> ru.validate_phone_number(\"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    pattern = self.generate_phone_number_pattern()\n    return bool(re.fullmatch(pattern, phone_number))\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2599,
+        "cached_tokens": 0,
+        "completion_tokens": 609,
+        "reasoning_tokens": 512,
+        "cost": 0.000474655
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method uses the class\u2019s phone-number pattern with `re.fullmatch`, so it returns `True` only when the entire input is a phone number in the documented format, and `False` otherwise.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method uses the class\u2019s phone-number pattern with `re.fullmatch`, so it returns `True` only when the entire input is a phone number in the documented format, and `False` otherwise.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2543,
+            "cached_tokens": 0,
+            "completion_tokens": 111,
+            "reasoning_tokens": 52,
+            "cost": 0.0003098
+          }
+        ],
+        "prompt_tokens": 2543,
+        "cached_tokens": 0,
+        "completion_tokens": 111,
+        "reasoning_tokens": 52,
+        "cost": 0.0003098
+      },
+      "revision": null,
+      "final_code": "def validate_phone_number(self, phone_number):\n    \"\"\"\n    Verify if the phone number is valid\n    :param phone_number: Phone number to be verified\n    :return: True or False, indicating whether the phone number is valid\n    >>> ru = RegexUtils()\n    >>> ru.validate_phone_number(\"123-456-7890\")\n    True\n    \"\"\"\n    import re\n    pattern = self.generate_phone_number_pattern()\n    return bool(re.fullmatch(pattern, phone_number))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "extract_email",
+      "first": {
+        "code": "def extract_email(self, text):\n    \"\"\"\n    Extract all email addresses from the text\n    :param text: string, input text\n    :return: list of string, All extracted email addresses\n    >>> ru = RegexUtils()\n    >>> ru.extract_email(\"abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com\")\n    ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']\n    \"\"\"\n    import re\n    pattern = self.generate_email_pattern()\n    return [match.group(0) for match in re.finditer(pattern, text)]",
+        "valid": true,
+        "reply": "```python\ndef extract_email(self, text):\n    \"\"\"\n    Extract all email addresses from the text\n    :param text: string, input text\n    :return: list of string, All extracted email addresses\n    >>> ru = RegexUtils()\n    >>> ru.extract_email(\"abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com\")\n    ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']\n    \"\"\"\n    import re\n    pattern = self.generate_email_pattern()\n    return [match.group(0) for match in re.finditer(pattern, text)]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2709,
+        "cached_tokens": 2560,
+        "completion_tokens": 566,
+        "reasoning_tokens": 383,
+        "cost": 0.000445218
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method uses the class\u2019s email pattern and returns the full text of every match as a list, as the docstring requires. It handles the documented example correctly.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method uses the class\u2019s email pattern and returns the full text of every match as a list, as the docstring requires. It handles the documented example correctly.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2673,
+            "cached_tokens": 0,
+            "completion_tokens": 175,
+            "reasoning_tokens": 124,
+            "cost": 0.0003548
+          }
+        ],
+        "prompt_tokens": 2673,
+        "cached_tokens": 0,
+        "completion_tokens": 175,
+        "reasoning_tokens": 124,
+        "cost": 0.0003548
+      },
+      "revision": null,
+      "final_code": "def extract_email(self, text):\n    \"\"\"\n    Extract all email addresses from the text\n    :param text: string, input text\n    :return: list of string, All extracted email addresses\n    >>> ru = RegexUtils()\n    >>> ru.extract_email(\"abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com\")\n    ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']\n    \"\"\"\n    import re\n    pattern = self.generate_email_pattern()\n    return [match.group(0) for match in re.finditer(pattern, text)]",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "RegexUtilsTestMatch": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestFindall": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestSplit": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestSub": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGenerateEmailPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGeneratePhoneNumberPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGenerateSplitSentencesPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "RegexUtilsTestSplitSentences": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "RegexUtilsTestValidatePhoneNumber": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestExtractEmail": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "RegexUtilsTestMatch": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestFindall": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestSplit": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestSub": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGenerateEmailPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGeneratePhoneNumberPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestGenerateSplitSentencesPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "RegexUtilsTestSplitSentences": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestValidatePhoneNumber": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTestExtractEmail": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "RegexUtilsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import re\n\nclass RegexUtils:\n\n    def match(self, pattern, text):\n        \"\"\"\n        Check if the text matches the regular expression\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: True or False, representing whether the text matches the regular expression or not\n        >>> ru = RegexUtils()\n        >>> ru.match(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890\")\n        True\n        \"\"\"\n        import re\n        return bool(re.fullmatch(pattern, text))\n\n    def findall(self, pattern, text):\n        \"\"\"\n        Find all matching substrings and return a list of all matching substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: list of string, List of all matching substrings\n        >>> ru = RegexUtils()\n        >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['123-456-7890', '876-286-9876', '987-762-9767']\n        \"\"\"\n        return re.findall(pattern, text)\n\n    def split(self, pattern, text):\n        \"\"\"\n        Split text based on regular expression patterns and return a list of substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to be split\n        :return: list of string, List of substrings after splitting\n        >>> ru = RegexUtils()\n        >>> ru.split(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['', ' abiguygusu ', ' kjgufwycs ', '']\n        \"\"\"\n        import re\n        return re.split(pattern, text)\n\n    def sub(self, pattern, replacement, text):\n        \"\"\"\n        Replace the substring matched by a regular expression with the specified string\n        :param pattern: string, Regular expression pattern\n        :param replacement: Text to replace with\n        :param text: string, Text to be replaced\n        :return: string, Text after replacement\n        >>> ru = RegexUtils()\n        >>> ru.sub(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', 'phone num',  \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        'phone num abiguygusu phone num kjgufwycs phone num'\n        \"\"\"\n        import re\n        return re.sub(pattern, replacement, text)\n\n    def generate_email_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match email addresses\n        :return: string, regular expression patterns that match email addresses\n        >>> ru = RegexUtils()\n        >>> ru.generate_email_pattern()\n        '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'\n        \"\"\"\n        return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'\n\n    def generate_phone_number_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match phone numbers\n        :return: string, regular expression patterns that match phone numbers\n        >>> ru = RegexUtils()\n        >>> ru.generate_phone_number_pattern()\n        '\\\\b\\\\d{3}-\\\\d{3}-\\\\d{4}\\\\b'\n        \"\"\"\n        return r'\\b\\d{3}-\\d{3}-\\d{4}\\b'\n\n    def generate_split_sentences_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match the middle characters of two sentences\n        :return: string, regular expression patterns that match the middle characters of two sentences\n        >>> ru = RegexUtils()\n        >>> ru.generate_split_sentences_pattern()\n        '\\\\[.!?\\\\][\\\\\\\\s]{1,2}(?=\\\\[A-Z\\\\])'\n        \"\"\"\n        return r'[.!?][\\s]{1,2}(?=[A-Z])'\n\n    def split_sentences(self, text):\n        \"\"\"\n        Split the text into a list of sentences without Punctuation except the last sentence\n        :param text: Text to be split\n        :return: Split Text List\n        >>> ru = RegexUtils()\n        >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n        ['Aaa', 'Bbbb', 'Ccc!']\n        \"\"\"\n        import re\n        pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n        parts = re.split(pattern, text)\n        result = [part.strip() for part in parts if part.strip()]\n        if result:\n            result[-1] = result[-1].rstrip('.!?')\n        return result\n\n    def validate_phone_number(self, phone_number):\n        \"\"\"\n        Verify if the phone number is valid\n        :param phone_number: Phone number to be verified\n        :return: True or False, indicating whether the phone number is valid\n        >>> ru = RegexUtils()\n        >>> ru.validate_phone_number(\"123-456-7890\")\n        True\n        \"\"\"\n        import re\n        pattern = self.generate_phone_number_pattern()\n        return bool(re.fullmatch(pattern, phone_number))\n\n    def extract_email(self, text):\n        \"\"\"\n        Extract all email addresses from the text\n        :param text: string, input text\n        :return: list of string, All extracted email addresses\n        >>> ru = RegexUtils()\n        >>> ru.extract_email(\"abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com\")\n        ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']\n        \"\"\"\n        import re\n        pattern = self.generate_email_pattern()\n        return [match.group(0) for match in re.finditer(pattern, text)]\n",
+  "source": "import re\n\nclass RegexUtils:\n\n    def match(self, pattern, text):\n        \"\"\"\n        Check if the text matches the regular expression\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: True or False, representing whether the text matches the regular expression or not\n        >>> ru = RegexUtils()\n        >>> ru.match(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890\")\n        True\n        \"\"\"\n        import re\n        return bool(re.fullmatch(pattern, text))\n\n    def findall(self, pattern, text):\n        \"\"\"\n        Find all matching substrings and return a list of all matching substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to match\n        :return: list of string, List of all matching substrings\n        >>> ru = RegexUtils()\n        >>> ru.findall(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['123-456-7890', '876-286-9876', '987-762-9767']\n        \"\"\"\n        import re\n        return [match.group(0) for match in re.finditer(pattern, text)]\n\n    def split(self, pattern, text):\n        \"\"\"\n        Split text based on regular expression patterns and return a list of substrings\n        :param pattern: string, Regular expression pattern\n        :param text: string, Text to be split\n        :return: list of string, List of substrings after splitting\n        >>> ru = RegexUtils()\n        >>> ru.split(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        ['', ' abiguygusu ', ' kjgufwycs ', '']\n        \"\"\"\n        import re\n        return re.split(pattern, text)\n\n    def sub(self, pattern, replacement, text):\n        \"\"\"\n        Replace the substring matched by a regular expression with the specified string\n        :param pattern: string, Regular expression pattern\n        :param replacement: Text to replace with\n        :param text: string, Text to be replaced\n        :return: string, Text after replacement\n        >>> ru = RegexUtils()\n        >>> ru.sub(r'\\b\\d{3}-\\d{3}-\\d{4}\\b', 'phone num',  \"123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767\")\n        'phone num abiguygusu phone num kjgufwycs phone num'\n        \"\"\"\n        import re\n        return re.sub(pattern, replacement, text)\n\n    def generate_email_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match email addresses\n        :return: string, regular expression patterns that match email addresses\n        >>> ru = RegexUtils()\n        >>> ru.generate_email_pattern()\n        '\\\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}\\\\b'\n        \"\"\"\n        return r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b'\n\n    def generate_phone_number_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match phone numbers\n        :return: string, regular expression patterns that match phone numbers\n        >>> ru = RegexUtils()\n        >>> ru.generate_phone_number_pattern()\n        '\\\\b\\\\d{3}-\\\\d{3}-\\\\d{4}\\\\b'\n        \"\"\"\n        return r'\\b\\d{3}-\\d{3}-\\d{4}\\b'\n\n    def generate_split_sentences_pattern(self):\n        \"\"\"\n        Generate regular expression patterns that match the middle characters of two sentences\n        :return: string, regular expression patterns that match the middle characters of two sentences\n        >>> ru = RegexUtils()\n        >>> ru.generate_split_sentences_pattern()\n        '\\\\[.!?\\\\][\\\\\\\\s]{1,2}(?=\\\\[A-Z\\\\])'\n        \"\"\"\n        return r'[.!?][\\s]{1,2}(?=[A-Z])'\n\n    def split_sentences(self, text):\n        \"\"\"\n        Split the text into a list of sentences without Punctuation except the last sentence\n        :param text: Text to be split\n        :return: Split Text List\n        >>> ru = RegexUtils()\n        >>> ru.split_sentences(\"Aaa. Bbbb? Ccc!\")\n        ['Aaa', 'Bbbb', 'Ccc!']\n        \"\"\"\n        import re\n        pattern = r'[.!?][\\s]{1,2}(?=[A-Z])'\n        parts = re.split(pattern, text)\n        result = [part.strip() for part in parts if part.strip()]\n        return result\n\n    def validate_phone_number(self, phone_number):\n        \"\"\"\n        Verify if the phone number is valid\n        :param phone_number: Phone number to be verified\n        :return: True or False, indicating whether the phone number is valid\n        >>> ru = RegexUtils()\n        >>> ru.validate_phone_number(\"123-456-7890\")\n        True\n        \"\"\"\n        import re\n        pattern = self.generate_phone_number_pattern()\n        return bool(re.fullmatch(pattern, phone_number))\n\n    def extract_email(self, text):\n        \"\"\"\n        Extract all email addresses from the text\n        :param text: string, input text\n        :return: list of string, All extracted email addresses\n        >>> ru = RegexUtils()\n        >>> ru.extract_email(\"abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com\")\n        ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com']\n        \"\"\"\n        import re\n        pattern = self.generate_email_pattern()\n        return [match.group(0) for match in re.finditer(pattern, text)]\n"
+}

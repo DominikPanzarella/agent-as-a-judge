@@ -1,0 +1,384 @@
+{
+  "task_id": "ClassEval_33",
+  "class_name": "DiscountStrategy",
+  "setup": "C3",
+  "name": "C3-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": "C2-9b",
+  "methods": [
+    {
+      "method_name": "total",
+      "first": {
+        "code": "def total(self):\n    \"\"\"\n    Calculate the total cost of items in the cart.\n    :return: float, total cost of items\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart)\n    >>> ds.total()\n    329.0\n\n    \"\"\"\n    total = 0.0\n    for item in self.cart:\n        quantity = item['quantity']\n        price = item['price']\n        total += quantity * price\n    return total",
+        "valid": true,
+        "reply": "```python\n    def total(self):\n        \"\"\"\n        Calculate the total cost of items in the cart.\n        :return: float, total cost of items\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> ds = DiscountStrategy(customer, cart)\n        >>> ds.total()\n        329.0\n\n        \"\"\"\n        total = 0.0\n        for item in self.cart:\n            quantity = item['quantity']\n            price = item['price']\n            total += quantity * price\n        return total\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1061,
+        "cached_tokens": 0,
+        "completion_tokens": 497,
+        "reasoning_tokens": 310,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method sums each cart item's quantity multiplied by its price, producing 329.0 for the documented example and returning the total as a float. It correctly uses the class's `cart` field.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method sums each cart item's quantity multiplied by its price, producing 329.0 for the documented example and returning the total as a float. It correctly uses the class's `cart` field.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1237,
+            "cached_tokens": 0,
+            "completion_tokens": 56,
+            "reasoning_tokens": 0,
+            "cost": 0.0001517
+          }
+        ],
+        "prompt_tokens": 1237,
+        "cached_tokens": 0,
+        "completion_tokens": 56,
+        "reasoning_tokens": 0,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": null,
+      "final_code": "def total(self):\n    \"\"\"\n    Calculate the total cost of items in the cart.\n    :return: float, total cost of items\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart)\n    >>> ds.total()\n    329.0\n\n    \"\"\"\n    total = 0.0\n    for item in self.cart:\n        quantity = item['quantity']\n        price = item['price']\n        total += quantity * price\n    return total",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "due",
+      "first": {
+        "code": "def due(self):\n    \"\"\"\n    Calculate the final amount to be paid after applying the discount.\n    :return: float, final amount to be paid\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> ds.due()\n    312.55\n    \"\"\"\n    total = self.total()\n    if self.promotion:\n        discount = self.promotion(self)\n        return round(total - discount, 2)\n    return round(total, 2)",
+        "valid": true,
+        "reply": "\n\n```python\ndef due(self):\n    \"\"\"\n    Calculate the final amount to be paid after applying the discount.\n    :return: float, final amount to be paid\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> ds.due()\n    312.55\n    \"\"\"\n    total = self.total()\n    if self.promotion:\n        discount = self.promotion(self)\n        return round(total - discount, 2)\n    return round(total, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1224,
+        "cached_tokens": 0,
+        "completion_tokens": 703,
+        "reasoning_tokens": 533,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The calculation is correct if the promotion returns a numeric discount, but the documented FidelityPromo is currently only a docstring and returns None. Consequently, the example raises TypeError when due subtracts the discount; implement FidelityPromo to return the discount amount before this example can work.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The calculation is correct if the promotion returns a numeric discount, but the documented FidelityPromo is currently only a docstring and returns None. Consequently, the example raises TypeError when due subtracts the discount; implement FidelityPromo to return the discount amount before this example can work.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1448,
+            "cached_tokens": 0,
+            "completion_tokens": 536,
+            "reasoning_tokens": 462,
+            "cost": 0.0004128
+          }
+        ],
+        "prompt_tokens": 1448,
+        "cached_tokens": 0,
+        "completion_tokens": 536,
+        "reasoning_tokens": 462,
+        "cost": 0.0004128
+      },
+      "revision": {
+        "code": "def due(self):\n    \"\"\"\n    Calculate the final amount to be paid after applying the discount.\n    :return: float, final amount to be paid\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> ds.due()\n    312.55\n    \"\"\"\n    total = self.total()\n    if self.promotion:\n        discount = self.promotion(self)\n        return round(total - discount, 2)\n    return round(total, 2)",
+        "valid": true,
+        "reply": "```python\ndef due(self):\n    \"\"\"\n    Calculate the final amount to be paid after applying the discount.\n    :return: float, final amount to be paid\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> ds.due()\n    312.55\n    \"\"\"\n    total = self.total()\n    if self.promotion:\n        discount = self.promotion(self)\n        return round(total - discount, 2)\n    return round(total, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1487,
+        "cached_tokens": 0,
+        "completion_tokens": 642,
+        "reasoning_tokens": 472,
+        "cost": 0.000306132
+      },
+      "final_code": "def due(self):\n    \"\"\"\n    Calculate the final amount to be paid after applying the discount.\n    :return: float, final amount to be paid\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> ds.due()\n    312.55\n    \"\"\"\n    total = self.total()\n    if self.promotion:\n        discount = self.promotion(self)\n        return round(total - discount, 2)\n    return round(total, 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "FidelityPromo",
+      "first": {
+        "code": "@staticmethod\ndef FidelityPromo(order):\n    \"\"\"\n    Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> DiscountStrategy.FidelityPromo(order)\n    16.45\n    \"\"\"\n    if order.customer.get('fidelity', 0) >= 1000:\n        return round(order.total() * 0.05, 2)\n    return 0.0",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def FidelityPromo(order):\n        \"\"\"\n        Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> DiscountStrategy.FidelityPromo(order)\n        16.45\n        \"\"\"\n        if order.customer.get('fidelity', 0) >= 1000:\n            return round(order.total() * 0.05, 2)\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1390,
+        "cached_tokens": 0,
+        "completion_tokens": 983,
+        "reasoning_tokens": 673,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The docstring says customers with over 1000 points qualify, but `>= 1000` also gives the discount to a customer with exactly 1000 points. Use `> 1000` to match the documented condition.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The docstring says customers with over 1000 points qualify, but `>= 1000` also gives the discount to a customer with exactly 1000 points. Use `> 1000` to match the documented condition.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1695,
+            "cached_tokens": 0,
+            "completion_tokens": 123,
+            "reasoning_tokens": 57,
+            "cost": 0.000231
+          }
+        ],
+        "prompt_tokens": 1695,
+        "cached_tokens": 0,
+        "completion_tokens": 123,
+        "reasoning_tokens": 57,
+        "cost": 0.000231
+      },
+      "revision": {
+        "code": "@staticmethod\ndef FidelityPromo(order):\n    \"\"\"\n    Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> DiscountStrategy.FidelityPromo(order)\n    16.45\n    \"\"\"\n    if order.customer.get('fidelity', 0) > 1000:\n        return round(order.total() * 0.05, 2)\n    return 0.0",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def FidelityPromo(order):\n        \"\"\"\n        Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> DiscountStrategy.FidelityPromo(order)\n        16.45\n        \"\"\"\n        if order.customer.get('fidelity', 0) > 1000:\n            return round(order.total() * 0.05, 2)\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1701,
+        "cached_tokens": 0,
+        "completion_tokens": 296,
+        "reasoning_tokens": 75,
+        "cost": 0.000269086
+      },
+      "final_code": "@staticmethod\ndef FidelityPromo(order):\n    \"\"\"\n    Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n    >>> DiscountStrategy.FidelityPromo(order)\n    16.45\n    \"\"\"\n    if order.customer.get('fidelity', 0) > 1000:\n        return round(order.total() * 0.05, 2)\n    return 0.0",
+      "passed_first": true,
+      "passed": false
+    },
+    {
+      "method_name": "BulkItemPromo",
+      "first": {
+        "code": "@staticmethod\ndef BulkItemPromo(order):\n    \"\"\"\n    Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 20, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.BulkItemPromo)\n    >>> DiscountStrategy.BulkItemPromo(order)\n    47.0\n    \"\"\"\n    discount = 0.0\n    for item in order.cart:\n        quantity = item['quantity']\n        price = item['price']\n        if quantity >= 20:\n            discount += quantity * price * 0.1\n    return round(discount, 2)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef BulkItemPromo(order):\n    \"\"\"\n    Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 20, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.BulkItemPromo)\n    >>> DiscountStrategy.BulkItemPromo(order)\n    47.0\n    \"\"\"\n    discount = 0.0\n    for item in order.cart:\n        quantity = item['quantity']\n        price = item['price']\n        if quantity >= 20:\n            discount += quantity * price * 0.1\n    return round(discount, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1596,
+        "cached_tokens": 1152,
+        "completion_tokens": 811,
+        "reasoning_tokens": 570,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method applies a 10% discount to the full quantity of each cart entry whose quantity is at least 20, and returns the summed discount rounded to two decimals. It uses the existing `order.cart` field and produces the documented 47.0 example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method applies a 10% discount to the full quantity of each cart entry whose quantity is at least 20, and returns the summed discount rounded to two decimals. It uses the existing `order.cart` field and produces the documented 47.0 example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1977,
+            "cached_tokens": 0,
+            "completion_tokens": 148,
+            "reasoning_tokens": 77,
+            "cost": 0.00027170000000000004
+          }
+        ],
+        "prompt_tokens": 1977,
+        "cached_tokens": 0,
+        "completion_tokens": 148,
+        "reasoning_tokens": 77,
+        "cost": 0.00027170000000000004
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef BulkItemPromo(order):\n    \"\"\"\n    Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 20, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.BulkItemPromo)\n    >>> DiscountStrategy.BulkItemPromo(order)\n    47.0\n    \"\"\"\n    discount = 0.0\n    for item in order.cart:\n        quantity = item['quantity']\n        price = item['price']\n        if quantity >= 20:\n            discount += quantity * price * 0.1\n    return round(discount, 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "LargeOrderPromo",
+      "first": {
+        "code": "@staticmethod\ndef LargeOrderPromo(order):\n    \"\"\"\n    Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)\n    >>> DiscountStrategy.LargeOrderPromo(order)\n    0.0\n    \"\"\"\n    num_products = len(set(item['product'] for item in order.cart))\n    if num_products >= 10:\n        return round(order.total() * 0.07, 2)\n    return 0.0",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef LargeOrderPromo(order):\n    \"\"\"\n    Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)\n    >>> DiscountStrategy.LargeOrderPromo(order)\n    0.0\n    \"\"\"\n    num_products = len(set(item['product'] for item in order.cart))\n    if num_products >= 10:\n        return round(order.total() * 0.07, 2)\n    return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1830,
+        "cached_tokens": 0,
+        "completion_tokens": 687,
+        "reasoning_tokens": 444,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method counts distinct product values in the cart and applies a 7% discount to the order total when there are at least 10, otherwise returning 0.0. This matches the documented rule and uses fields and methods defined by the class.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method counts distinct product values in the cart and applies a 7% discount to the order total when there are at least 10, otherwise returning 0.0. This matches the documented rule and uses fields and methods defined by the class.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2237,
+            "cached_tokens": 0,
+            "completion_tokens": 158,
+            "reasoning_tokens": 90,
+            "cost": 0.00030270000000000004
+          }
+        ],
+        "prompt_tokens": 2237,
+        "cached_tokens": 0,
+        "completion_tokens": 158,
+        "reasoning_tokens": 90,
+        "cost": 0.00030270000000000004
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef LargeOrderPromo(order):\n    \"\"\"\n    Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.\n    :param order: object, the order to apply the discount to\n    :return: float, discount amount\n    >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)\n    >>> DiscountStrategy.LargeOrderPromo(order)\n    0.0\n    \"\"\"\n    num_products = len(set(item['product'] for item in order.cart))\n    if num_products >= 10:\n        return round(order.total() * 0.07, 2)\n    return 0.0",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": false,
+  "tests_first": {
+    "DiscountStrategyTestTotal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestDue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestFidelityPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestBulkItemPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestLargeOrderPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "DiscountStrategyTestTotal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestDue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestFidelityPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "DiscountStrategyTestBulkItemPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTestLargeOrderPromo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DiscountStrategyTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass DiscountStrategy: \n    def __init__(self, customer, cart, promotion=None):\n        \"\"\"\n        Initialize the DiscountStrategy with customer information, a cart of items, and an optional promotion.\n        :param customer: dict, customer information\n        :param cart: list of dicts, a cart of items with details\n        :param promotion: function, optional promotion applied to the order\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n\n        \"\"\"\n        self.customer = customer\n        self.cart = cart\n        self.promotion = promotion\n        self.total()\n\n    def total(self):\n        \"\"\"\n        Calculate the total cost of items in the cart.\n        :return: float, total cost of items\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> ds = DiscountStrategy(customer, cart)\n        >>> ds.total()\n        329.0\n\n        \"\"\"\n        total = 0.0\n        for item in self.cart:\n            quantity = item['quantity']\n            price = item['price']\n            total += quantity * price\n        return total\n\n    def due(self):\n        \"\"\"\n        Calculate the final amount to be paid after applying the discount.\n        :return: float, final amount to be paid\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> ds.due()\n        312.55\n        \"\"\"\n        total = self.total()\n        if self.promotion:\n            discount = self.promotion(self)\n            return round(total - discount, 2)\n        return round(total, 2)\n\n    @staticmethod\n    def FidelityPromo(order):\n        \"\"\"\n        Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> DiscountStrategy.FidelityPromo(order)\n        16.45\n        \"\"\"\n        if order.customer.get('fidelity', 0) >= 1000:\n            return round(order.total() * 0.05, 2)\n        return 0.0\n\n    @staticmethod\n    def BulkItemPromo(order):\n        \"\"\"\n        Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 20, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.BulkItemPromo)\n        >>> DiscountStrategy.BulkItemPromo(order)\n        47.0\n        \"\"\"\n        discount = 0.0\n        for item in order.cart:\n            quantity = item['quantity']\n            price = item['price']\n            if quantity >= 20:\n                discount += quantity * price * 0.1\n        return round(discount, 2)\n\n    @staticmethod\n    def LargeOrderPromo(order):\n        \"\"\"\n        Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)\n        >>> DiscountStrategy.LargeOrderPromo(order)\n        0.0\n        \"\"\"\n        num_products = len(set(item['product'] for item in order.cart))\n        if num_products >= 10:\n            return round(order.total() * 0.07, 2)\n        return 0.0\n",
+  "source": "\n\nclass DiscountStrategy: \n    def __init__(self, customer, cart, promotion=None):\n        \"\"\"\n        Initialize the DiscountStrategy with customer information, a cart of items, and an optional promotion.\n        :param customer: dict, customer information\n        :param cart: list of dicts, a cart of items with details\n        :param promotion: function, optional promotion applied to the order\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n\n        \"\"\"\n        self.customer = customer\n        self.cart = cart\n        self.promotion = promotion\n        self.total()\n\n    def total(self):\n        \"\"\"\n        Calculate the total cost of items in the cart.\n        :return: float, total cost of items\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> ds = DiscountStrategy(customer, cart)\n        >>> ds.total()\n        329.0\n\n        \"\"\"\n        total = 0.0\n        for item in self.cart:\n            quantity = item['quantity']\n            price = item['price']\n            total += quantity * price\n        return total\n\n    def due(self):\n        \"\"\"\n        Calculate the final amount to be paid after applying the discount.\n        :return: float, final amount to be paid\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> ds = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> ds.due()\n        312.55\n        \"\"\"\n        total = self.total()\n        if self.promotion:\n            discount = self.promotion(self)\n            return round(total - discount, 2)\n        return round(total, 2)\n\n    @staticmethod\n    def FidelityPromo(order):\n        \"\"\"\n        Calculate the discount based on the fidelity points of the customer.Customers with over 1000 points can enjoy a 5% discount on the entire order.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.FidelityPromo)\n        >>> DiscountStrategy.FidelityPromo(order)\n        16.45\n        \"\"\"\n        if order.customer.get('fidelity', 0) > 1000:\n            return round(order.total() * 0.05, 2)\n        return 0.0\n\n    @staticmethod\n    def BulkItemPromo(order):\n        \"\"\"\n        Calculate the discount based on bulk item quantity in the order.In the same order, if the quantity of a single item reaches 20 or more, each item will enjoy a 10% discount.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 20, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.BulkItemPromo)\n        >>> DiscountStrategy.BulkItemPromo(order)\n        47.0\n        \"\"\"\n        discount = 0.0\n        for item in order.cart:\n            quantity = item['quantity']\n            price = item['price']\n            if quantity >= 20:\n                discount += quantity * price * 0.1\n        return round(discount, 2)\n\n    @staticmethod\n    def LargeOrderPromo(order):\n        \"\"\"\n        Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.\n        :param order: object, the order to apply the discount to\n        :return: float, discount amount\n        >>> customer = {'name': 'John Doe', 'fidelity': 1200}\n        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]\n        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)\n        >>> DiscountStrategy.LargeOrderPromo(order)\n        0.0\n        \"\"\"\n        num_products = len(set(item['product'] for item in order.cart))\n        if num_products >= 10:\n            return round(order.total() * 0.07, 2)\n        return 0.0\n"
+}

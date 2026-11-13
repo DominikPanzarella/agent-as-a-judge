@@ -1,0 +1,148 @@
+{
+  "task_id": "ClassEval_6",
+  "class_name": "AvgPartition",
+  "setup": "C3",
+  "name": "C3-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": "C2-9b",
+  "methods": [
+    {
+      "method_name": "setNum",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 412,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 4037,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "get",
+      "first": {
+        "code": "def get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n\n    \"\"\"\n    n = len(self.lst)\n    base_size = n // self.limit\n    extra_items = n % self.limit\n\n    start = index * base_size + min(index, extra_items)\n\n    if index < extra_items:\n        end = start + base_size + 1\n    else:\n        end = start + base_size\n\n    return self.lst[start:end]",
+        "valid": true,
+        "reply": "```python\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n\n        \"\"\"\n        n = len(self.lst)\n        base_size = n // self.limit\n        extra_items = n % self.limit\n        \n        start = index * base_size + min(index, extra_items)\n        \n        if index < extra_items:\n            end = start + base_size + 1\n        else:\n            end = start + base_size\n        \n        return self.lst[start:end]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 411,
+        "cached_tokens": 0,
+        "completion_tokens": 1292,
+        "reasoning_tokens": 938,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For a valid positive `limit` and an in-range partition index, the slicing logic distributes the remainder correctly. However, the constructor does not actually enforce its documented `limit > 0` check, so `get` can divide by zero; validate `limit` in the constructor or guard against zero here.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For a valid positive `limit` and an in-range partition index, the slicing logic distributes the remainder correctly. However, the constructor does not actually enforce its documented `limit > 0` check, so `get` can divide by zero; validate `limit` in the constructor or guard against zero here.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 695,
+            "cached_tokens": 0,
+            "completion_tokens": 597,
+            "reasoning_tokens": 516,
+            "cost": 0.000368
+          }
+        ],
+        "prompt_tokens": 695,
+        "cached_tokens": 0,
+        "completion_tokens": 597,
+        "reasoning_tokens": 516,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": {
+        "code": "def get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n\n    \"\"\"\n    if self.limit <= 0:\n        return []\n\n    n = len(self.lst)\n    base_size = n // self.limit\n    extra_items = n % self.limit\n\n    start = index * base_size + min(index, extra_items)\n\n    if index < extra_items:\n        end = start + base_size + 1\n    else:\n        end = start + base_size\n\n    return self.lst[start:end]",
+        "valid": true,
+        "reply": "\n\n```python\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n\n        \"\"\"\n        if self.limit <= 0:\n            return []\n            \n        n = len(self.lst)\n        base_size = n // self.limit\n        extra_items = n % self.limit\n        \n        start = index * base_size + min(index, extra_items)\n        \n        if index < extra_items:\n            end = start + base_size + 1\n        else:\n            end = start + base_size\n        \n        return self.lst[start:end]\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 703,
+        "cached_tokens": 0,
+        "completion_tokens": 650,
+        "reasoning_tokens": 441,
+        "cost": 0.0002328
+      },
+      "final_code": "def get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n\n    \"\"\"\n    if self.limit <= 0:\n        return []\n\n    n = len(self.lst)\n    base_size = n // self.limit\n    extra_items = n % self.limit\n\n    start = index * base_size + min(index, extra_items)\n\n    if index < extra_items:\n        end = start + base_size + 1\n    else:\n        end = start + base_size\n\n    return self.lst[start:end]",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "AvgPartitionTestSetNum": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "AvgPartitionTestGet": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "AvgPartitionTestSetNum": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "AvgPartitionTestGet": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass AvgPartition: \n    def __init__(self, lst, limit):\n        \"\"\"\n        Initialize the class with the given list and the number of partitions, and check if the number of partitions is greater than 0.\n        \"\"\"\n        self.lst = lst\n        self.limit = limit\n\n    def setNum(self):\n        return None\n\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n\n        \"\"\"\n        n = len(self.lst)\n        base_size = n // self.limit\n        extra_items = n % self.limit\n\n        start = index * base_size + min(index, extra_items)\n\n        if index < extra_items:\n            end = start + base_size + 1\n        else:\n            end = start + base_size\n\n        return self.lst[start:end]\n",
+  "source": "\n\nclass AvgPartition: \n    def __init__(self, lst, limit):\n        \"\"\"\n        Initialize the class with the given list and the number of partitions, and check if the number of partitions is greater than 0.\n        \"\"\"\n        self.lst = lst\n        self.limit = limit\n\n    def setNum(self):\n        return None\n\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n\n        \"\"\"\n        if self.limit <= 0:\n            return []\n\n        n = len(self.lst)\n        base_size = n // self.limit\n        extra_items = n % self.limit\n\n        start = index * base_size + min(index, extra_items)\n\n        if index < extra_items:\n            end = start + base_size + 1\n        else:\n            end = start + base_size\n\n        return self.lst[start:end]\n"
+}

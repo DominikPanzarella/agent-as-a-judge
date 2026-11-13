@@ -6,7 +6,7 @@ title, the team, the changes to the plan, the status with numbers, and a schedul
 
 ![Architecture](architecture_base.png)
 
-Blue parts are built and piloted; the orange part is built for C3 and not run yet. The source is
+Blue parts are in both setups; the orange part is only in C3. The source is
 `architecture_base.svg`.
 
 ## Course dates
@@ -81,14 +81,22 @@ Blue parts are built and piloted; the orange part is built for C3 and not run ye
   and 3 the other way; v7 gets 5 and 4. Neither gain is more than 7, so **v1 stays**. Kappa
   goes from 0.47 (v6) to 0.59 (the repeat of v1). v1 changes more between two passes than v2
   did (1 of 71): about one verdict in ten of the judge is noise.
-- [ ] **One full run of C2** (13 to 14 Nov) on the 61 test classes (`loop.py --classes test`),
+- [x] **One full run of C2** (12 Nov, 0.18 $) on the 61 test classes (`loop.py --classes test`),
   with the 9B and judge v1; then we tell the instructors the budget spent.
-- [ ] **One full run of C3** (14 to 15 Nov) on the same classes, taking from C2 every first
+  Result: 165 of 251 methods pass in the first versions and 186 in the final ones, +8.4 points
+  [+4.4, +12.9]; 75 revisions fix 22 methods and break 1. Judge against the tests: kappa 0.30,
+  TPR 0.76, TNR 0.55. 21 first replies have no usable method.
+- [x] **One full run of C3** (12 Nov, 0.09 $) on the same classes, taking from C2 every first
   version and review whose input is the same (`loop.py --reuse`): between two runs of the 9B,
   18% of the pilot methods change result, more than any effect we expect from the memory.
-- [ ] **Analysis** (15 to 16 Nov). Pass rates before and after the feedback in C2, C3 against C2
+  Result: 173 of 251 first versions and 61 reviews come from C2. 169 methods pass in the first
+  versions and 182 in the final ones, +5.2 points [+1.7, +9.4]. Against C2: -1.6 points
+  [-4.7, +1.5], McNemar p = 0.42. On the same code the memory changes 10 of 95 verdicts, as
+  many as two passes of v1 differ on the pilot (7 of 71): no effect of the memory is visible.
+- [x] **Analysis** (12 Nov). Pass rates before and after the feedback in C2, C3 against C2
   on the same methods, with and without the weak methods, McNemar tests and bootstrap intervals;
-  the judge's TPR and TNR come from the same files (`analyze.py`).
+  the judge's TPR and TNR come from the same files (`analyze.py`). Charts:
+  `figures/full_first_final.png`, `full_differences.png`, `full_judge.png` (`plot_results.py`).
 
 ## 16 to 19 November: midway report
 

@@ -1,0 +1,161 @@
+{
+  "task_id": "ClassEval_53",
+  "class_name": "LongestWord",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "add_word",
+      "first": {
+        "code": "def add_word(self, word):\n    \"\"\"\n    append the input word into self.word_list\n    :param word: str, input word\n    \"\"\"\n    self.word_list.append(word)",
+        "valid": true,
+        "reply": "```python\nimport re\nimport string\n\nclass LongestWord:\n    \"\"\"\n    This is a class allows to add words to a list and find the longest word in a given sentence by comparing the words with the ones in the word list.\n    \"\"\"\n\n    def __init__(self):\n        \"\"\"\n        Initialize a list of word.\n        \"\"\"\n        self.word_list = []\n\n    def add_word(self, word):\n        \"\"\"\n        append the input word into self.word_list\n        :param word: str, input word\n        \"\"\"\n        self.word_list.append(word)\n\n    def find_longest_word(self, sentence):\n        \"\"\"\n        Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n        Words are strictly case sensitive.\n        :param sentence: a sentence str\n        :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n        >>> longestWord = LongestWord()\n        >>> longestWord.add_word('A')\n        >>> longestWord.add_word('aM')\n        >>> longestWord.find_longest_word('I am a student.')\n        'a'\n        \"\"\"\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 380,
+        "cached_tokens": 0,
+        "completion_tokens": 377,
+        "reasoning_tokens": 107,
+        "cost": 0.000141451
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`add_word` appends the input word to `self.word_list`, which is initialized as a list in the constructor, exactly as its docstring specifies.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`add_word` appends the input word to `self.word_list`, which is initialized as a list in the constructor, exactly as its docstring specifies.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 532,
+            "cached_tokens": 0,
+            "completion_tokens": 48,
+            "reasoning_tokens": 0,
+            "cost": 7.72e-05
+          }
+        ],
+        "prompt_tokens": 532,
+        "cached_tokens": 0,
+        "completion_tokens": 48,
+        "reasoning_tokens": 0,
+        "cost": 7.72e-05
+      },
+      "revision": null,
+      "final_code": "def add_word(self, word):\n    \"\"\"\n    append the input word into self.word_list\n    :param word: str, input word\n    \"\"\"\n    self.word_list.append(word)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "find_longest_word",
+      "first": {
+        "code": "def find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    \"\"\"\n    if not self.word_list:\n        return ''\n\n    # Remove punctuation marks\n    cleaned = re.sub(r'[^\\w\\s]', '', sentence)\n\n    # Split into words\n    words = cleaned.split()\n\n    # Find longest word that is in word_list\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n\n    return longest",
+        "valid": true,
+        "reply": "```python\ndef find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    \"\"\"\n    if not self.word_list:\n        return ''\n    \n    # Remove punctuation marks\n    cleaned = re.sub(r'[^\\w\\s]', '', sentence)\n    \n    # Split into words\n    words = cleaned.split()\n    \n    # Find longest word that is in word_list\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n    \n    return longest\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 436,
+        "cached_tokens": 0,
+        "completion_tokens": 920,
+        "reasoning_tokens": 779,
+        "cost": 0.000270996
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The regex treats underscores as word characters, so it leaves this punctuation mark in the sentence; for example, with `word_list == ['ab']`, `find_longest_word('a_b')` returns `''` instead of `'ab'`. Remove punctuation explicitly (including underscores) before splitting.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The regex treats underscores as word characters, so it leaves this punctuation mark in the sentence; for example, with `word_list == ['ab']`, `find_longest_word('a_b')` returns `''` instead of `'ab'`. Remove punctuation explicitly (including underscores) before splitting.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 718,
+            "cached_tokens": 0,
+            "completion_tokens": 422,
+            "reasoning_tokens": 343,
+            "cost": 0.0002828
+          }
+        ],
+        "prompt_tokens": 718,
+        "cached_tokens": 0,
+        "completion_tokens": 422,
+        "reasoning_tokens": 343,
+        "cost": 0.0002828
+      },
+      "revision": {
+        "code": "```python\ndef find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list",
+        "valid": false,
+        "reply": "```python\ndef find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 731,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 4347,
+        "cost": 0.001002381
+      },
+      "final_code": "def find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    \"\"\"\n    if not self.word_list:\n        return ''\n\n    # Remove punctuation marks\n    cleaned = re.sub(r'[^\\w\\s]', '', sentence)\n\n    # Split into words\n    words = cleaned.split()\n\n    # Find longest word that is in word_list\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n\n    return longest",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "LongestWordTestAddWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "LongestWordTestFindLongestWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "LongestWordTestAddWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "LongestWordTestFindLongestWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import re\nimport string\n\nclass LongestWord: \n    def __init__(self):\n        \"\"\"\n        Initialize a list of word.\n        \"\"\"\n        self.word_list = []\n\n    def add_word(self, word):\n        \"\"\"\n        append the input word into self.word_list\n        :param word: str, input word\n        \"\"\"\n        self.word_list.append(word)\n\n    def find_longest_word(self, sentence):\n        \"\"\"\n        Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n        Words are strictly case sensitive.\n        :param sentence: a sentence str\n        :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n        \"\"\"\n        if not self.word_list:\n            return ''\n\n        # Remove punctuation marks\n        cleaned = re.sub(r'[^\\w\\s]', '', sentence)\n\n        # Split into words\n        words = cleaned.split()\n\n        # Find longest word that is in word_list\n        longest = ''\n        for word in words:\n            if word in self.word_list and len(word) > len(longest):\n                longest = word\n\n        return longest\n",
+  "source": "import re\nimport string\n\nclass LongestWord: \n    def __init__(self):\n        \"\"\"\n        Initialize a list of word.\n        \"\"\"\n        self.word_list = []\n\n    def add_word(self, word):\n        \"\"\"\n        append the input word into self.word_list\n        :param word: str, input word\n        \"\"\"\n        self.word_list.append(word)\n\n    def find_longest_word(self, sentence):\n        \"\"\"\n        Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n        Words are strictly case sensitive.\n        :param sentence: a sentence str\n        :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n        \"\"\"\n        if not self.word_list:\n            return ''\n\n        # Remove punctuation marks\n        cleaned = re.sub(r'[^\\w\\s]', '', sentence)\n\n        # Split into words\n        words = cleaned.split()\n\n        # Find longest word that is in word_list\n        longest = ''\n        for word in words:\n            if word in self.word_list and len(word) > len(longest):\n                longest = word\n\n        return longest\n"
+}

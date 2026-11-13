@@ -1,0 +1,303 @@
+{
+  "task_id": "ClassEval_92",
+  "class_name": "UserLoginDB",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "insert_user",
+      "first": {
+        "code": "def insert_user(self, username, password):\n    \"\"\"\n    Inserts a new user into the \"users\" table.\n    :param username: str, the username of the user.\n    :param password: str, the password of the user.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    \"\"\"\n    self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef insert_user(self, username, password):\n    \"\"\"\n    Inserts a new user into the \"users\" table.\n    :param username: str, the username of the user.\n    :param password: str, the password of the user.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    \"\"\"\n    self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 712,
+        "cached_tokens": 0,
+        "completion_tokens": 2354,
+        "reasoning_tokens": 2423,
+        "cost": 0.000323892
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`insert_user` correctly executes a parameterized insert and commits, but the documented usage calls `create_table()`, which this class does not define, so that usage raises `AttributeError` (and there is no table setup shown). Add a `create_table` method or otherwise ensure the `users` table exists before inserting.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`insert_user` correctly executes a parameterized insert and commits, but the documented usage calls `create_table()`, which this class does not define, so that usage raises `AttributeError` (and there is no table setup shown). Add a `create_table` method or otherwise ensure the `users` table exists before inserting.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 922,
+            "cached_tokens": 0,
+            "completion_tokens": 384,
+            "reasoning_tokens": 299,
+            "cost": 0.00028419999999999997
+          }
+        ],
+        "prompt_tokens": 922,
+        "cached_tokens": 0,
+        "completion_tokens": 384,
+        "reasoning_tokens": 299,
+        "cost": 0.00028419999999999997
+      },
+      "revision": {
+        "code": "def insert_user(self, username, password):\n    \"\"\"\n    Inserts a new user into the \"users\" table.\n    :param username: str, the username of the user.\n    :param password: str, the password of the user.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.insert_user('user1', 'pass1')\n    \"\"\"\n    self.cursor.execute(\"CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT)\")\n    self.connection.commit()\n    self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef insert_user(self, username, password):\n    \"\"\"\n    Inserts a new user into the \"users\" table.\n    :param username: str, the username of the user.\n    :param password: str, the password of the user.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.insert_user('user1', 'pass1')\n    \"\"\"\n    self.cursor.execute(\"CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT)\")\n    self.connection.commit()\n    self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 951,
+        "cached_tokens": 0,
+        "completion_tokens": 651,
+        "reasoning_tokens": 567,
+        "cost": 0.000148392
+      },
+      "final_code": "def insert_user(self, username, password):\n    \"\"\"\n    Inserts a new user into the \"users\" table.\n    :param username: str, the username of the user.\n    :param password: str, the password of the user.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.insert_user('user1', 'pass1')\n    \"\"\"\n    self.cursor.execute(\"CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT)\")\n    self.connection.commit()\n    self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "search_user_by_username",
+      "first": {
+        "code": "def search_user_by_username(self, username):\n    \"\"\"\n    Searches for users in the \"users\" table by username.\n    :param username: str, the username of the user to search for.\n    :return:list of tuples, the rows from the \"users\" table that match the search criteria.\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> result = user_db.search_user_by_username('user1')\n    len(result) = 1\n    \"\"\"\n    self.cursor.execute(\"SELECT * FROM users WHERE username = ?\", (username,))\n    return self.cursor.fetchall()",
+        "valid": true,
+        "reply": "```python\ndef search_user_by_username(self, username):\n    \"\"\"\n    Searches for users in the \"users\" table by username.\n    :param username: str, the username of the user to search for.\n    :return:list of tuples, the rows from the \"users\" table that match the search criteria.\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> result = user_db.search_user_by_username('user1')\n    len(result) = 1\n    \"\"\"\n    self.cursor.execute(\"SELECT * FROM users WHERE username = ?\", (username,))\n    return self.cursor.fetchall()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 874,
+        "cached_tokens": 0,
+        "completion_tokens": 504,
+        "reasoning_tokens": 367,
+        "cost": 0.000158228
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method runs a parameterized query for the given username and returns `fetchall()` as a list of matching row tuples, as documented. It works when the `users` table exists; the earlier `insert_user` method creates that table.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method runs a parameterized query for the given username and returns `fetchall()` as a list of matching row tuples, as documented. It works when the `users` table exists; the earlier `insert_user` method creates that table.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1096,
+            "cached_tokens": 0,
+            "completion_tokens": 294,
+            "reasoning_tokens": 227,
+            "cost": 0.0002566
+          }
+        ],
+        "prompt_tokens": 1096,
+        "cached_tokens": 0,
+        "completion_tokens": 294,
+        "reasoning_tokens": 227,
+        "cost": 0.0002566
+      },
+      "revision": null,
+      "final_code": "def search_user_by_username(self, username):\n    \"\"\"\n    Searches for users in the \"users\" table by username.\n    :param username: str, the username of the user to search for.\n    :return:list of tuples, the rows from the \"users\" table that match the search criteria.\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> result = user_db.search_user_by_username('user1')\n    len(result) = 1\n    \"\"\"\n    self.cursor.execute(\"SELECT * FROM users WHERE username = ?\", (username,))\n    return self.cursor.fetchall()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "delete_user_by_username",
+      "first": {
+        "code": "def delete_user_by_username(self, username):\n    \"\"\"\n    Deletes a user from the \"users\" table by username.\n    :param username: str, the username of the user to delete.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.delete_user_by_username('user1')\n    \"\"\"\n    self.cursor.execute(\"DELETE FROM users WHERE username = ?\", (username,))\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef delete_user_by_username(self, username):\n    \"\"\"\n    Deletes a user from the \"users\" table by username.\n    :param username: str, the username of the user to delete.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.delete_user_by_username('user1')\n    \"\"\"\n    self.cursor.execute(\"DELETE FROM users WHERE username = ?\", (username,))\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1028,
+        "cached_tokens": 0,
+        "completion_tokens": 427,
+        "reasoning_tokens": 310,
+        "cost": 0.000128862
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method uses the existing cursor and connection to delete rows matching the username, then commits the change; it returns `None` as documented. It works when the `users` table exists, as it does after `insert_user` creates it.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method uses the existing cursor and connection to delete rows matching the username, then commits the change; it returns `None` as documented. It works when the `users` table exists, as it does after `insert_user` creates it.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1209,
+            "cached_tokens": 0,
+            "completion_tokens": 408,
+            "reasoning_tokens": 341,
+            "cost": 0.0003249
+          }
+        ],
+        "prompt_tokens": 1209,
+        "cached_tokens": 0,
+        "completion_tokens": 408,
+        "reasoning_tokens": 341,
+        "cost": 0.0003249
+      },
+      "revision": null,
+      "final_code": "def delete_user_by_username(self, username):\n    \"\"\"\n    Deletes a user from the \"users\" table by username.\n    :param username: str, the username of the user to delete.\n    :return: None\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.delete_user_by_username('user1')\n    \"\"\"\n    self.cursor.execute(\"DELETE FROM users WHERE username = ?\", (username,))\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "validate_user_login",
+      "first": {
+        "code": "def validate_user_login(self, username, password):\n    \"\"\"\n    Determine whether the user can log in, that is, the user is in the database and the password is correct\n    :param username:str, the username of the user to validate.\n    :param password:str, the password of the user to validate.\n    :return:bool, representing whether the user can log in correctly\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.validate_user_login('user1', 'pass1')\n    True\n    \"\"\"\n    self.cursor.execute(\"SELECT password FROM users WHERE username = ?\", (username,))\n    result = self.cursor.fetchone()\n    if result and result[0] == password:\n        return True\n    return False",
+        "valid": true,
+        "reply": "```python\ndef validate_user_login(self, username, password):\n    \"\"\"\n    Determine whether the user can log in, that is, the user is in the database and the password is correct\n    :param username:str, the username of the user to validate.\n    :param password:str, the password of the user to validate.\n    :return:bool, representing whether the user can log in correctly\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.validate_user_login('user1', 'pass1')\n    True\n    \"\"\"\n    self.cursor.execute(\"SELECT password FROM users WHERE username = ?\", (username,))\n    result = self.cursor.fetchone()\n    if result and result[0] == password:\n        return True\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1152,
+        "cached_tokens": 0,
+        "completion_tokens": 546,
+        "reasoning_tokens": 398,
+        "cost": 0.0001521
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly returns `True` only when a matching username exists and its stored password equals the supplied password, and returns `False` otherwise. It uses the class\u2019s existing cursor and the `users` table created by `insert_user`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly returns `True` only when a matching username exists and its stored password equals the supplied password, and returns `False` otherwise. It uses the class\u2019s existing cursor and the `users` table created by `insert_user`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1382,
+            "cached_tokens": 0,
+            "completion_tokens": 281,
+            "reasoning_tokens": 214,
+            "cost": 0.00027870000000000005
+          }
+        ],
+        "prompt_tokens": 1382,
+        "cached_tokens": 0,
+        "completion_tokens": 281,
+        "reasoning_tokens": 214,
+        "cost": 0.00027870000000000005
+      },
+      "revision": null,
+      "final_code": "def validate_user_login(self, username, password):\n    \"\"\"\n    Determine whether the user can log in, that is, the user is in the database and the password is correct\n    :param username:str, the username of the user to validate.\n    :param password:str, the password of the user to validate.\n    :return:bool, representing whether the user can log in correctly\n    >>> user_db = UserLoginDB(\"user_database.db\")\n    >>> user_db.create_table()\n    >>> user_db.insert_user('user1', 'pass1')\n    >>> user_db.validate_user_login('user1', 'pass1')\n    True\n    \"\"\"\n    self.cursor.execute(\"SELECT password FROM users WHERE username = ?\", (username,))\n    result = self.cursor.fetchone()\n    if result and result[0] == password:\n        return True\n    return False",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "UserLoginDBTestInsertUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestSearchUserByUsername": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestDeleteUserByUsername": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestValidateUserLogin": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "UserLoginDBTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "UserLoginDBTestInsertUser": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestSearchUserByUsername": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestDeleteUserByUsername": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "UserLoginDBTestValidateUserLogin": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "UserLoginDBTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import sqlite3\n\nclass UserLoginDB: \n    def __init__(self, db_name):\n        \"\"\"\n        Initializes the UserLoginDB object with the specified database name.\n        :param db_name: str, the name of the SQLite database.\n        \"\"\"\n        self.connection = sqlite3.connect(db_name)\n        self.cursor = self.connection.cursor()\n\n    def insert_user(self, username, password):\n        \"\"\"\n        Inserts a new user into the \"users\" table.\n        :param username: str, the username of the user.\n        :param password: str, the password of the user.\n        :return: None\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        \"\"\"\n        self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n        self.connection.commit()\n\n    def search_user_by_username(self, username):\n        \"\"\"\n        Searches for users in the \"users\" table by username.\n        :param username: str, the username of the user to search for.\n        :return:list of tuples, the rows from the \"users\" table that match the search criteria.\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> result = user_db.search_user_by_username('user1')\n        len(result) = 1\n        \"\"\"\n        self.cursor.execute(\"SELECT * FROM users WHERE username = ?\", (username,))\n        return self.cursor.fetchall()\n\n    def delete_user_by_username(self, username):\n        \"\"\"\n        Deletes a user from the \"users\" table by username.\n        :param username: str, the username of the user to delete.\n        :return: None\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> user_db.delete_user_by_username('user1')\n        \"\"\"\n        self.cursor.execute(\"DELETE FROM users WHERE username = ?\", (username,))\n        self.connection.commit()\n\n    def validate_user_login(self, username, password):\n        \"\"\"\n        Determine whether the user can log in, that is, the user is in the database and the password is correct\n        :param username:str, the username of the user to validate.\n        :param password:str, the password of the user to validate.\n        :return:bool, representing whether the user can log in correctly\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> user_db.validate_user_login('user1', 'pass1')\n        True\n        \"\"\"\n        self.cursor.execute(\"SELECT password FROM users WHERE username = ?\", (username,))\n        result = self.cursor.fetchone()\n        if result and result[0] == password:\n            return True\n        return False\n",
+  "source": "import sqlite3\n\nclass UserLoginDB: \n    def __init__(self, db_name):\n        \"\"\"\n        Initializes the UserLoginDB object with the specified database name.\n        :param db_name: str, the name of the SQLite database.\n        \"\"\"\n        self.connection = sqlite3.connect(db_name)\n        self.cursor = self.connection.cursor()\n\n    def insert_user(self, username, password):\n        \"\"\"\n        Inserts a new user into the \"users\" table.\n        :param username: str, the username of the user.\n        :param password: str, the password of the user.\n        :return: None\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.insert_user('user1', 'pass1')\n        \"\"\"\n        self.cursor.execute(\"CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT)\")\n        self.connection.commit()\n        self.cursor.execute(\"INSERT INTO users (username, password) VALUES (?, ?)\", (username, password))\n        self.connection.commit()\n\n    def search_user_by_username(self, username):\n        \"\"\"\n        Searches for users in the \"users\" table by username.\n        :param username: str, the username of the user to search for.\n        :return:list of tuples, the rows from the \"users\" table that match the search criteria.\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> result = user_db.search_user_by_username('user1')\n        len(result) = 1\n        \"\"\"\n        self.cursor.execute(\"SELECT * FROM users WHERE username = ?\", (username,))\n        return self.cursor.fetchall()\n\n    def delete_user_by_username(self, username):\n        \"\"\"\n        Deletes a user from the \"users\" table by username.\n        :param username: str, the username of the user to delete.\n        :return: None\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> user_db.delete_user_by_username('user1')\n        \"\"\"\n        self.cursor.execute(\"DELETE FROM users WHERE username = ?\", (username,))\n        self.connection.commit()\n\n    def validate_user_login(self, username, password):\n        \"\"\"\n        Determine whether the user can log in, that is, the user is in the database and the password is correct\n        :param username:str, the username of the user to validate.\n        :param password:str, the password of the user to validate.\n        :return:bool, representing whether the user can log in correctly\n        >>> user_db = UserLoginDB(\"user_database.db\")\n        >>> user_db.create_table()\n        >>> user_db.insert_user('user1', 'pass1')\n        >>> user_db.validate_user_login('user1', 'pass1')\n        True\n        \"\"\"\n        self.cursor.execute(\"SELECT password FROM users WHERE username = ?\", (username,))\n        result = self.cursor.fetchone()\n        if result and result[0] == password:\n            return True\n        return False\n"
+}

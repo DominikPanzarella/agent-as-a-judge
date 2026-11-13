@@ -1,0 +1,145 @@
+{
+  "task_id": "ClassEval_97",
+  "class_name": "Words2Numbers",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "text2int",
+      "first": {
+        "code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    import re\n\n    # Replace hyphens and normalize\n    textnum = textnum.lower().replace('-', ' ')\n    words = textnum.split()\n\n    if not words:\n        return \"0\"\n\n    total = 0\n    current = 0\n\n    for word in words:\n        if word not in self.numwords:\n            raise ValueError(f\"Unknown word: {word}\")\n\n        multiplier, value = self.numwords[word]\n\n        # Skip \"and\" - it's just a connector\n        if word == \"and\":\n            continue\n\n        if multiplier >= 1000:\n            # Scale word (thousand, million, etc.)\n            total += current * multiplier\n            current = value\n        else:\n            current += value\n\n    total += current\n\n    return str(total)",
+        "valid": true,
+        "reply": "```python\ndef text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    import re\n    \n    # Replace hyphens and normalize\n    textnum = textnum.lower().replace('-', ' ')\n    words = textnum.split()\n    \n    if not words:\n        return \"0\"\n    \n    total = 0\n    current = 0\n    \n    for word in words:\n        if word not in self.numwords:\n            raise ValueError(f\"Unknown word: {word}\")\n        \n        multiplier, value = self.numwords[word]\n        \n        # Skip \"and\" - it's just a connector\n        if word == \"and\":\n            continue\n        \n        if multiplier >= 1000:\n            # Scale word (thousand, million, etc.)\n            total += current * multiplier\n            current = value\n        else:\n            current += value\n    \n    total += current\n    \n    return str(total)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 701,
+        "cached_tokens": 0,
+        "completion_tokens": 1313,
+        "reasoning_tokens": 1298,
+        "cost": 0.00020436
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method treats `hundred` as an ordinary word and adds its value of zero, so inputs such as `one hundred` produce `1` instead of `100`. Handle the hundred scale by multiplying the current subtotal by 100.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method treats `hundred` as an ordinary word and adds its value of zero, so inputs such as `one hundred` produce `1` instead of `100`. Handle the hundred scale by multiplying the current subtotal by 100.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1039,
+            "cached_tokens": 0,
+            "completion_tokens": 225,
+            "reasoning_tokens": 158,
+            "cost": 0.0002164
+          }
+        ],
+        "prompt_tokens": 1039,
+        "cached_tokens": 0,
+        "completion_tokens": 225,
+        "reasoning_tokens": 158,
+        "cost": 0.0002164
+      },
+      "revision": {
+        "code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Replace hyphens and normalize\n    textnum = textnum.lower().replace('-', ' ')\n    words = textnum.split()\n\n    if not words:\n        return \"0\"\n\n    total = 0\n    current = 0\n\n    for word in words:\n        if word not in self.numwords:\n            raise ValueError(f\"Unknown word: {word}\")\n\n        multiplier, value = self.numwords[word]\n\n        # Skip \"and\" - it's just a connector\n        if word == \"and\":\n            continue\n\n        if multiplier == 100:\n            # Handle hundred: multiply current subtotal by 100\n            if current > 0:\n                total += current * 100\n                current = 0\n            current = value\n        elif multiplier >= 1000:\n            # Scale word (thousand, million, etc.)\n            total += current * multiplier\n            current = value\n        else:\n            current += value\n\n    total += current\n\n    return str(total)",
+        "valid": true,
+        "reply": "```python\ndef text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Replace hyphens and normalize\n    textnum = textnum.lower().replace('-', ' ')\n    words = textnum.split()\n    \n    if not words:\n        return \"0\"\n    \n    total = 0\n    current = 0\n    \n    for word in words:\n        if word not in self.numwords:\n            raise ValueError(f\"Unknown word: {word}\")\n        \n        multiplier, value = self.numwords[word]\n        \n        # Skip \"and\" - it's just a connector\n        if word == \"and\":\n            continue\n        \n        if multiplier == 100:\n            # Handle hundred: multiply current subtotal by 100\n            if current > 0:\n                total += current * 100\n                current = 0\n            current = value\n        elif multiplier >= 1000:\n            # Scale word (thousand, million, etc.)\n            total += current * multiplier\n            current = value\n        else:\n            current += value\n    \n    total += current\n    \n    return str(total)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1066,
+        "cached_tokens": 0,
+        "completion_tokens": 1094,
+        "reasoning_tokens": 757,
+        "cost": 0.000207864
+      },
+      "final_code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Replace hyphens and normalize\n    textnum = textnum.lower().replace('-', ' ')\n    words = textnum.split()\n\n    if not words:\n        return \"0\"\n\n    total = 0\n    current = 0\n\n    for word in words:\n        if word not in self.numwords:\n            raise ValueError(f\"Unknown word: {word}\")\n\n        multiplier, value = self.numwords[word]\n\n        # Skip \"and\" - it's just a connector\n        if word == \"and\":\n            continue\n\n        if multiplier == 100:\n            # Handle hundred: multiply current subtotal by 100\n            if current > 0:\n                total += current * 100\n                current = 0\n            current = value\n        elif multiplier >= 1000:\n            # Scale word (thousand, million, etc.)\n            total += current * multiplier\n            current = value\n        else:\n            current += value\n\n    total += current\n\n    return str(total)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "is_valid_input",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1025,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 3896,
+        "cost": 0.00053595
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "Words2NumbersTestText2Int": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 2,
+      "errors": 1,
+      "passed": false
+    },
+    "Words2NumbersTestIsValidInput": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "Words2NumbersTestText2Int": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "Words2NumbersTestIsValidInput": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass Words2Numbers: \n    def __init__(self):\n        \"\"\"\n        Initialize the word lists and dictionaries required for conversion\n        \"\"\"\n        self.numwords = {}\n        self.units = [\n            \"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\",\n            \"nine\", \"ten\", \"eleven\", \"twelve\", \"thirteen\", \"fourteen\", \"fifteen\",\n            \"sixteen\", \"seventeen\", \"eighteen\", \"nineteen\",\n        ]\n        self.tens = [\"\", \"\", \"twenty\", \"thirty\", \"forty\", \"fifty\", \"sixty\", \"seventy\", \"eighty\", \"ninety\"]\n        self.scales = [\"hundred\", \"thousand\", \"million\", \"billion\", \"trillion\"]\n\n        self.numwords[\"and\"] = (1, 0)\n        for idx, word in enumerate(self.units):\n            self.numwords[word] = (1, idx)\n        for idx, word in enumerate(self.tens):\n            self.numwords[word] = (1, idx * 10)\n        for idx, word in enumerate(self.scales):\n            self.numwords[word] = (10 ** (idx * 3 or 2), 0)\n\n        self.ordinal_words = {'first': 1, 'second': 2, 'third': 3, 'fifth': 5, 'eighth': 8, 'ninth': 9, 'twelfth': 12}\n        self.ordinal_endings = [('ieth', 'y'), ('th', '')]\n\n    def text2int(self, textnum):\n        \"\"\"\n        Convert the word string to the corresponding integer string\n        :param textnum: string, the word string to be converted\n        :return: string, the final converted integer string\n        >>> w2n = Words2Numbers()\n        >>> w2n.text2int(\"thirty-two\")\n        \"32\"\n        \"\"\"\n        import re\n\n        # Replace hyphens and normalize\n        textnum = textnum.lower().replace('-', ' ')\n        words = textnum.split()\n\n        if not words:\n            return \"0\"\n\n        total = 0\n        current = 0\n\n        for word in words:\n            if word not in self.numwords:\n                raise ValueError(f\"Unknown word: {word}\")\n\n            multiplier, value = self.numwords[word]\n\n            # Skip \"and\" - it's just a connector\n            if word == \"and\":\n                continue\n\n            if multiplier >= 1000:\n                # Scale word (thousand, million, etc.)\n                total += current * multiplier\n                current = value\n            else:\n                current += value\n\n        total += current\n\n        return str(total)\n\n    def is_valid_input(self, textnum):\n        return None\n",
+  "source": "\n\nclass Words2Numbers: \n    def __init__(self):\n        \"\"\"\n        Initialize the word lists and dictionaries required for conversion\n        \"\"\"\n        self.numwords = {}\n        self.units = [\n            \"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\",\n            \"nine\", \"ten\", \"eleven\", \"twelve\", \"thirteen\", \"fourteen\", \"fifteen\",\n            \"sixteen\", \"seventeen\", \"eighteen\", \"nineteen\",\n        ]\n        self.tens = [\"\", \"\", \"twenty\", \"thirty\", \"forty\", \"fifty\", \"sixty\", \"seventy\", \"eighty\", \"ninety\"]\n        self.scales = [\"hundred\", \"thousand\", \"million\", \"billion\", \"trillion\"]\n\n        self.numwords[\"and\"] = (1, 0)\n        for idx, word in enumerate(self.units):\n            self.numwords[word] = (1, idx)\n        for idx, word in enumerate(self.tens):\n            self.numwords[word] = (1, idx * 10)\n        for idx, word in enumerate(self.scales):\n            self.numwords[word] = (10 ** (idx * 3 or 2), 0)\n\n        self.ordinal_words = {'first': 1, 'second': 2, 'third': 3, 'fifth': 5, 'eighth': 8, 'ninth': 9, 'twelfth': 12}\n        self.ordinal_endings = [('ieth', 'y'), ('th', '')]\n\n    def text2int(self, textnum):\n        \"\"\"\n        Convert the word string to the corresponding integer string\n        :param textnum: string, the word string to be converted\n        :return: string, the final converted integer string\n        >>> w2n = Words2Numbers()\n        >>> w2n.text2int(\"thirty-two\")\n        \"32\"\n        \"\"\"\n        # Replace hyphens and normalize\n        textnum = textnum.lower().replace('-', ' ')\n        words = textnum.split()\n\n        if not words:\n            return \"0\"\n\n        total = 0\n        current = 0\n\n        for word in words:\n            if word not in self.numwords:\n                raise ValueError(f\"Unknown word: {word}\")\n\n            multiplier, value = self.numwords[word]\n\n            # Skip \"and\" - it's just a connector\n            if word == \"and\":\n                continue\n\n            if multiplier == 100:\n                # Handle hundred: multiply current subtotal by 100\n                if current > 0:\n                    total += current * 100\n                    current = 0\n                current = value\n            elif multiplier >= 1000:\n                # Scale word (thousand, million, etc.)\n                total += current * multiplier\n                current = value\n            else:\n                current += value\n\n        total += current\n\n        return str(total)\n\n    def is_valid_input(self, textnum):\n        return None\n"
+}

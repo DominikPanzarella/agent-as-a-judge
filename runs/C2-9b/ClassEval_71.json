@@ -1,0 +1,236 @@
+{
+  "task_id": "ClassEval_71",
+  "class_name": "PushBoxGame",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "init_game",
+      "first": {
+        "code": "def init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n\n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.is_game_over = False",
+        "valid": true,
+        "reply": "```python\ndef init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n    \n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n    \n    self.is_game_over = False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 811,
+        "cached_tokens": 0,
+        "completion_tokens": 746,
+        "reasoning_tokens": 586,
+        "cost": 0.00031665
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method scans the map and records the player, target, and box positions, counts the targets, and resets the game-over flag as required. It correctly produces the documented values for the example map.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method scans the map and records the player, target, and box positions, counts the targets, and resets the game-over flag as required. It correctly produces the documented values for the example map.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1043,
+            "cached_tokens": 0,
+            "completion_tokens": 115,
+            "reasoning_tokens": 57,
+            "cost": 0.0001618
+          }
+        ],
+        "prompt_tokens": 1043,
+        "cached_tokens": 0,
+        "completion_tokens": 115,
+        "reasoning_tokens": 57,
+        "cost": 0.0001618
+      },
+      "revision": null,
+      "final_code": "def init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n\n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.is_game_over = False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "check_win",
+      "first": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 970,
+        "cached_tokens": 0,
+        "completion_tokens": 818,
+        "reasoning_tokens": 715,
+        "cost": 0.000360612
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The `len(self.boxes) > 0` condition makes a map with no boxes unwinnable, although the stated rule says the game is won when all boxes are on targets (which is vacuously true when there are none). Remove that condition if maps with zero boxes are allowed; otherwise, this method is correct for maps guaranteed to contain a box.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The `len(self.boxes) > 0` condition makes a map with no boxes unwinnable, although the stated rule says the game is won when all boxes are on targets (which is vacuously true when there are none). Remove that condition if maps with zero boxes are allowed; otherwise, this method is correct for maps guaranteed to contain a box.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1186,
+            "cached_tokens": 0,
+            "completion_tokens": 609,
+            "reasoning_tokens": 516,
+            "cost": 0.00042310000000000004
+          }
+        ],
+        "prompt_tokens": 1186,
+        "cached_tokens": 0,
+        "completion_tokens": 609,
+        "reasoning_tokens": 516,
+        "cost": 0.00042310000000000004
+      },
+      "revision": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1227,
+        "cached_tokens": 0,
+        "completion_tokens": 361,
+        "reasoning_tokens": 226,
+        "cost": 0.000291766
+      },
+      "final_code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "move",
+      "first": {
+        "code": "def move(self, direction):\n    \"\"\"\n    Move the player based on the specified direction and check if the game is won.\n    :param direction: str, the direction of the player's movement. \n        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n    :return: True if the game is won, False otherwise.\n    \"\"\"\n    # Direction mappings\n    directions = {\n        'w': (-1, 0),  # up\n        's': (1, 0),   # down\n        'a': (0, -1),  # left\n        'd': (0, 1)    # right\n    }\n\n    dr, dc = directions[direction]\n\n    new_row = self.player_row + dr\n    new_col = self.player_col + dc\n\n    row_str = self.map[new_row]\n\n    # Check for wall or out of bounds\n    if row_str[new_col] == '#' or new_col < 0 or new_col >= len(row_str):\n        return False\n\n    # Get the cell value at new position\n    cell_value = row_str[new_col]\n\n    # Determine what's at the new position\n    if cell_value == 'X':\n        # There's a box here, need to check if we can push it\n        double_dr, double_dc = dr * 2, dc * 2\n        box_new_row = new_row + dr\n        box_new_col = new_col + dc\n\n        # Check if we're trying to push off the edge\n        if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n            return False\n\n        box_cell = self.map[box_new_row][box_new_col]\n\n        # Box can only be pushed if target or empty space\n        if box_cell != 'X' and box_cell not in [' ', 'G']:\n            return False\n\n        # Remove old box position from boxes list\n        self.boxes.remove((new_row, new_col))\n\n        # Add new box position\n        self.boxes.append((box_new_row, box_new_col))\n\n        # Remove old player position from map by updating temporarily\n        # We'll update our internal tracking without permanently changing self.map\n        self.player_row = new_row\n        self.player_col = new_col\n\n    else:\n        # Just move player, no box involved\n        self.player_row = new_row\n        self.player_col = new_col\n\n    # Update map visualization (convert to mutable list first)\n    # Actually we don't modify self.map directly since it's a list of strings (immutable)\n    # But we need to keep track of state. The boxes list tracks box positions internally.\n\n    # Check if game is over\n    self.is_game_over = self.check_win()\n\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef move(self, direction):\n    \"\"\"\n    Move the player based on the specified direction and check if the game is won.\n    :param direction: str, the direction of the player's movement. \n        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n    \n    :return: True if the game is won, False otherwise.\n    \"\"\"\n    # Direction mappings\n    directions = {\n        'w': (-1, 0),  # up\n        's': (1, 0),   # down\n        'a': (0, -1),  # left\n        'd': (0, 1)    # right\n    }\n    \n    dr, dc = directions[direction]\n    \n    new_row = self.player_row + dr\n    new_col = self.player_col + dc\n    \n    row_str = self.map[new_row]\n    \n    # Check for wall or out of bounds\n    if row_str[new_col] == '#' or new_col < 0 or new_col >= len(row_str):\n        return False\n    \n    # Get the cell value at new position\n    cell_value = row_str[new_col]\n    \n    # Determine what's at the new position\n    if cell_value == 'X':\n        # There's a box here, need to check if we can push it\n        double_dr, double_dc = dr * 2, dc * 2\n        box_new_row = new_row + dr\n        box_new_col = new_col + dc\n        \n        # Check if we're trying to push off the edge\n        if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n            return False\n            \n        box_cell = self.map[box_new_row][box_new_col]\n        \n        # Box can only be pushed if target or empty space\n        if box_cell != 'X' and box_cell not in [' ', 'G']:\n            return False\n        \n        # Remove old box position from boxes list\n        self.boxes.remove((new_row, new_col))\n        \n        # Add new box position\n        self.boxes.append((box_new_row, box_new_col))\n        \n        # Remove old player position from map by updating temporarily\n        # We'll update our internal tracking without permanently changing self.map\n        self.player_row = new_row\n        self.player_col = new_col\n    \n    else:\n        # Just move player, no box involved\n        self.player_row = new_row\n        self.player_col = new_col\n    \n    # Update map visualization (convert to mutable list first)\n    # Actually we don't modify self.map directly since it's a list of strings (immutable)\n    # But we need to keep track of state. The boxes list tracks box positions internally.\n    \n    # Check if game is over\n    self.is_game_over = self.check_win()\n    \n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1100,
+        "cached_tokens": 0,
+        "completion_tokens": 1060,
+        "reasoning_tokens": 404,
+        "cost": 0.00044124
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "NOT OK: It checks occupancy against the unchanged initial map, so after a box moves it can mistake the old location for a box and miss boxes at their new locations; use `self.boxes` for box occupancy. It also indexes rows/cells before fully checking bounds (and never checks the pushed box\u2019s row), which can wrap negative indexes or raise `IndexError`; validate both positions before indexing.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "NOT OK: It checks occupancy against the unchanged initial map, so after a box moves it can mistake the old location for a box and miss boxes at their new locations; use `self.boxes` for box occupancy. It also indexes rows/cells before fully checking bounds (and never checks the pushed box\u2019s row), which can wrap negative indexes or raise `IndexError`; validate both positions before indexing.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1764,
+            "cached_tokens": 0,
+            "completion_tokens": 386,
+            "reasoning_tokens": 286,
+            "cost": 0.0003694
+          }
+        ],
+        "prompt_tokens": 1764,
+        "cached_tokens": 0,
+        "completion_tokens": 386,
+        "reasoning_tokens": 286,
+        "cost": 0.0003694
+      },
+      "revision": {
+        "code": "def move(self, direction):\n    \"\"\"\n    Move the player based on the specified direction and check if the game is won.\n    :param direction: str, the direction of the player's movement. \n        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n    :return: True if the game is won, False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"])       \n    >>> game.print_map()\n    # # # # # \n    # O     #\n    #   X   #\n    #     G #\n    # # # # #\n    >>> game.move('d')\n    False\n    >>> game.move('s')   \n    False\n    >>> game.move('a')   \n    False\n    >>> game.move('s') \n    False\n    >>> game.move('d') \n    True\n    \"\"\"\n    # Direction mappings\n    directions = {\n        'w': (-1, 0),  # up\n        's': (1, 0),   # down\n        'a': (0, -1),  # left\n        'd': (0, 1)    # right\n    }\n\n    dr, dc = directions[direction]\n\n    new_row = self.player_row + dr\n    new_col = self.player_col + dc\n\n    # Check bounds for player's new position FIRST before any indexing\n    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):\n        return False\n\n    # Determine what's at the new position using both map and boxes list\n    cell_value = self.map[new_row][new_col]\n    has_box_here = (new_row, new_col) in self.boxes\n\n    if has_box_here:\n        # There's a box here, need to check if we can push it\n        box_new_row = new_row + dr\n        box_new_col = new_col + dc\n\n        # Check bounds for pushed box position FIRST\n        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):\n            return False\n\n        # Check if we're trying to push another box into\n        if (box_new_row, box_new_col) in self.boxes:\n            return False\n\n        # Check if the target cell is a wall\n        pushed_cell = self.map[box_new_row][box_new_col]\n        if pushed_cell == '#':\n            return False\n\n    # Update player position\n    self.player_row = new_row\n    self.player_col = new_col\n\n    # Handle box movement if applicable\n    if has_box_here:\n        # Remove old box position from boxes list\n        self.boxes.remove((new_row, new_col))\n        # Add new box position to boxes list\n        self.boxes.append((box_new_row, box_new_col))\n\n    # Check if game is over\n    self.is_game_over = self.check_win()\n\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef move(self, direction):\n    \"\"\"\n    Move the player based on the specified direction and check if the game is won.\n    :param direction: str, the direction of the player's movement. \n        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n    :return: True if the game is won, False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"])       \n    >>> game.print_map()\n    # # # # # \n    # O     #\n    #   X   #\n    #     G #\n    # # # # #\n    >>> game.move('d')\n    False\n    >>> game.move('s')   \n    False\n    >>> game.move('a')   \n    False\n    >>> game.move('s') \n    False\n    >>> game.move('d') \n    True\n    \"\"\"\n    # Direction mappings\n    directions = {\n        'w': (-1, 0),  # up\n        's': (1, 0),   # down\n        'a': (0, -1),  # left\n        'd': (0, 1)    # right\n    }\n    \n    dr, dc = directions[direction]\n    \n    new_row = self.player_row + dr\n    new_col = self.player_col + dc\n    \n    # Check bounds for player's new position FIRST before any indexing\n    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):\n        return False\n    \n    # Determine what's at the new position using both map and boxes list\n    cell_value = self.map[new_row][new_col]\n    has_box_here = (new_row, new_col) in self.boxes\n    \n    if has_box_here:\n        # There's a box here, need to check if we can push it\n        box_new_row = new_row + dr\n        box_new_col = new_col + dc\n        \n        # Check bounds for pushed box position FIRST\n        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):\n            return False\n        \n        # Check if we're trying to push another box into\n        if (box_new_row, box_new_col) in self.boxes:\n            return False\n        \n        # Check if the target cell is a wall\n        pushed_cell = self.map[box_new_row][box_new_col]\n        if pushed_cell == '#':\n            return False\n    \n    # Update player position\n    self.player_row = new_row\n    self.player_col = new_col\n    \n    # Handle box movement if applicable\n    if has_box_here:\n        # Remove old box position from boxes list\n        self.boxes.remove((new_row, new_col))\n        # Add new box position to boxes list\n        self.boxes.append((box_new_row, box_new_col))\n    \n    # Check if game is over\n    self.is_game_over = self.check_win()\n    \n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1852,
+        "cached_tokens": 0,
+        "completion_tokens": 1759,
+        "reasoning_tokens": 1109,
+        "cost": 0.000736628
+      },
+      "final_code": "def move(self, direction):\n    \"\"\"\n    Move the player based on the specified direction and check if the game is won.\n    :param direction: str, the direction of the player's movement. \n        It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n    :return: True if the game is won, False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"])       \n    >>> game.print_map()\n    # # # # # \n    # O     #\n    #   X   #\n    #     G #\n    # # # # #\n    >>> game.move('d')\n    False\n    >>> game.move('s')   \n    False\n    >>> game.move('a')   \n    False\n    >>> game.move('s') \n    False\n    >>> game.move('d') \n    True\n    \"\"\"\n    # Direction mappings\n    directions = {\n        'w': (-1, 0),  # up\n        's': (1, 0),   # down\n        'a': (0, -1),  # left\n        'd': (0, 1)    # right\n    }\n\n    dr, dc = directions[direction]\n\n    new_row = self.player_row + dr\n    new_col = self.player_col + dc\n\n    # Check bounds for player's new position FIRST before any indexing\n    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):\n        return False\n\n    # Determine what's at the new position using both map and boxes list\n    cell_value = self.map[new_row][new_col]\n    has_box_here = (new_row, new_col) in self.boxes\n\n    if has_box_here:\n        # There's a box here, need to check if we can push it\n        box_new_row = new_row + dr\n        box_new_col = new_col + dc\n\n        # Check bounds for pushed box position FIRST\n        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):\n            return False\n\n        # Check if we're trying to push another box into\n        if (box_new_row, box_new_col) in self.boxes:\n            return False\n\n        # Check if the target cell is a wall\n        pushed_cell = self.map[box_new_row][box_new_col]\n        if pushed_cell == '#':\n            return False\n\n    # Update player position\n    self.player_row = new_row\n    self.player_col = new_col\n\n    # Handle box movement if applicable\n    if has_box_here:\n        # Remove old box position from boxes list\n        self.boxes.remove((new_row, new_col))\n        # Add new box position to boxes list\n        self.boxes.append((box_new_row, box_new_col))\n\n    # Check if game is over\n    self.is_game_over = self.check_win()\n\n    return self.is_game_over",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 2,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n\n        for row_idx, row in enumerate(self.map):\n            for col_idx, cell in enumerate(row):\n                if cell == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif cell == 'G':\n                    self.targets.append((row_idx, col_idx))\n                    self.target_count += 1\n                elif cell == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n        return self.is_game_over\n\n    def move(self, direction):\n        \"\"\"\n        Move the player based on the specified direction and check if the game is won.\n        :param direction: str, the direction of the player's movement. \n            It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n        :return: True if the game is won, False otherwise.\n        \"\"\"\n        # Direction mappings\n        directions = {\n            'w': (-1, 0),  # up\n            's': (1, 0),   # down\n            'a': (0, -1),  # left\n            'd': (0, 1)    # right\n        }\n\n        dr, dc = directions[direction]\n\n        new_row = self.player_row + dr\n        new_col = self.player_col + dc\n\n        row_str = self.map[new_row]\n\n        # Check for wall or out of bounds\n        if row_str[new_col] == '#' or new_col < 0 or new_col >= len(row_str):\n            return False\n\n        # Get the cell value at new position\n        cell_value = row_str[new_col]\n\n        # Determine what's at the new position\n        if cell_value == 'X':\n            # There's a box here, need to check if we can push it\n            double_dr, double_dc = dr * 2, dc * 2\n            box_new_row = new_row + dr\n            box_new_col = new_col + dc\n\n            # Check if we're trying to push off the edge\n            if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n                return False\n\n            box_cell = self.map[box_new_row][box_new_col]\n\n            # Box can only be pushed if target or empty space\n            if box_cell != 'X' and box_cell not in [' ', 'G']:\n                return False\n\n            # Remove old box position from boxes list\n            self.boxes.remove((new_row, new_col))\n\n            # Add new box position\n            self.boxes.append((box_new_row, box_new_col))\n\n            # Remove old player position from map by updating temporarily\n            # We'll update our internal tracking without permanently changing self.map\n            self.player_row = new_row\n            self.player_col = new_col\n\n        else:\n            # Just move player, no box involved\n            self.player_row = new_row\n            self.player_col = new_col\n\n        # Update map visualization (convert to mutable list first)\n        # Actually we don't modify self.map directly since it's a list of strings (immutable)\n        # But we need to keep track of state. The boxes list tracks box positions internally.\n\n        # Check if game is over\n        self.is_game_over = self.check_win()\n\n        return self.is_game_over\n",
+  "source": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n\n        for row_idx, row in enumerate(self.map):\n            for col_idx, cell in enumerate(row):\n                if cell == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif cell == 'G':\n                    self.targets.append((row_idx, col_idx))\n                    self.target_count += 1\n                elif cell == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        self.is_game_over = all(pos in self.targets for pos in self.boxes)\n        return self.is_game_over\n\n    def move(self, direction):\n        \"\"\"\n        Move the player based on the specified direction and check if the game is won.\n        :param direction: str, the direction of the player's movement. \n            It can be 'w', 's', 'a', or 'd' representing up, down, left, or right respectively.\n\n        :return: True if the game is won, False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"])       \n        >>> game.print_map()\n        # # # # # \n        # O     #\n        #   X   #\n        #     G #\n        # # # # #\n        >>> game.move('d')\n        False\n        >>> game.move('s')   \n        False\n        >>> game.move('a')   \n        False\n        >>> game.move('s') \n        False\n        >>> game.move('d') \n        True\n        \"\"\"\n        # Direction mappings\n        directions = {\n            'w': (-1, 0),  # up\n            's': (1, 0),   # down\n            'a': (0, -1),  # left\n            'd': (0, 1)    # right\n        }\n\n        dr, dc = directions[direction]\n\n        new_row = self.player_row + dr\n        new_col = self.player_col + dc\n\n        # Check bounds for player's new position FIRST before any indexing\n        if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):\n            return False\n\n        # Determine what's at the new position using both map and boxes list\n        cell_value = self.map[new_row][new_col]\n        has_box_here = (new_row, new_col) in self.boxes\n\n        if has_box_here:\n            # There's a box here, need to check if we can push it\n            box_new_row = new_row + dr\n            box_new_col = new_col + dc\n\n            # Check bounds for pushed box position FIRST\n            if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):\n                return False\n\n            # Check if we're trying to push another box into\n            if (box_new_row, box_new_col) in self.boxes:\n                return False\n\n            # Check if the target cell is a wall\n            pushed_cell = self.map[box_new_row][box_new_col]\n            if pushed_cell == '#':\n                return False\n\n        # Update player position\n        self.player_row = new_row\n        self.player_col = new_col\n\n        # Handle box movement if applicable\n        if has_box_here:\n            # Remove old box position from boxes list\n            self.boxes.remove((new_row, new_col))\n            # Add new box position to boxes list\n            self.boxes.append((box_new_row, box_new_col))\n\n        # Check if game is over\n        self.is_game_over = self.check_win()\n\n        return self.is_game_over\n"
+}

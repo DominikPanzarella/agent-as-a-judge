@@ -1,10 +1,12 @@
-"""Charts of the pilot for the README, from saved results. Sends no request.
+"""Charts of the pilot and of the full runs for the README, from saved results. Sends no request.
 
 One chart per question, in docs/figures/: the judges' kappa (judge_kappa.png), their claims
 (judge_claims.png), why judge and tests disagree (disagreements.png), the methods passing
 before and after the feedback (setups_first_final.png), and the judge's TPR and TNR with their
-intervals (judge_rates.png, from pilot_controls.py). The colors are checked for color
-blindness, and every mark carries its value.
+intervals (judge_rates.png, from pilot_controls.py). For the full runs on the 61 test classes:
+the methods passing before and after the feedback (full_first_final.png), the differences with
+their intervals (full_differences.png) and the judge against the tests (full_judge.png). The
+colors are checked for color blindness, and every mark carries its value.
 
     .venv/bin/python scripts/plot_results.py
 """
@@ -17,8 +19,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
+import analyze  # noqa: E402
 import harness  # noqa: E402
 import judge  # noqa: E402
+import pilot_controls  # noqa: E402
 import pilot_report  # noqa: E402
 
 ROOT = harness.ROOT
@@ -26,6 +30,7 @@ OUT = ROOT / "docs/figures"
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK_2, GRID, SURFACE = "#0b0b0b", "#52514e", "#e4e3df", "#ffffff"
 JUDGES = [("v1", "low"), ("v1", "medium"), ("v2", "low"), ("v2", "medium")]
+FULL = [("C2", "C2-9b"), ("C3", "C3-9b")]  # the full runs on the 61 test classes
 
 plt.rcParams.update({
     "font.family": ["Helvetica", "Arial", "DejaVu Sans"], "font.size": 11,
@@ -210,6 +215,99 @@ def judge_rates():
     save(fig, "judge_rates.png", 0.76, left=0.25)
 
 
+def full_runs():
+    """The three charts of the full runs, for the setups that have all the test classes."""
+    task_ids = harness.class_ids("test")
+    runs = [(label, analyze.load_run(name, task_ids)) for label, name in FULL]
+    runs = [(label, results) for label, results in runs if len(results) == len(task_ids)]
+    if not runs:
+        print("no full run on the test classes yet")
+        return
+    first = {label: analyze.first_outcomes(results) for label, results in runs}
+    final = {label: analyze.outcomes(results) for label, results in runs}
+    n = len(final[runs[0][0]])
+
+    # Before and after the feedback.
+    counts = [(label, sum(first[label].values()), sum(final[label].values())) for label, _ in runs]
+    fig, ax = figure("Methods passing before and after the feedback: "
+                     + ", ".join(f"{label} {a} → {b}" for label, a, b in counts),
+                     f"Methods passing their tests out of {n}, first and final versions "
+                     f"({len(task_ids)} test classes)", 2.6 + 0.5 * len(runs))
+    for y, (label, a, b) in enumerate(reversed(counts)):
+        ax.plot([a, b], [y, y], color=GRID, linewidth=3, zorder=1)
+        ax.scatter([a], [y], s=90, color=BLUE, edgecolor=SURFACE, linewidth=2, zorder=3,
+                   label="first versions" if y == 0 else None)
+        ax.scatter([b], [y], s=90, color=ORANGE, edgecolor=SURFACE, linewidth=2, zorder=4,
+                   label="final versions" if y == 0 else None)
+        ax.annotate(f"{a / n:.1%} → {b / n:.1%}", (max(a, b), y), xytext=(12, 0),
+                    textcoords="offset points", va="center", fontsize=9.5, color=INK_2)
+    ax.set_yticks(range(len(counts)), [c[0] for c in reversed(counts)])
+    ax.set_xlim(min(c[1] for c in counts) - 15, max(c[2] for c in counts) + 20)
+    ax.set_ylim(-0.6, len(counts) - 0.4)
+    ax.set_xlabel(f"methods passing (of {n})")
+    ax.legend(loc="lower right", fontsize=9.5, ncol=2, bbox_to_anchor=(1.0, 1.0), handletextpad=0.3)
+    height = 2.6 + 0.5 * len(runs)
+    save(fig, "full_first_final.png", 1 - 1.05 / height, left=0.08)
+
+    # The differences, with their intervals.
+    rows = [(f"{label}: final − first versions", analyze.difference(first[label], final[label]))
+            for label, _ in runs]
+    memory = None
+    if len(runs) == 2:
+        (a, _), (b, _) = runs
+        memory = analyze.difference(final[a], final[b])
+        rows.append((f"{b} − {a}, final versions", memory))
+    helps = all(d["low"] > 0 for _, d in rows[:len(runs)])
+    if helps and memory and memory["low"] <= 0 <= memory["high"]:
+        title = "After the feedback more methods pass; the judge's memory adds nothing"
+    else:
+        title = "The effect of the feedback and of the judge's memory"
+    height = 1.9 + 0.6 * len(rows)
+    fig, ax = figure(title, f"Difference in the share of the {n} methods that pass, in percentage points, "
+                            "with 95% bootstrap intervals over classes", height)
+    ax.axvline(0, color=INK_2, linewidth=1, zorder=1)
+    for y, (label, d) in enumerate(reversed(rows)):
+        ax.plot([100 * d["low"], 100 * d["high"]], [y, y], color=BLUE, linewidth=2, alpha=0.5, zorder=2)
+        ax.scatter([100 * d["diff"]], [y], s=70, color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=3)
+        ax.text(100 * d["high"] + 0.6, y, f"{100 * d['diff']:+.1f}  [{100 * d['low']:+.1f}, {100 * d['high']:+.1f}]",
+                va="center", fontsize=9, color=INK_2)
+    ax.set_yticks(range(len(rows)), [r[0] for r in reversed(rows)])
+    ax.set_xlim(min(-6, 100 * min(d["low"] for _, d in rows) - 2), 100 * max(d["high"] for _, d in rows) + 9)
+    ax.set_ylim(-0.6, len(rows) - 0.4)
+    ax.set_xlabel("percentage points")
+    save(fig, "full_differences.png", 1 - 1.05 / height, left=0.3)
+
+    # The judge against the tests, on the first versions; the pilot is the 9B's two pilot runs.
+    pilot = [m for run in ("C0-9b", "C0-9b-r2")
+             for r in pilot_report.load(ROOT / "runs/judge" / f"{run}-v1-medium", pilot_report.dev_classes()).values()
+             for m in r["methods"] if not m.get("auto")]
+    rates = [("pilot classes", judge.agreement(pilot))] if pilot else []
+    rates += [(f"{label}, test classes", judge.agreement(analyze.judge_rows(results))) for label, results in runs]
+    lower = rates[0][0] == "pilot classes" and all(a["kappa"] < rates[0][1]["kappa"] for _, a in rates[1:])
+    height = 1.9 + 0.7 * len(rates)
+    fig, ax = figure("On the test classes the judge agrees with the tests less than on the pilot" if lower
+                     else "The judge against the tests",
+                     "Judge v1 on the first versions of the 9B's methods, with 95% Wilson intervals", height)
+    for y, (label, a) in enumerate(reversed(rates)):
+        for key, k, total, color, dy, name in [
+                ("tpr", round(a["tpr"] * a["n_passing"]), a["n_passing"], BLUE, 0.14, "TPR: passing methods called OK"),
+                ("tnr", round(a["tnr"] * a["n_failing"]), a["n_failing"], ORANGE, -0.14,
+                 "TNR: failing methods called NOT OK")]:
+            lo, hi = pilot_controls.wilson(k, total)
+            ax.plot([lo, hi], [y + dy, y + dy], color=color, linewidth=2, alpha=0.5, zorder=2)
+            ax.scatter([a[key]], [y + dy], s=60, color=color, edgecolor=SURFACE, linewidth=1.5, zorder=3,
+                       label=name if y == 0 else None)
+            ax.text(hi + 0.015, y + dy, f"{a[key]:.2f}", va="center", fontsize=8.5, color=INK_2)
+        ax.text(1.1, y, f"kappa {a['kappa']:.2f}\n{a['n']} methods", va="center", fontsize=8.5, color=INK_2)
+    ax.set_yticks(range(len(rates)), [r[0] for r in reversed(rates)])
+    ax.set_xlim(0, 1.3)
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
+    ax.set_ylim(-0.6, len(rates) - 0.4)
+    ax.set_xlabel("share of methods")
+    ax.legend(loc="lower right", fontsize=9.5, ncol=2, bbox_to_anchor=(1.0, 1.0), handletextpad=0.3)
+    save(fig, "full_judge.png", 1 - 1.05 / height, left=0.22)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     task_ids = pilot_report.dev_classes()
@@ -218,6 +316,7 @@ def main():
     disagreements()
     setups_first_final(task_ids)
     judge_rates()
+    full_runs()
 
 
 if __name__ == "__main__":

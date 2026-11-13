@@ -1,0 +1,209 @@
+{
+  "task_id": "ClassEval_91",
+  "class_name": "UrlPath",
+  "setup": "C2",
+  "name": "C2-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "reuse": null,
+  "methods": [
+    {
+      "method_name": "fix_path",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 490,
+        "cached_tokens": 0,
+        "completion_tokens": 4000,
+        "reasoning_tokens": 4607,
+        "cost": 0.00062402
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "add",
+      "first": {
+        "code": "def add(self, segment):\n    \"\"\"\n    Adds a segment to the list of segments in the UrlPath.\n    :param segment: str, the segment to add.\n    >>> url_path = UrlPath()\n    >>> url_path.add('foo')\n    >>> url_path.add('bar')\n\n    url_path.segments = ['foo', 'bar']\n    \"\"\"\n    self.segments.append(segment)",
+        "valid": true,
+        "reply": "```python\n    def add(self, segment):\n        \"\"\"\n        Adds a segment to the list of segments in the UrlPath.\n        :param segment: str, the segment to add.\n        >>> url_path = UrlPath()\n        >>> url_path.add('foo')\n        >>> url_path.add('bar')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        self.segments.append(segment)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 489,
+        "cached_tokens": 0,
+        "completion_tokens": 238,
+        "reasoning_tokens": 142,
+        "cost": 6.5274e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`add` appends the given segment to `self.segments`, producing `['foo', 'bar']` in the documented example. The constructor initializes `self.segments`, so this method is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`add` appends the given segment to `self.segments`, producing `['foo', 'bar']` in the documented example. The constructor initializes `self.segments`, so this method is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 675,
+            "cached_tokens": 0,
+            "completion_tokens": 58,
+            "reasoning_tokens": 0,
+            "cost": 9.65e-05
+          }
+        ],
+        "prompt_tokens": 675,
+        "cached_tokens": 0,
+        "completion_tokens": 58,
+        "reasoning_tokens": 0,
+        "cost": 9.65e-05
+      },
+      "revision": null,
+      "final_code": "def add(self, segment):\n    \"\"\"\n    Adds a segment to the list of segments in the UrlPath.\n    :param segment: str, the segment to add.\n    >>> url_path = UrlPath()\n    >>> url_path.add('foo')\n    >>> url_path.add('bar')\n\n    url_path.segments = ['foo', 'bar']\n    \"\"\"\n    self.segments.append(segment)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "parse",
+      "first": {
+        "code": "def parse(self, path, charset):\n    \"\"\"\n    Parses a given path string and populates the list of segments in the UrlPath.\n    :param path: str, the path string to parse.\n    :param charset: str, the character encoding of the path string.\n    >>> url_path = UrlPath()\n    >>> url_path.parse('/foo/bar/', 'utf-8')\n\n    url_path.segments = ['foo', 'bar']\n    \"\"\"\n    path = path.strip('/')\n    if path:\n        for segment in path.split('/'):\n            if segment:\n                self.segments.append(segment)",
+        "valid": true,
+        "reply": "```python\n    def parse(self, path, charset):\n        \"\"\"\n        Parses a given path string and populates the list of segments in the UrlPath.\n        :param path: str, the path string to parse.\n        :param charset: str, the character encoding of the path string.\n        >>> url_path = UrlPath()\n        >>> url_path.parse('/foo/bar/', 'utf-8')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        path = path.strip('/')\n        if path:\n            for segment in path.split('/'):\n                if segment:\n                    self.segments.append(segment)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 588,
+        "cached_tokens": 0,
+        "completion_tokens": 579,
+        "reasoning_tokens": 482,
+        "cost": 0.000141
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`charset` is never used, so percent-encoded path segments are left encoded instead of being decoded using the specified character encoding. Decode the path (for example, with `urllib.parse.unquote(path, encoding=charset)`) before splitting it into segments.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`charset` is never used, so percent-encoded path segments are left encoded instead of being decoded using the specified character encoding. Decode the path (for example, with `urllib.parse.unquote(path, encoding=charset)`) before splitting it into segments.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 807,
+            "cached_tokens": 0,
+            "completion_tokens": 325,
+            "reasoning_tokens": 254,
+            "cost": 0.00024319999999999998
+          }
+        ],
+        "prompt_tokens": 807,
+        "cached_tokens": 0,
+        "completion_tokens": 325,
+        "reasoning_tokens": 254,
+        "cost": 0.00024319999999999998
+      },
+      "revision": {
+        "code": "def parse(self, path, charset):\n    \"\"\"\n    Parses a given path string and populates the list of segments in the UrlPath.\n    :param path: str, the path string to parse.\n    :param charset: str, the character encoding of the path string.\n    >>> url_path = UrlPath()\n    >>> url_path.parse('/foo/bar/', 'utf-8')\n\n    url_path.segments = ['foo', 'bar']\n    \"\"\"\n    # Decode percent-encoded characters using the provided charset\n    decoded_path = urllib.parse.unquote(path, encoding=charset)\n\n    # Remove leading and trailing slashes, then split by '/'\n    path = decoded_path.strip('/')\n    if path:\n        for segment in path.split('/'):\n            if segment:\n                self.segments.append(segment)",
+        "valid": true,
+        "reply": "```python\n    def parse(self, path, charset):\n        \"\"\"\n        Parses a given path string and populates the list of segments in the UrlPath.\n        :param path: str, the path string to parse.\n        :param charset: str, the character encoding of the path string.\n        >>> url_path = UrlPath()\n        >>> url_path.parse('/foo/bar/', 'utf-8')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        # Decode percent-encoded characters using the provided charset\n        decoded_path = urllib.parse.unquote(path, encoding=charset)\n        \n        # Remove leading and trailing slashes, then split by '/'\n        path = decoded_path.strip('/')\n        if path:\n            for segment in path.split('/'):\n                if segment:\n                    self.segments.append(segment)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 816,
+        "cached_tokens": 576,
+        "completion_tokens": 613,
+        "reasoning_tokens": 483,
+        "cost": 0.000128922
+      },
+      "final_code": "def parse(self, path, charset):\n    \"\"\"\n    Parses a given path string and populates the list of segments in the UrlPath.\n    :param path: str, the path string to parse.\n    :param charset: str, the character encoding of the path string.\n    >>> url_path = UrlPath()\n    >>> url_path.parse('/foo/bar/', 'utf-8')\n\n    url_path.segments = ['foo', 'bar']\n    \"\"\"\n    # Decode percent-encoded characters using the provided charset\n    decoded_path = urllib.parse.unquote(path, encoding=charset)\n\n    # Remove leading and trailing slashes, then split by '/'\n    path = decoded_path.strip('/')\n    if path:\n        for segment in path.split('/'):\n            if segment:\n                self.segments.append(segment)",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "UrlPathTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "UrlPathTestParse": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "UrlPathTestFixPath": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 6,
+      "errors": 0,
+      "passed": false
+    },
+    "UrlPathTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "UrlPathTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "UrlPathTestParse": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "UrlPathTestFixPath": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 6,
+      "errors": 0,
+      "passed": false
+    },
+    "UrlPathTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import urllib.parse\n\nclass UrlPath: \n    def __init__(self):\n        \"\"\"\n        Initializes the UrlPath object with an empty list of segments and a flag indicating the presence of an end tag.\n        \"\"\"\n        self.segments = []\n        self.with_end_tag = False\n\n    def add(self, segment):\n        \"\"\"\n        Adds a segment to the list of segments in the UrlPath.\n        :param segment: str, the segment to add.\n        >>> url_path = UrlPath()\n        >>> url_path.add('foo')\n        >>> url_path.add('bar')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        self.segments.append(segment)\n\n    def parse(self, path, charset):\n        \"\"\"\n        Parses a given path string and populates the list of segments in the UrlPath.\n        :param path: str, the path string to parse.\n        :param charset: str, the character encoding of the path string.\n        >>> url_path = UrlPath()\n        >>> url_path.parse('/foo/bar/', 'utf-8')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        path = path.strip('/')\n        if path:\n            for segment in path.split('/'):\n                if segment:\n                    self.segments.append(segment)\n\n    @staticmethod\n    def fix_path(path):\n        return None\n",
+  "source": "import urllib.parse\n\nclass UrlPath: \n    def __init__(self):\n        \"\"\"\n        Initializes the UrlPath object with an empty list of segments and a flag indicating the presence of an end tag.\n        \"\"\"\n        self.segments = []\n        self.with_end_tag = False\n\n    def add(self, segment):\n        \"\"\"\n        Adds a segment to the list of segments in the UrlPath.\n        :param segment: str, the segment to add.\n        >>> url_path = UrlPath()\n        >>> url_path.add('foo')\n        >>> url_path.add('bar')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        self.segments.append(segment)\n\n    def parse(self, path, charset):\n        \"\"\"\n        Parses a given path string and populates the list of segments in the UrlPath.\n        :param path: str, the path string to parse.\n        :param charset: str, the character encoding of the path string.\n        >>> url_path = UrlPath()\n        >>> url_path.parse('/foo/bar/', 'utf-8')\n\n        url_path.segments = ['foo', 'bar']\n        \"\"\"\n        # Decode percent-encoded characters using the provided charset\n        decoded_path = urllib.parse.unquote(path, encoding=charset)\n\n        # Remove leading and trailing slashes, then split by '/'\n        path = decoded_path.strip('/')\n        if path:\n            for segment in path.split('/'):\n                if segment:\n                    self.segments.append(segment)\n\n    @staticmethod\n    def fix_path(path):\n        return None\n"
+}
