@@ -1,7 +1,7 @@
 """The sheet for our labels of the pilot: the methods of the 9B to check by hand. Sends no request.
 
 The cases are every method of C0-9b and C0-9b-r2 where a judge and the tests disagree, plus a
-sample of methods where judge v2 and the tests agree, shuffled together. For each case
+sample of methods where the judge of the study (v1) and the tests agree, shuffled together. For each case
 runs/labels/pilot_9b_cases.md shows the docstring, the 9B's code, the tests with the error of each
 failing test and, last, what the judges said. Each rater fills in a separate CSV without looking
 at the other; --merge then gives the agreement between the two and the cases to settle together.
@@ -81,7 +81,7 @@ def failing_tests(task, source, name):
 
 
 def cases():
-    """The disagreements of any judge, plus a sample of the methods where v2 agrees with the tests."""
+    """The disagreements of any judge, plus a sample of the methods where v1 agrees with the tests."""
     names = JUDGES
     verdicts = {name: compare_judges.verdicts(name) for name in names}
     keys = sorted({k for v in verdicts.values() for k, m in v.items() if not compare_judges.right(m)})

@@ -1,5 +1,4 @@
 # Agent-As-a-Judge
-Neural Code Analysis Course Paper Presentation and Project
 
 **Project: Can a Judge Agent Make a Coding Agent Better?**
 Dominik Panzarella and Daniele Buser, Neural Code Analysis, USI, autumn 2026.
@@ -66,8 +65,8 @@ harness runs all its tests on the first and on the final versions: that is the g
   tokens per request. It writes one method at a time and rewrites it after a NOT OK, without ever
   seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
-  the reason is the feedback. The judge of the study is v1: it only reads the code and never sees
-  the tests. The pilot also tried judges that run code of their own (v2 to v5), which agreed with
+  the reason is the feedback. The judge of the study is v1: it reads the docstrings and the code,
+  runs nothing and never sees the tests. The pilot also tried judges that run code of their own (v2 to v5), which agreed with
   the tests about as often (kappa 0.50 to 0.54, v1 0.52), and two variants of v1 itself (v6, v7),
   which did not beat it: between two passes of v1, 7 of 71 verdicts change, more than either
   variant gains. Two options are built and not used in the full runs: the judge adds to the
@@ -94,9 +93,10 @@ harness runs all its tests on the first and on the final versions: that is the g
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
   verdict.
 
-After the midway: our labels and the error analysis, a judge that writes tests of its own from
-the docstring and runs them, more than one rewrite when the judge is sure, and the other variants
-in the [roadmap](docs/roadmap_midway.md).
+After the midway: our labels and the error analysis, the control without feedback and the
+repetitions on the 61 classes, a judge that writes tests of its own from the docstring and runs
+them, more than one rewrite when the judge is sure, and the other variants in the
+[roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -126,12 +126,13 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/check_api.py
 .venv/bin/python scripts/budget.py
 
-# the coder alone (setup C0 of the pilot, now only the first versions)
+# the coder alone, qwen3.5-9b with no judge (setup C0 of the pilot) -> runs/C0-9b
 .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_55
 .venv/bin/python scripts/coder.py --all
 
-# the judge on a finished run (v1, v6 and v7 only read; v2 to v5, tried in the pilot, can also run code)
-.venv/bin/python scripts/judge.py C0-9b --version v1 --effort medium --all
+# the judge on a finished run: v1 with medium effort by default (v6 and v7 also only read;
+# v2 to v5, tried in the pilot, can also run code)
+.venv/bin/python scripts/judge.py C0-9b --all
 
 # C2 and C3: coder and judge together
 .venv/bin/python scripts/loop.py C2 --name C2-9b --classes test

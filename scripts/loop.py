@@ -3,7 +3,7 @@
 C2: the judge reviews each method; after a NOT OK the coder rewrites that method once, and the
 next methods see the new version. C3: as C2, and the judge also reads its earlier reviews of the
 same class, its memory. The tests run on the first and on the final version of every method.
-Results go to runs/<setup>-<judge>-<effort>/<task_id>.json.
+Results go to runs/<name>/<task_id>.json; without --name the folder is <setup>-<judge>-<effort>.
 
 --reuse takes from another run every first version and review whose input is the same, so two
 setups differ only where the judge does, and not because the coder writes a method differently.

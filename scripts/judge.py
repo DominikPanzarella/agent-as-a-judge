@@ -16,12 +16,14 @@ With --min-confidence a verdict below the threshold sends it to look again, at m
 
 Run as a script, it judges a finished run and compares the verdicts with the tests.
 
-    .venv/bin/python scripts/judge.py C0 --dry-run ClassEval_55
-    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --all
-    .venv/bin/python scripts/judge.py C0 --version v2 --effort medium --summary
-    .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --tag r2 --all   # a repeat
-    .venv/bin/python scripts/judge.py C0-9b --version v2 --effort medium --confidence --tag conf --all
-    .venv/bin/python scripts/judge.py C0-9b --version v6 --effort medium --all
+The defaults are the study's: judge v1 with medium effort.
+
+    .venv/bin/python scripts/judge.py C0-9b --dry-run ClassEval_55
+    .venv/bin/python scripts/judge.py C0-9b --all
+    .venv/bin/python scripts/judge.py C0-9b --summary
+    .venv/bin/python scripts/judge.py C0-9b --tag r2 --all                                # a repeat
+    .venv/bin/python scripts/judge.py C0-9b --version v6 --all                            # a variant
+    .venv/bin/python scripts/judge.py C0-9b --version v2 --confidence --tag conf --all    # the pilot of 12 November
 """
 import argparse
 import json
@@ -44,7 +46,7 @@ MODEL = "gpt-6-luna"
 VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7"]
 READ_ONLY = ("v1", "v6", "v7")  # these judges get no tool: they only read the code
 EFFORTS = ["low", "medium"]  # the course allows low or medium reasoning effort
-EFFORT = "low"  # with "low", GPT-6 Luna used no reasoning tokens in the first test
+EFFORT = "medium"  # the study's; with "low", GPT-6 Luna used no reasoning tokens in the first test
 MAX_RUNS = 5  # code runs that judge v2 may ask for on one method, and again on each new look
 MAX_LOOKS = 2  # times an unsure judge is sent to look again at one method
 OUTPUT_LIMIT = 2000  # characters of stdout and of stderr shown to the judge
@@ -393,7 +395,7 @@ def summary(setup, version="v1", effort=EFFORT, tag=""):
 
 def main():
     parser = argparse.ArgumentParser(description="The judge on the methods of a finished run.")
-    parser.add_argument("setup", help="the run to judge, such as C0")
+    parser.add_argument("setup", help="the run to judge, such as C0-9b")
     parser.add_argument("tasks", nargs="*", help="task ids, such as ClassEval_19")
     parser.add_argument("--version", choices=VERSIONS, default="v1",
                         help="v1, v6 and v7 only read the code; v2 to v5 can run it")

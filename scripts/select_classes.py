@@ -1,4 +1,4 @@
-"""Choose the ClassEval classes we keep (option A).
+"""Choose the ClassEval classes we keep.
 
 A class is dropped if benchmarks+ marks one of its methods as problematic, if all its methods are
 trivial, or if its reference solution fails in our harness. Output: data/selection/classes.csv,

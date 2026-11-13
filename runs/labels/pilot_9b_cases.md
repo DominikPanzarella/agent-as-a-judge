@@ -212,23 +212,7 @@ class ThermostatTestAutoCheckConflict(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method identifies the expected mode using the same comparison as `auto_set_mode`, returns `False` and corrects the mode on a conflict, and returns `True` when there is no conflict. The documented example returns `False` and sets the mode to `'heat'`.
-
-```python
-t = Thermostat(20.4, 37.5, 'cool'); print(t.auto_check_conflict()); print(t.mode)
-t = Thermostat(20.4, 20.4, 'heat'); print(t.auto_check_conflict()); print(t.mode)
-```
-
-```text
-exit code 0
-stdout:
-False
-heat
-False
-cool
-
-stderr:
-```
+Reason of v1-medium: The method compares the current mode with the mode required by the temperature relationship, corrects a conflict using `auto_set_mode()`, and returns `False` for that conflict; it returns `True` when there was no conflict. This matches the docstring and example.
 
 </details>
 
@@ -468,23 +452,7 @@ class CalculatorTestApplyOperator(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: The documented example expects `([1, -1], ['-'])`, but running it returns `([1, -1], ['+'])`: the method applies and removes the top (`'-'`) operator, leaving `'+'`. With the usual list-stack convention, the implementation is consistent with the description, so the example should be corrected to expect `['+']` (or the stack convention clarified).
-
-```python
-c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))
-print(c.apply_operator([5], ['+']))
-print(c.apply_operator([4,5], ['?']))
-```
-
-```text
-exit code 0
-stdout:
-([1, -1], ['+'])
-([5], ['+'])
-([4, 5], ['?'])
-
-stderr:
-```
+Reason of v1-medium: The method returns `([1, -1], ['+'])` for the documented example, because it applies and removes the top operator `'-'`; the docstring incorrectly expects `['-']`. Fix the example’s expected value to `['+']` (or change the implementation if that expectation is intentional).
 
 </details>
 
@@ -679,20 +647,7 @@ class VendingMachineTestPurchaseItem(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: The documented successful and missing-product examples return `0.0` and `False`, respectively, but the method does not display “purchase unsuccessful” when an item is out of stock as its docstring requires. Add the required display message on that failure path.
-
-```python
-v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':10}}; v.balance=1.25; print(v.purchase_item('Coke')); print(v.purchase_item('Pizza'))
-```
-
-```text
-exit code 0
-stdout:
-0.0
-False
-
-stderr:
-```
+Reason of v1-medium: The purchase and balance updates are correct, but when the item is out of stock the method returns `False` without displaying “purchase unsuccessful” as the docstring requires. Add that message for the out-of-stock case.
 
 </details>
 
@@ -897,39 +852,13 @@ class ChatTestSendMessage(unittest.TestCase):
         self.assertEqual(chat.users, {'John': [], 'Mary': []})
 ```
 
-- FAIL: test_send_message: AssertionError: {'Joh[106 chars]y': []} != {'Joh[106 chars]y': [{'sender': 'John', 'receiver': 'Mary', 'm[50 chars]7'}]}
+- FAIL: test_send_message: AssertionError: {'Joh[106 chars]y': []} != {'Joh[106 chars]y': [{'sender': 'John', 'receiver': 'Mary', 'm[50 chars]4'}]}
 
 <details><summary>The judges (open after the label)</summary>
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The message is appended only to the sender’s list, so the receiver’s list remains empty after a successful send; the receiver cannot retrieve the message as one of their messages. Store it for the receiver as well (avoiding a duplicate if sender and receiver are the same).
-
-```python
-chat = Chat(); chat.users={'John': [], 'Mary': []}; print(chat.send_message('John','Mary','Hello')); print(chat.users)
-```
-
-```text
-exit code 0
-stdout:
-True
-{'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-08 11:03:47'}], 'Mary': []}
-
-stderr:
-```
-
-```python
-chat = Chat(); chat.users={'John': [], 'Mary': []}; print(chat.send_message('John','Mary','Hello')); print(chat.users['Mary'])
-```
-
-```text
-exit code 0
-stdout:
-True
-[]
-
-stderr:
-```
+Reason of v1-medium: The message is appended only to the sender's list, so the receiver cannot retrieve a message addressed to them with `get_messages`. Record the message for the receiver as well (while avoiding a duplicate if sender and receiver are the same).
 
 </details>
 
@@ -1115,22 +1044,7 @@ class MovieTicketDBTestSearchTicketsByCustomer(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method inserts the supplied values into the matching columns using parameterized SQL and commits the transaction. It returns `None` as documented, and the test inserted the expected ticket row.
-
-```python
-db = MovieTicketDB(':memory:')
-print(db.insert_ticket('Movie A', 'Theater 1', 'A1', 'John Doe'))
-print(db.cursor.execute('SELECT * FROM tickets').fetchall())
-```
-
-```text
-exit code 0
-stdout:
-None
-[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]
-
-stderr:
-```
+Reason of v1-medium: OK. It inserts the four supplied values into the matching columns using parameterized SQL and commits the transaction; the table is created by the constructor before this method is called.
 
 </details>
 
@@ -1314,7 +1228,7 @@ class VendingMachineTestAddItem(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method stores the product under its name with the given price and quantity, producing the documented inventory for the example. It uses fields initialized by the constructor and implicitly returns `None` as documented.
+Reason of v1-medium: The method stores the product under its name with the given price and quantity, producing the documented inventory entry and returning None implicitly. This matches the docstring.
 
 </details>
 
@@ -1437,19 +1351,7 @@ class FitnessTrackerTestGetBMI(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method returns weight divided by the square of height, as specified, and the documented example produces 21.604938271604937. No concrete issue appears for the documented input.
-
-```python
-ft=FitnessTracker(1.8,70,20,'male'); print(ft.get_BMI())
-```
-
-```text
-exit code 0
-stdout:
-21.604938271604937
-
-stderr:
-```
+Reason of v1-medium: The method returns weight divided by height squared, matching the docstring; for the example it yields 70 / (1.8 ** 2) = 21.604938271604937. It uses fields initialized by the constructor and has no concrete issue for the documented inputs.
 
 </details>
 
@@ -1636,21 +1538,7 @@ class WarehouseTestAddProduct(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method adds a new product in the documented dictionary format and, for an existing product ID, increases its quantity as described. The documented example produces the expected inventory.
-
-```python
-warehouse = Warehouse()
-warehouse.add_product(1, "product1", 3)
-print(warehouse.inventory)
-```
-
-```text
-exit code 0
-stdout:
-{1: {'name': 'product1', 'quantity': 3}}
-
-stderr:
-```
+Reason of v1-medium: The method creates the documented product record for a new ID and adds the supplied quantity to an existing product’s quantity. This matches the documented behavior.
 
 </details>
 
@@ -1830,7 +1718,7 @@ class MovieTicketDBTestInsertTicket(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method creates the `tickets` table with the documented ID and text fields, leaves an existing table intact, and commits the change. It implicitly returns `None` as documented.
+Reason of v1-medium: OK: It creates the `tickets` table only if it does not already exist, with an auto-incrementing integer ID and text columns for the four named fields. It commits the schema change and returns `None` implicitly, as documented.
 
 </details>
 
@@ -2013,20 +1901,7 @@ class ThermostatTestSetMode(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 OK, v4 OK, v5 NOT OK
 
-Reason of v2-medium: The method accepts any value, even though the docstring restricts the mode to `'heat'` or `'cool'`; setting `'invalid'` leaves `mode` as `'invalid'`. Validate the argument and reject values outside the allowed modes.
-
-```python
-t=Thermostat(20.4,37.5,'heat'); print(t.set_mode('cool'), t.mode); t.set_mode('invalid'); print(t.mode)
-```
-
-```text
-exit code 0
-stdout:
-None cool
-invalid
-
-stderr:
-```
+Reason of v1-medium: `set_mode` assigns any value, even though the method documents that the mode must be `'heat'` or `'cool'`. Validate the input and reject other values, for example by raising `ValueError`.
 
 </details>
 
@@ -2181,102 +2056,7 @@ class ManacherTestPalindromicString(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method correctly computes the longest palindromic substring and returns the documented example result, `'ababa'`. It also handles empty and single-character strings; I found no concrete correctness issue.
-
-```python
-m=Manacher('ababaxse'); print(m.palindromic_string())
-for s in ['', 'a', 'abba', 'babad', 'cbbd', '#a#']:
- print(repr(s), repr(Manacher(s).palindromic_string()))
-```
-
-```text
-exit code 0
-stdout:
-ababa
-'' ''
-'a' 'a'
-'abba' 'abba'
-'babad' 'bab'
-'cbbd' 'bb'
-'#a#' '#a#'
-
-stderr:
-```
-
-```python
-def brute(s):
- best=''
- for i in range(len(s)):
-  for j in range(i+1,len(s)+1):
-   x=s[i:j]
-   if x==x[::-1] and len(x)>len(best): best=x
- return best
-import itertools
-for n in range(1,7):
- for chars in itertools.product('a#b', repeat=n):
-  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)
-  if got != exp:
-   print(repr(s),repr(got),repr(exp)); raise SystemExit
-print('all ok')
-```
-
-```text
-exit code 0
-stdout:
-all ok
-
-stderr:
-```
-
-```python
-def brute(s):
- best=''
- for i in range(len(s)):
-  for j in range(i+1,len(s)+1):
-   x=s[i:j]
-   if x==x[::-1] and len(x)>len(best): best=x
- return best
-import itertools
-for n in range(1,9):
- for chars in itertools.product('a#', repeat=n):
-  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)
-  if got != exp:
-   print(repr(s),repr(got),repr(exp)); raise SystemExit
-print('all ok')
-```
-
-```text
-exit code 0
-stdout:
-all ok
-
-stderr:
-```
-
-```python
-def brute(s):
- best=''
- for i in range(len(s)):
-  for j in range(i+1,len(s)+1):
-   x=s[i:j]
-   if x==x[::-1] and len(x)>len(best): best=x
- return best
-import itertools
-for n in range(1,10):
- for chars in itertools.product('a#b', repeat=n):
-  s=''.join(chars); got=Manacher(s).palindromic_string(); exp=brute(s)
-  if got != exp:
-   print(repr(s),repr(got),repr(exp)); raise SystemExit
-print('all ok')
-```
-
-```text
-exit code 0
-stdout:
-all ok
-
-stderr:
-```
+Reason of v1-medium: The `#` separator can also occur in the input, making the transformed string ambiguous and producing incorrect results; for example, `'a#b'` can return `'a#'`, which is not a palindrome. Use a separator guaranteed not to occur in the input, or otherwise escape/handle separator characters.
 
 </details>
 
@@ -2480,34 +2260,7 @@ class ChatTestGetMessages(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: A message sent by a user to themself is appended once from their own message list and then appended again during the received-message scan. Avoid adding messages from the username’s own list a second time (or otherwise deduplicate) so each message appears once.
-
-```python
-c=Chat(); c.users={'John':[{'sender':'John','receiver':'Mary','message':'Hello','timestamp':'2023-01-01 00:00:00'}]}; print(c.get_messages('John')); print(c.get_messages('Mary')); c.users={'John':[], 'Mary':[]}; c.send_message('John','Mary','Hello'); print(c.get_messages('Mary'))
-```
-
-```text
-exit code 0
-stdout:
-[{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]
-[]
-[{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-08 11:03:55'}]
-
-stderr:
-```
-
-```python
-c=Chat(); c.users={'John':[]}; print(c.send_message('John','John','hi')); print(c.get_messages('John'))
-```
-
-```text
-exit code 0
-stdout:
-True
-[{'sender': 'John', 'receiver': 'John', 'message': 'hi', 'timestamp': '2026-11-08 11:03:59'}, {'sender': 'John', 'receiver': 'John', 'message': 'hi', 'timestamp': '2026-11-08 11:03:59'}]
-
-stderr:
-```
+Reason of v1-medium: A message sent by a user to themselves is stored in that user's list, then appended again during the received-message scan, so it appears twice. Skip that user's list in the scan or otherwise avoid adding messages already included.
 
 </details>
 
@@ -2792,32 +2545,7 @@ class CalculatorTestCalculate(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: For an incomplete expression such as `1+`, the final loop keeps calling `apply_operator` with only one operand; that method leaves both stacks unchanged, so `calculate` loops forever instead of returning `None`. Validate that each operation has two operands and return `None` for malformed expressions before entering a loop that cannot make progress.
-
-```python
-c=Calculator(); print(c.calculate('1+2-3'))
-print(c.calculate('2^3^2'))
-print(c.calculate('(1+2)*3'))
-print(c.calculate('1+'))
-print(c.calculate('2(3+4)'))
-```
-
-```text
-Stopped after 10 seconds.
-```
-
-```python
-c=Calculator(); print(c.calculate('1+2-3')); print(c.calculate('(1+2)*3'))
-```
-
-```text
-exit code 0
-stdout:
-0.0
-9.0
-
-stderr:
-```
+Reason of v1-medium: The final loop can run forever on malformed input: for example, `calculate('(1')` leaves `'('` on `operator_stack`, and `calculate('1+')` leaves too few operands, so `apply_operator` makes no progress. Validate parentheses and operand/operator counts, and return `None` when an operator cannot be applied instead of looping indefinitely.
 
 </details>
 
@@ -3019,19 +2747,7 @@ class CalculatorTestApplyOperator(unittest.TestCase):
 
 Verdicts: v1 OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: The documented example expects `([1, -1], ['-'])`, but running it returns `([1, -1], ['+'])`: the method pops the top operator `'-'`, so `'+'` remains. Update the example or change the stack handling so the documented result matches the intended behavior.
-
-```python
-c=Calculator(); print(c.apply_operator([1,2,3], ['+','-']))
-```
-
-```text
-exit code 0
-stdout:
-([1, -1], ['+'])
-
-stderr:
-```
+Reason of v1-medium: The method pops the top operator and two operands, applies the corresponding operation from `self.operators`, and returns the updated stacks; it also produces the documented example result. It is correct for valid operators and stacks with enough operands.
 
 </details>
 
@@ -3214,23 +2930,7 @@ class MovieTicketDBTestSearchTicketsByCustomer(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method inserts the supplied values into the matching columns and commits the transaction; testing showed the row was stored and the method returned `None`, as documented.
-
-```python
-db = MovieTicketDB(':memory:')
-db.insert_ticket('Movie A', 'Theater 1', 'A1', 'John Doe')
-print(db.cursor.execute('SELECT * FROM tickets').fetchall())
-print(db.insert_ticket('Movie B', 'Theater 2', 'B2', 'Jane Doe'))
-```
-
-```text
-exit code 0
-stdout:
-[(1, 'Movie A', 'Theater 1', 'A1', 'John Doe')]
-None
-
-stderr:
-```
+Reason of v1-medium: The method inserts the four provided values into the matching columns using parameterized SQL and commits the change, so it fulfills the docstring. The table is created by the constructor before this method is used.
 
 </details>
 
@@ -3438,20 +3138,7 @@ class VendingMachineTestAddItem(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method stores the given price and quantity under the item name and implicitly returns None, matching the documented behavior and example. The example ran and produced the expected inventory.
-
-```python
-v = VendingMachine(); print(v.add_item('Coke', 1.25, 10)); print(v.inventory)
-```
-
-```text
-exit code 0
-stdout:
-None
-{'Coke': {'price': 1.25, 'quantity': 10}}
-
-stderr:
-```
+Reason of v1-medium: The method stores the item’s price and quantity in the inventory using the documented structure, and its implicit return value is `None`, as specified. It matches the example; the docstring does not specify special behavior for an item name that is already present.
 
 </details>
 
@@ -3652,20 +3339,7 @@ class VendingMachineTestDisplayItems(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method returns `False` for an empty inventory and formats the displayed product information as a string; both documented examples match when run. Joining multiple product entries with commas is consistent with returning a string listing the products.
-
-```python
-v = VendingMachine(); print(repr(v.display_items())); v.inventory={'Coke': {'price':1.25,'quantity':10}}; print(repr(v.display_items()))
-```
-
-```text
-exit code 0
-stdout:
-False
-'Coke - $1.25 [10]'
-
-stderr:
-```
+Reason of v1-medium: NOT OK: The docstring says a nonempty inventory returns a list of product strings, but the method joins them into one comma-separated string. Return `items` instead to match the documented return type and example.
 
 </details>
 
@@ -3854,7 +3528,7 @@ class ThermostatTestSetMode(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method assigns `self.mode` for either allowed value, `'heat'` or `'cool'`, and raises `ValueError` for any other value. This satisfies the documented mode restriction and example.
+Reason of v1-medium: The method accepts only the two modes specified in the docstring, assigns a valid mode, and raises a clear `ValueError` for any other value. It correctly updates the existing `self.mode` field.
 
 </details>
 
@@ -4048,21 +3722,7 @@ class WarehouseTestCreateOrder(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method checks that the product exists and has enough stock, returns `False` when either condition fails, and otherwise stores the order with the documented default status. The documented examples work; the docstring does not require deducting the ordered quantity from inventory.
-
-```python
-w=Warehouse(); w.add_product(1, 'product1', 3); print(w.create_order(1,1,2)); print(w.orders); print(w.create_order(1,2,2))
-```
-
-```text
-exit code 0
-stdout:
-True
-{1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}
-False
-
-stderr:
-```
+Reason of v1-medium: A successful order is recorded without reducing the product's inventory quantity, so later orders can be accepted even when the combined orders exceed available stock. Decrement the inventory quantity by the ordered amount after validating it.
 
 </details>
 
@@ -4202,23 +3862,7 @@ class FitnessTrackerTestConditionJudge(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: `BMI_std` is a list of dictionaries, so indexing it with `"male"` or `"female"` raises a `TypeError` (the example does). Store the standards as a dictionary or select the appropriate dictionary from the list before looking up the BMI bounds.
-
-```python
-x=FitnessTracker(1.8,70,20,'male')
-try:
- print(x.condition_judge())
-except Exception as e:
- print(type(e).__name__, str(e))
-```
-
-```text
-exit code 0
-stdout:
-TypeError list indices must be integers or slices, not str
-
-stderr:
-```
+Reason of v1-medium: `BMI_std` is a list of dictionaries, so `self.BMI_std["male"]` raises a `TypeError`; retrieve the appropriate range from the list or change the constructor to store a dictionary. Also, the example BMI (about 21.6) is within the male range 20–25, so its expected result should be `0`, not `-1`.
 
 </details>
 
@@ -4424,31 +4068,7 @@ class ThermostatTestSimulateOperation(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: NOT OK — the documented example does not finish: repeated 0.9 increments produce 37.49999999999997, so the exact `!=` check keeps the loop running after the target is passed. Stop when the temperature reaches or crosses the target, and clamp it to the target.
-
-```python
-t = Thermostat(20.4, 37.5, 'cool')
-print(t.simulate_operation(), t.current_temperature, t.mode)
-```
-
-```text
-Stopped after 10 seconds.
-```
-
-```python
-x=20.4
-for i in range(19): x += .9
-print(repr(x), x == 37.5)
-
-```
-
-```text
-exit code 0
-stdout:
-37.49999999999997 False
-
-stderr:
-```
+Reason of v1-medium: The loop can overshoot the target or fail to reach it exactly due to floating-point increments, so checking `!=` can make the simulation run forever; clamp each adjustment to the target and use a directional comparison. Also, the example performs about 19 half-second sleeps, so the returned elapsed wall-clock time is roughly 9–10 seconds, not the documented 18.
 
 </details>
 
@@ -4667,21 +4287,7 @@ class WarehouseTestCreateOrder(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method creates the documented order with the default status and returns `False` when the product is missing or stock is insufficient; the examples also produce the documented results. The docstring does not require reducing inventory or specify a different success return value.
-
-```python
-w=Warehouse(); w.add_product(1,'product1',3); print(w.create_order(1,1,2)); print(w.orders); print(w.create_order(1,2,2))
-```
-
-```text
-exit code 0
-stdout:
-True
-{1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}
-False
-
-stderr:
-```
+Reason of v1-medium: It records the order but never subtracts the ordered quantity from inventory, so later orders can reuse the same stock and the inventory becomes inaccurate. After validating availability, decrement that product’s quantity before storing the order.
 
 </details>
 
@@ -4838,39 +4444,7 @@ class FitnessTrackerTestConditionJudge(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: The method raises `KeyError('female')` for a female user because it only looks up `self.BMI_std[0]`, which contains the male standard; it should find the entry matching `self.sex`. Also, the documented male example returns `0` when run, not `-1`: BMI 21.6 falls within the stated male range of 20–25, so that example expectation should be corrected.
-
-```python
-ft = FitnessTracker(1.8,70,20,"male")
-try:
- print(ft.condition_judge())
-except Exception as e:
- print(type(e).__name__, str(e))
-```
-
-```text
-exit code 0
-stdout:
-0
-
-stderr:
-```
-
-```python
-ft = FitnessTracker(1.8,70,20,"female")
-try:
- print(ft.condition_judge())
-except Exception as e:
- print(type(e).__name__, str(e))
-```
-
-```text
-exit code 0
-stdout:
-KeyError 'female'
-
-stderr:
-```
+Reason of v1-medium: For female users, `self.BMI_std[0][self.sex]` raises `KeyError` because the first dictionary only has a `male` key; look up the dictionary matching `self.sex`. Also, the male example’s BMI is within 20–25, so this method returns `0`, not the documented `-1`—correct the expected result or the stated standard.
 
 </details>
 
@@ -5046,20 +4620,7 @@ class ChatTestGetMessages(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method returns the stored message list for a username in the chat, and returns an empty list if the username is absent; both docstring examples work as shown. It is correct.
-
-```python
-c=Chat(); c.users={'John': [{'sender':'John','receiver':'Mary','message':'Hello','timestamp':'2023-01-01 00:00:00'}]}; print(c.get_messages('John')); print(c.get_messages('Mary'))
-```
-
-```text
-exit code 0
-stdout:
-[{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2023-01-01 00:00:00'}]
-[]
-
-stderr:
-```
+Reason of v1-medium: The method returns the stored message list for a registered user and an empty list for a username not in `self.users`, matching the examples and return description. It is correct.
 
 </details>
 
@@ -5290,23 +4851,7 @@ class MetricsCalculator2TestMrr(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: For tuple input, `mrr` appends the reciprocal rank but never returns it, so the documented single-query example returns `None` (as observed); add a return for that branch, such as `(reciprocal_ranks[0], reciprocal_ranks)`.
-
-```python
-print(MetricsCalculator2.mrr(([1, 0, 1, 0], 4)))
-print(MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)]))
-print(MetricsCalculator2.mrr([]))
-```
-
-```text
-exit code 0
-stdout:
-None
-(0.75, [1.0, 0.5])
-None
-
-stderr:
-```
+Reason of v1-medium: For tuple input, `mrr` appends the reciprocal rank but never returns a result, so it returns `None` instead of the documented `(score, [score])`. Add a return for the tuple case; an empty list also currently falls through and returns `None`.
 
 </details>
 
@@ -5524,21 +5069,7 @@ class VendingMachineTestPurchaseItem(unittest.TestCase):
 
 Verdicts: v1 NOT OK, v2 NOT OK, v2-r2 NOT OK, v3 NOT OK, v4 NOT OK, v5 NOT OK
 
-Reason of v2-medium: The documented examples work, but when the product is out of stock the method only returns `False`; it does not display a purchase-unsuccessful message as the docstring requires. Add that message in the out-of-stock branch while still returning `False`.
-
-```python
-v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':10}}; v.balance=1.25; print(v.purchase_item('Coke')); print(v.purchase_item('Pizza')); v=VendingMachine(); v.inventory={'Coke': {'price':1.25,'quantity':0}}; print(v.purchase_item('Coke'))
-```
-
-```text
-exit code 0
-stdout:
-0.0
-False
-False
-
-stderr:
-```
+Reason of v1-medium: The method correctly checks stock and balance before charging and decrementing inventory, but it does not display “purchase unsuccessful” when the product is out of stock as the docstring requires. Add that message in the out-of-stock branch.
 
 </details>
 
@@ -5723,27 +5254,13 @@ class ChatTestSendMessage(unittest.TestCase):
         self.assertEqual(chat.users, {'John': [], 'Mary': []})
 ```
 
-- FAIL: test_send_message: AssertionError: {'Joh[106 chars]y': []} != {'Joh[106 chars]y': [{'sender': 'John', 'receiver': 'Mary', 'm[50 chars]8'}]}
+- FAIL: test_send_message: AssertionError: {'Joh[106 chars]y': []} != {'Joh[106 chars]y': [{'sender': 'John', 'receiver': 'Mary', 'm[50 chars]5'}]}
 
 <details><summary>The judges (open after the label)</summary>
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method returns False when either user is absent and otherwise records the message for the sender with the documented fields and a formatted timestamp, then returns True. It passes the documented examples.
-
-```python
-c=Chat(); c.users={'John': [], 'Mary': []}; print(c.send_message('John','Mary','Hello')); print(c.users); print(c.send_message('John','Tom','Hello'));
-```
-
-```text
-exit code 0
-stdout:
-True
-{'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': '2026-11-08 11:07:24'}], 'Mary': []}
-False
-
-stderr:
-```
+Reason of v1-medium: The method returns False when either user is absent and otherwise appends a message record with the required fields to the sender's message list, matching the documented behavior and examples. `datetime` is imported, so the timestamp creation is supported.
 
 </details>
 
@@ -5940,24 +5457,6 @@ class ThermostatTestAutoCheckConflict(unittest.TestCase):
 
 Verdicts: v1 OK, v2 OK, v2-r2 OK, v3 OK, v4 OK, v5 OK
 
-Reason of v2-medium: The method selects the same expected mode as `auto_set_mode`, updates `self.mode` when it differs, and returns `False` for that conflict; otherwise it returns `True`. The documented example returns `False` and changes the mode to `'heat'`.
-
-```python
-t = Thermostat(20.4, 37.5, 'cool'); print(t.auto_check_conflict(), t.mode)
-t = Thermostat(20.4, 37.5, 'heat'); print(t.auto_check_conflict(), t.mode)
-t = Thermostat(40, 37.5, 'heat'); print(t.auto_check_conflict(), t.mode)
-t = Thermostat(37.5, 37.5, 'heat'); print(t.auto_check_conflict(), t.mode)
-```
-
-```text
-exit code 0
-stdout:
-False heat
-True heat
-False cool
-False cool
-
-stderr:
-```
+Reason of v1-medium: The method determines the expected mode using the same temperature comparison as `auto_set_mode`, returns `False` and updates the mode when they differ, and otherwise returns `True`. This matches the documented behavior, including when the temperatures are equal.
 
 </details>

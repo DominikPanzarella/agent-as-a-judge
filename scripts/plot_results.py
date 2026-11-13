@@ -1,6 +1,7 @@
 """Charts of the pilot and of the full runs for the README, from saved results. Sends no request.
 
-One chart per question, in docs/figures/: the judges' kappa (judge_kappa.png), their claims
+One chart per question, in docs/figures/. For the pilot of 7 and 8 November, with judges v1 and v2
+and the setup C0 of that time: the judges' kappa (judge_kappa.png), their claims
 (judge_claims.png), why judge and tests disagree (disagreements.png), the methods passing
 before and after the feedback (setups_first_final.png), and the judge's TPR and TNR with their
 intervals (judge_rates.png, from pilot_controls.py). For the full runs on the 61 test classes:

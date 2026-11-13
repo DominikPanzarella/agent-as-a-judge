@@ -3,8 +3,9 @@
 1. Resampling. The methods that the judge calls NOT OK in one C0 run are replaced by the same
    method from an independent C0 run, written without feedback. C2 has to do better than this to
    show that the judge's reason helps, and not just a second attempt.
-2. The judge on more failing methods. TPR and TNR of judge v2 with medium effort, pooled over the
-   27B and 9B runs, with 95% Wilson intervals. The 9B runs contain more failing methods.
+2. The judge on more failing methods. TPR and TNR of judge v2 with medium effort, the judge of
+   8 November, pooled over the 27B and 9B runs, with 95% Wilson intervals. The 9B runs contain
+   more failing methods.
 3. Power. How often an exact McNemar test on the 251 test methods detects a gain, simulated.
 
     .venv/bin/python scripts/pilot_controls.py

@@ -27,15 +27,18 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   judge GPT-6 Luna.
 - [x] **Coder, setup C0** (6 Nov). One method per request, never seeing the tests.
 - [x] **Judge v1 and v2** (6 Nov). v1 reads the code; v2 can also run it, up to 5 times.
-- [x] **Pilot** (7 Nov, 10 development classes, 38 methods). Against the tests the judge looks close
-  to chance (kappa at most 0.21). Against our labels of the 15 disputed methods it reaches 0.60,
-  because the tests often check things the docstring does not say. With medium effort all the
-  judge's concrete claims were true, so we keep the judge with medium effort.
-- [x] **Setup C2 on the development classes** (7 Nov). 3 methods fixed, 2 broken. It starts from
-  worse first versions than C0, so the coder's randomness hides the effect of the feedback.
+- [x] **Pilot with the 27B** (7 Nov, 10 development classes, 38 methods). Against the tests the
+  judge looks close to chance (kappa at most 0.21). Against our labels of the 15 disputed methods
+  it reaches 0.60, because the tests often check things the docstring does not say. With medium
+  effort all the judge's concrete claims were true, so we keep the judge with medium effort.
+- [x] **Setup C2 on the development classes** (7 Nov, 27B and judge v2). 3 methods fixed, 2
+  broken. It starts from worse first versions than C0, so the coder's randomness hides the effect
+  of the feedback.
 - [x] **Checks after the literature review** (8 Nov, `pilot_controls.py`). Rewriting the rejected
   methods without feedback does about as well as C2's revisions. The judge catches 15 of 22 failing
   methods of the 9B and 5 of 19 of the 27B, whose failures are mostly hidden requirements.
+  Charts of the pilot: `figures/judge_kappa.png`, `judge_claims.png`, `disagreements.png`,
+  `setups_first_final.png`, `judge_rates.png`; of the judge's prompts: `judge_variants.png`.
 
 ## Week 2 (9 to 15 November)
 
@@ -100,7 +103,7 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 
 ## 16 to 19 November: midway report
 
-- [ ] **Draft** (16 Nov), to bring to the lab.
+- [x] **Draft** (13 Nov), to bring to the lab of 16 November.
 - [ ] **Submission** (19 Nov).
 
 ## After the midway (20 November to 17 December)
@@ -108,11 +111,13 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 - [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of the pilot methods
   (`label_sheet.py`, two raters, then consensus) and the error analysis of 20 disagreements of C2
   (`analyze.py --sample 20`).
+- [ ] **Control and repetitions** (23 to 29 Nov), after the instructors' answer. The rejected
+  methods rewritten without the judge's reason on the 61 classes, and C2 and C3 repeated.
 - [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
 - [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
   the same number of attempts, and with rewriting without feedback.
 - [ ] **C3 as a flywheel**, if time and budget allow. Rounds of classes; between rounds the judge
-  keeps a memory of its mistakes, confirmed by hand.
+  keeps a memory of its mistakes, confirmed by hand. Today's C3 has no rounds and no such check.
 - [ ] **Later variants** (30 Nov to 6 Dec), the ones the instructors accept.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
@@ -126,8 +131,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   judge that writes tests of its own, come after.
 - [x] **C3: the memory is the judge's earlier reviews of the same class**, as in the paper's
   memory module. No rounds and no checks by hand, and nothing from the tests reaches the judge.
-- [x] **The judge's confidence** as one more field of its answer; an unsure judge looks again.
-  The coder still rewrites a method at most once, so the budget of C2 does not change.
+- [x] **The judge's confidence**, built as an option: one more field of its answer, and an unsure
+  judge looks again. On the pilot it said little, so the full runs do not use it. The coder still
+  rewrites a method at most once, so the budget of C2 does not change.
 
 ## Decisions of 11 November (the instructors' answer)
 
@@ -147,30 +153,31 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 
 Each comes with its reason and source.
 
-- [ ] **Same first versions in every setup.** C2 and C3 start from the same first versions, written
-  once with the same prompt, since two identical runs differ by 3 methods, as much as the feedback.
+- [x] **Same first versions in every setup** (12 Nov, `loop.py --reuse`). C3 takes from C2 every
+  first version whose input is the same, 173 of 251, since two identical runs of the pilot differ
+  by 3 methods, as much as the feedback.
 - [ ] **Our labels next to the tests, with TPR and TNR.** The paper judges its judge against human
   experts, and our tests and docstrings often disagree. We write the labelling criteria first,
   because people change them while labelling (Shankar et al. 2024, "criteria drift").
-- [ ] **Feedback with evidence.** The coder also gets the code the judge ran and its output.
-  Grounded critiques work better (CRITIC, Gou et al. 2024), and the judge's medium-effort claims
-  were all true.
+- [ ] **Feedback with evidence**, only with a judge that runs code, which v1 does not. The coder
+  also gets the code the judge ran and its output. Grounded critiques work better (CRITIC, Gou et
+  al. 2024), and in the pilot the claims of judge v2 with medium effort were all true.
 - [ ] **A judge that checks one docstring requirement at a time**, like the paper's ask module,
-  with a third verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in C2 were correct code
-  rejected for behaviour the docstring does not describe. Telling an underspecified task apart from
-  a wrong solution works better as a separate step (Edwards and Schuster 2026). It also writes its
-  checks from the docstring before reading the code, because tests written by a model carry a bias
-  that can mislead the feedback (Chen et al., ACL 2025).
-- [ ] **A careful memory in C3**: only corrections we confirm by hand, at most about ten. The
-  paper found its memory module harmful, because errors spread to later verdicts.
-- [ ] **C3 without the manual check.** Every disagreement between the judge and the tests goes into
-  the memory as it is, as in the paper's memory module. Against C3 with the manual check, it shows
-  how much the check matters.
-- [ ] **C3 with a third model as reviewer.** A model of a third family, neither Qwen nor GPT, reads
-  each disagreement (docstring, tests, code, the judge's reason) and decides in our place who is
-  right. On the development classes we first compare it with our labels. Models tend to favour
-  their own outputs (Panickssery et al. 2024); a model that judges a judge is the meta-judge of
-  Wu et al. 2024, and a panel of different models is the jury of Verga et al. 2024.
+  with a third verdict, NOT SPECIFIED, that never reaches the coder. Both methods broken in the
+  pilot of C2 were correct code rejected for behaviour the docstring does not describe. Telling an
+  underspecified task apart from a wrong solution works better as a separate step (Edwards and
+  Schuster 2026). It also writes its checks from the docstring before reading the code, because
+  tests written by a model carry a bias that can mislead the feedback (Chen et al., ACL 2025).
+- [x] **C3 without a manual check** (12 Nov): today's C3. The memory holds the judge's reviews as
+  they are, as in the paper's memory module, and nothing from the tests.
+- [ ] **A careful memory in C3**, the flywheel above: only corrections we confirm by hand, at most
+  about ten. The paper found its memory module harmful, because errors spread to later verdicts.
+  Against today's C3, it shows how much the check matters.
+- [ ] **The flywheel with a third model as reviewer.** A model of a third family, neither Qwen nor
+  GPT, reads each disagreement (docstring, tests, code, the judge's reason) and decides in our
+  place who is right. On the development classes we first compare it with our labels. Models tend
+  to favour their own outputs (Panickssery et al. 2024); a model that judges a judge is the
+  meta-judge of Wu et al. 2024, and a panel of different models is the jury of Verga et al. 2024.
 - [ ] **Two controls**: empty feedback (NOT OK without the reason) and resampling (the method
   written again without feedback). They separate the effect of the reason from that of a second
   attempt; in a placebo-controlled study resampling did as well as feedback (Iscan 2026).

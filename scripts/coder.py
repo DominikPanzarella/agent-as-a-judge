@@ -1,7 +1,7 @@
 """The coder alone: Qwen writes each class one method at a time, with no feedback.
 
 The pilot ran this as setup C0. In the study every setup has a judge, and these are the
-first versions, written before any feedback. For each method it gets the class skeleton, the
+first versions, written before any feedback. The default model is the study's, qwen3.5-9b. For each method it gets the class skeleton, the
 methods written so far and the method's name, never the tests. A reply without a usable method
 leaves a stub and is not asked again. Results go to runs/<name>/<task_id>.json and every request to
 runs/cost_log.csv.
@@ -9,7 +9,7 @@ runs/cost_log.csv.
     .venv/bin/python scripts/coder.py --dry-run ClassEval_19      # show the first prompt
     .venv/bin/python scripts/coder.py ClassEval_19 ClassEval_53
     .venv/bin/python scripts/coder.py --all
-    .venv/bin/python scripts/coder.py --model qwen/qwen3.5-9b --name C0-9b ClassEval_19
+    .venv/bin/python scripts/coder.py --model qwen/qwen3.8-27b --name C0 ClassEval_19   # the 27B of the first pilot
 """
 import argparse
 import ast
@@ -28,9 +28,9 @@ import harness
 
 ROOT = harness.ROOT
 METHOD_ORDER = ROOT / "data/selection/method_order.csv"
-SETUP = "C0"
+SETUP = "C0-9b"  # the 9B alone; C0 and C0-r2 hold the 27B of the first pilot
 
-MODEL = "qwen/qwen3.8-27b"
+MODEL = "qwen/qwen3.5-9b"  # the coder of the study, as in loop.py
 MAX_TOKENS = 4000  # the reasoning tokens count against this limit too
 EXTRA_BODY = {
     "reasoning": {"effort": "low"},
@@ -146,7 +146,7 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="print the first prompt and send nothing")
     parser.add_argument("--force", action="store_true", help="run again classes that already have a result")
     parser.add_argument("--name", default=SETUP,
-                        help="name of the run and of its folder in runs/, such as C0-r2 for a second run")
+                        help="name of the run and of its folder in runs/, such as C0-9b-r2 for a second run")
     parser.add_argument("--model", default=MODEL, help="OpenRouter model of the coder")
     args = parser.parse_args()
 

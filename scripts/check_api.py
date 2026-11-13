@@ -1,6 +1,6 @@
 """Check both API keys with one tiny request each.
 
-GPT-6 Luna on OpenAI, and Qwen on OpenRouter on the cheapest full-precision provider. It prints
+GPT-6 Luna on OpenAI, and Qwen 3.5 9B on OpenRouter on the cheapest full-precision provider. It prints
 tokens, cost and provider, never the keys.
 """
 import os
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 JUDGE_MODEL = "gpt-6-luna"           # OpenAI project
-CODER_MODEL = "qwen/qwen3.8-27b"     # OpenRouter; qwen3.6-27b has no bf16 or fp16 provider
+CODER_MODEL = "qwen/qwen3.5-9b"      # OpenRouter; the coder of the study
 PROMPT = "Answer with one word: what is the capital of Switzerland?"
 
 load_dotenv()
