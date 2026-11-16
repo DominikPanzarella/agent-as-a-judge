@@ -8,11 +8,17 @@ Results go to runs/<name>/<task_id>.json; without --name the folder is <setup>-<
 --reuse takes from another run every first version and review whose input is the same, so two
 setups differ only where the judge does, and not because the coder writes a method differently.
 
-The defaults are the study's: coder qwen3.5-9b, judge v1 with medium effort.
+--no-reason is the control of C2: after a NOT OK the coder is told the verdict without the
+judge's reason. With --reuse on its C2 run, the two differ only in that message, which shows
+how much of the gain comes from the reason and how much from a second attempt.
+
+The defaults are the study's: coder qwen3.5-9b with 8000 output tokens, judge v1 with medium
+effort. The runs of 12 November (C2-9b, C3-9b) had 4000 tokens: --max-tokens 4000.
 
     .venv/bin/python scripts/loop.py C3 --dry-run ClassEval_19
-    .venv/bin/python scripts/loop.py C2 --name C2-9b --classes test
-    .venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --classes test
+    .venv/bin/python scripts/loop.py C2 --name C2-9b-8k-r1 --classes test
+    .venv/bin/python scripts/loop.py C3 --name C3-9b-8k-r1 --reuse C2-9b-8k-r1 --classes test
+    .venv/bin/python scripts/loop.py C2 --no-reason --name C2n-9b-8k-r1 --reuse C2-9b-8k-r1 --classes test
 """
 import argparse
 import json
@@ -32,9 +38,17 @@ SETUPS = ["C2", "C3"]
 # The study's settings, decided with the instructors on 11 and 12 November.
 CODER = "qwen/qwen3.5-9b"
 EFFORT = "medium"
+# What a run file says when it does not record a setting: the runs before 16 November.
+OLD_SETTINGS = {"max_tokens": 4000}
 
 def method_feedback(name, reason):
     return (f"A reviewer read your method `{name}` and answered NOT OK: {reason}\n\n"
+            f"Write the method `{name}` again, taking the review into account.")
+
+
+def verdict_feedback(name):
+    """The control's message: method_feedback without the judge's reason."""
+    return (f"A reviewer read your method `{name}` and answered NOT OK.\n\n"
             f"Write the method `{name}` again, taking the review into account.")
 
 
@@ -46,17 +60,25 @@ class Run:
     """The two clients and the settings of one run, plus the calls that log their cost."""
 
     def __init__(self, coder_client, judge_client, setup, name, model, version, effort,
-                 confidence=False, min_confidence=None, reuse=None):
+                 confidence=False, min_confidence=None, reuse=None, max_tokens=coder.MAX_TOKENS,
+                 with_reason=True):
         self.coder_client, self.judge_client = coder_client, judge_client
         self.setup, self.name, self.model = setup, name, model
         self.version, self.effort = version, effort
         self.confidence, self.min_confidence = confidence, min_confidence
         self.reuse = reuse  # name of the run to take equal first versions and reviews from
+        self.max_tokens = max_tokens  # output tokens of the coder, reasoning included
+        self.with_reason = with_reason  # False in the control: the coder gets only the verdict
 
     def settings(self):
         """What must be equal in another run before one of its results can be reused."""
         return {"coder_model": self.model, "judge": self.version, "effort": self.effort,
-                "confidence": self.confidence, "min_confidence": self.min_confidence}
+                "confidence": self.confidence, "min_confidence": self.min_confidence,
+                "max_tokens": self.max_tokens}
+
+    def feedback(self, name, reason):
+        """The message to the coder after a NOT OK."""
+        return method_feedback(name, reason) if self.with_reason else verdict_feedback(name)
 
     def earlier(self, task, written, name):
         """The record of this method in the reused run, if it was written after the same methods."""
@@ -64,7 +86,7 @@ class Run:
         if not self.reuse or not f.exists():
             return None
         old = json.loads(f.read_text(encoding="utf-8"))
-        if any(old.get(k) != v for k, v in self.settings().items()):
+        if any(old.get(k, OLD_SETTINGS.get(k)) != v for k, v in self.settings().items()):
             return None
         before = {}
         for record in old["methods"]:
@@ -74,8 +96,8 @@ class Run:
                 before[record["method_name"]] = record["final_code"]
         return None
 
-    def write(self, task, messages, method_name, role, max_tokens=coder.MAX_TOKENS):
-        r = coder.ask(self.coder_client, messages, self.model, max_tokens)
+    def write(self, task, messages, method_name, role):
+        r = coder.ask(self.coder_client, messages, self.model, self.max_tokens)
         budget.log(setup=self.name, task_id=task["task_id"], method_name=method_name, role=role,
                    service="openrouter", model=self.model, **r)
         return r
@@ -119,7 +141,7 @@ def write_class(run, task, steps):
             record["review"] = review
             if review["verdict"] == "NOT OK":
                 messages += [{"role": "assistant", "content": first["reply"]},
-                             {"role": "user", "content": method_feedback(name, review["reason"])}]
+                             {"role": "user", "content": run.feedback(name, review["reason"])}]
                 r = run.write(task, messages, name, "coder-revision")
                 code = coder.extract_method(r["reply"], name)
                 record["revision"] = {"code": code, "valid": usable(code), **r}
@@ -143,7 +165,8 @@ def run_class(run, task, steps):
     for r in records:
         r["passed_first"], r["passed"] = passed_first[r["method_name"]], passed[r["method_name"]]
     return {"task_id": task["task_id"], "class_name": task["class_name"], "setup": run.setup,
-            "name": run.name, **run.settings(), "reuse": run.reuse, "methods": records,
+            "name": run.name, **run.settings(), "reuse": run.reuse,
+            "feedback": "reason" if run.with_reason else "verdict", "methods": records,
             "class_passed_first": harness.class_passed(tests_first),
             "class_passed": harness.class_passed(tests),
             "tests_first": tests_first, "tests": tests, "source_first": source_first, "source": source}
@@ -174,10 +197,14 @@ def main():
     parser.add_argument("--confidence", action="store_true", help="the judge also says how sure it is, 0 to 100")
     parser.add_argument("--min-confidence", type=int, help="below this confidence the judge looks again")
     parser.add_argument("--reuse", help="run to take equal first versions and reviews from, such as C2-9b")
+    parser.add_argument("--no-reason", action="store_true",
+                        help="the control: after a NOT OK the coder gets the verdict without the reason")
+    parser.add_argument("--max-tokens", type=int, default=coder.MAX_TOKENS,
+                        help="output tokens of the coder per request, reasoning included")
     parser.add_argument("--dry-run", action="store_true", help="print the feedback prompts and send nothing")
     parser.add_argument("--force", action="store_true", help="run again classes that already have a result")
     args = parser.parse_args()
-    name = args.name or f"{args.setup}-{args.judge}-{args.effort}"
+    name = args.name or f"{args.setup}-{args.judge}-{args.effort}" + ("-noreason" if args.no_reason else "")
 
     tasks = {t["task_id"]: t for t in harness.load_tasks()}
     order = coder.method_order()
@@ -189,7 +216,8 @@ def main():
     if args.dry_run:
         task = tasks[chosen[0]]
         print("After a NOT OK, the coder's conversation goes on with this message:\n")
-        print(method_feedback(order[task["task_id"]][0], "<the judge's reason>"))
+        first = order[task["task_id"]][0]
+        print(verdict_feedback(first) if args.no_reason else method_feedback(first, "<the judge's reason>"))
         if args.setup == "C3" and len(order[task["task_id"]]) > 1:
             first, second = order[task["task_id"]][:2]
             memory = [judge.memory_line(first, {"verdict": "NOT OK", "reason": "<the judge's reason>"}, True)]
@@ -202,7 +230,8 @@ def main():
     run = Run(OpenAI(api_key=os.environ["OPENROUTER_API_KEY"], base_url="https://openrouter.ai/api/v1", max_retries=5),
               OpenAI(api_key=os.environ["OPENAI_API_KEY"], max_retries=5),
               args.setup, name, args.model, args.judge, args.effort,
-              args.confidence or args.min_confidence is not None, args.min_confidence, args.reuse)
+              args.confidence or args.min_confidence is not None, args.min_confidence, args.reuse,
+              args.max_tokens, not args.no_reason)
     out_dir = ROOT / "runs" / name
     out_dir.mkdir(parents=True, exist_ok=True)
     for task_id in chosen:

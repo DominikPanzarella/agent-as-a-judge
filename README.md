@@ -61,8 +61,9 @@ harness runs all its tests on the first and on the final versions: that is the g
 - **Prompt.** The class skeleton with all the docstrings, the methods written so far and the name
   of the next method.
 - **Coder.** `qwen/qwen3.5-9b` on OpenRouter (chosen on 11 November; the pilot also used
-  `qwen3.8-27b`, which already passes 82% of the methods), with low reasoning effort and 4000 output
-  tokens per request. It writes one method at a time and rewrites it after a NOT OK, without ever
+  `qwen3.8-27b`, which already passes 82% of the methods), with low reasoning effort and 8000
+  output tokens per request (4000 in the runs of 12 November; doubled with the instructors on
+  16 November). It writes one method at a time and rewrites it after a NOT OK, without ever
   seeing the tests or running code.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
   the reason is the feedback. The judge of the study is v1: it reads the docstrings and the code,
@@ -73,6 +74,9 @@ harness runs all its tests on the first and on the final versions: that is the g
   verdict how sure it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the
   method again, at most twice (`--min-confidence`). On the pilot classes the confidence was 95
   or more for 68 of 71 verdicts, right or wrong.
+- **Control of C2** (built on 16 November, not run yet). With `--no-reason` the coder learns after
+  a NOT OK that the method was rejected, without the judge's reason. Paired with a C2 run
+  through `--reuse`, it separates the effect of the reason from that of a second attempt.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.
@@ -134,9 +138,14 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 # v2 to v5, tried in the pilot, can also run code)
 .venv/bin/python scripts/judge.py C0-9b --all
 
-# C2 and C3: coder and judge together
-.venv/bin/python scripts/loop.py C2 --name C2-9b --classes test
-.venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --classes test
+# C2 and C3: coder and judge together (the runs of 12 November, with 4000 tokens for the coder)
+.venv/bin/python scripts/loop.py C2 --name C2-9b --classes test --max-tokens 4000
+.venv/bin/python scripts/loop.py C3 --name C3-9b --reuse C2-9b --classes test --max-tokens 4000
+
+# the three repetitions (r1, r2, r3) with 8000 tokens, each with its control without the reason
+.venv/bin/python scripts/loop.py C2 --name C2-9b-8k-r1 --classes test
+.venv/bin/python scripts/loop.py C3 --name C3-9b-8k-r1 --reuse C2-9b-8k-r1 --classes test
+.venv/bin/python scripts/loop.py C2 --no-reason --name C2n-9b-8k-r1 --reuse C2-9b-8k-r1 --classes test
 
 # results
 .venv/bin/python scripts/pilot_report.py               # tables of the pilot
