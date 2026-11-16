@@ -1,0 +1,252 @@
+{
+  "task_id": "ClassEval_29",
+  "class_name": "DataStatistics",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "mean",
+      "first": {
+        "code": "def mean(self, data):\n    \"\"\"\n    Calculate the average value of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the mean value\n    >>> ds = DataStatistics()\n    >>> ds.mean([1, 2, 3, 4, 5])\n    3.00\n    \"\"\"\n    return round(sum(data) / len(data), 2)",
+        "valid": true,
+        "reply": "```python\ndef mean(self, data):\n    \"\"\"\n    Calculate the average value of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the mean value\n    >>> ds = DataStatistics()\n    >>> ds.mean([1, 2, 3, 4, 5])\n    3.00\n    \"\"\"\n    return round(sum(data) / len(data), 2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 417,
+        "cached_tokens": 0,
+        "completion_tokens": 522,
+        "reasoning_tokens": 337,
+        "cost": 3.9339e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "For nonempty numeric data, this computes the arithmetic mean and rounds it to two decimal places, as documented. An empty list would raise `ZeroDivisionError`, but the docstring does not specify empty-input behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "For nonempty numeric data, this computes the arithmetic mean and rounds it to two decimal places, as documented. An empty list would raise `ZeroDivisionError`, but the docstring does not specify empty-input behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 626,
+            "cached_tokens": 0,
+            "completion_tokens": 245,
+            "reasoning_tokens": 184,
+            "cost": 0.0001851
+          }
+        ],
+        "prompt_tokens": 626,
+        "cached_tokens": 0,
+        "completion_tokens": 245,
+        "reasoning_tokens": 184,
+        "cost": 0.0001851
+      },
+      "revision": null,
+      "final_code": "def mean(self, data):\n    \"\"\"\n    Calculate the average value of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the mean value\n    >>> ds = DataStatistics()\n    >>> ds.mean([1, 2, 3, 4, 5])\n    3.00\n    \"\"\"\n    return round(sum(data) / len(data), 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "median",
+      "first": {
+        "code": "def median(self, data):\n    \"\"\"\n    Calculate the median of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the median value\n    >>> ds = DataStatistics()\n    >>> ds.median([2, 5, 1, 3, 4])\n    3.00\n    \"\"\"\n    sorted_data = sorted(data)\n    n = len(sorted_data)\n    if n % 2 == 1:\n        return round(sorted_data[n // 2], 2)\n    else:\n        return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)",
+        "valid": true,
+        "reply": "```python\ndef median(self, data):\n    \"\"\"\n    Calculate the median of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the median value\n    >>> ds = DataStatistics()\n    >>> ds.median([2, 5, 1, 3, 4])\n    3.00\n    \"\"\"\n    sorted_data = sorted(data)\n    n = len(sorted_data)\n    if n % 2 == 1:\n        return round(sorted_data[n // 2], 2)\n    else:\n        return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 530,
+        "cached_tokens": 0,
+        "completion_tokens": 603,
+        "reasoning_tokens": 373,
+        "cost": 4.7037e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For an empty list, the even-length branch indexes `sorted_data[-1]` and `sorted_data[0]`, raising `IndexError`; the method should explicitly handle or reject empty input. Also, for an odd-length list of integers, `round(value, 2)` can return an `int`, despite the documented float return type.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For an empty list, the even-length branch indexes `sorted_data[-1]` and `sorted_data[0]`, raising `IndexError`; the method should explicitly handle or reject empty input. Also, for an odd-length list of integers, `round(value, 2)` can return an `int`, despite the documented float return type.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 787,
+            "cached_tokens": 0,
+            "completion_tokens": 542,
+            "reasoning_tokens": 453,
+            "cost": 0.0003497
+          }
+        ],
+        "prompt_tokens": 787,
+        "cached_tokens": 0,
+        "completion_tokens": 542,
+        "reasoning_tokens": 453,
+        "cost": 0.0003497
+      },
+      "revision": {
+        "code": "def median(self, data):\n    \"\"\"\n    Calculate the median of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the median value\n    >>> ds = DataStatistics()\n    >>> ds.median([2, 5, 1, 3, 4])\n    3.00\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate median of empty list\")\n    sorted_data = sorted(data)\n    n = len(sorted_data)\n    if n % 2 == 1:\n        return round(float(sorted_data[n // 2]), 2)\n    else:\n        return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)",
+        "valid": true,
+        "reply": "```python\ndef median(self, data):\n    \"\"\"\n    Calculate the median of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the median value\n    >>> ds = DataStatistics()\n    >>> ds.median([2, 5, 1, 3, 4])\n    3.00\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate median of empty list\")\n    sorted_data = sorted(data)\n    n = len(sorted_data)\n    if n % 2 == 1:\n        return round(float(sorted_data[n // 2]), 2)\n    else:\n        return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 803,
+        "cached_tokens": 0,
+        "completion_tokens": 820,
+        "reasoning_tokens": 569,
+        "cost": 6.6679e-05
+      },
+      "final_code": "def median(self, data):\n    \"\"\"\n    Calculate the median of a group of data, accurate to two digits after the Decimal separator\n    :param data:list, data list\n    :return:float, the median value\n    >>> ds = DataStatistics()\n    >>> ds.median([2, 5, 1, 3, 4])\n    3.00\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate median of empty list\")\n    sorted_data = sorted(data)\n    n = len(sorted_data)\n    if n % 2 == 1:\n        return round(float(sorted_data[n // 2]), 2)\n    else:\n        return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "mode",
+      "first": {
+        "code": "def mode(self, data):\n    \"\"\"\n    Calculate the mode of a set of data\n    :param data:list, data list\n    :return:float, the mode\n    >>> ds = DataStatistics()\n    >>> ds.mode([2, 2, 3, 3, 4])\n    [2, 3]\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate mode of empty list\")\n    counter = Counter(data)\n    max_count = max(counter.values())\n    modes = [value for value, count in counter.items() if count == max_count]\n    return modes",
+        "valid": true,
+        "reply": "```python\ndef mode(self, data):\n    \"\"\"\n    Calculate the mode of a set of data\n    :param data:list, data list\n    :return:float, the mode\n    >>> ds = DataStatistics()\n    >>> ds.mode([2, 2, 3, 3, 4])\n    [2, 3]\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate mode of empty list\")\n    counter = Counter(data)\n    max_count = max(counter.values())\n    modes = [value for value, count in counter.items() if count == max_count]\n    return modes\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 710,
+        "cached_tokens": 0,
+        "completion_tokens": 607,
+        "reasoning_tokens": 440,
+        "cost": 5.9655e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method returns a list of modes, including a one-element list when there is a unique mode, while the docstring says the return value is a float. Since the example expects a list for tied modes, update the return description to specify a list.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method returns a list of modes, including a one-element list when there is a unique mode, while the docstring says the return value is a float. Since the example expects a list for tied modes, update the return description to specify a list.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 930,
+            "cached_tokens": 0,
+            "completion_tokens": 608,
+            "reasoning_tokens": 538,
+            "cost": 0.000397
+          }
+        ],
+        "prompt_tokens": 930,
+        "cached_tokens": 0,
+        "completion_tokens": 608,
+        "reasoning_tokens": 538,
+        "cost": 0.000397
+      },
+      "revision": {
+        "code": "def mode(self, data):\n    \"\"\"\n    Calculate the mode of a set of data\n    :param data:list, data list\n    :return:list, the mode(s) as a list\n    >>> ds = DataStatistics()\n    >>> ds.mode([2, 2, 3, 3, 4])\n    [2, 3]\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate mode of empty list\")\n    counter = Counter(data)\n    max_count = max(counter.values())\n    modes = [value for value, count in counter.items() if count == max_count]\n    return modes",
+        "valid": true,
+        "reply": "```python\ndef mode(self, data):\n    \"\"\"\n    Calculate the mode of a set of data\n    :param data:list, data list\n    :return:list, the mode(s) as a list\n    >>> ds = DataStatistics()\n    >>> ds.mode([2, 2, 3, 3, 4])\n    [2, 3]\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate mode of empty list\")\n    counter = Counter(data)\n    max_count = max(counter.values())\n    modes = [value for value, count in counter.items() if count == max_count]\n    return modes\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 938,
+        "cached_tokens": 0,
+        "completion_tokens": 244,
+        "reasoning_tokens": 115,
+        "cost": 4.8126e-05
+      },
+      "final_code": "def mode(self, data):\n    \"\"\"\n    Calculate the mode of a set of data\n    :param data:list, data list\n    :return:list, the mode(s) as a list\n    >>> ds = DataStatistics()\n    >>> ds.mode([2, 2, 3, 3, 4])\n    [2, 3]\n    \"\"\"\n    if not data:\n        raise ValueError(\"Cannot calculate mode of empty list\")\n    counter = Counter(data)\n    max_count = max(counter.values())\n    modes = [value for value, count in counter.items() if count == max_count]\n    return modes",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "DataStatisticsTestMean": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTestMedian": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTestMode": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "DataStatisticsTestMean": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTestMedian": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTestMode": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DataStatisticsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "from collections import Counter\n\nclass DataStatistics:\n\n    def mean(self, data):\n        \"\"\"\n        Calculate the average value of a group of data, accurate to two digits after the Decimal separator\n        :param data:list, data list\n        :return:float, the mean value\n        >>> ds = DataStatistics()\n        >>> ds.mean([1, 2, 3, 4, 5])\n        3.00\n        \"\"\"\n        return round(sum(data) / len(data), 2)\n\n    def median(self, data):\n        \"\"\"\n        Calculate the median of a group of data, accurate to two digits after the Decimal separator\n        :param data:list, data list\n        :return:float, the median value\n        >>> ds = DataStatistics()\n        >>> ds.median([2, 5, 1, 3, 4])\n        3.00\n        \"\"\"\n        sorted_data = sorted(data)\n        n = len(sorted_data)\n        if n % 2 == 1:\n            return round(sorted_data[n // 2], 2)\n        else:\n            return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)\n\n    def mode(self, data):\n        \"\"\"\n        Calculate the mode of a set of data\n        :param data:list, data list\n        :return:float, the mode\n        >>> ds = DataStatistics()\n        >>> ds.mode([2, 2, 3, 3, 4])\n        [2, 3]\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot calculate mode of empty list\")\n        counter = Counter(data)\n        max_count = max(counter.values())\n        modes = [value for value, count in counter.items() if count == max_count]\n        return modes\n",
+  "source": "from collections import Counter\n\nclass DataStatistics:\n\n    def mean(self, data):\n        \"\"\"\n        Calculate the average value of a group of data, accurate to two digits after the Decimal separator\n        :param data:list, data list\n        :return:float, the mean value\n        >>> ds = DataStatistics()\n        >>> ds.mean([1, 2, 3, 4, 5])\n        3.00\n        \"\"\"\n        return round(sum(data) / len(data), 2)\n\n    def median(self, data):\n        \"\"\"\n        Calculate the median of a group of data, accurate to two digits after the Decimal separator\n        :param data:list, data list\n        :return:float, the median value\n        >>> ds = DataStatistics()\n        >>> ds.median([2, 5, 1, 3, 4])\n        3.00\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot calculate median of empty list\")\n        sorted_data = sorted(data)\n        n = len(sorted_data)\n        if n % 2 == 1:\n            return round(float(sorted_data[n // 2]), 2)\n        else:\n            return round((sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2, 2)\n\n    def mode(self, data):\n        \"\"\"\n        Calculate the mode of a set of data\n        :param data:list, data list\n        :return:list, the mode(s) as a list\n        >>> ds = DataStatistics()\n        >>> ds.mode([2, 2, 3, 3, 4])\n        [2, 3]\n        \"\"\"\n        if not data:\n            raise ValueError(\"Cannot calculate mode of empty list\")\n        counter = Counter(data)\n        max_count = max(counter.values())\n        modes = [value for value, count in counter.items() if count == max_count]\n        return modes\n"
+}

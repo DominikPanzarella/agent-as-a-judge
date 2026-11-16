@@ -1,0 +1,340 @@
+{
+  "task_id": "ClassEval_28",
+  "class_name": "DatabaseProcessor",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "first": {
+        "code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name} \n                      (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "```python\ndef create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name} \n                      (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)''')\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 654,
+        "cached_tokens": 0,
+        "completion_tokens": 557,
+        "reasoning_tokens": 354,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method works for ordinary unquoted identifiers, but interpolating names directly into SQL makes valid names containing reserved words or special characters fail, and can expose the query to SQL injection. Validate and properly quote each identifier before building the statement.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method works for ordinary unquoted identifiers, but interpolating names directly into SQL makes valid names containing reserved words or special characters fail, and can expose the query to SQL injection. Validate and properly quote each identifier before building the statement.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 928,
+            "cached_tokens": 0,
+            "completion_tokens": 422,
+            "reasoning_tokens": 356,
+            "cost": 0.0003038
+          }
+        ],
+        "prompt_tokens": 928,
+        "cached_tokens": 0,
+        "completion_tokens": 422,
+        "reasoning_tokens": 356,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "Parasail",
+        "prompt_tokens": 891,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 8000,
+        "cost": 0.0020891
+      },
+      "final_code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name} \n                      (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)''')\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert_into_database",
+      "first": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    if not data:\n        return\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Get column names from the first dictionary\n    columns = [name for name in data[0].keys()]\n\n    # Build placeholders for parameterized query\n    placeholders = ', '.join(['?' for _ in columns])\n\n    # Build column names for INSERT statement\n    column_names = ', '.join(columns)\n\n    # Insert each row\n    for row in data:\n        values = [row[col] for col in columns]\n        cursor.execute(f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})', values)\n\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    if not data:\n        return\n    \n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Get column names from the first dictionary\n    columns = [name for name in data[0].keys()]\n    \n    # Build placeholders for parameterized query\n    placeholders = ', '.join(['?' for _ in columns])\n    \n    # Build column names for INSERT statement\n    column_names = ', '.join(columns)\n    \n    # Insert each row\n    for row in data:\n        values = [row[col] for col in columns]\n        cursor.execute(f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})', values)\n    \n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 860,
+        "cached_tokens": 576,
+        "completion_tokens": 910,
+        "reasoning_tokens": 631,
+        "cost": 0.0003135
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method assumes every dictionary has exactly the same columns as the first: a later row missing one of those keys raises `KeyError`, and extra keys are silently ignored. Validate that the rows have consistent keys (or build each insert from that row\u2019s keys) before inserting.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method assumes every dictionary has exactly the same columns as the first: a later row missing one of those keys raises `KeyError`, and extra keys are silently ignored. Validate that the rows have consistent keys (or build each insert from that row\u2019s keys) before inserting.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1187,
+            "cached_tokens": 0,
+            "completion_tokens": 534,
+            "reasoning_tokens": 460,
+            "cost": 0.0003857
+          }
+        ],
+        "prompt_tokens": 1187,
+        "cached_tokens": 0,
+        "completion_tokens": 534,
+        "reasoning_tokens": 460,
+        "cost": 0.0003857
+      },
+      "revision": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    if not data or not data[0]:\n        return\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Ensure all rows have the same keys\n    unique_keys = set(data[0].keys())\n    for row in data[1:]:\n        if set(row.keys()) != unique_keys:\n            raise ValueError(\"All rows must have the same set of keys\")\n\n    # Build the INSERT statement with placeholders\n    columns = ', '.join(sorted(unique_keys))\n    placeholders = ', '.join(['?' for _ in unique_keys])\n\n    # Execute insert for each row\n    for row in data:\n        values = [row[key] for key in sorted(unique_keys)]\n        cursor.execute(f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})', values)\n\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    if not data or not data[0]:\n        return\n    \n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Ensure all rows have the same keys\n    unique_keys = set(data[0].keys())\n    for row in data[1:]:\n        if set(row.keys()) != unique_keys:\n            raise ValueError(\"All rows must have the same set of keys\")\n    \n    # Build the INSERT statement with placeholders\n    columns = ', '.join(sorted(unique_keys))\n    placeholders = ', '.join(['?' for _ in unique_keys])\n    \n    # Execute insert for each row\n    for row in data:\n        values = [row[key] for key in sorted(unique_keys)]\n        cursor.execute(f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})', values)\n    \n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1178,
+        "cached_tokens": 0,
+        "completion_tokens": 907,
+        "reasoning_tokens": 636,
+        "cost": 0.000380775
+      },
+      "final_code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    if not data or not data[0]:\n        return\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Ensure all rows have the same keys\n    unique_keys = set(data[0].keys())\n    for row in data[1:]:\n        if set(row.keys()) != unique_keys:\n            raise ValueError(\"All rows must have the same set of keys\")\n\n    # Build the INSERT statement with placeholders\n    columns = ', '.join(sorted(unique_keys))\n    placeholders = ', '.join(['?' for _ in unique_keys])\n\n    # Execute insert for each row\n    for row in data:\n        values = [row[key] for key in sorted(unique_keys)]\n        cursor.execute(f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})', values)\n\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "search_database",
+      "first": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    cursor.execute(f'''\n        SELECT id, {key1}, {key2}\n        FROM {table_name}\n        WHERE {key1} = ?\n        ORDER BY id\n    ''', (name,))\n\n    results = cursor.fetchall()\n    conn.close()\n\n    return results if results else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    cursor.execute(f'''\n        SELECT id, {key1}, {key2}\n        FROM {table_name}\n        WHERE {key1} = ?\n        ORDER BY id\n    ''', (name,))\n    \n    results = cursor.fetchall()\n    conn.close()\n    \n    return results if results else None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1160,
+        "cached_tokens": 576,
+        "completion_tokens": 751,
+        "reasoning_tokens": 539,
+        "cost": 0.00030375
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`key1` and `key2` are not defined in this method or stored on the class, so calling it raises `NameError`. Use the intended column names (for example, select `*` and filter on `name`) or store the schema fields so the method can reference them.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`key1` and `key2` are not defined in this method or stored on the class, so calling it raises `NameError`. Use the intended column names (for example, select `*` and filter on `name`) or store the schema fields so the method can reference them.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1398,
+            "cached_tokens": 0,
+            "completion_tokens": 206,
+            "reasoning_tokens": 127,
+            "cost": 0.00024280000000000002
+          }
+        ],
+        "prompt_tokens": 1398,
+        "cached_tokens": 0,
+        "completion_tokens": 206,
+        "reasoning_tokens": 127,
+        "cost": 0.00024280000000000002
+      },
+      "revision": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use the key1 column for name, assuming key1 is TEXT (typically 'name')\n    # Using explicit column names based on create_table convention\n    cursor.execute(f'SELECT id, key1, key2 FROM `{table_name}` WHERE key1 = ?', (name,))\n\n    results = cursor.fetchall()\n    conn.close()\n\n    return results if results else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Use the key1 column for name, assuming key1 is TEXT (typically 'name')\n    # Using explicit column names based on create_table convention\n    cursor.execute(f'SELECT id, key1, key2 FROM `{table_name}` WHERE key1 = ?', (name,))\n    \n    results = cursor.fetchall()\n    conn.close()\n    \n    return results if results else None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1409,
+        "cached_tokens": 1152,
+        "completion_tokens": 2567,
+        "reasoning_tokens": 2341,
+        "cost": 0.00078265
+      },
+      "final_code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use the key1 column for name, assuming key1 is TEXT (typically 'name')\n    # Using explicit column names based on create_table convention\n    cursor.execute(f'SELECT id, key1, key2 FROM `{table_name}` WHERE key1 = ?', (name,))\n\n    results = cursor.fetchall()\n    conn.close()\n\n    return results if results else None",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "delete_from_database",
+      "first": {
+        "code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'DELETE FROM {table_name} WHERE key1 = ?', (name,))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'DELETE FROM {table_name} WHERE key1 = ?', (name,))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1377,
+        "cached_tokens": 576,
+        "completion_tokens": 509,
+        "reasoning_tokens": 371,
+        "cost": 0.00026495
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`create_table` uses the supplied column name (for example, `name`), not a column literally named `key1`, so this query fails for the documented table. Use the actual name column in the DELETE condition, or store and use the configured key column.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`create_table` uses the supplied column name (for example, `name`), not a column literally named `key1`, so this query fails for the documented table. Use the actual name column in the DELETE condition, or store and use the configured key column.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1535,
+            "cached_tokens": 0,
+            "completion_tokens": 184,
+            "reasoning_tokens": 111,
+            "cost": 0.0002455
+          }
+        ],
+        "prompt_tokens": 1535,
+        "cached_tokens": 0,
+        "completion_tokens": 184,
+        "reasoning_tokens": 111,
+        "cost": 0.0002455
+      },
+      "revision": {
+        "code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('DELETE FROM {table_name} WHERE key1 = ?'.format(table_name=table_name), (name,))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('DELETE FROM {table_name} WHERE key1 = ?'.format(table_name=table_name), (name,))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1554,
+        "cached_tokens": 0,
+        "completion_tokens": 967,
+        "reasoning_tokens": 975,
+        "cost": 0.000450675
+      },
+      "final_code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('DELETE FROM {table_name} WHERE key1 = ?'.format(table_name=table_name), (name,))\n    conn.commit()\n    conn.close()",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name} \n                          (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        if not data:\n            return\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Get column names from the first dictionary\n        columns = [name for name in data[0].keys()]\n\n        # Build placeholders for parameterized query\n        placeholders = ', '.join(['?' for _ in columns])\n\n        # Build column names for INSERT statement\n        column_names = ', '.join(columns)\n\n        # Insert each row\n        for row in data:\n            values = [row[col] for col in columns]\n            cursor.execute(f'INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})', values)\n\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for.\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                        otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        cursor.execute(f'''\n            SELECT id, {key1}, {key2}\n            FROM {table_name}\n            WHERE {key1} = ?\n            ORDER BY id\n        ''', (name,))\n\n        results = cursor.fetchall()\n        conn.close()\n\n        return results if results else None\n\n    def delete_from_database(self, table_name, name):\n        \"\"\"\n        Delete rows from the specified table in the database with a matching name.\n        :param table_name: str, the name of the table to delete rows from.\n        :param name: str, the name to match for deletion.\n        >>> db.delete_from_database('user', 'John')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'DELETE FROM {table_name} WHERE key1 = ?', (name,))\n        conn.commit()\n        conn.close()\n",
+  "source": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name} \n                          (id INTEGER PRIMARY KEY, {key1} TEXT, {key2} INTEGER)''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        if not data or not data[0]:\n            return\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Ensure all rows have the same keys\n        unique_keys = set(data[0].keys())\n        for row in data[1:]:\n            if set(row.keys()) != unique_keys:\n                raise ValueError(\"All rows must have the same set of keys\")\n\n        # Build the INSERT statement with placeholders\n        columns = ', '.join(sorted(unique_keys))\n        placeholders = ', '.join(['?' for _ in unique_keys])\n\n        # Execute insert for each row\n        for row in data:\n            values = [row[key] for key in sorted(unique_keys)]\n            cursor.execute(f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})', values)\n\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for.\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                        otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Use the key1 column for name, assuming key1 is TEXT (typically 'name')\n        # Using explicit column names based on create_table convention\n        cursor.execute(f'SELECT id, key1, key2 FROM `{table_name}` WHERE key1 = ?', (name,))\n\n        results = cursor.fetchall()\n        conn.close()\n\n        return results if results else None\n\n    def delete_from_database(self, table_name, name):\n        \"\"\"\n        Delete rows from the specified table in the database with a matching name.\n        :param table_name: str, the name of the table to delete rows from.\n        :param name: str, the name to match for deletion.\n        >>> db.delete_from_database('user', 'John')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('DELETE FROM {table_name} WHERE key1 = ?'.format(table_name=table_name), (name,))\n        conn.commit()\n        conn.close()\n"
+}

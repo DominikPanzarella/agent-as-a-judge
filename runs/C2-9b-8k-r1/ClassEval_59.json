@@ -1,0 +1,222 @@
+{
+  "task_id": "ClassEval_59",
+  "class_name": "MovieBookingSystem",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "add_movie",
+      "first": {
+        "code": "```python\ndef add_movie(self, name, price, start_time, end_time, n):\n    \"\"\"\n    Add a new movie into self.movies\n    :param name: str, movie name\n    :param price: float, price for one ticket\n    :param start_time: str\n    :param end_time: str\n    :param n: int, the size of seats(n*n)\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.movies\n    [{'name': 'Batman', 'price': 49.9, 'start_time': datetime.datetime(1900, 1, 1, 17, 5), 'end_time': datetime.datetime(1900, 1, 1, 19, 25),\n    'seats': array([[0., 0., 0.],\n        [0., 0., 0.],\n        [0., 0., 0.]])}]\n    \"\"\"\n    start_hour, start_minute = map(int, start_time.split(':'))\n    end_hour, end_minute = map(int, end_time.split(':'))\n    start_time_dt = datetime(1900, 1, 1, start_hour, start_minute)\n    end_time_dt = datetime(19",
+        "valid": false,
+        "reply": "```python\ndef add_movie(self, name, price, start_time, end_time, n):\n    \"\"\"\n    Add a new movie into self.movies\n    :param name: str, movie name\n    :param price: float, price for one ticket\n    :param start_time: str\n    :param end_time: str\n    :param n: int, the size of seats(n*n)\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.movies\n    [{'name': 'Batman', 'price': 49.9, 'start_time': datetime.datetime(1900, 1, 1, 17, 5), 'end_time': datetime.datetime(1900, 1, 1, 19, 25),\n    'seats': array([[0., 0., 0.],\n        [0., 0., 0.],\n        [0., 0., 0.]])}]\n    \"\"\"\n    start_hour, start_minute = map(int, start_time.split(':'))\n    end_hour, end_minute = map(int, end_time.split(':'))\n    start_time_dt = datetime(1900, 1, 1, start_hour, start_minute)\n    end_time_dt = datetime(19",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 907,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 6613,
+        "cost": 0.000336489
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "book_ticket",
+      "first": {
+        "code": "def book_ticket(self, name, seats_to_book):\n    \"\"\"\n    Book tickets for a movie. Change the seats value in self.movies if book successfully.\n    :param name: str, movie name\n    :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n    :return: str, booking status message. \"Movie not found.\" for no such movie.\n            \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n    'Booking success.'\n    >>> system.book_ticket('Batman', [(0, 0)])\n    'Booking failed.'\n    >>> system.book_ticket('batman', [(0, 0)])\n    'Movie not found.'\n    \"\"\"\n    # Find the movie\n    movie = None\n    for m in self.movies:\n        if m['name'] == name:\n            movie = m\n            break\n\n    if movie is None:\n        return 'Movie not found.'\n\n    try:\n        seats_array = movie['seats']\n\n        # Validate all seats first before making changes\n        for row, col in seats_to_book:\n            if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                return 'Booking failed.'\n            if seats_array[row, col] != 0:\n                return 'Booking failed.'\n\n        # Mark seats as booked (use 1 to indicate occupied)\n        for row, col in seats_to_book:\n            seats_array[row, col] = 1\n\n        return 'Booking success.'\n\n    except Exception:\n        return 'Booking failed.'",
+        "valid": true,
+        "reply": "```python\n    def book_ticket(self, name, seats_to_book):\n        \"\"\"\n        Book tickets for a movie. Change the seats value in self.movies if book successfully.\n        :param name: str, movie name\n        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n        :return: str, booking status message. \"Movie not found.\" for no such movie.\n                \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n        'Booking success.'\n        >>> system.book_ticket('Batman', [(0, 0)])\n        'Booking failed.'\n        >>> system.book_ticket('batman', [(0, 0)])\n        'Movie not found.'\n        \"\"\"\n        # Find the movie\n        movie = None\n        for m in self.movies:\n            if m['name'] == name:\n                movie = m\n                break\n        \n        if movie is None:\n            return 'Movie not found.'\n        \n        try:\n            seats_array = movie['seats']\n            \n            # Validate all seats first before making changes\n            for row, col in seats_to_book:\n                if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                    return 'Booking failed.'\n                if seats_array[row, col] != 0:\n                    return 'Booking failed.'\n            \n            # Mark seats as booked (use 1 to indicate occupied)\n            for row, col in seats_to_book:\n                seats_array[row, col] = 1\n            \n            return 'Booking success.'\n        \n        except Exception:\n            return 'Booking failed.'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 907,
+        "cached_tokens": 0,
+        "completion_tokens": 1223,
+        "reasoning_tokens": 883,
+        "cost": 7.2186e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method validates every requested seat before booking, so duplicate coordinates such as `[(0, 0), (0, 0)]` pass validation and return success while reserving only one seat. Reject duplicate coordinates before marking seats, or otherwise ensure each requested seat is distinct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method validates every requested seat before booking, so duplicate coordinates such as `[(0, 0), (0, 0)]` pass validation and return success while reserving only one seat. Reject duplicate coordinates before marking seats, or otherwise ensure each requested seat is distinct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1355,
+            "cached_tokens": 0,
+            "completion_tokens": 294,
+            "reasoning_tokens": 219,
+            "cost": 0.0002825
+          }
+        ],
+        "prompt_tokens": 1355,
+        "cached_tokens": 0,
+        "completion_tokens": 294,
+        "reasoning_tokens": 219,
+        "cost": 0.0002825
+      },
+      "revision": {
+        "code": "def book_ticket(self, name, seats_to_book):\n    \"\"\"\n    Book tickets for a movie. Change the seats value in self.movies if book successfully.\n    :param name: str, movie name\n    :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n    :return: str, booking status message. \"Movie not found.\" for no such movie.\n            \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n    'Booking success.'\n    >>> system.book_ticket('Batman', [(0, 0)])\n    'Booking failed.'\n    >>> system.book_ticket('batman', [(0, 0)])\n    'Movie not found.'\n    \"\"\"\n    # Find the movie\n    movie = None\n    for m in self.movies:\n        if m['name'] == name:\n            movie = m\n            break\n\n    if movie is None:\n        return 'Movie not found.'\n\n    try:\n        seats_array = movie['seats']\n\n        # Check for duplicate seats in request\n        seen_seats = set()\n        for row, col in seats_to_book:\n            seat_tuple = (row, col)\n            if seat_tuple in seen_seats:\n                return 'Booking failed.'\n            seen_seats.add(seat_tuple)\n\n        # Validate all seats first before making changes\n        for row, col in seats_to_book:\n            if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                return 'Booking failed.'\n            if seats_array[row, col] != 0:\n                return 'Booking failed.'\n\n        # Mark seats as booked (use 1 to indicate occupied)\n        for row, col in seats_to_book:\n            seats_array[row, col] = 1\n\n        return 'Booking success.'\n\n    except Exception:\n        return 'Booking failed.'",
+        "valid": true,
+        "reply": "```python\n    def book_ticket(self, name, seats_to_book):\n        \"\"\"\n        Book tickets for a movie. Change the seats value in self.movies if book successfully.\n        :param name: str, movie name\n        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n        :return: str, booking status message. \"Movie not found.\" for no such movie.\n                \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n        'Booking success.'\n        >>> system.book_ticket('Batman', [(0, 0)])\n        'Booking failed.'\n        >>> system.book_ticket('batman', [(0, 0)])\n        'Movie not found.'\n        \"\"\"\n        # Find the movie\n        movie = None\n        for m in self.movies:\n            if m['name'] == name:\n                movie = m\n                break\n        \n        if movie is None:\n            return 'Movie not found.'\n        \n        try:\n            seats_array = movie['seats']\n            \n            # Check for duplicate seats in request\n            seen_seats = set()\n            for row, col in seats_to_book:\n                seat_tuple = (row, col)\n                if seat_tuple in seen_seats:\n                    return 'Booking failed.'\n                seen_seats.add(seat_tuple)\n            \n            # Validate all seats first before making changes\n            for row, col in seats_to_book:\n                if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                    return 'Booking failed.'\n                if seats_array[row, col] != 0:\n                    return 'Booking failed.'\n            \n            # Mark seats as booked (use 1 to indicate occupied)\n            for row, col in seats_to_book:\n                seats_array[row, col] = 1\n            \n            return 'Booking success.'\n        \n        except Exception:\n            return 'Booking failed.'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1431,
+        "cached_tokens": 0,
+        "completion_tokens": 585,
+        "reasoning_tokens": 104,
+        "cost": 6.1452e-05
+      },
+      "final_code": "def book_ticket(self, name, seats_to_book):\n    \"\"\"\n    Book tickets for a movie. Change the seats value in self.movies if book successfully.\n    :param name: str, movie name\n    :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n    :return: str, booking status message. \"Movie not found.\" for no such movie.\n            \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n    'Booking success.'\n    >>> system.book_ticket('Batman', [(0, 0)])\n    'Booking failed.'\n    >>> system.book_ticket('batman', [(0, 0)])\n    'Movie not found.'\n    \"\"\"\n    # Find the movie\n    movie = None\n    for m in self.movies:\n        if m['name'] == name:\n            movie = m\n            break\n\n    if movie is None:\n        return 'Movie not found.'\n\n    try:\n        seats_array = movie['seats']\n\n        # Check for duplicate seats in request\n        seen_seats = set()\n        for row, col in seats_to_book:\n            seat_tuple = (row, col)\n            if seat_tuple in seen_seats:\n                return 'Booking failed.'\n            seen_seats.add(seat_tuple)\n\n        # Validate all seats first before making changes\n        for row, col in seats_to_book:\n            if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                return 'Booking failed.'\n            if seats_array[row, col] != 0:\n                return 'Booking failed.'\n\n        # Mark seats as booked (use 1 to indicate occupied)\n        for row, col in seats_to_book:\n            seats_array[row, col] = 1\n\n        return 'Booking success.'\n\n    except Exception:\n        return 'Booking failed.'",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "available_movies",
+      "first": {
+        "code": "def available_movies(self, start_time, end_time):\n    \"\"\"\n    Get a list of available movies within the specified time range\n    :param start_time: str, start time in HH:MM format\n    :param end_time: str, end time in HH:MM format\n    :return: list of str, names of available movies\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.available_movies('12:00', '22:00')\n    ['Batman']\n    \"\"\"\n    from datetime import datetime\n\n    # Parse the query time strings to datetime objects\n    # Use today's date as the reference date\n    ref_date = datetime.now().date()\n\n    try:\n        start_datetime = datetime.combine(ref_date, \n                                         datetime.strptime(start_time, '%H:%M').time())\n        end_datetime = datetime.combine(ref_date, \n                                        datetime.strptime(end_time, '%H:%M').time())\n    except ValueError:\n        return []\n\n    # Find movies within the time range\n    available = []\n    for movie in self.movies:\n        movie_start = movie['start_time']\n        movie_end = movie['end_time']\n\n        # Check if movie time range is within query time range\n        if start_datetime <= movie_start and movie_end <= end_datetime:\n            available.append(movie['name'])\n\n    return available",
+        "valid": true,
+        "reply": "```python\ndef available_movies(self, start_time, end_time):\n    \"\"\"\n    Get a list of available movies within the specified time range\n    :param start_time: str, start time in HH:MM format\n    :param end_time: str, end time in HH:MM format\n    :return: list of str, names of available movies\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.available_movies('12:00', '22:00')\n    ['Batman']\n    \"\"\"\n    from datetime import datetime\n    \n    # Parse the query time strings to datetime objects\n    # Use today's date as the reference date\n    ref_date = datetime.now().date()\n    \n    try:\n        start_datetime = datetime.combine(ref_date, \n                                         datetime.strptime(start_time, '%H:%M').time())\n        end_datetime = datetime.combine(ref_date, \n                                        datetime.strptime(end_time, '%H:%M').time())\n    except ValueError:\n        return []\n    \n    # Find movies within the time range\n    available = []\n    for movie in self.movies:\n        movie_start = movie['start_time']\n        movie_end = movie['end_time']\n        \n        # Check if movie time range is within query time range\n        if start_datetime <= movie_start and movie_end <= end_datetime:\n            available.append(movie['name'])\n    \n    return available\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1403,
+        "cached_tokens": 0,
+        "completion_tokens": 2138,
+        "reasoning_tokens": 1922,
+        "cost": 0.000121263
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The query times use today\u2019s date, while the movie times shown in the class example use `datetime` values dated 1900, so the comparisons fail and the documented example returns an empty list. Compare the times consistently (for example, by comparing their time components) or construct both sides with the same reference date.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The query times use today\u2019s date, while the movie times shown in the class example use `datetime` values dated 1900, so the comparisons fail and the documented example returns an empty list. Compare the times consistently (for example, by comparing their time components) or construct both sides with the same reference date.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1712,
+            "cached_tokens": 0,
+            "completion_tokens": 280,
+            "reasoning_tokens": 197,
+            "cost": 0.00031120000000000003
+          }
+        ],
+        "prompt_tokens": 1712,
+        "cached_tokens": 0,
+        "completion_tokens": 280,
+        "reasoning_tokens": 197,
+        "cost": 0.00031120000000000003
+      },
+      "revision": {
+        "code": "def available_movies(self, start_time, end_time):\n    \"\"\"\n    Get a list of available movies within the specified time range\n    :param start_time: str, start time in HH:MM format\n    :param end_time: str, end time in HH:MM format\n    :return: list of str, names of available movies\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.available_movies('12:00', '22:00')\n    ['Batman']\n    \"\"\"\n    # Parse time strings to minutes since midnight for consistent comparison\n    def parse_time_to_minutes(time_str):\n        h, m = map(int, time_str.split(':'))\n        return h * 60 + m\n\n    query_start = parse_time_to_minutes(start_time)\n    query_end = parse_time_to_minutes(end_time)\n\n    available = []\n    for movie in self.movies:\n        # Extract time components from movie's datetime objects\n        movie_start_h = movie['start_time'].hour\n        movie_start_m = movie['start_time'].minute\n        movie_start_total = movie_start_h * 60 + movie_start_m\n\n        movie_end_h = movie['end_time'].hour\n        movie_end_m = movie['end_time'].minute\n        movie_end_total = movie_end_h * 60 + movie_end_m\n\n        # Check if movie time range is within query time range\n        if query_start <= movie_start_total and movie_end_total <= query_end:\n            available.append(movie['name'])\n\n    return available",
+        "valid": true,
+        "reply": "```python\ndef available_movies(self, start_time, end_time):\n    \"\"\"\n    Get a list of available movies within the specified time range\n    :param start_time: str, start time in HH:MM format\n    :param end_time: str, end time in HH:MM format\n    :return: list of str, names of available movies\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.available_movies('12:00', '22:00')\n    ['Batman']\n    \"\"\"\n    # Parse time strings to minutes since midnight for consistent comparison\n    def parse_time_to_minutes(time_str):\n        h, m = map(int, time_str.split(':'))\n        return h * 60 + m\n    \n    query_start = parse_time_to_minutes(start_time)\n    query_end = parse_time_to_minutes(end_time)\n    \n    available = []\n    for movie in self.movies:\n        # Extract time components from movie's datetime objects\n        movie_start_h = movie['start_time'].hour\n        movie_start_m = movie['start_time'].minute\n        movie_start_total = movie_start_h * 60 + movie_start_m\n        \n        movie_end_h = movie['end_time'].hour\n        movie_end_m = movie['end_time'].minute\n        movie_end_total = movie_end_h * 60 + movie_end_m\n        \n        # Check if movie time range is within query time range\n        if query_start <= movie_start_total and movie_end_total <= query_end:\n            available.append(movie['name'])\n    \n    return available\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1831,
+        "cached_tokens": 0,
+        "completion_tokens": 1092,
+        "reasoning_tokens": 707,
+        "cost": 9.2025e-05
+      },
+      "final_code": "def available_movies(self, start_time, end_time):\n    \"\"\"\n    Get a list of available movies within the specified time range\n    :param start_time: str, start time in HH:MM format\n    :param end_time: str, end time in HH:MM format\n    :return: list of str, names of available movies\n    >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n    >>> system.available_movies('12:00', '22:00')\n    ['Batman']\n    \"\"\"\n    # Parse time strings to minutes since midnight for consistent comparison\n    def parse_time_to_minutes(time_str):\n        h, m = map(int, time_str.split(':'))\n        return h * 60 + m\n\n    query_start = parse_time_to_minutes(start_time)\n    query_end = parse_time_to_minutes(end_time)\n\n    available = []\n    for movie in self.movies:\n        # Extract time components from movie's datetime objects\n        movie_start_h = movie['start_time'].hour\n        movie_start_m = movie['start_time'].minute\n        movie_start_total = movie_start_h * 60 + movie_start_m\n\n        movie_end_h = movie['end_time'].hour\n        movie_end_m = movie['end_time'].minute\n        movie_end_total = movie_end_h * 60 + movie_end_m\n\n        # Check if movie time range is within query time range\n        if query_start <= movie_start_total and movie_end_total <= query_end:\n            available.append(movie['name'])\n\n    return available",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "MovieBookingSystemTestAddMovie": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "MovieBookingSystemTestBookTicket": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 1,
+      "passed": false
+    },
+    "MovieBookingSystemTestAvailableMovies": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "MovieBookingSystemTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "MovieBookingSystemTestAddMovie": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "MovieBookingSystemTestBookTicket": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 1,
+      "passed": false
+    },
+    "MovieBookingSystemTestAvailableMovies": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "MovieBookingSystemTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "from datetime import datetime\nimport numpy as np\n\nclass MovieBookingSystem: \n    def __init__(self):\n        \"\"\"\n        Initialize movies contains the information about movies\n        >>> system.movies\n        [{'name': 'Batman', 'price': 49.9, 'start_time': datetime.datetime(1900, 1, 1, 17, 5), 'end_time': datetime.datetime(1900, 1, 1, 19, 25),\n        'seats': array([[0., 0., 0.],\n            [0., 0., 0.],\n            [0., 0., 0.]])}]\n        \"\"\"\n        self.movies = []\n\n    def add_movie(self, name, price, start_time, end_time, n):\n        return None\n\n    def book_ticket(self, name, seats_to_book):\n        \"\"\"\n        Book tickets for a movie. Change the seats value in self.movies if book successfully.\n        :param name: str, movie name\n        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n        :return: str, booking status message. \"Movie not found.\" for no such movie.\n                \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n        'Booking success.'\n        >>> system.book_ticket('Batman', [(0, 0)])\n        'Booking failed.'\n        >>> system.book_ticket('batman', [(0, 0)])\n        'Movie not found.'\n        \"\"\"\n        # Find the movie\n        movie = None\n        for m in self.movies:\n            if m['name'] == name:\n                movie = m\n                break\n\n        if movie is None:\n            return 'Movie not found.'\n\n        try:\n            seats_array = movie['seats']\n\n            # Validate all seats first before making changes\n            for row, col in seats_to_book:\n                if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                    return 'Booking failed.'\n                if seats_array[row, col] != 0:\n                    return 'Booking failed.'\n\n            # Mark seats as booked (use 1 to indicate occupied)\n            for row, col in seats_to_book:\n                seats_array[row, col] = 1\n\n            return 'Booking success.'\n\n        except Exception:\n            return 'Booking failed.'\n\n    def available_movies(self, start_time, end_time):\n        \"\"\"\n        Get a list of available movies within the specified time range\n        :param start_time: str, start time in HH:MM format\n        :param end_time: str, end time in HH:MM format\n        :return: list of str, names of available movies\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.available_movies('12:00', '22:00')\n        ['Batman']\n        \"\"\"\n        from datetime import datetime\n\n        # Parse the query time strings to datetime objects\n        # Use today's date as the reference date\n        ref_date = datetime.now().date()\n\n        try:\n            start_datetime = datetime.combine(ref_date, \n                                             datetime.strptime(start_time, '%H:%M').time())\n            end_datetime = datetime.combine(ref_date, \n                                            datetime.strptime(end_time, '%H:%M').time())\n        except ValueError:\n            return []\n\n        # Find movies within the time range\n        available = []\n        for movie in self.movies:\n            movie_start = movie['start_time']\n            movie_end = movie['end_time']\n\n            # Check if movie time range is within query time range\n            if start_datetime <= movie_start and movie_end <= end_datetime:\n                available.append(movie['name'])\n\n        return available\n",
+  "source": "from datetime import datetime\nimport numpy as np\n\nclass MovieBookingSystem: \n    def __init__(self):\n        \"\"\"\n        Initialize movies contains the information about movies\n        >>> system.movies\n        [{'name': 'Batman', 'price': 49.9, 'start_time': datetime.datetime(1900, 1, 1, 17, 5), 'end_time': datetime.datetime(1900, 1, 1, 19, 25),\n        'seats': array([[0., 0., 0.],\n            [0., 0., 0.],\n            [0., 0., 0.]])}]\n        \"\"\"\n        self.movies = []\n\n    def add_movie(self, name, price, start_time, end_time, n):\n        return None\n\n    def book_ticket(self, name, seats_to_book):\n        \"\"\"\n        Book tickets for a movie. Change the seats value in self.movies if book successfully.\n        :param name: str, movie name\n        :param seats_to_book: list of tuples, representing seats to book [(row1, col1), (row2, col2), ...]\n        :return: str, booking status message. \"Movie not found.\" for no such movie.\n                \"Booking success.\" for successfully booking, or \"Booking failed.\" otherwise\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.book_ticket('Batman', [(0, 0), (0, 1)])\n        'Booking success.'\n        >>> system.book_ticket('Batman', [(0, 0)])\n        'Booking failed.'\n        >>> system.book_ticket('batman', [(0, 0)])\n        'Movie not found.'\n        \"\"\"\n        # Find the movie\n        movie = None\n        for m in self.movies:\n            if m['name'] == name:\n                movie = m\n                break\n\n        if movie is None:\n            return 'Movie not found.'\n\n        try:\n            seats_array = movie['seats']\n\n            # Check for duplicate seats in request\n            seen_seats = set()\n            for row, col in seats_to_book:\n                seat_tuple = (row, col)\n                if seat_tuple in seen_seats:\n                    return 'Booking failed.'\n                seen_seats.add(seat_tuple)\n\n            # Validate all seats first before making changes\n            for row, col in seats_to_book:\n                if row < 0 or row >= seats_array.shape[0] or col < 0 or col >= seats_array.shape[1]:\n                    return 'Booking failed.'\n                if seats_array[row, col] != 0:\n                    return 'Booking failed.'\n\n            # Mark seats as booked (use 1 to indicate occupied)\n            for row, col in seats_to_book:\n                seats_array[row, col] = 1\n\n            return 'Booking success.'\n\n        except Exception:\n            return 'Booking failed.'\n\n    def available_movies(self, start_time, end_time):\n        \"\"\"\n        Get a list of available movies within the specified time range\n        :param start_time: str, start time in HH:MM format\n        :param end_time: str, end time in HH:MM format\n        :return: list of str, names of available movies\n        >>> system.add_movie('Batman', 49.9, '17:05', '19:25', 3)\n        >>> system.available_movies('12:00', '22:00')\n        ['Batman']\n        \"\"\"\n        # Parse time strings to minutes since midnight for consistent comparison\n        def parse_time_to_minutes(time_str):\n            h, m = map(int, time_str.split(':'))\n            return h * 60 + m\n\n        query_start = parse_time_to_minutes(start_time)\n        query_end = parse_time_to_minutes(end_time)\n\n        available = []\n        for movie in self.movies:\n            # Extract time components from movie's datetime objects\n            movie_start_h = movie['start_time'].hour\n            movie_start_m = movie['start_time'].minute\n            movie_start_total = movie_start_h * 60 + movie_start_m\n\n            movie_end_h = movie['end_time'].hour\n            movie_end_m = movie['end_time'].minute\n            movie_end_total = movie_end_h * 60 + movie_end_m\n\n            # Check if movie time range is within query time range\n            if query_start <= movie_start_total and movie_end_total <= query_end:\n                available.append(movie['name'])\n\n        return available\n"
+}

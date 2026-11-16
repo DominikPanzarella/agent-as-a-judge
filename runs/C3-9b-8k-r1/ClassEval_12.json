@@ -1,0 +1,254 @@
+{
+  "task_id": "ClassEval_12",
+  "class_name": "BlackjackGame",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "create_deck",
+      "first": {
+        "code": "def create_deck(self):\n    \"\"\"\n    Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n    :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n    >>> black_jack_game = BlackjackGame()\n    >>> black_jack_game.create_deck()\n    ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',\n    '6C', '7C', '3D', '10C', 'AD', '4C', '5D', 'AH', '2D', 'QC', 'KH', '9C', '9H',\n    '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',\n    '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']\n    \"\"\"\n    suits = ['S', 'H', 'D', 'C']\n    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n    deck = []\n    for suit in suits:\n        for rank in ranks:\n            deck.append(f'{rank}{suit}')\n    random.shuffle(deck)\n    return deck",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_deck(self):\n    \"\"\"\n    Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n    :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n    >>> black_jack_game = BlackjackGame()\n    >>> black_jack_game.create_deck()\n    ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',\n    '6C', '7C', '3D', '10C', 'AD', '4C', '5D', 'AH', '2D', 'QC', 'KH', '9C', '9H',\n    '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',\n    '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']\n    \"\"\"\n    suits = ['S', 'H', 'D', 'C']\n    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n    deck = []\n    for suit in suits:\n        for rank in ranks:\n            deck.append(f'{rank}{suit}')\n    random.shuffle(deck)\n    return deck\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 984,
+        "cached_tokens": 0,
+        "completion_tokens": 944,
+        "reasoning_tokens": 368,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method correctly builds and shuffles 52 unique standard cards without Jokers, but the exact-output doctest is incompatible with `random.shuffle` and will almost always fail. Make the example assert properties of the deck instead, or seed/mock the shuffle for that test.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method correctly builds and shuffles 52 unique standard cards without Jokers, but the exact-output doctest is incompatible with `random.shuffle` and will almost always fail. Make the example assert properties of the deck instead, or seed/mock the shuffle for that test.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1437,
+            "cached_tokens": 0,
+            "completion_tokens": 436,
+            "reasoning_tokens": 363,
+            "cost": 0.00036170000000000006
+          }
+        ],
+        "prompt_tokens": 1437,
+        "cached_tokens": 0,
+        "completion_tokens": 436,
+        "reasoning_tokens": 363,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def create_deck(self):\n    \"\"\"\n    Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n    :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n    >>> black_jack_game = BlackjackGame()\n    >>> deck = black_jack_game.create_deck()\n    >>> len(deck) == 52\n    True\n    >>> all(len(card) == 2 or card.startswith('10') and card[1] in ['S', 'H', 'D', 'C'] for card in deck)\n    True\n    >>> all(card[1] in ['S', 'H', 'D', 'C'] and card[0] in ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'] for card in deck)\n    True\n    \"\"\"\n    suits = ['S', 'H', 'D', 'C']\n    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n    deck = []\n    for suit in suits:\n        for rank in ranks:\n            deck.append(f'{rank}{suit}')\n    random.shuffle(deck)\n    return deck",
+        "valid": true,
+        "reply": "```python\ndef create_deck(self):\n    \"\"\"\n    Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n    :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n    >>> black_jack_game = BlackjackGame()\n    >>> deck = black_jack_game.create_deck()\n    >>> len(deck) == 52\n    True\n    >>> all(len(card) == 2 or card.startswith('10') and card[1] in ['S', 'H', 'D', 'C'] for card in deck)\n    True\n    >>> all(card[1] in ['S', 'H', 'D', 'C'] and card[0] in ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'] for card in deck)\n    True\n    \"\"\"\n    suits = ['S', 'H', 'D', 'C']\n    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n    deck = []\n    for suit in suits:\n        for rank in ranks:\n            deck.append(f'{rank}{suit}')\n    random.shuffle(deck)\n    return deck\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1477,
+        "cached_tokens": 0,
+        "completion_tokens": 728,
+        "reasoning_tokens": 353,
+        "cost": 0.000190855
+      },
+      "final_code": "def create_deck(self):\n    \"\"\"\n    Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n    :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n    >>> black_jack_game = BlackjackGame()\n    >>> deck = black_jack_game.create_deck()\n    >>> len(deck) == 52\n    True\n    >>> all(len(card) == 2 or card.startswith('10') and card[1] in ['S', 'H', 'D', 'C'] for card in deck)\n    True\n    >>> all(card[1] in ['S', 'H', 'D', 'C'] and card[0] in ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'] for card in deck)\n    True\n    \"\"\"\n    suits = ['S', 'H', 'D', 'C']\n    ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n    deck = []\n    for suit in suits:\n        for rank in ranks:\n            deck.append(f'{rank}{suit}')\n    random.shuffle(deck)\n    return deck",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "calculate_hand_value",
+      "first": {
+        "code": "def calculate_hand_value(self, hand):\n    \"\"\"\n    Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.\n    If the card is a digit, its value is added to the total hand value.\n    Value of J, Q, or K is 10, while Aces are worth 11.\n    If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,\n    until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.\n    :param hand: list\n    :return: the value of the poker cards stored in hand list, a number.\n    >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])\n    40\n    \"\"\"\n    def get_card_value(card):\n        rank = card[:-1]\n        if rank.isdigit():\n            return int(rank)\n        elif rank in ['J', 'Q', 'K']:\n            return 10\n        else:  # 'A'\n            return 11\n\n    hand_value = 0\n    aces_count = 0\n\n    for card in hand:\n        value = get_card_value(card)\n        if value == 11:\n            aces_count += 1\n        hand_value += value\n\n    while hand_value > 21 and aces_count > 0:\n        hand_value -= 10\n        aces_count -= 1\n\n    return hand_value",
+        "valid": true,
+        "reply": "```python\ndef calculate_hand_value(self, hand):\n    \"\"\"\n    Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.\n    If the card is a digit, its value is added to the total hand value.\n    Value of J, Q, or K is 10, while Aces are worth 11.\n    If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,\n    until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.\n    :param hand: list\n    :return: the value of the poker cards stored in hand list, a number.\n    >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])\n    40\n    \"\"\"\n    def get_card_value(card):\n        rank = card[:-1]\n        if rank.isdigit():\n            return int(rank)\n        elif rank in ['J', 'Q', 'K']:\n            return 10\n        else:  # 'A'\n            return 11\n    \n    hand_value = 0\n    aces_count = 0\n    \n    for card in hand:\n        value = get_card_value(card)\n        if value == 11:\n            aces_count += 1\n        hand_value += value\n    \n    while hand_value > 21 and aces_count > 0:\n        hand_value -= 10\n        aces_count -= 1\n    \n    return hand_value\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1318,
+        "cached_tokens": 0,
+        "completion_tokens": 1034,
+        "reasoning_tokens": 537,
+        "cost": 0.00021259
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly assigns numeric cards their rank value, face cards 10, and Aces 11, then reduces Aces by 10 as needed to keep the total at or below 21. It also returns 40 for the documented example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly assigns numeric cards their rank value, face cards 10, and Aces 11, then reduces Aces by 10 as needed to keep the total at or below 21. It also returns 40 for the documented example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1796,
+            "cached_tokens": 0,
+            "completion_tokens": 182,
+            "reasoning_tokens": 114,
+            "cost": 0.0002706
+          }
+        ],
+        "prompt_tokens": 1796,
+        "cached_tokens": 0,
+        "completion_tokens": 182,
+        "reasoning_tokens": 114,
+        "cost": 0.0002706
+      },
+      "revision": null,
+      "final_code": "def calculate_hand_value(self, hand):\n    \"\"\"\n    Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.\n    If the card is a digit, its value is added to the total hand value.\n    Value of J, Q, or K is 10, while Aces are worth 11.\n    If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,\n    until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.\n    :param hand: list\n    :return: the value of the poker cards stored in hand list, a number.\n    >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])\n    40\n    \"\"\"\n    def get_card_value(card):\n        rank = card[:-1]\n        if rank.isdigit():\n            return int(rank)\n        elif rank in ['J', 'Q', 'K']:\n            return 10\n        else:  # 'A'\n            return 11\n\n    hand_value = 0\n    aces_count = 0\n\n    for card in hand:\n        value = get_card_value(card)\n        if value == 11:\n            aces_count += 1\n        hand_value += value\n\n    while hand_value > 21 and aces_count > 0:\n        hand_value -= 10\n        aces_count -= 1\n\n    return hand_value",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "check_winner",
+      "first": {
+        "code": "def check_winner(self, player_hand, dealer_hand):\n    \"\"\"\n    Determines the winner of a game by comparing the hand values of the player and dealer.\n    rule:\n    If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n    Otherwise, the winner is the one with the lower hand value.\n    :param player_hand: list\n    :param dealer_hand: list\n    :return: the result of the game, only two certain str: 'Dealer wins' or 'Player wins'\n    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n    'Player wins'\n    \"\"\"\n    player_value = self.calculate_hand_value(player_hand)\n    dealer_value = self.calculate_hand_value(dealer_hand)\n\n    if player_value > 21 and dealer_value > 21:\n        if player_value < dealer_value:\n            return 'Player wins'\n        else:\n            return 'Dealer wins'\n    elif player_value > 21:\n        return 'Dealer wins'\n    elif dealer_value > 21:\n        return 'Player wins'\n    else:\n        if player_value > dealer_value:\n            return 'Player wins'\n        else:\n            return 'Dealer wins'",
+        "valid": true,
+        "reply": "```python\ndef check_winner(self, player_hand, dealer_hand):\n    \"\"\"\n    Determines the winner of a game by comparing the hand values of the player and dealer.\n    rule:\n    If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n    Otherwise, the winner is the one with the lower hand value.\n    :param player_hand: list\n    :param dealer_hand: list\n    :return: the result of the game, only two certain str: 'Dealer wins' or 'Player wins'\n    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n    'Player wins'\n    \"\"\"\n    player_value = self.calculate_hand_value(player_hand)\n    dealer_value = self.calculate_hand_value(dealer_hand)\n    \n    if player_value > 21 and dealer_value > 21:\n        if player_value < dealer_value:\n            return 'Player wins'\n        else:\n            return 'Dealer wins'\n    elif player_value > 21:\n        return 'Dealer wins'\n    elif dealer_value > 21:\n        return 'Player wins'\n    else:\n        if player_value > dealer_value:\n            return 'Player wins'\n        else:\n            return 'Dealer wins'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1671,
+        "cached_tokens": 0,
+        "completion_tokens": 1019,
+        "reasoning_tokens": 689,
+        "cost": 0.000237415
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When the hand values are equal, the rules identify no winner, but this method always returns 'Dealer wins' (both for tied non-bust hands and tied bust hands). Define a tie-break rule in the docstring and implement it, or allow a draw result.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When the hand values are equal, the rules identify no winner, but this method always returns 'Dealer wins' (both for tied non-bust hands and tied bust hands). Define a tie-break rule in the docstring and implement it, or allow a draw result.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2139,
+            "cached_tokens": 0,
+            "completion_tokens": 1164,
+            "reasoning_tokens": 1091,
+            "cost": 0.0007959
+          }
+        ],
+        "prompt_tokens": 2139,
+        "cached_tokens": 0,
+        "completion_tokens": 1164,
+        "reasoning_tokens": 1091,
+        "cost": 0.0007959
+      },
+      "revision": {
+        "code": "def check_winner(self, player_hand, dealer_hand):\n    \"\"\"\n    Determines the winner of a game by comparing the hand values of the player and dealer.\n    rule:\n    If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n    Otherwise, the winner is the one with the lower hand value.\n    :param player_hand: list\n    :param dealer_hand: list\n    :return: the result of the game, possible strings: 'Player wins', 'Dealer wins', or 'Draw'\n             - If either player has a bust (>21) and the other does not, the non-busting player wins\n             - If both bust, the one with lower bust value wins\n             - If both have the same valid hand value (<=21), it's a Draw\n    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n    'Player wins'\n    >>> black_jack_game.check_winner(['AS', '10H', 'AS'], ['AS', '10H'])\n    'Draw'\n    >>> black_jack_game.check_winner(['AS', 'AS', 'AS'], ['AS', 'AS'])\n    'Dealer wins'\n    \"\"\"\n    player_value = self.calculate_hand_value(player_hand)\n    dealer_value = self.calculate_hand_value(dealer_hand)\n\n    # If both busted, compare bust values (lower is better)\n    if player_value > 21 and dealer_value > 21:\n        if player_value < dealer_value:\n            return 'Player wins'\n        elif dealer_value < player_value:\n            return 'Dealer wins'\n        else:\n            return 'Draw'\n\n    # If only player busted, dealer wins\n    if player_value > 21:\n        return 'Dealer wins'\n\n    # If only dealer busted, player wins\n    if dealer_value > 21:\n        return 'Player wins'\n\n    # Neither busted - higher score wins\n    if player_value == dealer_value:\n        return 'Draw'\n\n    if player_value > dealer_value:\n        return 'Player wins'\n\n    return 'Dealer wins'",
+        "valid": true,
+        "reply": "```python\ndef check_winner(self, player_hand, dealer_hand):\n    \"\"\"\n    Determines the winner of a game by comparing the hand values of the player and dealer.\n    rule:\n    If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n    Otherwise, the winner is the one with the lower hand value.\n    :param player_hand: list\n    :param dealer_hand: list\n    :return: the result of the game, possible strings: 'Player wins', 'Dealer wins', or 'Draw'\n             - If either player has a bust (>21) and the other does not, the non-busting player wins\n             - If both bust, the one with lower bust value wins\n             - If both have the same valid hand value (<=21), it's a Draw\n    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n    'Player wins'\n    >>> black_jack_game.check_winner(['AS', '10H', 'AS'], ['AS', '10H'])\n    'Draw'\n    >>> black_jack_game.check_winner(['AS', 'AS', 'AS'], ['AS', 'AS'])\n    'Dealer wins'\n    \"\"\"\n    player_value = self.calculate_hand_value(player_hand)\n    dealer_value = self.calculate_hand_value(dealer_hand)\n    \n    # If both busted, compare bust values (lower is better)\n    if player_value > 21 and dealer_value > 21:\n        if player_value < dealer_value:\n            return 'Player wins'\n        elif dealer_value < player_value:\n            return 'Dealer wins'\n        else:\n            return 'Draw'\n    \n    # If only player busted, dealer wins\n    if player_value > 21:\n        return 'Dealer wins'\n    \n    # If only dealer busted, player wins\n    if dealer_value > 21:\n        return 'Player wins'\n    \n    # Neither busted - higher score wins\n    if player_value == dealer_value:\n        return 'Draw'\n    \n    if player_value > dealer_value:\n        return 'Player wins'\n    \n    return 'Dealer wins'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2085,
+        "cached_tokens": 0,
+        "completion_tokens": 1041,
+        "reasoning_tokens": 586,
+        "cost": 0.000270885
+      },
+      "final_code": "def check_winner(self, player_hand, dealer_hand):\n    \"\"\"\n    Determines the winner of a game by comparing the hand values of the player and dealer.\n    rule:\n    If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n    Otherwise, the winner is the one with the lower hand value.\n    :param player_hand: list\n    :param dealer_hand: list\n    :return: the result of the game, possible strings: 'Player wins', 'Dealer wins', or 'Draw'\n             - If either player has a bust (>21) and the other does not, the non-busting player wins\n             - If both bust, the one with lower bust value wins\n             - If both have the same valid hand value (<=21), it's a Draw\n    >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n    'Player wins'\n    >>> black_jack_game.check_winner(['AS', '10H', 'AS'], ['AS', '10H'])\n    'Draw'\n    >>> black_jack_game.check_winner(['AS', 'AS', 'AS'], ['AS', 'AS'])\n    'Dealer wins'\n    \"\"\"\n    player_value = self.calculate_hand_value(player_hand)\n    dealer_value = self.calculate_hand_value(dealer_hand)\n\n    # If both busted, compare bust values (lower is better)\n    if player_value > 21 and dealer_value > 21:\n        if player_value < dealer_value:\n            return 'Player wins'\n        elif dealer_value < player_value:\n            return 'Dealer wins'\n        else:\n            return 'Draw'\n\n    # If only player busted, dealer wins\n    if player_value > 21:\n        return 'Dealer wins'\n\n    # If only dealer busted, player wins\n    if dealer_value > 21:\n        return 'Player wins'\n\n    # Neither busted - higher score wins\n    if player_value == dealer_value:\n        return 'Draw'\n\n    if player_value > dealer_value:\n        return 'Player wins'\n\n    return 'Dealer wins'",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "BlackjackGameTestCreateDeck": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BlackjackGameTestCalculateHandValue": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BlackjackGameTestCheckWinner": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BlackjackGameTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BlackjackGameTestCreateDeck": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BlackjackGameTestCalculateHandValue": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BlackjackGameTestCheckWinner": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BlackjackGameTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import random\n\nclass BlackjackGame: \n    def __init__(self):\n        \"\"\"\n        Initialize the Blackjack Game with the attribute deck, player_hand and dealer_hand.\n        While initializing deck attribute, call the create_deck method to generate.\n        The deck stores 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].\n        player_hand is a list which stores player's hand cards.\n        dealer_hand is is a list which stores dealer's hand cards.\n        \"\"\"\n        self.deck = self.create_deck()\n        self.player_hand = []\n        self.dealer_hand = []\n\n    def create_deck(self):\n        \"\"\"\n        Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n        :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n        >>> black_jack_game = BlackjackGame()\n        >>> black_jack_game.create_deck()\n        ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',\n        '6C', '7C', '3D', '10C', 'AD', '4C', '5D', 'AH', '2D', 'QC', 'KH', '9C', '9H',\n        '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',\n        '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']\n        \"\"\"\n        suits = ['S', 'H', 'D', 'C']\n        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n        deck = []\n        for suit in suits:\n            for rank in ranks:\n                deck.append(f'{rank}{suit}')\n        random.shuffle(deck)\n        return deck\n\n    def calculate_hand_value(self, hand):\n        \"\"\"\n        Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.\n        If the card is a digit, its value is added to the total hand value.\n        Value of J, Q, or K is 10, while Aces are worth 11.\n        If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,\n        until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.\n        :param hand: list\n        :return: the value of the poker cards stored in hand list, a number.\n        >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])\n        40\n        \"\"\"\n        def get_card_value(card):\n            rank = card[:-1]\n            if rank.isdigit():\n                return int(rank)\n            elif rank in ['J', 'Q', 'K']:\n                return 10\n            else:  # 'A'\n                return 11\n\n        hand_value = 0\n        aces_count = 0\n\n        for card in hand:\n            value = get_card_value(card)\n            if value == 11:\n                aces_count += 1\n            hand_value += value\n\n        while hand_value > 21 and aces_count > 0:\n            hand_value -= 10\n            aces_count -= 1\n\n        return hand_value\n\n    def check_winner(self, player_hand, dealer_hand):\n        \"\"\"\n        Determines the winner of a game by comparing the hand values of the player and dealer.\n        rule:\n        If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n        Otherwise, the winner is the one with the lower hand value.\n        :param player_hand: list\n        :param dealer_hand: list\n        :return: the result of the game, only two certain str: 'Dealer wins' or 'Player wins'\n        >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n        'Player wins'\n        \"\"\"\n        player_value = self.calculate_hand_value(player_hand)\n        dealer_value = self.calculate_hand_value(dealer_hand)\n\n        if player_value > 21 and dealer_value > 21:\n            if player_value < dealer_value:\n                return 'Player wins'\n            else:\n                return 'Dealer wins'\n        elif player_value > 21:\n            return 'Dealer wins'\n        elif dealer_value > 21:\n            return 'Player wins'\n        else:\n            if player_value > dealer_value:\n                return 'Player wins'\n            else:\n                return 'Dealer wins'\n",
+  "source": "import random\n\nclass BlackjackGame: \n    def __init__(self):\n        \"\"\"\n        Initialize the Blackjack Game with the attribute deck, player_hand and dealer_hand.\n        While initializing deck attribute, call the create_deck method to generate.\n        The deck stores 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].\n        player_hand is a list which stores player's hand cards.\n        dealer_hand is is a list which stores dealer's hand cards.\n        \"\"\"\n        self.deck = self.create_deck()\n        self.player_hand = []\n        self.dealer_hand = []\n\n    def create_deck(self):\n        \"\"\"\n        Create a deck of 52 cards, which stores 52 random order poker with the Jokers removed.\n        :return: a list of 52 random order poker with the Jokers removed, format is ['AS', '2S', ...].\n        >>> black_jack_game = BlackjackGame()\n        >>> deck = black_jack_game.create_deck()\n        >>> len(deck) == 52\n        True\n        >>> all(len(card) == 2 or card.startswith('10') and card[1] in ['S', 'H', 'D', 'C'] for card in deck)\n        True\n        >>> all(card[1] in ['S', 'H', 'D', 'C'] and card[0] in ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'] for card in deck)\n        True\n        \"\"\"\n        suits = ['S', 'H', 'D', 'C']\n        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']\n        deck = []\n        for suit in suits:\n            for rank in ranks:\n                deck.append(f'{rank}{suit}')\n        random.shuffle(deck)\n        return deck\n\n    def calculate_hand_value(self, hand):\n        \"\"\"\n        Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.\n        If the card is a digit, its value is added to the total hand value.\n        Value of J, Q, or K is 10, while Aces are worth 11.\n        If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,\n        until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.\n        :param hand: list\n        :return: the value of the poker cards stored in hand list, a number.\n        >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])\n        40\n        \"\"\"\n        def get_card_value(card):\n            rank = card[:-1]\n            if rank.isdigit():\n                return int(rank)\n            elif rank in ['J', 'Q', 'K']:\n                return 10\n            else:  # 'A'\n                return 11\n\n        hand_value = 0\n        aces_count = 0\n\n        for card in hand:\n            value = get_card_value(card)\n            if value == 11:\n                aces_count += 1\n            hand_value += value\n\n        while hand_value > 21 and aces_count > 0:\n            hand_value -= 10\n            aces_count -= 1\n\n        return hand_value\n\n    def check_winner(self, player_hand, dealer_hand):\n        \"\"\"\n        Determines the winner of a game by comparing the hand values of the player and dealer.\n        rule:\n        If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.\n        Otherwise, the winner is the one with the lower hand value.\n        :param player_hand: list\n        :param dealer_hand: list\n        :return: the result of the game, possible strings: 'Player wins', 'Dealer wins', or 'Draw'\n                 - If either player has a bust (>21) and the other does not, the non-busting player wins\n                 - If both bust, the one with lower bust value wins\n                 - If both have the same valid hand value (<=21), it's a Draw\n        >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])\n        'Player wins'\n        >>> black_jack_game.check_winner(['AS', '10H', 'AS'], ['AS', '10H'])\n        'Draw'\n        >>> black_jack_game.check_winner(['AS', 'AS', 'AS'], ['AS', 'AS'])\n        'Dealer wins'\n        \"\"\"\n        player_value = self.calculate_hand_value(player_hand)\n        dealer_value = self.calculate_hand_value(dealer_hand)\n\n        # If both busted, compare bust values (lower is better)\n        if player_value > 21 and dealer_value > 21:\n            if player_value < dealer_value:\n                return 'Player wins'\n            elif dealer_value < player_value:\n                return 'Dealer wins'\n            else:\n                return 'Draw'\n\n        # If only player busted, dealer wins\n        if player_value > 21:\n            return 'Dealer wins'\n\n        # If only dealer busted, player wins\n        if dealer_value > 21:\n            return 'Player wins'\n\n        # Neither busted - higher score wins\n        if player_value == dealer_value:\n            return 'Draw'\n\n        if player_value > dealer_value:\n            return 'Player wins'\n\n        return 'Dealer wins'\n"
+}

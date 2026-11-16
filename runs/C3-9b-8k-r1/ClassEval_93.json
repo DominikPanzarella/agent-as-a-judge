@@ -1,0 +1,329 @@
+{
+  "task_id": "ClassEval_93",
+  "class_name": "VectorUtil",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "similarity",
+      "first": {
+        "code": "@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    norm_2 = np.linalg.norm(vector_2)\n    return dot(vector_1, vector_2) / (norm_1 * norm_2)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    norm_2 = np.linalg.norm(vector_2)\n    return dot(vector_1, vector_2) / (norm_1 * norm_2)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 903,
+        "cached_tokens": 0,
+        "completion_tokens": 946,
+        "reasoning_tokens": 717,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For nonzero, equal-dimensional vectors, this computes the cosine similarity correctly. A zero vector makes the denominator zero and yields `nan` (with a warning); explicitly reject zero-norm inputs or define a documented result for them.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For nonzero, equal-dimensional vectors, this computes the cosine similarity correctly. A zero vector makes the denominator zero and yields `nan` (with a warning); explicitly reject zero-norm inputs or define a documented result for them.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1150,
+            "cached_tokens": 0,
+            "completion_tokens": 375,
+            "reasoning_tokens": 310,
+            "cost": 0.0003025
+          }
+        ],
+        "prompt_tokens": 1150,
+        "cached_tokens": 0,
+        "completion_tokens": 375,
+        "reasoning_tokens": 310,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: float, Cosine similarity between `vector_1` and `vector_2`\n    :raise ValueError: If either vector has zero norm\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    norm_2 = np.linalg.norm(vector_2)\n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n    return dot(vector_1, vector_2) / (norm_1 * norm_2)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: float, Cosine similarity between `vector_1` and `vector_2`\n    :raise ValueError: If either vector has zero norm\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    norm_2 = np.linalg.norm(vector_2)\n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n    return dot(vector_1, vector_2) / (norm_1 * norm_2)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1214,
+        "cached_tokens": 0,
+        "completion_tokens": 929,
+        "reasoning_tokens": 655,
+        "cost": 0.00035365
+      },
+      "final_code": "@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: float, Cosine similarity between `vector_1` and `vector_2`\n    :raise ValueError: If either vector has zero norm\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    norm_2 = np.linalg.norm(vector_2)\n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n    return dot(vector_1, vector_2) / (norm_1 * norm_2)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "cosine_similarities",
+      "first": {
+        "code": "@staticmethod\ndef cosine_similarities(vector_1, vectors_all):\n    \"\"\"\n    Compute cosine similarities between one vector and a set of other vectors.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n    >>> vector1 = np.array([1, 2, 3])\n    >>> vectors_all = [np.array([4, 5, 6]), np.array([7, 8, 9])]\n    >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n    [0.97463185 0.95941195]\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    similarities = []\n    for vector in vectors_all:\n        norm_2 = np.linalg.norm(vector)\n        if norm_1 == 0 or norm_2 == 0:\n            return np.zeros(len(vectors_all))\n        similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n        similarities.append(similarity)\n    return np.array(similarities)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef cosine_similarities(vector_1, vectors_all):\n    \"\"\"\n    Compute cosine similarities between one vector and a set of other vectors.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n    >>> vector1 = np.array([1, 2, 3])\n    >>> vectors_all = [np.array([4, 5, 6]), np.array([7, 8, 9])]\n    >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n    [0.97463185 0.95941195]\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    similarities = []\n    for vector in vectors_all:\n        norm_2 = np.linalg.norm(vector)\n        if norm_1 == 0 or norm_2 == 0:\n            return np.zeros(len(vectors_all))\n        similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n        similarities.append(similarity)\n    return np.array(similarities)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1185,
+        "cached_tokens": 0,
+        "completion_tokens": 883,
+        "reasoning_tokens": 558,
+        "cost": 0.00033925
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If any vector has zero norm, the method returns an all-zero array, discarding valid similarities for the other vectors; for a zero query vector it also returns zeros instead of following `similarity`'s `ValueError` behavior. Raise `ValueError` for zero-norm inputs (or define and apply a consistent per-vector policy) rather than returning zeros for the entire result.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If any vector has zero norm, the method returns an all-zero array, discarding valid similarities for the other vectors; for a zero query vector it also returns zeros instead of following `similarity`'s `ValueError` behavior. Raise `ValueError` for zero-norm inputs (or define and apply a consistent per-vector policy) rather than returning zeros for the entire result.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1581,
+            "cached_tokens": 0,
+            "completion_tokens": 285,
+            "reasoning_tokens": 188,
+            "cost": 0.00030060000000000004
+          }
+        ],
+        "prompt_tokens": 1581,
+        "cached_tokens": 0,
+        "completion_tokens": 285,
+        "reasoning_tokens": 188,
+        "cost": 0.00030060000000000004
+      },
+      "revision": {
+        "code": "@staticmethod\ndef cosine_similarities(vector_1, vectors_all):\n    \"\"\"\n    Compute cosine similarities between one vector and a set of other vectors.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n    >>> vector1 = np.array([1, 2, 3])\n    >>> vectors_all = [np.array([4, 5, 6]), np.array([0, 0, 0])]\n    >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n    Traceback (most recent call last):\n        ...\n    ValueError: One or the other vectors have zero norm, cannot compute similarity\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    if norm_1 == 0:\n        raise ValueError(\"Query vector has zero norm, cannot compute similarity\")\n\n    similarities = []\n    for vector in vectors_all:\n        norm_2 = np.linalg.norm(vector)\n        if norm_2 == 0:\n            raise ValueError(\"One of the vectors has zero norm, cannot compute similarity\")\n        similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n        similarities.append(similarity)\n    return np.array(similarities)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef cosine_similarities(vector_1, vectors_all):\n    \"\"\"\n    Compute cosine similarities between one vector and a set of other vectors.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n    >>> vector1 = np.array([1, 2, 3])\n    >>> vectors_all = [np.array([4, 5, 6]), np.array([0, 0, 0])]\n    >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n    Traceback (most recent call last):\n        ...\n    ValueError: One or the other vectors have zero norm, cannot compute similarity\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    if norm_1 == 0:\n        raise ValueError(\"Query vector has zero norm, cannot compute similarity\")\n    \n    similarities = []\n    for vector in vectors_all:\n        norm_2 = np.linalg.norm(vector)\n        if norm_2 == 0:\n            raise ValueError(\"One of the vectors has zero norm, cannot compute similarity\")\n        similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n        similarities.append(similarity)\n    return np.array(similarities)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1631,
+        "cached_tokens": 1152,
+        "completion_tokens": 811,
+        "reasoning_tokens": 456,
+        "cost": 0.00036585
+      },
+      "final_code": "@staticmethod\ndef cosine_similarities(vector_1, vectors_all):\n    \"\"\"\n    Compute cosine similarities between one vector and a set of other vectors.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n    >>> vector1 = np.array([1, 2, 3])\n    >>> vectors_all = [np.array([4, 5, 6]), np.array([0, 0, 0])]\n    >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n    Traceback (most recent call last):\n        ...\n    ValueError: One or the other vectors have zero norm, cannot compute similarity\n    \"\"\"\n    norm_1 = np.linalg.norm(vector_1)\n    if norm_1 == 0:\n        raise ValueError(\"Query vector has zero norm, cannot compute similarity\")\n\n    similarities = []\n    for vector in vectors_all:\n        norm_2 = np.linalg.norm(vector)\n        if norm_2 == 0:\n            raise ValueError(\"One of the vectors has zero norm, cannot compute similarity\")\n        similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n        similarities.append(similarity)\n    return np.array(similarities)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "n_similarity",
+      "first": {
+        "code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n    0.9897287473881233\n    \"\"\"\n    import numpy as np\n    similarities = []\n\n    for vector1 in vector_list_1:\n        for vector2 in vector_list_2:\n            norm1 = np.linalg.norm(vector1)\n            norm2 = np.linalg.norm(vector2)\n\n            if norm1 == 0 or norm2 == 0:\n                raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n\n            similarity = dot(vector1, vector2) / (norm1 * norm2)\n            similarities.append(similarity)\n\n    return np.array(similarities)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n    0.9897287473881233\n    \"\"\"\n    import numpy as np\n    similarities = []\n    \n    for vector1 in vector_list_1:\n        for vector2 in vector_list_2:\n            norm1 = np.linalg.norm(vector1)\n            norm2 = np.linalg.norm(vector2)\n            \n            if norm1 == 0 or norm2 == 0:\n                raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n            \n            similarity = dot(vector1, vector2) / (norm1 * norm2)\n            similarities.append(similarity)\n    \n    return np.array(similarities)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1529,
+        "cached_tokens": 1152,
+        "completion_tokens": 764,
+        "reasoning_tokens": 451,
+        "cost": 0.0003439
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method computes every pairwise cosine similarity and returns an array, but `n_similarity` should return one cosine similarity between the mean vectors of the two sets, as shown by the scalar doctest. Average each list\u2019s vectors and compute cosine similarity between those averages (handling empty lists and zero-norm means as appropriate).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method computes every pairwise cosine similarity and returns an array, but `n_similarity` should return one cosine similarity between the mean vectors of the two sets, as shown by the scalar doctest. Average each list\u2019s vectors and compute cosine similarity between those averages (handling empty lists and zero-norm means as appropriate).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1991,
+            "cached_tokens": 0,
+            "completion_tokens": 200,
+            "reasoning_tokens": 116,
+            "cost": 0.0002991
+          }
+        ],
+        "prompt_tokens": 1991,
+        "cached_tokens": 0,
+        "completion_tokens": 200,
+        "reasoning_tokens": 116,
+        "cost": 0.0002991
+      },
+      "revision": {
+        "code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: float, Cosine similarity between mean vectors of vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n    0.9897287473881233\n    \"\"\"\n    if not vector_list_1:\n        raise ValueError(\"vector_list_1 is empty\")\n    if not vector_list_2:\n        raise ValueError(\"vector_list_2 is empty\")\n\n    mean_1 = np.mean(vector_list_1, axis=0)\n    mean_2 = np.mean(vector_list_2, axis=0)\n\n    norm_1 = np.linalg.norm(mean_1)\n    norm_2 = np.linalg.norm(mean_2)\n\n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both mean vectors have zero norm, cannot compute similarity\")\n\n    return dot(mean_1, mean_2) / (norm_1 * norm_2)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: float, Cosine similarity between mean vectors of vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n    0.9897287473881233\n    \"\"\"\n    if not vector_list_1:\n        raise ValueError(\"vector_list_1 is empty\")\n    if not vector_list_2:\n        raise ValueError(\"vector_list_2 is empty\")\n    \n    mean_1 = np.mean(vector_list_1, axis=0)\n    mean_2 = np.mean(vector_list_2, axis=0)\n    \n    norm_1 = np.linalg.norm(mean_1)\n    norm_2 = np.linalg.norm(mean_2)\n    \n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both mean vectors have zero norm, cannot compute similarity\")\n    \n    return dot(mean_1, mean_2) / (norm_1 * norm_2)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1942,
+        "cached_tokens": 1152,
+        "completion_tokens": 1511,
+        "reasoning_tokens": 1158,
+        "cost": 0.00057195
+      },
+      "final_code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: float, Cosine similarity between mean vectors of vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n    0.9897287473881233\n    \"\"\"\n    if not vector_list_1:\n        raise ValueError(\"vector_list_1 is empty\")\n    if not vector_list_2:\n        raise ValueError(\"vector_list_2 is empty\")\n\n    mean_1 = np.mean(vector_list_1, axis=0)\n    mean_2 = np.mean(vector_list_2, axis=0)\n\n    norm_1 = np.linalg.norm(mean_1)\n    norm_2 = np.linalg.norm(mean_2)\n\n    if norm_1 == 0 or norm_2 == 0:\n        raise ValueError(\"One or both mean vectors have zero norm, cannot compute similarity\")\n\n    return dot(mean_1, mean_2) / (norm_1 * norm_2)",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "compute_idf_weight_dict",
+      "first": {
+        "code": "@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    import math\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = math.log((total_num + 1) / (count + 1))\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    import math\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = math.log((total_num + 1) / (count + 1))\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1874,
+        "cached_tokens": 1152,
+        "completion_tokens": 783,
+        "reasoning_tokens": 580,
+        "cost": 0.00038315
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method computes `log((total_num + 1) / (count + 1))` for each dictionary value and preserves the corresponding keys, matching the documented calculation and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method computes `log((total_num + 1) / (count + 1))` for each dictionary value and preserves the corresponding keys, matching the documented calculation and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2293,
+            "cached_tokens": 0,
+            "completion_tokens": 142,
+            "reasoning_tokens": 87,
+            "cost": 0.00030030000000000004
+          }
+        ],
+        "prompt_tokens": 2293,
+        "cached_tokens": 0,
+        "completion_tokens": 142,
+        "reasoning_tokens": 87,
+        "cost": 0.00030030000000000004
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    import math\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = math.log((total_num + 1) / (count + 1))\n    return result",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "VectorUtilTestSimilarity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "VectorUtilTestCosineSimilarities": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTestNSimilarity": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "VectorUtilTestComputeIdfWeightDict": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "VectorUtilTestSimilarity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 2,
+      "passed": false
+    },
+    "VectorUtilTestCosineSimilarities": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTestNSimilarity": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTestComputeIdfWeightDict": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import numpy as np\nfrom gensim import matutils\nfrom numpy import dot, array\n\nclass VectorUtil:\n\n    @staticmethod\n    def similarity(vector_1, vector_2):\n        \"\"\"\n        Compute the cosine similarity between one vector and another vector.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n        >>> vector_1 = np.array([1, 1])\n        >>> vector_2 = np.array([1, 0])\n        >>> VectorUtil.similarity(vector_1, vector_2)\n        0.7071067811865475\n        \"\"\"\n        norm_1 = np.linalg.norm(vector_1)\n        norm_2 = np.linalg.norm(vector_2)\n        return dot(vector_1, vector_2) / (norm_1 * norm_2)\n\n    @staticmethod\n    def cosine_similarities(vector_1, vectors_all):\n        \"\"\"\n        Compute cosine similarities between one vector and a set of other vectors.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n        :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n        >>> vector1 = np.array([1, 2, 3])\n        >>> vectors_all = [np.array([4, 5, 6]), np.array([7, 8, 9])]\n        >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n        [0.97463185 0.95941195]\n        \"\"\"\n        norm_1 = np.linalg.norm(vector_1)\n        similarities = []\n        for vector in vectors_all:\n            norm_2 = np.linalg.norm(vector)\n            if norm_1 == 0 or norm_2 == 0:\n                return np.zeros(len(vectors_all))\n            similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n            similarities.append(similarity)\n        return np.array(similarities)\n\n    @staticmethod\n    def n_similarity(vector_list_1, vector_list_2):\n        \"\"\"\n        Compute cosine similarity between two sets of vectors.\n        :param vector_list_1: list of numpy vector\n        :param vector_list_2: list of numpy vector\n        :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n        >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n        >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n        >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n        0.9897287473881233\n        \"\"\"\n        import numpy as np\n        similarities = []\n\n        for vector1 in vector_list_1:\n            for vector2 in vector_list_2:\n                norm1 = np.linalg.norm(vector1)\n                norm2 = np.linalg.norm(vector2)\n\n                if norm1 == 0 or norm2 == 0:\n                    raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n\n                similarity = dot(vector1, vector2) / (norm1 * norm2)\n                similarities.append(similarity)\n\n        return np.array(similarities)\n\n    @staticmethod\n    def compute_idf_weight_dict(total_num, number_dict):\n        \"\"\"\n        Calculate log(total_num+1/count+1) for each count in number_dict\n        :param total_num: int\n        :param number_dict: dict\n        :return: dict\n        >>> num_dict = {'key1':0.1, 'key2':0.5}\n        >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n        {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n        \"\"\"\n        import math\n        result = {}\n        for key, count in number_dict.items():\n            result[key] = math.log((total_num + 1) / (count + 1))\n        return result\n",
+  "source": "import numpy as np\nfrom gensim import matutils\nfrom numpy import dot, array\n\nclass VectorUtil:\n\n    @staticmethod\n    def similarity(vector_1, vector_2):\n        \"\"\"\n        Compute the cosine similarity between one vector and another vector.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :return: float, Cosine similarity between `vector_1` and `vector_2`\n        :raise ValueError: If either vector has zero norm\n        >>> vector_1 = np.array([1, 1])\n        >>> vector_2 = np.array([1, 0])\n        >>> VectorUtil.similarity(vector_1, vector_2)\n        0.7071067811865475\n        \"\"\"\n        norm_1 = np.linalg.norm(vector_1)\n        norm_2 = np.linalg.norm(vector_2)\n        if norm_1 == 0 or norm_2 == 0:\n            raise ValueError(\"One or both vectors have zero norm, cannot compute similarity\")\n        return dot(vector_1, vector_2) / (norm_1 * norm_2)\n\n    @staticmethod\n    def cosine_similarities(vector_1, vectors_all):\n        \"\"\"\n        Compute cosine similarities between one vector and a set of other vectors.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vectors_all: list of numpy.ndarray, For each row in vectors_all, distance from vector_1 is computed, expected shape (num_vectors, dim).\n        :return: numpy.ndarray, Contains cosine distance between `vector_1` and each row in `vectors_all`, shape (num_vectors,).\n        >>> vector1 = np.array([1, 2, 3])\n        >>> vectors_all = [np.array([4, 5, 6]), np.array([0, 0, 0])]\n        >>> VectorUtil.cosine_similarities(vector1, vectors_all)\n        Traceback (most recent call last):\n            ...\n        ValueError: One or the other vectors have zero norm, cannot compute similarity\n        \"\"\"\n        norm_1 = np.linalg.norm(vector_1)\n        if norm_1 == 0:\n            raise ValueError(\"Query vector has zero norm, cannot compute similarity\")\n\n        similarities = []\n        for vector in vectors_all:\n            norm_2 = np.linalg.norm(vector)\n            if norm_2 == 0:\n                raise ValueError(\"One of the vectors has zero norm, cannot compute similarity\")\n            similarity = dot(vector_1, vector) / (norm_1 * norm_2)\n            similarities.append(similarity)\n        return np.array(similarities)\n\n    @staticmethod\n    def n_similarity(vector_list_1, vector_list_2):\n        \"\"\"\n        Compute cosine similarity between two sets of vectors.\n        :param vector_list_1: list of numpy vector\n        :param vector_list_2: list of numpy vector\n        :return: float, Cosine similarity between mean vectors of vector_list_1 and vector_list_2.\n        >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n        >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n        >>> VectorUtil.n_similarity(vector_list1, vector_list2)\n        0.9897287473881233\n        \"\"\"\n        if not vector_list_1:\n            raise ValueError(\"vector_list_1 is empty\")\n        if not vector_list_2:\n            raise ValueError(\"vector_list_2 is empty\")\n\n        mean_1 = np.mean(vector_list_1, axis=0)\n        mean_2 = np.mean(vector_list_2, axis=0)\n\n        norm_1 = np.linalg.norm(mean_1)\n        norm_2 = np.linalg.norm(mean_2)\n\n        if norm_1 == 0 or norm_2 == 0:\n            raise ValueError(\"One or both mean vectors have zero norm, cannot compute similarity\")\n\n        return dot(mean_1, mean_2) / (norm_1 * norm_2)\n\n    @staticmethod\n    def compute_idf_weight_dict(total_num, number_dict):\n        \"\"\"\n        Calculate log(total_num+1/count+1) for each count in number_dict\n        :param total_num: int\n        :param number_dict: dict\n        :return: dict\n        >>> num_dict = {'key1':0.1, 'key2':0.5}\n        >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n        {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n        \"\"\"\n        import math\n        result = {}\n        for key, count in number_dict.items():\n            result[key] = math.log((total_num + 1) / (count + 1))\n        return result\n"
+}

@@ -1,0 +1,318 @@
+{
+  "task_id": "ClassEval_2",
+  "class_name": "ArgumentParser",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "_convert_type",
+      "first": {
+        "code": "def _convert_type(self, arg, value):\n    \"\"\"\n    Try to convert the type of input value by searching in self.types.\n    :param value: str, the input value in command line\n    :return: return corresponding value in self.types if convert successfully, or the input value otherwise\n    >>> parser.types\n    {'arg1': int}\n    >>> parser._convert_type('arg1', '21')\n    21\n    \"\"\"\n    if arg in self.types:\n        arg_type = self.types[arg]\n        try:\n            return arg_type(value)\n        except (ValueError, TypeError):\n            pass\n    return value",
+        "valid": true,
+        "reply": "```python\ndef _convert_type(self, arg, value):\n    \"\"\"\n    Try to convert the type of input value by searching in self.types.\n    :param value: str, the input value in command line\n    :return: return corresponding value in self.types if convert successfully, or the input value otherwise\n    >>> parser.types\n    {'arg1': int}\n    >>> parser._convert_type('arg1', '21')\n    21\n    \"\"\"\n    if arg in self.types:\n        arg_type = self.types[arg]\n        try:\n            return arg_type(value)\n        except (ValueError, TypeError):\n            pass\n    return value\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 877,
+        "cached_tokens": 0,
+        "completion_tokens": 717,
+        "reasoning_tokens": 610,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`add_argument('arg1', True, 'int')` stores the string `'int'` in `self.types`, so this method tries to call that string, catches the resulting `TypeError`, and returns `'21'` instead of converting it. Either normalize type-name strings to type objects when storing them, or resolve them to callables here before conversion.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`add_argument('arg1', True, 'int')` stores the string `'int'` in `self.types`, so this method tries to call that string, catches the resulting `TypeError`, and returns `'21'` instead of converting it. Either normalize type-name strings to type objects when storing them, or resolve them to callables here before conversion.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1094,
+            "cached_tokens": 0,
+            "completion_tokens": 376,
+            "reasoning_tokens": 283,
+            "cost": 0.00029739999999999996
+          }
+        ],
+        "prompt_tokens": 1094,
+        "cached_tokens": 0,
+        "completion_tokens": 376,
+        "reasoning_tokens": 283,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def _convert_type(self, arg, value):\n    \"\"\"\n    Try to convert the type of input value by searching in self.types.\n    :param value: str, the input value in command line\n    :return: return corresponding value in self.types if convert successfully, or the input value oherwise\n    >>> parser.types\n    {'arg1': int}\n    >>> parser._convert_type('arg1', '21')\n    21\n    \"\"\"\n    type_name_to_class = {\n        'int': int,\n        'float': float,\n        'bool': bool,\n        'str': str,\n    }\n\n    if arg not in self.types:\n        return value\n\n    type_def = self.types[arg]\n\n    # Resolve string type name to actual type object if necessary\n    if isinstance(type_def, str):\n        converter = type_name_to_class.get(type_def)\n    else:\n        converter = type_def\n\n    if converter is None or not callable(converter):\n        return value\n\n    try:\n        return converter(value)\n    except (ValueError, TypeError):\n        return value",
+        "valid": true,
+        "reply": "```python\ndef _convert_type(self, arg, value):\n    \"\"\"\n    Try to convert the type of input value by searching in self.types.\n    :param value: str, the input value in command line\n    :return: return corresponding value in self.types if convert successfully, or the input value oherwise\n    >>> parser.types\n    {'arg1': int}\n    >>> parser._convert_type('arg1', '21')\n    21\n    \"\"\"\n    type_name_to_class = {\n        'int': int,\n        'float': float,\n        'bool': bool,\n        'str': str,\n    }\n\n    if arg not in self.types:\n        return value\n\n    type_def = self.types[arg]\n\n    # Resolve string type name to actual type object if necessary\n    if isinstance(type_def, str):\n        converter = type_name_to_class.get(type_def)\n    else:\n        converter = type_def\n\n    if converter is None or not callable(converter):\n        return value\n\n    try:\n        return converter(value)\n    except (ValueError, TypeError):\n        return value\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1139,
+        "cached_tokens": 0,
+        "completion_tokens": 6521,
+        "reasoning_tokens": 6520,
+        "cost": 0.000503482
+      },
+      "final_code": "def _convert_type(self, arg, value):\n    \"\"\"\n    Try to convert the type of input value by searching in self.types.\n    :param value: str, the input value in command line\n    :return: return corresponding value in self.types if convert successfully, or the input value oherwise\n    >>> parser.types\n    {'arg1': int}\n    >>> parser._convert_type('arg1', '21')\n    21\n    \"\"\"\n    type_name_to_class = {\n        'int': int,\n        'float': float,\n        'bool': bool,\n        'str': str,\n    }\n\n    if arg not in self.types:\n        return value\n\n    type_def = self.types[arg]\n\n    # Resolve string type name to actual type object if necessary\n    if isinstance(type_def, str):\n        converter = type_name_to_class.get(type_def)\n    else:\n        converter = type_def\n\n    if converter is None or not callable(converter):\n        return value\n\n    try:\n        return converter(value)\n    except (ValueError, TypeError):\n        return value",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "parse_arguments",
+      "first": {
+        "code": "def parse_arguments(self, command_string):\n    \"\"\"\n    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n    :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n        where missing_args is a set of the missing argument names which are str.\n    >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n    (True, None)\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    \"\"\"\n    words = command_string.split()\n    # Skip program name and path (first two elements)\n    args = []\n    for i in range(2, len(words)):\n        if words[i].startswith('--') or words[i].startswith('-'):\n            args.append(words[i])\n\n    missing_args = set(self.required)\n    i = 0\n    while i < len(args):\n        arg = args[i]\n\n        # Handle --key=value format\n        if arg.startswith('--='):\n            return False, missing_args\n\n        if '=' in arg:\n            key, value = arg.split('=', 1)\n            clean_key = key.lstrip('-')\n            clean_value = value.lstrip('-')\n            converted = self._convert_type(clean_key, clean_value)\n            self.arguments[clean_key] = converted\n        elif arg.startswith('--'):\n            key = arg[2:].lstrip('-')\n            self.arguments[key] = True\n        elif arg.startswith('-') and not arg.startswith('--'):\n            key = arg[1:].lstrip('-')\n            self.arguments[key] = True\n        else:\n            # Value following a single-dash flag\n            key = args[i - 1][1:].lstrip('-')\n            converted = self._convert_type(key, args[i])\n            self.arguments[key] = converted\n\n        i += 1\n\n    if missing_args:\n        return False, missing_args\n\n    return True, None",
+        "valid": true,
+        "reply": "```python\ndef parse_arguments(self, command_string):\n    \"\"\"\n    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n    :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n        where missing_args is a set of the missing argument names which are str.\n    >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n    (True, None)\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    \"\"\"\n    words = command_string.split()\n    # Skip program name and path (first two elements)\n    args = []\n    for i in range(2, len(words)):\n        if words[i].startswith('--') or words[i].startswith('-'):\n            args.append(words[i])\n    \n    missing_args = set(self.required)\n    i = 0\n    while i < len(args):\n        arg = args[i]\n        \n        # Handle --key=value format\n        if arg.startswith('--='):\n            return False, missing_args\n        \n        if '=' in arg:\n            key, value = arg.split('=', 1)\n            clean_key = key.lstrip('-')\n            clean_value = value.lstrip('-')\n            converted = self._convert_type(clean_key, clean_value)\n            self.arguments[clean_key] = converted\n        elif arg.startswith('--'):\n            key = arg[2:].lstrip('-')\n            self.arguments[key] = True\n        elif arg.startswith('-') and not arg.startswith('--'):\n            key = arg[1:].lstrip('-')\n            self.arguments[key] = True\n        else:\n            # Value following a single-dash flag\n            key = args[i - 1][1:].lstrip('-')\n            converted = self._convert_type(key, args[i])\n            self.arguments[key] = converted\n        \n        i += 1\n    \n    if missing_args:\n        return False, missing_args\n    \n    return True, None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1135,
+        "cached_tokens": 0,
+        "completion_tokens": 1304,
+        "reasoning_tokens": 847,
+        "cost": 0.000143321
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method never removes parsed keys from `missing_args`, so it reports failure whenever any argument is required, even when supplied. It also filters out non-flag words, so values in forms like `-arg2 value2` are discarded and the flag is stored as `True`; retain and consume value tokens, and discard each successfully parsed required key from `missing_args`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method never removes parsed keys from `missing_args`, so it reports failure whenever any argument is required, even when supplied. It also filters out non-flag words, so values in forms like `-arg2 value2` are discarded and the flag is stored as `True`; retain and consume value tokens, and discard each successfully parsed required key from `missing_args`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1802,
+            "cached_tokens": 0,
+            "completion_tokens": 186,
+            "reasoning_tokens": 91,
+            "cost": 0.0002732
+          }
+        ],
+        "prompt_tokens": 1802,
+        "cached_tokens": 0,
+        "completion_tokens": 186,
+        "reasoning_tokens": 91,
+        "cost": 0.0002732
+      },
+      "revision": {
+        "code": "def parse_arguments(self, command_string):\n    \"\"\"\n    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n    :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n        where missing_args is a set of the missing argument names which are str.\n    >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n    (True, None)\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    \"\"\"\n    words = command_string.split()\n    # Skip program name and path (first two elements)\n    i = 2\n    consumed_keys = set()\n\n    while i < len(words):\n        word = words[i]\n\n        if word.startswith('--'):\n            # Long option --key or --key=value\n            if '=' in word:\n                key = word.split('=')[0][2:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n            else:\n                key = word[2:]\n                self.arguments[key] = True\n                consumed_keys.add(key)\n            i += 1\n\n        elif word.startswith('-') and word != '-':\n            # Short option -key or -key=value\n            if '=' in word:\n                key = word.split('=')[0][1:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n                i += 1\n            else:\n                # Could be a flag -key alone or expecting a value\n                key = word[1:]\n\n                # If the next word looks like a flag, this is a boolean flag\n                if i + 1 < len(words) and (words[i + 1].startswith('--') or words[i + 1].startswith('-')):\n                    self.arguments[key] = True\n                    consumed_keys.add(key)\n                else:\n                    # Expecting a value in the next position\n                    if i + 1 < len(words):\n                        value = words[i + 1]\n                        cleaned_value = value.lstrip('-')\n                        converted = self._convert_type(key, cleaned_value)\n                        self.arguments[key] = converted\n                        consumed_keys.add(key)\n                    else:\n                        self.arguments[key] = True\n                        consumed_keys.add(key)\n                i += 1\n\n        else:\n            # This shouldn't happen based on expected input format\n            i += 1\n\n    # Remove successfully parsed required keys from missing_args\n    required_copy = set(self.required)\n    remaining_missing = required_copy - consumed_keys\n\n    if remaining_missing:\n        return False, remaining_missing\n\n    return True, None",
+        "valid": true,
+        "reply": "```python\ndef parse_arguments(self, command_string):\n    \"\"\"\n    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n    :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n        where missing_args is a set of the missing argument names which are str.\n    >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n    (True, None)\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    \"\"\"\n    words = command_string.split()\n    # Skip program name and path (first two elements)\n    i = 2\n    consumed_keys = set()\n    \n    while i < len(words):\n        word = words[i]\n        \n        if word.startswith('--'):\n            # Long option --key or --key=value\n            if '=' in word:\n                key = word.split('=')[0][2:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n            else:\n                key = word[2:]\n                self.arguments[key] = True\n                consumed_keys.add(key)\n            i += 1\n            \n        elif word.startswith('-') and word != '-':\n            # Short option -key or -key=value\n            if '=' in word:\n                key = word.split('=')[0][1:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n                i += 1\n            else:\n                # Could be a flag -key alone or expecting a value\n                key = word[1:]\n                \n                # If the next word looks like a flag, this is a boolean flag\n                if i + 1 < len(words) and (words[i + 1].startswith('--') or words[i + 1].startswith('-')):\n                    self.arguments[key] = True\n                    consumed_keys.add(key)\n                else:\n                    # Expecting a value in the next position\n                    if i + 1 < len(words):\n                        value = words[i + 1]\n                        cleaned_value = value.lstrip('-')\n                        converted = self._convert_type(key, cleaned_value)\n                        self.arguments[key] = converted\n                        consumed_keys.add(key)\n                    else:\n                        self.arguments[key] = True\n                        consumed_keys.add(key)\n                i += 1\n                \n        else:\n            # This shouldn't happen based on expected input format\n            i += 1\n    \n    # Remove successfully parsed required keys from missing_args\n    required_copy = set(self.required)\n    remaining_missing = required_copy - consumed_keys\n    \n    if remaining_missing:\n        return False, remaining_missing\n    \n    return True, None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1783,
+        "cached_tokens": 0,
+        "completion_tokens": 2108,
+        "reasoning_tokens": 1466,
+        "cost": 0.000229253
+      },
+      "final_code": "def parse_arguments(self, command_string):\n    \"\"\"\n    Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n    Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n    :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n    :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n        where missing_args is a set of the missing argument names which are str.\n    >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n    (True, None)\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    \"\"\"\n    words = command_string.split()\n    # Skip program name and path (first two elements)\n    i = 2\n    consumed_keys = set()\n\n    while i < len(words):\n        word = words[i]\n\n        if word.startswith('--'):\n            # Long option --key or --key=value\n            if '=' in word:\n                key = word.split('=')[0][2:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n            else:\n                key = word[2:]\n                self.arguments[key] = True\n                consumed_keys.add(key)\n            i += 1\n\n        elif word.startswith('-') and word != '-':\n            # Short option -key or -key=value\n            if '=' in word:\n                key = word.split('=')[0][1:]\n                value = word.split('=', 1)[1]\n                cleaned_value = value.lstrip('-')\n                converted = self._convert_type(key, cleaned_value)\n                self.arguments[key] = converted\n                consumed_keys.add(key)\n                i += 1\n            else:\n                # Could be a flag -key alone or expecting a value\n                key = word[1:]\n\n                # If the next word looks like a flag, this is a boolean flag\n                if i + 1 < len(words) and (words[i + 1].startswith('--') or words[i + 1].startswith('-')):\n                    self.arguments[key] = True\n                    consumed_keys.add(key)\n                else:\n                    # Expecting a value in the next position\n                    if i + 1 < len(words):\n                        value = words[i + 1]\n                        cleaned_value = value.lstrip('-')\n                        converted = self._convert_type(key, cleaned_value)\n                        self.arguments[key] = converted\n                        consumed_keys.add(key)\n                    else:\n                        self.arguments[key] = True\n                        consumed_keys.add(key)\n                i += 1\n\n        else:\n            # This shouldn't happen based on expected input format\n            i += 1\n\n    # Remove successfully parsed required keys from missing_args\n    required_copy = set(self.required)\n    remaining_missing = required_copy - consumed_keys\n\n    if remaining_missing:\n        return False, remaining_missing\n\n    return True, None",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "get_argument",
+      "first": {
+        "code": "def get_argument(self, key):\n    \"\"\"\n    Retrieves the value of the specified argument from the arguments dictionary and returns it.\n    :param key: str, argument name\n    :return: The value of the argument, or None if the argument does not exist.\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    >>> parser.get_argument('arg2')\n    'value2'\n    \"\"\"\n    if key in self.arguments:\n        return self.arguments[key]\n    return None",
+        "valid": true,
+        "reply": "\n\n```python\ndef get_argument(self, key):\n    \"\"\"\n    Retrieves the value of the specified argument from the arguments dictionary and returns it.\n    :param key: str, argument name\n    :return: The value of the argument, or None if the argument does not exist.\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    >>> parser.get_argument('arg2')\n    'value2'\n    \"\"\"\n    if key in self.arguments:\n        return self.arguments[key]\n    return None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1880,
+        "cached_tokens": 0,
+        "completion_tokens": 348,
+        "reasoning_tokens": 210,
+        "cost": 0.000275
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns the stored value when the key exists and returns `None` when it does not, matching the docstring.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns the stored value when the key exists and returns `None` when it does not, matching the docstring.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2224,
+            "cached_tokens": 0,
+            "completion_tokens": 56,
+            "reasoning_tokens": 13,
+            "cost": 0.0002504
+          }
+        ],
+        "prompt_tokens": 2224,
+        "cached_tokens": 0,
+        "completion_tokens": 56,
+        "reasoning_tokens": 13,
+        "cost": 0.0002504
+      },
+      "revision": null,
+      "final_code": "def get_argument(self, key):\n    \"\"\"\n    Retrieves the value of the specified argument from the arguments dictionary and returns it.\n    :param key: str, argument name\n    :return: The value of the argument, or None if the argument does not exist.\n    >>> parser.arguments\n    {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n    >>> parser.get_argument('arg2')\n    'value2'\n    \"\"\"\n    if key in self.arguments:\n        return self.arguments[key]\n    return None",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "add_argument",
+      "first": {
+        "code": "def add_argument(self, arg, required=False, arg_type=str):\n    \"\"\"\n    Adds an argument to self.types and self.required.\n    Check if it is a required argument and store the argument type.\n    If the argument is set as required, it will be added to the required set.\n    The argument type and name are stored in the types dictionary as key-value pairs.\n    :param arg: str, argument name\n    :param required: bool, whether the argument is required, default is False\n    :param arg_type:str, Argument type, default is str\n    >>> parser.add_argument('arg1', True, 'int')\n    >>> parser.required\n    {'arg1'}\n    >>> parser.types\n    {'arg1': 'int'}\n    \"\"\"\n    if required:\n        self.required.add(arg)\n    self.types[arg] = arg_type",
+        "valid": true,
+        "reply": "\n\n```python\ndef add_argument(self, arg, required=False, arg_type=str):\n    \"\"\"\n    Adds an argument to self.types and self.required.\n    Check if it is a required argument and store the argument type.\n    If the argument is set as required, it will be added to the required set.\n    The argument type and name are stored in the types dictionary as key-value pairs.\n    :param arg: str, argument name\n    :param required: bool, whether the argument is required, default is False\n    :param arg_type:str, Argument type, default is str\n    >>> parser.add_argument('arg1', True, 'int')\n    >>> parser.required\n    {'arg1'}\n    >>> parser.types\n    {'arg1': 'int'}\n    \"\"\"\n    if required:\n        self.required.add(arg)\n    self.types[arg] = arg_type\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 2011,
+        "cached_tokens": 1728,
+        "completion_tokens": 698,
+        "reasoning_tokens": 504,
+        "cost": 0.0003756
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method adds `arg` to `self.required` when `required` is true and stores `arg_type` under that name in `self.types`, matching the docstring and existing fields. It does not need to remove an already-required argument when called with `required=False`, since the method is documented to add arguments, not update them.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method adds `arg` to `self.required` when `required` is true and stores `arg_type` under that name in `self.types`, matching the docstring and existing fields. It does not need to remove an already-required argument when called with `required=False`, since the method is documented to add arguments, not update them.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2431,
+            "cached_tokens": 0,
+            "completion_tokens": 160,
+            "reasoning_tokens": 73,
+            "cost": 0.00032310000000000005
+          }
+        ],
+        "prompt_tokens": 2431,
+        "cached_tokens": 0,
+        "completion_tokens": 160,
+        "reasoning_tokens": 73,
+        "cost": 0.00032310000000000005
+      },
+      "revision": null,
+      "final_code": "def add_argument(self, arg, required=False, arg_type=str):\n    \"\"\"\n    Adds an argument to self.types and self.required.\n    Check if it is a required argument and store the argument type.\n    If the argument is set as required, it will be added to the required set.\n    The argument type and name are stored in the types dictionary as key-value pairs.\n    :param arg: str, argument name\n    :param required: bool, whether the argument is required, default is False\n    :param arg_type:str, Argument type, default is str\n    >>> parser.add_argument('arg1', True, 'int')\n    >>> parser.required\n    {'arg1'}\n    >>> parser.types\n    {'arg1': 'int'}\n    \"\"\"\n    if required:\n        self.required.add(arg)\n    self.types[arg] = arg_type",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "ArgumentParserTestParseArguments": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "ArgumentParserTestGetArgument": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestAddArgument": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestConvertType": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "ArgumentParserTestParseArguments": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "ArgumentParserTestGetArgument": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestAddArgument": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestConvertType": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArgumentParserTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass ArgumentParser: \n    def __init__(self):\n        \"\"\"\n        Initialize the fields.\n        self.arguments is a dict that stores the args in a command line\n        self.requried is a set that stores the required arguments\n        self.types is a dict that stores type of every arguments.\n        >>> parser.arguments\n        {'key1': 'value1', 'option1': True}\n        >>> parser.required\n        {'arg1'}\n        >>> parser.types\n        {'arg1': 'type1'}\n        \"\"\"\n        self.arguments = {}\n        self.required = set()\n        self.types = {}\n\n    def parse_arguments(self, command_string):\n        \"\"\"\n        Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n        Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n        :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n        :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n            where missing_args is a set of the missing argument names which are str.\n        >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n        (True, None)\n        >>> parser.arguments\n        {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n        \"\"\"\n        words = command_string.split()\n        # Skip program name and path (first two elements)\n        args = []\n        for i in range(2, len(words)):\n            if words[i].startswith('--') or words[i].startswith('-'):\n                args.append(words[i])\n\n        missing_args = set(self.required)\n        i = 0\n        while i < len(args):\n            arg = args[i]\n\n            # Handle --key=value format\n            if arg.startswith('--='):\n                return False, missing_args\n\n            if '=' in arg:\n                key, value = arg.split('=', 1)\n                clean_key = key.lstrip('-')\n                clean_value = value.lstrip('-')\n                converted = self._convert_type(clean_key, clean_value)\n                self.arguments[clean_key] = converted\n            elif arg.startswith('--'):\n                key = arg[2:].lstrip('-')\n                self.arguments[key] = True\n            elif arg.startswith('-') and not arg.startswith('--'):\n                key = arg[1:].lstrip('-')\n                self.arguments[key] = True\n            else:\n                # Value following a single-dash flag\n                key = args[i - 1][1:].lstrip('-')\n                converted = self._convert_type(key, args[i])\n                self.arguments[key] = converted\n\n            i += 1\n\n        if missing_args:\n            return False, missing_args\n\n        return True, None\n\n    def get_argument(self, key):\n        \"\"\"\n        Retrieves the value of the specified argument from the arguments dictionary and returns it.\n        :param key: str, argument name\n        :return: The value of the argument, or None if the argument does not exist.\n        >>> parser.arguments\n        {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n        >>> parser.get_argument('arg2')\n        'value2'\n        \"\"\"\n        if key in self.arguments:\n            return self.arguments[key]\n        return None\n\n    def add_argument(self, arg, required=False, arg_type=str):\n        \"\"\"\n        Adds an argument to self.types and self.required.\n        Check if it is a required argument and store the argument type.\n        If the argument is set as required, it will be added to the required set.\n        The argument type and name are stored in the types dictionary as key-value pairs.\n        :param arg: str, argument name\n        :param required: bool, whether the argument is required, default is False\n        :param arg_type:str, Argument type, default is str\n        >>> parser.add_argument('arg1', True, 'int')\n        >>> parser.required\n        {'arg1'}\n        >>> parser.types\n        {'arg1': 'int'}\n        \"\"\"\n        if required:\n            self.required.add(arg)\n        self.types[arg] = arg_type\n\n    def _convert_type(self, arg, value):\n        \"\"\"\n        Try to convert the type of input value by searching in self.types.\n        :param value: str, the input value in command line\n        :return: return corresponding value in self.types if convert successfully, or the input value otherwise\n        >>> parser.types\n        {'arg1': int}\n        >>> parser._convert_type('arg1', '21')\n        21\n        \"\"\"\n        if arg in self.types:\n            arg_type = self.types[arg]\n            try:\n                return arg_type(value)\n            except (ValueError, TypeError):\n                pass\n        return value\n",
+  "source": "\n\nclass ArgumentParser: \n    def __init__(self):\n        \"\"\"\n        Initialize the fields.\n        self.arguments is a dict that stores the args in a command line\n        self.requried is a set that stores the required arguments\n        self.types is a dict that stores type of every arguments.\n        >>> parser.arguments\n        {'key1': 'value1', 'option1': True}\n        >>> parser.required\n        {'arg1'}\n        >>> parser.types\n        {'arg1': 'type1'}\n        \"\"\"\n        self.arguments = {}\n        self.required = set()\n        self.types = {}\n\n    def parse_arguments(self, command_string):\n        \"\"\"\n        Parses the given command line argument string and invoke _convert_type to stores the parsed result in specific type in the arguments dictionary.\n        Checks for missing required arguments, if any, and returns False with the missing argument names, otherwise returns True.\n        :param command_string: str, command line argument string, formatted like \"python script.py --arg1=value1 -arg2 value2 --option1 -option2\"\n        :return tuple: (True, None) if parsing is successful, (False, missing_args) if parsing fails,\n            where missing_args is a set of the missing argument names which are str.\n        >>> parser.parse_arguments(\"python script.py --arg1=value1 -arg2 value2 --option1 -option2\")\n        (True, None)\n        >>> parser.arguments\n        {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n        \"\"\"\n        words = command_string.split()\n        # Skip program name and path (first two elements)\n        i = 2\n        consumed_keys = set()\n\n        while i < len(words):\n            word = words[i]\n\n            if word.startswith('--'):\n                # Long option --key or --key=value\n                if '=' in word:\n                    key = word.split('=')[0][2:]\n                    value = word.split('=', 1)[1]\n                    cleaned_value = value.lstrip('-')\n                    converted = self._convert_type(key, cleaned_value)\n                    self.arguments[key] = converted\n                    consumed_keys.add(key)\n                else:\n                    key = word[2:]\n                    self.arguments[key] = True\n                    consumed_keys.add(key)\n                i += 1\n\n            elif word.startswith('-') and word != '-':\n                # Short option -key or -key=value\n                if '=' in word:\n                    key = word.split('=')[0][1:]\n                    value = word.split('=', 1)[1]\n                    cleaned_value = value.lstrip('-')\n                    converted = self._convert_type(key, cleaned_value)\n                    self.arguments[key] = converted\n                    consumed_keys.add(key)\n                    i += 1\n                else:\n                    # Could be a flag -key alone or expecting a value\n                    key = word[1:]\n\n                    # If the next word looks like a flag, this is a boolean flag\n                    if i + 1 < len(words) and (words[i + 1].startswith('--') or words[i + 1].startswith('-')):\n                        self.arguments[key] = True\n                        consumed_keys.add(key)\n                    else:\n                        # Expecting a value in the next position\n                        if i + 1 < len(words):\n                            value = words[i + 1]\n                            cleaned_value = value.lstrip('-')\n                            converted = self._convert_type(key, cleaned_value)\n                            self.arguments[key] = converted\n                            consumed_keys.add(key)\n                        else:\n                            self.arguments[key] = True\n                            consumed_keys.add(key)\n                    i += 1\n\n            else:\n                # This shouldn't happen based on expected input format\n                i += 1\n\n        # Remove successfully parsed required keys from missing_args\n        required_copy = set(self.required)\n        remaining_missing = required_copy - consumed_keys\n\n        if remaining_missing:\n            return False, remaining_missing\n\n        return True, None\n\n    def get_argument(self, key):\n        \"\"\"\n        Retrieves the value of the specified argument from the arguments dictionary and returns it.\n        :param key: str, argument name\n        :return: The value of the argument, or None if the argument does not exist.\n        >>> parser.arguments\n        {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}\n        >>> parser.get_argument('arg2')\n        'value2'\n        \"\"\"\n        if key in self.arguments:\n            return self.arguments[key]\n        return None\n\n    def add_argument(self, arg, required=False, arg_type=str):\n        \"\"\"\n        Adds an argument to self.types and self.required.\n        Check if it is a required argument and store the argument type.\n        If the argument is set as required, it will be added to the required set.\n        The argument type and name are stored in the types dictionary as key-value pairs.\n        :param arg: str, argument name\n        :param required: bool, whether the argument is required, default is False\n        :param arg_type:str, Argument type, default is str\n        >>> parser.add_argument('arg1', True, 'int')\n        >>> parser.required\n        {'arg1'}\n        >>> parser.types\n        {'arg1': 'int'}\n        \"\"\"\n        if required:\n            self.required.add(arg)\n        self.types[arg] = arg_type\n\n    def _convert_type(self, arg, value):\n        \"\"\"\n        Try to convert the type of input value by searching in self.types.\n        :param value: str, the input value in command line\n        :return: return corresponding value in self.types if convert successfully, or the input value oherwise\n        >>> parser.types\n        {'arg1': int}\n        >>> parser._convert_type('arg1', '21')\n        21\n        \"\"\"\n        type_name_to_class = {\n            'int': int,\n            'float': float,\n            'bool': bool,\n            'str': str,\n        }\n\n        if arg not in self.types:\n            return value\n\n        type_def = self.types[arg]\n\n        # Resolve string type name to actual type object if necessary\n        if isinstance(type_def, str):\n            converter = type_name_to_class.get(type_def)\n        else:\n            converter = type_def\n\n        if converter is None or not callable(converter):\n            return value\n\n        try:\n            return converter(value)\n        except (ValueError, TypeError):\n            return value\n"
+}

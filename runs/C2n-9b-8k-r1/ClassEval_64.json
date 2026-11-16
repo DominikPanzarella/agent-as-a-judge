@@ -1,0 +1,435 @@
+{
+  "task_id": "ClassEval_64",
+  "class_name": "NumberConverter",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "decimal_to_binary",
+      "first": {
+        "code": "@staticmethod\ndef decimal_to_binary(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to binary format.\n    :param decimal_num: int, decimal number\n    :return: str, the binary representation of an integer.\n    >>> NumberConverter.decimal_to_binary(42423)\n    '1010010110110111'\n    \"\"\"\n    return bin(decimal_num)[2:]",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def decimal_to_binary(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to binary format.\n        :param decimal_num: int, decimal number\n        :return: str, the binary representation of an integer.\n        >>> NumberConverter.decimal_to_binary(42423)\n        '1010010110110111'\n        \"\"\"\n        return bin(decimal_num)[2:]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 674,
+        "cached_tokens": 0,
+        "completion_tokens": 480,
+        "reasoning_tokens": 356,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For negative integers, `bin(decimal_num)[2:]` returns an incorrect string (for example, `-5` becomes `'b101'`). Handle negatives explicitly, such as by returning `'-' + bin(abs(decimal_num))[2:]`, or document that only nonnegative inputs are supported.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For negative integers, `bin(decimal_num)[2:]` returns an incorrect string (for example, `-5` becomes `'b101'`). Handle negatives explicitly, such as by returning `'-' + bin(abs(decimal_num))[2:]`, or document that only nonnegative inputs are supported.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 803,
+            "cached_tokens": 0,
+            "completion_tokens": 194,
+            "reasoning_tokens": 115,
+            "cost": 0.0001773
+          }
+        ],
+        "prompt_tokens": 803,
+        "cached_tokens": 0,
+        "completion_tokens": 194,
+        "reasoning_tokens": 115,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "@staticmethod\ndef decimal_to_binary(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to binary format.\n    :param decimal_num: int, decimal number\n    :return: str, the binary representation of an integer.\n    >>> NumberConverter.decimal_to_binary(42423)\n    '1010010110110111'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    binary_digits = []\n    while num > 0:\n        binary_digits.append(str(num % 2))\n        num //= 2\n\n    # Reverse to get most significant bit first\n    result = ''.join(reversed(binary_digits))\n\n    return ('-' if negative else '') + result",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def decimal_to_binary(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to binary format.\n        :param decimal_num: int, decimal number\n        :return: str, the binary representation of an integer.\n        >>> NumberConverter.decimal_to_binary(42423)\n        '1010010110110111'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n        \n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n        \n        binary_digits = []\n        while num > 0:\n            binary_digits.append(str(num % 2))\n            num //= 2\n        \n        # Reverse to get most significant bit first\n        result = ''.join(reversed(binary_digits))\n        \n        return ('-' if negative else '') + result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 821,
+        "cached_tokens": 0,
+        "completion_tokens": 1352,
+        "reasoning_tokens": 1202,
+        "cost": 0.000145444
+      },
+      "final_code": "@staticmethod\ndef decimal_to_binary(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to binary format.\n    :param decimal_num: int, decimal number\n    :return: str, the binary representation of an integer.\n    >>> NumberConverter.decimal_to_binary(42423)\n    '1010010110110111'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    binary_digits = []\n    while num > 0:\n        binary_digits.append(str(num % 2))\n        num //= 2\n\n    # Reverse to get most significant bit first\n    result = ''.join(reversed(binary_digits))\n\n    return ('-' if negative else '') + result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "binary_to_decimal",
+      "first": {
+        "code": "@staticmethod\ndef binary_to_decimal(binary_num):\n    \"\"\"\n    Convert a number from binary format to decimal format.\n    :param binary_num: str, binary number\n    :return: int, the decimal representation of binary number str.\n    >>> NumberConverter.binary_to_decimal('1010010110110111')\n    42423\n    \"\"\"\n    return int(binary_num, 2)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef binary_to_decimal(binary_num):\n    \"\"\"\n    Convert a number from binary format to decimal format.\n    :param binary_num: str, binary number\n    :return: int, the decimal representation of binary number str.\n    >>> NumberConverter.binary_to_decimal('1010010110110111')\n    42423\n    \"\"\"\n    return int(binary_num, 2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 885,
+        "cached_tokens": 0,
+        "completion_tokens": 546,
+        "reasoning_tokens": 468,
+        "cost": 8.7516e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`int(binary_num, 2)` correctly converts valid binary strings to decimal integers, including the negative form produced by `decimal_to_binary`. The method matches its documented input and return types.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`int(binary_num, 2)` correctly converts valid binary strings to decimal integers, including the negative form produced by `decimal_to_binary`. The method matches its documented input and return types.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 988,
+            "cached_tokens": 0,
+            "completion_tokens": 132,
+            "reasoning_tokens": 76,
+            "cost": 0.00016480000000000002
+          }
+        ],
+        "prompt_tokens": 988,
+        "cached_tokens": 0,
+        "completion_tokens": 132,
+        "reasoning_tokens": 76,
+        "cost": 0.00016480000000000002
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef binary_to_decimal(binary_num):\n    \"\"\"\n    Convert a number from binary format to decimal format.\n    :param binary_num: str, binary number\n    :return: int, the decimal representation of binary number str.\n    >>> NumberConverter.binary_to_decimal('1010010110110111')\n    42423\n    \"\"\"\n    return int(binary_num, 2)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "decimal_to_octal",
+      "first": {
+        "code": "@staticmethod\ndef decimal_to_octal(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to octal format.\n    :param decimal_num: int, decimal number\n    :return: str, the octal representation of an integer.\n    >>> NumberConverter.decimal_to_octal(42423)\n    '122667'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    octal_digits = []\n    while num > 0:\n        octal_digits.append(str(num % 8))\n        num //= 8\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(octal_digits))\n\n    return ('-' if negative else '') + result",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef decimal_to_octal(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to octal format.\n    :param decimal_num: int, decimal number\n    :return: str, the octal representation of an integer.\n    >>> NumberConverter.decimal_to_octal(42423)\n    '122667'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    octal_digits = []\n    while num > 0:\n        octal_digits.append(str(num % 8))\n        num //= 8\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(octal_digits))\n\n    return ('-' if negative else '') + result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 985,
+        "cached_tokens": 0,
+        "completion_tokens": 1012,
+        "reasoning_tokens": 784,
+        "cost": 9.9108e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly handles zero and converts positive integers by repeated division by 8; for negative integers it converts the absolute value and adds a minus sign. It produces the documented result for 42423.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly handles zero and converts positive integers by repeated division by 8; for negative integers it converts the absolute value and adds a minus sign. It produces the documented result for 42423.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1166,
+            "cached_tokens": 0,
+            "completion_tokens": 160,
+            "reasoning_tokens": 102,
+            "cost": 0.00019660000000000004
+          }
+        ],
+        "prompt_tokens": 1166,
+        "cached_tokens": 0,
+        "completion_tokens": 160,
+        "reasoning_tokens": 102,
+        "cost": 0.00019660000000000004
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef decimal_to_octal(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to octal format.\n    :param decimal_num: int, decimal number\n    :return: str, the octal representation of an integer.\n    >>> NumberConverter.decimal_to_octal(42423)\n    '122667'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    octal_digits = []\n    while num > 0:\n        octal_digits.append(str(num % 8))\n        num //= 8\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(octal_digits))\n\n    return ('-' if negative else '') + result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "octal_to_decimal",
+      "first": {
+        "code": "@staticmethod\ndef octal_to_decimal(octal_num):\n    \"\"\"\n    Convert a number from octal format to decimal format.\n    :param octal_num: str, octal num\n    :return: int, the decimal representation of octal number str.\n    >>> NumberConverter.octal_to_decimal('122667')\n    42423\n    \"\"\"\n    return int(octal_num, 8)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef octal_to_decimal(octal_num):\n    \"\"\"\n    Convert a number from octal format to decimal format.\n    :param octal_num: str, octal num\n    :return: int, the decimal representation of octal number str.\n    >>> NumberConverter.octal_to_decimal('122667')\n    42423\n    \"\"\"\n    return int(octal_num, 8)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1181,
+        "cached_tokens": 0,
+        "completion_tokens": 373,
+        "reasoning_tokens": 280,
+        "cost": 6.9247e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "Yes. `int(octal_num, 8)` parses the string as base 8 and returns the expected decimal integer, including for the documented example; it also handles signed octal strings.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "Yes. `int(octal_num, 8)` parses the string as base 8 and returns the expected decimal integer, including for the documented example; it also handles signed octal strings.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1249,
+            "cached_tokens": 0,
+            "completion_tokens": 55,
+            "reasoning_tokens": 0,
+            "cost": 0.00015240000000000002
+          }
+        ],
+        "prompt_tokens": 1249,
+        "cached_tokens": 0,
+        "completion_tokens": 55,
+        "reasoning_tokens": 0,
+        "cost": 0.00015240000000000002
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef octal_to_decimal(octal_num):\n    \"\"\"\n    Convert a number from octal format to decimal format.\n    :param octal_num: str, octal num\n    :return: int, the decimal representation of octal number str.\n    >>> NumberConverter.octal_to_decimal('122667')\n    42423\n    \"\"\"\n    return int(octal_num, 8)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "decimal_to_hex",
+      "first": {
+        "code": "@staticmethod\ndef decimal_to_hex(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to hex format.\n    :param decimal_num: int, decimal number\n    :return hex_num: str, the hex representation of an integer.\n    >>> NumberConverter.decimal_to_hex(42423)\n    'a5b7'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    hex_digits = []\n    while num > 0:\n        digit = num % 16\n        if digit < 10:\n            hex_digits.append(str(digit))\n        else:\n            hex_digits.append(chr(ord('a') + digit - 10))\n        num //= 16\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(hex_digits))\n\n    return ('-' if negative else '') + result",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef decimal_to_hex(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to hex format.\n    :param decimal_num: int, decimal number\n    :return hex_num: str, the hex representation of an integer.\n    >>> NumberConverter.decimal_to_hex(42423)\n    'a5b7'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    hex_digits = []\n    while num > 0:\n        digit = num % 16\n        if digit < 10:\n            hex_digits.append(str(digit))\n        else:\n            hex_digits.append(chr(ord('a') + digit - 10))\n        num //= 16\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(hex_digits))\n\n    return ('-' if negative else '') + result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1277,
+        "cached_tokens": 0,
+        "completion_tokens": 806,
+        "reasoning_tokens": 611,
+        "cost": 9.8634e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly handles zero, converts each hexadecimal digit to lowercase, reverses the digits into the correct order, and preserves a negative sign for negative integers. It matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly handles zero, converts each hexadecimal digit to lowercase, reverses the digits into the correct order, and preserves a negative sign for negative integers. It matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1451,
+            "cached_tokens": 0,
+            "completion_tokens": 95,
+            "reasoning_tokens": 40,
+            "cost": 0.0001926
+          }
+        ],
+        "prompt_tokens": 1451,
+        "cached_tokens": 0,
+        "completion_tokens": 95,
+        "reasoning_tokens": 40,
+        "cost": 0.0001926
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef decimal_to_hex(decimal_num):\n    \"\"\"\n    Convert a number from decimal format to hex format.\n    :param decimal_num: int, decimal number\n    :return hex_num: str, the hex representation of an integer.\n    >>> NumberConverter.decimal_to_hex(42423)\n    'a5b7'\n    \"\"\"\n    if decimal_num == 0:\n        return '0'\n\n    # Handle negative numbers by converting absolute value and adding '-' prefix\n    negative = decimal_num < 0\n    num = abs(decimal_num)\n\n    hex_digits = []\n    while num > 0:\n        digit = num % 16\n        if digit < 10:\n            hex_digits.append(str(digit))\n        else:\n            hex_digits.append(chr(ord('a') + digit - 10))\n        num //= 16\n\n    # Reverse to get most significant digit first\n    result = ''.join(reversed(hex_digits))\n\n    return ('-' if negative else '') + result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "hex_to_decimal",
+      "first": {
+        "code": "@staticmethod\ndef hex_to_decimal(hex_num):\n    \"\"\"\n    Convert a number from hex format to decimal format.\n    :param hex_num: str, hex num\n    :return: int, the decimal representation of hex number str.\n    >>> NumberConverter.hex_to_decimal('a5b7')\n    42423\n    \"\"\"\n    return int(hex_num, 16)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef hex_to_decimal(hex_num):\n    \"\"\"\n    Convert a number from hex format to decimal format.\n    :param hex_num: str, hex num\n    :return: int, the decimal representation of hex number str.\n    >>> NumberConverter.hex_to_decimal('a5b7')\n    42423\n    \"\"\"\n    return int(hex_num, 16)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1504,
+        "cached_tokens": 0,
+        "completion_tokens": 565,
+        "reasoning_tokens": 495,
+        "cost": 0.000121148
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`int(hex_num, 16)` converts valid hexadecimal strings, including the documented `'a5b7'`, to the corresponding decimal integer. It also accepts signed hexadecimal strings, consistent with the other conversion methods\u2019 support for negative values.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`int(hex_num, 16)` converts valid hexadecimal strings, including the documented `'a5b7'`, to the corresponding decimal integer. It also accepts signed hexadecimal strings, consistent with the other conversion methods\u2019 support for negative values.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1528,
+            "cached_tokens": 0,
+            "completion_tokens": 64,
+            "reasoning_tokens": 0,
+            "cost": 0.00018480000000000002
+          }
+        ],
+        "prompt_tokens": 1528,
+        "cached_tokens": 0,
+        "completion_tokens": 64,
+        "reasoning_tokens": 0,
+        "cost": 0.00018480000000000002
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef hex_to_decimal(hex_num):\n    \"\"\"\n    Convert a number from hex format to decimal format.\n    :param hex_num: str, hex num\n    :return: int, the decimal representation of hex number str.\n    >>> NumberConverter.hex_to_decimal('a5b7')\n    42423\n    \"\"\"\n    return int(hex_num, 16)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "NumberConverterTestDecimalToBinary": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConverterTestBinaryToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestDecimalToOctal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestOctalToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestDecimalToHex": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestHexToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "NumberConverterTestDecimalToBinary": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConverterTestBinaryToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestDecimalToOctal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestOctalToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestDecimalToHex": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestHexToDecimal": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NumberConvertTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass NumberConverter:\n\n    @staticmethod\n    def decimal_to_binary(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to binary format.\n        :param decimal_num: int, decimal number\n        :return: str, the binary representation of an integer.\n        >>> NumberConverter.decimal_to_binary(42423)\n        '1010010110110111'\n        \"\"\"\n        return bin(decimal_num)[2:]\n\n    @staticmethod\n    def binary_to_decimal(binary_num):\n        \"\"\"\n        Convert a number from binary format to decimal format.\n        :param binary_num: str, binary number\n        :return: int, the decimal representation of binary number str.\n        >>> NumberConverter.binary_to_decimal('1010010110110111')\n        42423\n        \"\"\"\n        return int(binary_num, 2)\n\n    @staticmethod\n    def decimal_to_octal(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to octal format.\n        :param decimal_num: int, decimal number\n        :return: str, the octal representation of an integer.\n        >>> NumberConverter.decimal_to_octal(42423)\n        '122667'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n\n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n\n        octal_digits = []\n        while num > 0:\n            octal_digits.append(str(num % 8))\n            num //= 8\n\n        # Reverse to get most significant digit first\n        result = ''.join(reversed(octal_digits))\n\n        return ('-' if negative else '') + result\n\n    @staticmethod\n    def octal_to_decimal(octal_num):\n        \"\"\"\n        Convert a number from octal format to decimal format.\n        :param octal_num: str, octal num\n        :return: int, the decimal representation of octal number str.\n        >>> NumberConverter.octal_to_decimal('122667')\n        42423\n        \"\"\"\n        return int(octal_num, 8)\n\n    @staticmethod\n    def decimal_to_hex(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to hex format.\n        :param decimal_num: int, decimal number\n        :return hex_num: str, the hex representation of an integer.\n        >>> NumberConverter.decimal_to_hex(42423)\n        'a5b7'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n\n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n\n        hex_digits = []\n        while num > 0:\n            digit = num % 16\n            if digit < 10:\n                hex_digits.append(str(digit))\n            else:\n                hex_digits.append(chr(ord('a') + digit - 10))\n            num //= 16\n\n        # Reverse to get most significant digit first\n        result = ''.join(reversed(hex_digits))\n\n        return ('-' if negative else '') + result\n\n    @staticmethod\n    def hex_to_decimal(hex_num):\n        \"\"\"\n        Convert a number from hex format to decimal format.\n        :param hex_num: str, hex num\n        :return: int, the decimal representation of hex number str.\n        >>> NumberConverter.hex_to_decimal('a5b7')\n        42423\n        \"\"\"\n        return int(hex_num, 16)\n",
+  "source": "\n\nclass NumberConverter:\n\n    @staticmethod\n    def decimal_to_binary(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to binary format.\n        :param decimal_num: int, decimal number\n        :return: str, the binary representation of an integer.\n        >>> NumberConverter.decimal_to_binary(42423)\n        '1010010110110111'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n\n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n\n        binary_digits = []\n        while num > 0:\n            binary_digits.append(str(num % 2))\n            num //= 2\n\n        # Reverse to get most significant bit first\n        result = ''.join(reversed(binary_digits))\n\n        return ('-' if negative else '') + result\n\n    @staticmethod\n    def binary_to_decimal(binary_num):\n        \"\"\"\n        Convert a number from binary format to decimal format.\n        :param binary_num: str, binary number\n        :return: int, the decimal representation of binary number str.\n        >>> NumberConverter.binary_to_decimal('1010010110110111')\n        42423\n        \"\"\"\n        return int(binary_num, 2)\n\n    @staticmethod\n    def decimal_to_octal(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to octal format.\n        :param decimal_num: int, decimal number\n        :return: str, the octal representation of an integer.\n        >>> NumberConverter.decimal_to_octal(42423)\n        '122667'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n\n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n\n        octal_digits = []\n        while num > 0:\n            octal_digits.append(str(num % 8))\n            num //= 8\n\n        # Reverse to get most significant digit first\n        result = ''.join(reversed(octal_digits))\n\n        return ('-' if negative else '') + result\n\n    @staticmethod\n    def octal_to_decimal(octal_num):\n        \"\"\"\n        Convert a number from octal format to decimal format.\n        :param octal_num: str, octal num\n        :return: int, the decimal representation of octal number str.\n        >>> NumberConverter.octal_to_decimal('122667')\n        42423\n        \"\"\"\n        return int(octal_num, 8)\n\n    @staticmethod\n    def decimal_to_hex(decimal_num):\n        \"\"\"\n        Convert a number from decimal format to hex format.\n        :param decimal_num: int, decimal number\n        :return hex_num: str, the hex representation of an integer.\n        >>> NumberConverter.decimal_to_hex(42423)\n        'a5b7'\n        \"\"\"\n        if decimal_num == 0:\n            return '0'\n\n        # Handle negative numbers by converting absolute value and adding '-' prefix\n        negative = decimal_num < 0\n        num = abs(decimal_num)\n\n        hex_digits = []\n        while num > 0:\n            digit = num % 16\n            if digit < 10:\n                hex_digits.append(str(digit))\n            else:\n                hex_digits.append(chr(ord('a') + digit - 10))\n            num //= 16\n\n        # Reverse to get most significant digit first\n        result = ''.join(reversed(hex_digits))\n\n        return ('-' if negative else '') + result\n\n    @staticmethod\n    def hex_to_decimal(hex_num):\n        \"\"\"\n        Convert a number from hex format to decimal format.\n        :param hex_num: str, hex num\n        :return: int, the decimal representation of hex number str.\n        >>> NumberConverter.hex_to_decimal('a5b7')\n        42423\n        \"\"\"\n        return int(hex_num, 16)\n"
+}

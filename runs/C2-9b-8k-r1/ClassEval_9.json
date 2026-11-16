@@ -1,0 +1,211 @@
+{
+  "task_id": "ClassEval_9",
+  "class_name": "BigNumCalculator",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "add",
+      "first": {
+        "code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    # Remove any leading/trailing whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Check for empty or invalid input\n    if not num1 or not num2:\n        return \"0\"\n\n    # Handle signs\n    num1_neg = num1.startswith('-')\n    num2_neg = num2.startswith('-')\n\n    if num1_neg and num2_neg:\n        # Both negative: sum magnitudes and apply negative sign\n        magnitude_sum = BigNumCalculator._add_magnitude(num1[1:], num2[1:])\n        return '-' + magnitude_sum\n    elif num1_neg != num2_neg:\n        # Different signs: subtract smaller from larger, take sign of larger\n        return BigNumCalculator._subtract_abs(num1, num2, num1_neg == (abs(num1) < abs(num2)))\n    else:\n        # Same sign: sum magnitudes\n        if num1_neg:\n            magnitude1 = num1[1:]\n            magnitude2 = num2[1:]\n            return '-' + BigNumCalculator._add_magnitude(magnitude1, magnitude2)\n        else:\n            return BigNumCalculator._add_magnitude(num1, num2)",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Remove any leading/trailing whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n        \n        # Check for empty or invalid input\n        if not num1 or not num2:\n            return \"0\"\n        \n        # Handle signs\n        num1_neg = num1.startswith('-')\n        num2_neg = num2.startswith('-')\n        \n        if num1_neg and num2_neg:\n            # Both negative: sum magnitudes and apply negative sign\n            magnitude_sum = BigNumCalculator._add_magnitude(num1[1:], num2[1:])\n            return '-' + magnitude_sum\n        elif num1_neg != num2_neg:\n            # Different signs: subtract smaller from larger, take sign of larger\n            return BigNumCalculator._subtract_abs(num1, num2, num1_neg == (abs(num1) < abs(num2)))\n        else:\n            # Same sign: sum magnitudes\n            if num1_neg:\n                magnitude1 = num1[1:]\n                magnitude2 = num2[1:]\n                return '-' + BigNumCalculator._add_magnitude(magnitude1, magnitude2)\n            else:\n                return BigNumCalculator._add_magnitude(num1, num2)\n    \n    @staticmethod\n    def _add_magnitude(num1, num2):\n        \"\"\"Internal helper to add non-negative magnitudes.\"\"\"\n        # Reverse strings for easier processing\n        num1_rev = num1[::-1]\n        num2_rev = num2[::-1]\n        \n        i, j = 0, 0\n        carry = 0\n        result = []\n        \n        max_len = max(len(num1_rev), len(num2_rev))\n        \n        while i < max_len or carry > 0:\n            d1 = int(num1_rev[i]) if i < len(num1_rev) else 0\n            d2 = int(num2_rev[j]) if j < len(num2_rev) else 0\n            \n            total = d1 + d2 + carry\n            result.append(str(total % 10))\n            carry = total // 10\n            \n            i += 1\n            j += 1\n        \n        return ''.join(result[::-1])\n    \n    @staticmethod\n    def _subtract_abs(num1, num2, sign_result_neg):\n        \"\"\"Internal helper to subtract one non-negative magnitude from another with absolute value comparison.\"\"\"\n        # Determine which number is larger in magnitude\n        len1 = len(num1)\n        len2 = len(num2)\n        \n        if len1 == len2:\n            larger = num1 if num1 >= num2 else num2\n            smaller = num2 if num1 >= num2 else num1\n        else:\n            larger = num1 if len1 > len2 else num2\n            smaller = num2 if len1 > len2 else num1\n        \n        diff = BigNumCalculator._subtract_magnitude(larger, smaller)\n        result_sign = '-' if (sign_result_neg ^ ((num1 != num1_neg)) and abs(num1) <= abs(num2)) else ''\n        return diff if sign_result_neg else diff\n\n    @staticmethod\n    def _subtract_magnitude(num1, num2):\n        \"\"\"Subtracts two positive magnitudes where num1 >= num2.\"\"\"\n        num1_rev = num1[::-1]\n        num2_rev = num2[::-1]\n        \n        i, j = 0, 0\n        borrow = 0\n        result = []\n        \n        while i < len(num1_rev):\n            d1 = int(num1_rev[i])\n            d2 = int(num2_rev[j]) if j < len(num2_rev) else 0\n            \n            total = d1 - d2 - borrow\n            if total < 0:\n                total += 10\n                borrow = 1\n            else:\n                borrow = 0\n            \n            result.append(str(total))\n            i += 1\n            j += 1\n        \n        # Remove leading zeros\n        result_str = ''.join(result)\n        result_str = result_str.lstrip('0')\n        return result_str if result_str else '0'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 633,
+        "cached_tokens": 0,
+        "completion_tokens": 1940,
+        "reasoning_tokens": 776,
+        "cost": 9.9204e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method calls `_add_magnitude` and `_subtract_abs`, but neither helper exists in the class, so even adding two positive numbers raises `AttributeError`. Also, `abs(num1)` and `abs(num2)` raise `TypeError` because the values are strings; implement the helpers and compare parsed magnitudes instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method calls `_add_magnitude` and `_subtract_abs`, but neither helper exists in the class, so even adding two positive numbers raises `AttributeError`. Also, `abs(num1)` and `abs(num2)` raise `TypeError` because the values are strings; implement the helpers and compare parsed magnitudes instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 961,
+            "cached_tokens": 0,
+            "completion_tokens": 179,
+            "reasoning_tokens": 94,
+            "cost": 0.0001856
+          }
+        ],
+        "prompt_tokens": 961,
+        "cached_tokens": 0,
+        "completion_tokens": 179,
+        "reasoning_tokens": 94,
+        "cost": 0.0001856
+      },
+      "revision": {
+        "code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    # Convert to strings and strip whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Handle empty input\n    if not num1 or not num2:\n        return \"0\"\n\n    # Determine signs\n    neg1 = num1.startswith('-')\n    neg2 = num2.startswith('-')\n\n    if neg1 == neg2:\n        # Same sign: add magnitudes, preserve sign\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n        result_mag = BigNumCalculator._add_magnitude(mag1, mag2)\n        return '-' + result_mag if neg1 else result_mag\n    else:\n        # Different signs: subtract smaller from larger\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n\n        # Compare magnitudes (string comparison works for same-length; check length first)\n        if len(mag1) > len(mag2) or (len(mag1) == len(mag2) and mag1 >= mag2):\n            diff = BigNumCalculator._subtract_magnitude(mag1, mag2)\n            return '-' if neg1 else '+' + diff\n        else:\n            diff = BigNumCalculator._subtract_magnitude(mag2, mag1)\n            return '-' if neg2 else diff",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Convert to strings and strip whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n        \n        # Handle empty input\n        if not num1 or not num2:\n            return \"0\"\n        \n        # Determine signs\n        neg1 = num1.startswith('-')\n        neg2 = num2.startswith('-')\n        \n        if neg1 == neg2:\n            # Same sign: add magnitudes, preserve sign\n            mag1 = num1[1:] if neg1 else num1\n            mag2 = num2[1:] if neg2 else num2\n            result_mag = BigNumCalculator._add_magnitude(mag1, mag2)\n            return '-' + result_mag if neg1 else result_mag\n        else:\n            # Different signs: subtract smaller from larger\n            mag1 = num1[1:] if neg1 else num1\n            mag2 = num2[1:] if neg2 else num2\n            \n            # Compare magnitudes (string comparison works for same-length; check length first)\n            if len(mag1) > len(mag2) or (len(mag1) == len(mag2) and mag1 >= mag2):\n                diff = BigNumCalculator._subtract_magnitude(mag1, mag2)\n                return '-' if neg1 else '+' + diff\n            else:\n                diff = BigNumCalculator._subtract_magnitude(mag2, mag1)\n                return '-' if neg2 else diff\n    \n    @staticmethod\n    def _add_magnitude(num1, num2):\n        \"\"\"Helper to add two non-negative magnitude strings.\"\"\"\n        num1_rev = num1[::-1]\n        num2_rev = num2[::-1]\n        \n        carry = 0\n        result = []\n        max_len = max(len(num1_rev), len(num2_rev))\n        \n        for i in range(max_len):\n            d1 = int(num1_rev[i]) if i < len(num1_rev) else 0\n            d2 = int(num2_rev[i]) if i < len(num2_rev) else 0\n            total = d1 + d2 + carry\n            result.append(str(total % 10))\n            carry = total // 10\n        \n        if carry:\n            result.append('1')\n        \n        return ''.join(result[::-1])\n    \n    @staticmethod\n    def _subtract_magnitude(num1, num2):\n        \"\"\"Helper to subtract two positive magnitudes where num1 >= num2.\"\"\"\n        num1_rev = num1[::-1]\n        num2_rev = num2[::-1]\n        \n        borrow = 0\n        result = []\n        \n        for i in range(len(num1)):\n            d1 = int(num1_rev[i])\n            d2 = int(num2_rev[i]) if i < len(num2_rev) else 0\n            \n            total = d1 - d2 - borrow\n            if total < 0:\n                total += 10\n                borrow = 1\n            else:\n                borrow = 0\n            \n            result.append(str(total))\n        \n        return ''.join(result).lstrip('0') or '0'\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1798,
+        "cached_tokens": 0,
+        "completion_tokens": 2148,
+        "reasoning_tokens": 1318,
+        "cost": 0.00014056
+      },
+      "final_code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    # Convert to strings and strip whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Handle empty input\n    if not num1 or not num2:\n        return \"0\"\n\n    # Determine signs\n    neg1 = num1.startswith('-')\n    neg2 = num2.startswith('-')\n\n    if neg1 == neg2:\n        # Same sign: add magnitudes, preserve sign\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n        result_mag = BigNumCalculator._add_magnitude(mag1, mag2)\n        return '-' + result_mag if neg1 else result_mag\n    else:\n        # Different signs: subtract smaller from larger\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n\n        # Compare magnitudes (string comparison works for same-length; check length first)\n        if len(mag1) > len(mag2) or (len(mag1) == len(mag2) and mag1 >= mag2):\n            diff = BigNumCalculator._subtract_magnitude(mag1, mag2)\n            return '-' if neg1 else '+' + diff\n        else:\n            diff = BigNumCalculator._subtract_magnitude(mag2, mag1)\n            return '-' if neg2 else diff",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "subtract",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1118,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 7576,
+        "cost": 0.000367304
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "multiply",
+      "first": {
+        "code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n\n    \"\"\"\n    # Convert to strings and strip whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Handle empty input\n    if not num1 or not num2:\n        return \"0\"\n\n    # If either is zero\n    if num1 == \"0\" or num2 == \"0\":\n        return \"0\"\n\n    # Determine signs\n    neg1 = num1.startswith('-')\n    neg2 = num2.startswith('-')\n\n    # Remove sign for calculation\n    mag1 = num1[1:] if neg1 else num1\n    mag2 = num2[1:] if neg2 else num2\n\n    # Use Python's built-in arbitrary precision integer\n    result_int = int(mag1) * int(mag2)\n\n    # Apply sign\n    if neg1 != neg2:\n        result_int = -result_int\n\n    # Convert back to string\n    return str(result_int)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n\n    \"\"\"\n    # Convert to strings and strip whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Handle empty input\n    if not num1 or not num2:\n        return \"0\"\n\n    # If either is zero\n    if num1 == \"0\" or num2 == \"0\":\n        return \"0\"\n\n    # Determine signs\n    neg1 = num1.startswith('-')\n    neg2 = num2.startswith('-')\n    \n    # Remove sign for calculation\n    mag1 = num1[1:] if neg1 else num1\n    mag2 = num2[1:] if neg2 else num2\n    \n    # Use Python's built-in arbitrary precision integer\n    result_int = int(mag1) * int(mag2)\n    \n    # Apply sign\n    if neg1 != neg2:\n        result_int = -result_int\n    \n    # Convert back to string\n    return str(result_int)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1118,
+        "cached_tokens": 0,
+        "completion_tokens": 967,
+        "reasoning_tokens": 646,
+        "cost": 7.1918e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method strips whitespace, handles signed integer strings, multiplies their arbitrary-precision integer values, and returns the product as a string. This meets the documented behavior for big integer inputs.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method strips whitespace, handles signed integer strings, multiplies their arbitrary-precision integer values, and returns the product as a string. This meets the documented behavior for big integer inputs.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1335,
+            "cached_tokens": 0,
+            "completion_tokens": 258,
+            "reasoning_tokens": 203,
+            "cost": 0.0002625
+          }
+        ],
+        "prompt_tokens": 1335,
+        "cached_tokens": 0,
+        "completion_tokens": 258,
+        "reasoning_tokens": 203,
+        "cost": 0.0002625
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n\n    \"\"\"\n    # Convert to strings and strip whitespace\n    num1 = str(num1).strip()\n    num2 = str(num2).strip()\n\n    # Handle empty input\n    if not num1 or not num2:\n        return \"0\"\n\n    # If either is zero\n    if num1 == \"0\" or num2 == \"0\":\n        return \"0\"\n\n    # Determine signs\n    neg1 = num1.startswith('-')\n    neg2 = num2.startswith('-')\n\n    # Remove sign for calculation\n    mag1 = num1[1:] if neg1 else num1\n    mag2 = num2[1:] if neg2 else num2\n\n    # Use Python's built-in arbitrary precision integer\n    result_int = int(mag1) * int(mag2)\n\n    # Apply sign\n    if neg1 != neg2:\n        result_int = -result_int\n\n    # Convert back to string\n    return str(result_int)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "BigNumCalculatorTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "BigNumCalculatorTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Remove any leading/trailing whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n\n        # Check for empty or invalid input\n        if not num1 or not num2:\n            return \"0\"\n\n        # Handle signs\n        num1_neg = num1.startswith('-')\n        num2_neg = num2.startswith('-')\n\n        if num1_neg and num2_neg:\n            # Both negative: sum magnitudes and apply negative sign\n            magnitude_sum = BigNumCalculator._add_magnitude(num1[1:], num2[1:])\n            return '-' + magnitude_sum\n        elif num1_neg != num2_neg:\n            # Different signs: subtract smaller from larger, take sign of larger\n            return BigNumCalculator._subtract_abs(num1, num2, num1_neg == (abs(num1) < abs(num2)))\n        else:\n            # Same sign: sum magnitudes\n            if num1_neg:\n                magnitude1 = num1[1:]\n                magnitude2 = num2[1:]\n                return '-' + BigNumCalculator._add_magnitude(magnitude1, magnitude2)\n            else:\n                return BigNumCalculator._add_magnitude(num1, num2)\n\n    @staticmethod\n    def subtract(num1, num2):\n        return None\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n\n        \"\"\"\n        # Convert to strings and strip whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n\n        # Handle empty input\n        if not num1 or not num2:\n            return \"0\"\n\n        # If either is zero\n        if num1 == \"0\" or num2 == \"0\":\n            return \"0\"\n\n        # Determine signs\n        neg1 = num1.startswith('-')\n        neg2 = num2.startswith('-')\n\n        # Remove sign for calculation\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n\n        # Use Python's built-in arbitrary precision integer\n        result_int = int(mag1) * int(mag2)\n\n        # Apply sign\n        if neg1 != neg2:\n            result_int = -result_int\n\n        # Convert back to string\n        return str(result_int)\n",
+  "source": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Convert to strings and strip whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n\n        # Handle empty input\n        if not num1 or not num2:\n            return \"0\"\n\n        # Determine signs\n        neg1 = num1.startswith('-')\n        neg2 = num2.startswith('-')\n\n        if neg1 == neg2:\n            # Same sign: add magnitudes, preserve sign\n            mag1 = num1[1:] if neg1 else num1\n            mag2 = num2[1:] if neg2 else num2\n            result_mag = BigNumCalculator._add_magnitude(mag1, mag2)\n            return '-' + result_mag if neg1 else result_mag\n        else:\n            # Different signs: subtract smaller from larger\n            mag1 = num1[1:] if neg1 else num1\n            mag2 = num2[1:] if neg2 else num2\n\n            # Compare magnitudes (string comparison works for same-length; check length first)\n            if len(mag1) > len(mag2) or (len(mag1) == len(mag2) and mag1 >= mag2):\n                diff = BigNumCalculator._subtract_magnitude(mag1, mag2)\n                return '-' if neg1 else '+' + diff\n            else:\n                diff = BigNumCalculator._subtract_magnitude(mag2, mag1)\n                return '-' if neg2 else diff\n\n    @staticmethod\n    def subtract(num1, num2):\n        return None\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n\n        \"\"\"\n        # Convert to strings and strip whitespace\n        num1 = str(num1).strip()\n        num2 = str(num2).strip()\n\n        # Handle empty input\n        if not num1 or not num2:\n            return \"0\"\n\n        # If either is zero\n        if num1 == \"0\" or num2 == \"0\":\n            return \"0\"\n\n        # Determine signs\n        neg1 = num1.startswith('-')\n        neg2 = num2.startswith('-')\n\n        # Remove sign for calculation\n        mag1 = num1[1:] if neg1 else num1\n        mag2 = num2[1:] if neg2 else num2\n\n        # Use Python's built-in arbitrary precision integer\n        result_int = int(mag1) * int(mag2)\n\n        # Apply sign\n        if neg1 != neg2:\n            result_int = -result_int\n\n        # Convert back to string\n        return str(result_int)\n"
+}

@@ -1,0 +1,369 @@
+{
+  "task_id": "ClassEval_56",
+  "class_name": "MetricsCalculator",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "update",
+      "first": {
+        "code": "def update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            self.true_positives += 1\n        elif pred == 1 and true == 0:\n            self.false_positives += 1\n        elif pred == 0 and true == 1:\n            self.false_negatives += 1\n        else:\n            self.true_negatives += 1",
+        "valid": true,
+        "reply": "```python\n    def update(self, predicted_labels, true_labels):\n        \"\"\"\n        Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: None, change the number of corresponding samples\n        >>> mc = MetricsCalculator()\n        >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n        (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n        \"\"\"\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                self.true_positives += 1\n            elif pred == 1 and true == 0:\n                self.false_positives += 1\n            elif pred == 0 and true == 1:\n                self.false_negatives += 1\n            else:\n                self.true_negatives += 1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 756,
+        "cached_tokens": 0,
+        "completion_tokens": 573,
+        "reasoning_tokens": 265,
+        "cost": 4.2759e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "For paired binary labels, the method increments the appropriate count for each pair and implicitly returns `None`, matching the docstring and example. It assumes the label lists have equal length and contain only 0s and 1s.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "For paired binary labels, the method increments the appropriate count for each pair and implicitly returns `None`, matching the docstring and example. It assumes the label lists have equal length and contain only 0s and 1s.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1109,
+            "cached_tokens": 0,
+            "completion_tokens": 402,
+            "reasoning_tokens": 338,
+            "cost": 0.0003119
+          }
+        ],
+        "prompt_tokens": 1109,
+        "cached_tokens": 0,
+        "completion_tokens": 402,
+        "reasoning_tokens": 338,
+        "cost": 0.0003119
+      },
+      "revision": null,
+      "final_code": "def update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            self.true_positives += 1\n        elif pred == 1 and true == 0:\n            self.false_positives += 1\n        elif pred == 0 and true == 1:\n            self.false_negatives += 1\n        else:\n            self.true_negatives += 1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "precision",
+      "first": {
+        "code": "def precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n\n    if tp + fp > 0:\n        return tp / (tp + fp)\n    else:\n        return 0.0",
+        "valid": true,
+        "reply": "```python\ndef precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n    \n    if tp + fp > 0:\n        return tp / (tp + fp)\n    else:\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1012,
+        "cached_tokens": 0,
+        "completion_tokens": 555,
+        "reasoning_tokens": 301,
+        "cost": 4.8969e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method counts true positives and false positives from the supplied label pairs and returns TP/(TP+FP), yielding 0.5 for the documented example and 0.0 when there are no positive predictions. It does not depend on or alter the accumulated counters, which is consistent with calculating precision from its arguments.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method counts true positives and false positives from the supplied label pairs and returns TP/(TP+FP), yielding 0.5 for the documented example and 0.0 when there are no positive predictions. It does not depend on or alter the accumulated counters, which is consistent with calculating precision from its arguments.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1294,
+            "cached_tokens": 0,
+            "completion_tokens": 79,
+            "reasoning_tokens": 0,
+            "cost": 0.0001689
+          }
+        ],
+        "prompt_tokens": 1294,
+        "cached_tokens": 0,
+        "completion_tokens": 79,
+        "reasoning_tokens": 0,
+        "cost": 0.0001689
+      },
+      "revision": null,
+      "final_code": "def precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n\n    if tp + fp > 0:\n        return tp / (tp + fp)\n    else:\n        return 0.0",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "recall",
+      "first": {
+        "code": "def recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n\n    if tp + fn > 0:\n        return tp / (tp + fn)\n    else:\n        return 0.0",
+        "valid": true,
+        "reply": "```python\ndef recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n    \n    if tp + fn > 0:\n        return tp / (tp + fn)\n    else:\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1196,
+        "cached_tokens": 0,
+        "completion_tokens": 400,
+        "reasoning_tokens": 225,
+        "cost": 4.7892e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method counts true positives and false negatives, then returns TP / (TP + FN), which is recall; it also returns 0.0 when there are no positive true labels. It correctly handles the documented example and does not depend on any missing class fields or methods.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method counts true positives and false negatives, then returns TP / (TP + FN), which is recall; it also returns 0.0 when there are no positive true labels. It correctly handles the documented example and does not depend on any missing class fields or methods.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1470,
+            "cached_tokens": 0,
+            "completion_tokens": 71,
+            "reasoning_tokens": 0,
+            "cost": 0.0001825
+          }
+        ],
+        "prompt_tokens": 1470,
+        "cached_tokens": 0,
+        "completion_tokens": 71,
+        "reasoning_tokens": 0,
+        "cost": 0.0001825
+      },
+      "revision": null,
+      "final_code": "def recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n\n    if tp + fn > 0:\n        return tp / (tp + fn)\n    else:\n        return 0.0",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "f1_score",
+      "first": {
+        "code": "def f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = fn = tn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n        else:\n            tn += 1\n\n    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0\n    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0\n\n    if precision + recall > 0:\n        return 2 * (precision * recall) / (precision + recall)\n    else:\n        return 0.0",
+        "valid": true,
+        "reply": "```python\ndef f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = fn = tn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n        else:\n            tn += 1\n    \n    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0\n    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0\n    \n    if precision + recall > 0:\n        return 2 * (precision * recall) / (precision + recall)\n    else:\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1383,
+        "cached_tokens": 0,
+        "completion_tokens": 839,
+        "reasoning_tokens": 509,
+        "cost": 7.0062e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly computes true positives, false positives, and false negatives from the supplied labels, then returns the harmonic mean of precision and recall, using 0.0 when that mean is undefined. It matches the documented example and does not depend on missing class fields or methods.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly computes true positives, false positives, and false negatives from the supplied labels, then returns the harmonic mean of precision and recall, using 0.0 when that mean is undefined. It matches the documented example and does not depend on missing class fields or methods.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1749,
+            "cached_tokens": 0,
+            "completion_tokens": 71,
+            "reasoning_tokens": 0,
+            "cost": 0.00021040000000000002
+          }
+        ],
+        "prompt_tokens": 1749,
+        "cached_tokens": 0,
+        "completion_tokens": 71,
+        "reasoning_tokens": 0,
+        "cost": 0.00021040000000000002
+      },
+      "revision": null,
+      "final_code": "def f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    tp = fp = fn = tn = 0\n    for pred, true in zip(predicted_labels, true_labels):\n        if pred == 1 and true == 1:\n            tp += 1\n        elif pred == 1 and true == 0:\n            fp += 1\n        elif pred == 0 and true == 1:\n            fn += 1\n        else:\n            tn += 1\n\n    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0\n    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0\n\n    if precision + recall > 0:\n        return 2 * (precision * recall) / (precision + recall)\n    else:\n        return 0.0",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "accuracy",
+      "first": {
+        "code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    total = len(predicted_labels)\n    correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n\n    if total > 0:\n        return correct / total\n    else:\n        return 0.0",
+        "valid": true,
+        "reply": "```python\ndef accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    total = len(predicted_labels)\n    correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n    \n    if total > 0:\n        return correct / total\n    else:\n        return 0.0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1671,
+        "cached_tokens": 0,
+        "completion_tokens": 910,
+        "reasoning_tokens": 670,
+        "cost": 8.0607e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`zip` only compares labels up to the shorter list, but the denominator is always `len(predicted_labels)`, so unequal-length inputs can produce an incorrect accuracy. Require the lists to have equal lengths (or otherwise define and use a consistent sample count) before calculating the result.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`zip` only compares labels up to the shorter list, but the denominator is always `len(predicted_labels)`, so unequal-length inputs can produce an incorrect accuracy. Require the lists to have equal lengths (or otherwise define and use a consistent sample count) before calculating the result.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1889,
+            "cached_tokens": 0,
+            "completion_tokens": 381,
+            "reasoning_tokens": 305,
+            "cost": 0.00037939999999999995
+          }
+        ],
+        "prompt_tokens": 1889,
+        "cached_tokens": 0,
+        "completion_tokens": 381,
+        "reasoning_tokens": 305,
+        "cost": 0.00037939999999999995
+      },
+      "revision": {
+        "code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(\"predicted_labels and true_labels must have the same length\")\n\n    total = len(predicted_labels)\n    correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n\n    return correct / total",
+        "valid": true,
+        "reply": "```python\ndef accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(\"predicted_labels and true_labels must have the same length\")\n    \n    total = len(predicted_labels)\n    correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n    \n    return correct / total\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1922,
+        "cached_tokens": 0,
+        "completion_tokens": 896,
+        "reasoning_tokens": 868,
+        "cost": 8.6838e-05
+      },
+      "final_code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(\"predicted_labels and true_labels must have the same length\")\n\n    total = len(predicted_labels)\n    correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n\n    return correct / total",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "MetricsCalculatorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestPrecision": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestRecall": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestF1Score": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestAccuracy": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "MetricsCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "MetricsCalculatorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestPrecision": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestRecall": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestF1Score": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestAccuracy": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "MetricsCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass MetricsCalculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the number of all four samples to 0\n        \"\"\"\n        self.true_positives = 0\n        self.false_positives = 0\n        self.false_negatives = 0\n        self.true_negatives = 0\n\n    def update(self, predicted_labels, true_labels):\n        \"\"\"\n        Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: None, change the number of corresponding samples\n        >>> mc = MetricsCalculator()\n        >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n        (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n        \"\"\"\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                self.true_positives += 1\n            elif pred == 1 and true == 0:\n                self.false_positives += 1\n            elif pred == 0 and true == 1:\n                self.false_negatives += 1\n            else:\n                self.true_negatives += 1\n\n    def precision(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate precision\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fp = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 1 and true == 0:\n                fp += 1\n\n        if tp + fp > 0:\n            return tp / (tp + fp)\n        else:\n            return 0.0\n\n    def recall(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fn = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 0 and true == 1:\n                fn += 1\n\n        if tp + fn > 0:\n            return tp / (tp + fn)\n        else:\n            return 0.0\n\n    def f1_score(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate f1 score, which is the harmonic mean of precision and recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fp = fn = tn = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 1 and true == 0:\n                fp += 1\n            elif pred == 0 and true == 1:\n                fn += 1\n            else:\n                tn += 1\n\n        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0\n        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0\n\n        if precision + recall > 0:\n            return 2 * (precision * recall) / (precision + recall)\n        else:\n            return 0.0\n\n    def accuracy(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate accuracy\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        total = len(predicted_labels)\n        correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n\n        if total > 0:\n            return correct / total\n        else:\n            return 0.0\n",
+  "source": "\n\nclass MetricsCalculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the number of all four samples to 0\n        \"\"\"\n        self.true_positives = 0\n        self.false_positives = 0\n        self.false_negatives = 0\n        self.true_negatives = 0\n\n    def update(self, predicted_labels, true_labels):\n        \"\"\"\n        Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: None, change the number of corresponding samples\n        >>> mc = MetricsCalculator()\n        >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n        (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n        \"\"\"\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                self.true_positives += 1\n            elif pred == 1 and true == 0:\n                self.false_positives += 1\n            elif pred == 0 and true == 1:\n                self.false_negatives += 1\n            else:\n                self.true_negatives += 1\n\n    def precision(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate precision\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fp = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 1 and true == 0:\n                fp += 1\n\n        if tp + fp > 0:\n            return tp / (tp + fp)\n        else:\n            return 0.0\n\n    def recall(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fn = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 0 and true == 1:\n                fn += 1\n\n        if tp + fn > 0:\n            return tp / (tp + fn)\n        else:\n            return 0.0\n\n    def f1_score(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate f1 score, which is the harmonic mean of precision and recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        tp = fp = fn = tn = 0\n        for pred, true in zip(predicted_labels, true_labels):\n            if pred == 1 and true == 1:\n                tp += 1\n            elif pred == 1 and true == 0:\n                fp += 1\n            elif pred == 0 and true == 1:\n                fn += 1\n            else:\n                tn += 1\n\n        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0\n        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0\n\n        if precision + recall > 0:\n            return 2 * (precision * recall) / (precision + recall)\n        else:\n            return 0.0\n\n    def accuracy(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate accuracy\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(\"predicted_labels and true_labels must have the same length\")\n\n        total = len(predicted_labels)\n        correct = sum(1 for p, t in zip(predicted_labels, true_labels) if p == t)\n\n        return correct / total\n"
+}

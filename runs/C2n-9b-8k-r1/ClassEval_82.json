@@ -1,0 +1,512 @@
+{
+  "task_id": "ClassEval_82",
+  "class_name": "StockPortfolioTracker",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "add_stock",
+      "first": {
+        "code": "def add_stock(self, stock):\n    \"\"\"\n    Add a stock to the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.add_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    >>> tracker.portfolio\n    [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n    \"\"\"\n    self.portfolio.append(stock)",
+        "valid": true,
+        "reply": "```python\n    def add_stock(self, stock):\n        \"\"\"\n        Add a stock to the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.add_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        >>> tracker.portfolio\n        [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n        \"\"\"\n        self.portfolio.append(stock)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1189,
+        "cached_tokens": 0,
+        "completion_tokens": 586,
+        "reasoning_tokens": 459,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "It appends the supplied stock dictionary to `self.portfolio`, producing the portfolio shown in the example. This matches the stated behavior of adding a stock.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "It appends the supplied stock dictionary to `self.portfolio`, producing the portfolio shown in the example. This matches the stated behavior of adding a stock.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1308,
+            "cached_tokens": 0,
+            "completion_tokens": 47,
+            "reasoning_tokens": 0,
+            "cost": 0.0001543
+          }
+        ],
+        "prompt_tokens": 1308,
+        "cached_tokens": 0,
+        "completion_tokens": 47,
+        "reasoning_tokens": 0,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "def add_stock(self, stock):\n    \"\"\"\n    Add a stock to the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.add_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    >>> tracker.portfolio\n    [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n    \"\"\"\n    self.portfolio.append(stock)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "remove_stock",
+      "first": {
+        "code": "def remove_stock(self, stock):\n    \"\"\"\n    Remove a stock from the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    if not any(s[\"name\"] == stock[\"name\"] for s in self.portfolio):\n        return False\n    self.portfolio.remove(stock)\n    return True",
+        "valid": true,
+        "reply": "```python\ndef remove_stock(self, stock):\n    \"\"\"\n    Remove a stock from the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    if not any(s[\"name\"] == stock[\"name\"] for s in self.portfolio):\n        return False\n    self.portfolio.remove(stock)\n    return True\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1331,
+        "cached_tokens": 0,
+        "completion_tokens": 621,
+        "reasoning_tokens": 439,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method checks whether a stock with the same name exists, but then removes the exact dictionary; if its price or quantity differs, `list.remove` raises `ValueError`. Remove the matching portfolio entry by name (or check for the exact dictionary before calling `remove`).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method checks whether a stock with the same name exists, but then removes the exact dictionary; if its price or quantity differs, `list.remove` raises `ValueError`. Remove the matching portfolio entry by name (or check for the exact dictionary before calling `remove`).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1469,
+            "cached_tokens": 0,
+            "completion_tokens": 200,
+            "reasoning_tokens": 126,
+            "cost": 0.0002469
+          }
+        ],
+        "prompt_tokens": 1469,
+        "cached_tokens": 0,
+        "completion_tokens": 200,
+        "reasoning_tokens": 126,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def remove_stock(self, stock):\n    \"\"\"\n    Remove a stock from the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock[\"name\"]:\n            del self.portfolio[i]\n            return True\n    return False",
+        "valid": true,
+        "reply": "```python\ndef remove_stock(self, stock):\n    \"\"\"\n    Remove a stock from the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock[\"name\"]:\n            del self.portfolio[i]\n            return True\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1545,
+        "cached_tokens": 0,
+        "completion_tokens": 757,
+        "reasoning_tokens": 673,
+        "cost": 0.000180003
+      },
+      "final_code": "def remove_stock(self, stock):\n    \"\"\"\n    Remove a stock from the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock[\"name\"]:\n            del self.portfolio[i]\n            return True\n    return False",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "buy_stock",
+      "first": {
+        "code": "def buy_stock(self, stock):\n    \"\"\"\n    Buy a stock and add it to the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to buy,int.\n    :return: True if the stock was bought successfully, False if the cash balance is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.buy_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n    \"\"\"\n    cost = stock[\"price\"] * stock[\"quantity\"]\n    if self.cash_balance >= cost:\n        self.cash_balance -= cost\n        self.portfolio.append(stock)\n        return True\n    return False",
+        "valid": true,
+        "reply": "```python\ndef buy_stock(self, stock):\n    \"\"\"\n    Buy a stock and add it to the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to buy,int.\n    :return: True if the stock was bought successfully, False if the cash balance is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.buy_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n    \"\"\"\n    cost = stock[\"price\"] * stock[\"quantity\"]\n    if self.cash_balance >= cost:\n        self.cash_balance -= cost\n        self.portfolio.append(stock)\n        return True\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1504,
+        "cached_tokens": 0,
+        "completion_tokens": 852,
+        "reasoning_tokens": 638,
+        "cost": 0.00018662
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method computes the purchase cost from the stock\u2019s price and quantity, deducts it only when sufficient cash is available, and then adds the stock to the portfolio. Otherwise it returns `False` without changing either field, matching the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method computes the purchase cost from the stock\u2019s price and quantity, deducts it only when sufficient cash is available, and then adds the stock to the portfolio. Otherwise it returns `False` without changing either field, matching the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1660,
+            "cached_tokens": 0,
+            "completion_tokens": 135,
+            "reasoning_tokens": 68,
+            "cost": 0.0002335
+          }
+        ],
+        "prompt_tokens": 1660,
+        "cached_tokens": 0,
+        "completion_tokens": 135,
+        "reasoning_tokens": 68,
+        "cost": 0.0002335
+      },
+      "revision": null,
+      "final_code": "def buy_stock(self, stock):\n    \"\"\"\n    Buy a stock and add it to the portfolio.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to buy,int.\n    :return: True if the stock was bought successfully, False if the cash balance is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.buy_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n    \"\"\"\n    cost = stock[\"price\"] * stock[\"quantity\"]\n    if self.cash_balance >= cost:\n        self.cash_balance -= cost\n        self.portfolio.append(stock)\n        return True\n    return False",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "sell_stock",
+      "first": {
+        "code": "def sell_stock(self, stock):\n    \"\"\"\n    Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to sell,int.\n    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.sell_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    stock_name = stock[\"name\"]\n    price = stock[\"price\"]\n    quantity_to_sell = stock[\"quantity\"]\n\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock_name:\n            if s[\"quantity\"] >= quantity_to_sell:\n                # Calculate proceeds from sale\n                proceeds = price * quantity_to_sell\n                self.cash_balance += proceeds\n\n                # Update quantity in the stock entry\n                s[\"quantity\"] -= quantity_to_sell\n\n                # Remove stock entry if quantity is now 0\n                if s[\"quantity\"] == 0:\n                    del self.portfolio[i]\n                    return True\n            return False\n    return False",
+        "valid": true,
+        "reply": "```python\ndef sell_stock(self, stock):\n    \"\"\"\n    Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to sell,int.\n    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.sell_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    stock_name = stock[\"name\"]\n    price = stock[\"price\"]\n    quantity_to_sell = stock[\"quantity\"]\n    \n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock_name:\n            if s[\"quantity\"] >= quantity_to_sell:\n                # Calculate proceeds from sale\n                proceeds = price * quantity_to_sell\n                self.cash_balance += proceeds\n                \n                # Update quantity in the stock entry\n                s[\"quantity\"] -= quantity_to_sell\n                \n                # Remove stock entry if quantity is now 0\n                if s[\"quantity\"] == 0:\n                    del self.portfolio[i]\n                    return True\n            return False\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1716,
+        "cached_tokens": 0,
+        "completion_tokens": 1522,
+        "reasoning_tokens": 1298,
+        "cost": 0.000267366
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When a sale succeeds but leaves shares in the portfolio, the method updates the cash and share quantity, then returns False; it returns True only when the entire entry is removed. Return True after any successful sale, regardless of whether shares remain.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When a sale succeeds but leaves shares in the portfolio, the method updates the cash and share quantity, then returns False; it returns True only when the entire entry is removed. Return True after any successful sale, regardless of whether shares remain.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1962,
+            "cached_tokens": 0,
+            "completion_tokens": 205,
+            "reasoning_tokens": 138,
+            "cost": 0.00029870000000000005
+          }
+        ],
+        "prompt_tokens": 1962,
+        "cached_tokens": 0,
+        "completion_tokens": 205,
+        "reasoning_tokens": 138,
+        "cost": 0.00029870000000000005
+      },
+      "revision": {
+        "code": "def sell_stock(self, stock):\n    \"\"\"\n    Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to sell,int.\n    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.sell_stock({\"name\": 'AAPL', 'price': 150.0, 'quantity': 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    stock_name = stock[\"name\"]\n    price = stock[\"price\"]\n    quantity_to_sell = stock[\"quantity\"]\n\n    found = False\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock_name:\n            found = True\n            if s[\"quantity\"] >= quantity_to_sell:\n                # Calculate proceeds from sale\n                proceeds = price * quantity_to_sell\n                self.cash_balance += proceeds\n\n                # Update quantity in the stock entry\n                s[\"quantity\"] -= quantity_to_sell\n\n                # Remove stock entry if quantity is now 0\n                if s[\"quantity\"] == 0:\n                    del self.portfolio[i]\n            return found\n\n    return False",
+        "valid": true,
+        "reply": "```python\ndef sell_stock(self, stock):\n    \"\"\"\n    Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to sell,int.\n    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.sell_stock({\"name\": 'AAPL', 'price': 150.0, 'quantity': 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    stock_name = stock[\"name\"]\n    price = stock[\"price\"]\n    quantity_to_sell = stock[\"quantity\"]\n    \n    found = False\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock_name:\n            found = True\n            if s[\"quantity\"] >= quantity_to_sell:\n                # Calculate proceeds from sale\n                proceeds = price * quantity_to_sell\n                self.cash_balance += proceeds\n                \n                # Update quantity in the stock entry\n                s[\"quantity\"] -= quantity_to_sell\n                \n                # Remove stock entry if quantity is now 0\n                if s[\"quantity\"] == 0:\n                    del self.portfolio[i]\n            return found\n    \n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2092,
+        "cached_tokens": 0,
+        "completion_tokens": 896,
+        "reasoning_tokens": 616,
+        "cost": 0.00023096
+      },
+      "final_code": "def sell_stock(self, stock):\n    \"\"\"\n    Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :param quantity: the quantity of the stock to sell,int.\n    :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.sell_stock({\"name\": 'AAPL', 'price': 150.0, 'quantity': 10})\n    True\n    >>> tracker.portfolio\n    []\n\n    \"\"\"\n    stock_name = stock[\"name\"]\n    price = stock[\"price\"]\n    quantity_to_sell = stock[\"quantity\"]\n\n    found = False\n    for i, s in enumerate(self.portfolio):\n        if s[\"name\"] == stock_name:\n            found = True\n            if s[\"quantity\"] >= quantity_to_sell:\n                # Calculate proceeds from sale\n                proceeds = price * quantity_to_sell\n                self.cash_balance += proceeds\n\n                # Update quantity in the stock entry\n                s[\"quantity\"] -= quantity_to_sell\n\n                # Remove stock entry if quantity is now 0\n                if s[\"quantity\"] == 0:\n                    del self.portfolio[i]\n            return found\n\n    return False",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "calculate_portfolio_value",
+      "first": {
+        "code": "def calculate_portfolio_value(self):\n    \"\"\"\n    Calculate the total value of the portfolio.\n    :return: the total value of the portfolio, float.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.calculate_portfolio_value()\n    11500.0\n    \"\"\"\n    total_value = self.cash_balance\n    for stock in self.portfolio:\n        total_value += stock[\"price\"] * stock[\"quantity\"]\n    return total_value",
+        "valid": true,
+        "reply": "```python\ndef calculate_portfolio_value(self):\n    \"\"\"\n    Calculate the total value of the portfolio.\n    :return: the total value of the portfolio, float.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.calculate_portfolio_value()\n    11500.0\n    \"\"\"\n    total_value = self.cash_balance\n    for stock in self.portfolio:\n        total_value += stock[\"price\"] * stock[\"quantity\"]\n    return total_value\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2054,
+        "cached_tokens": 0,
+        "completion_tokens": 826,
+        "reasoning_tokens": 553,
+        "cost": 0.000221446
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly starts with the cash balance and adds each stock\u2019s price times its quantity, matching the documented total portfolio value and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly starts with the cash balance and adds each stock\u2019s price times its quantity, matching the documented total portfolio value and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2094,
+            "cached_tokens": 0,
+            "completion_tokens": 107,
+            "reasoning_tokens": 62,
+            "cost": 0.0002629
+          }
+        ],
+        "prompt_tokens": 2094,
+        "cached_tokens": 0,
+        "completion_tokens": 107,
+        "reasoning_tokens": 62,
+        "cost": 0.0002629
+      },
+      "revision": null,
+      "final_code": "def calculate_portfolio_value(self):\n    \"\"\"\n    Calculate the total value of the portfolio.\n    :return: the total value of the portfolio, float.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.calculate_portfolio_value()\n    11500.0\n    \"\"\"\n    total_value = self.cash_balance\n    for stock in self.portfolio:\n        total_value += stock[\"price\"] * stock[\"quantity\"]\n    return total_value",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_stock_value",
+      "first": {
+        "code": "def get_stock_value(self, stock):\n    \"\"\"\n    Get the value of a stock.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :return: the value of the stock, float.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.get_stock_value({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    1500.0\n\n    \"\"\"\n    return stock[\"price\"] * stock[\"quantity\"]",
+        "valid": true,
+        "reply": "```python\n    def get_stock_value(self, stock):\n        \"\"\"\n        Get the value of a stock.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :return: the value of the stock, float.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.get_stock_value({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        1500.0\n\n        \"\"\"\n        return stock[\"price\"] * stock[\"quantity\"]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2194,
+        "cached_tokens": 0,
+        "completion_tokens": 5252,
+        "reasoning_tokens": 5209,
+        "cost": 0.00066914
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method multiplies the stock\u2019s price by its quantity, which returns 1500.0 in the documented example and matches the stated stock value. It uses no missing fields or methods.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method multiplies the stock\u2019s price by its quantity, which returns 1500.0 in the documented example and matches the stated stock value. It uses no missing fields or methods.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2228,
+            "cached_tokens": 0,
+            "completion_tokens": 54,
+            "reasoning_tokens": 0,
+            "cost": 0.0002498
+          }
+        ],
+        "prompt_tokens": 2228,
+        "cached_tokens": 0,
+        "completion_tokens": 54,
+        "reasoning_tokens": 0,
+        "cost": 0.0002498
+      },
+      "revision": null,
+      "final_code": "def get_stock_value(self, stock):\n    \"\"\"\n    Get the value of a stock.\n    :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n    :return: the value of the stock, float.\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.get_stock_value({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n    1500.0\n\n    \"\"\"\n    return stock[\"price\"] * stock[\"quantity\"]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_portfolio_summary",
+      "first": {
+        "code": "def get_portfolio_summary(self):\n    \"\"\"\n    Get a summary of the portfolio.\n    :return: a tuple of the total value of the portfolio and a list of dictionaries with keys \"name\" and \"value\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.get_portfolio_summary()\n    (11500.0, [{'name': 'AAPL', 'value': 1500.0}])\n\n    \"\"\"\n    total_value = self.calculate_portfolio_value()\n    stock_summary = []\n    for stock in self.portfolio:\n        stock_value = stock[\"price\"] * stock[\"quantity\"]\n        stock_summary.append({\"name\": stock[\"name\"], \"value\": stock_value})\n    return total_value, stock_summary",
+        "valid": true,
+        "reply": "```python\ndef get_portfolio_summary(self):\n    \"\"\"\n    Get a summary of the portfolio.\n    :return: a tuple of the total value of the portfolio and a list of dictionaries with keys \"name\" and \"value\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.get_portfolio_summary()\n    (11500.0, [{'name': 'AAPL', 'value': 1500.0}])\n\n    \"\"\"\n    total_value = self.calculate_portfolio_value()\n    stock_summary = []\n    for stock in self.portfolio:\n        stock_value = stock[\"price\"] * stock[\"quantity\"]\n        stock_summary.append({\"name\": stock[\"name\"], \"value\": stock_value})\n    return total_value, stock_summary\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2351,
+        "cached_tokens": 0,
+        "completion_tokens": 680,
+        "reasoning_tokens": 434,
+        "cost": 0.000227188
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly uses `calculate_portfolio_value()` for the total (including cash) and builds a list containing each portfolio stock\u2019s name and price-times-quantity value, matching the documented return format and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly uses `calculate_portfolio_value()` for the total (including cash) and builds a list containing each portfolio stock\u2019s name and price-times-quantity value, matching the documented return format and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2409,
+            "cached_tokens": 0,
+            "completion_tokens": 113,
+            "reasoning_tokens": 53,
+            "cost": 0.00029739999999999996
+          }
+        ],
+        "prompt_tokens": 2409,
+        "cached_tokens": 0,
+        "completion_tokens": 113,
+        "reasoning_tokens": 53,
+        "cost": 0.00029739999999999996
+      },
+      "revision": null,
+      "final_code": "def get_portfolio_summary(self):\n    \"\"\"\n    Get a summary of the portfolio.\n    :return: a tuple of the total value of the portfolio and a list of dictionaries with keys \"name\" and \"value\"\n    >>> tracker = StockPortfolioTracker(10000.0)\n    >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n    >>> tracker.get_portfolio_summary()\n    (11500.0, [{'name': 'AAPL', 'value': 1500.0}])\n\n    \"\"\"\n    total_value = self.calculate_portfolio_value()\n    stock_summary = []\n    for stock in self.portfolio:\n        stock_value = stock[\"price\"] * stock[\"quantity\"]\n        stock_summary.append({\"name\": stock[\"name\"], \"value\": stock_value})\n    return total_value, stock_summary",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "StockPortfolioTrackerTestAddStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestRemoveStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestBuyStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestSellStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestCalculatePortfolioValue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestGetPortfolioSummary": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestGetStockValue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestMain": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "StockPortfolioTrackerTestAddStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestRemoveStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestBuyStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestSellStock": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "StockPortfolioTrackerTestCalculatePortfolioValue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestGetPortfolioSummary": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestGetStockValue": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StockPortfolioTrackerTestMain": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass StockPortfolioTracker: \n    def __init__(self, cash_balance):\n        \"\"\"\n        Initialize the StockPortfolioTracker class with a cash balance and an empty portfolio.\n        \"\"\"\n        self.portfolio = []\n        self.cash_balance = cash_balance\n\n    def add_stock(self, stock):\n        \"\"\"\n        Add a stock to the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.add_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        >>> tracker.portfolio\n        [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n        \"\"\"\n        self.portfolio.append(stock)\n\n    def remove_stock(self, stock):\n        \"\"\"\n        Remove a stock from the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        True\n        >>> tracker.portfolio\n        []\n\n        \"\"\"\n        if not any(s[\"name\"] == stock[\"name\"] for s in self.portfolio):\n            return False\n        self.portfolio.remove(stock)\n        return True\n\n    def buy_stock(self, stock):\n        \"\"\"\n        Buy a stock and add it to the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :param quantity: the quantity of the stock to buy,int.\n        :return: True if the stock was bought successfully, False if the cash balance is not enough.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.buy_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        True\n        >>> tracker.portfolio\n        [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n        \"\"\"\n        cost = stock[\"price\"] * stock[\"quantity\"]\n        if self.cash_balance >= cost:\n            self.cash_balance -= cost\n            self.portfolio.append(stock)\n            return True\n        return False\n\n    def sell_stock(self, stock):\n        \"\"\"\n        Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :param quantity: the quantity of the stock to sell,int.\n        :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.sell_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        True\n        >>> tracker.portfolio\n        []\n\n        \"\"\"\n        stock_name = stock[\"name\"]\n        price = stock[\"price\"]\n        quantity_to_sell = stock[\"quantity\"]\n\n        for i, s in enumerate(self.portfolio):\n            if s[\"name\"] == stock_name:\n                if s[\"quantity\"] >= quantity_to_sell:\n                    # Calculate proceeds from sale\n                    proceeds = price * quantity_to_sell\n                    self.cash_balance += proceeds\n\n                    # Update quantity in the stock entry\n                    s[\"quantity\"] -= quantity_to_sell\n\n                    # Remove stock entry if quantity is now 0\n                    if s[\"quantity\"] == 0:\n                        del self.portfolio[i]\n                        return True\n                return False\n        return False\n\n    def calculate_portfolio_value(self):\n        \"\"\"\n        Calculate the total value of the portfolio.\n        :return: the total value of the portfolio, float.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.calculate_portfolio_value()\n        11500.0\n        \"\"\"\n        total_value = self.cash_balance\n        for stock in self.portfolio:\n            total_value += stock[\"price\"] * stock[\"quantity\"]\n        return total_value\n\n    def get_portfolio_summary(self):\n        \"\"\"\n        Get a summary of the portfolio.\n        :return: a tuple of the total value of the portfolio and a list of dictionaries with keys \"name\" and \"value\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.get_portfolio_summary()\n        (11500.0, [{'name': 'AAPL', 'value': 1500.0}])\n\n        \"\"\"\n        total_value = self.calculate_portfolio_value()\n        stock_summary = []\n        for stock in self.portfolio:\n            stock_value = stock[\"price\"] * stock[\"quantity\"]\n            stock_summary.append({\"name\": stock[\"name\"], \"value\": stock_value})\n        return total_value, stock_summary\n\n    def get_stock_value(self, stock):\n        \"\"\"\n        Get the value of a stock.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :return: the value of the stock, float.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.get_stock_value({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        1500.0\n\n        \"\"\"\n        return stock[\"price\"] * stock[\"quantity\"]\n",
+  "source": "\n\nclass StockPortfolioTracker: \n    def __init__(self, cash_balance):\n        \"\"\"\n        Initialize the StockPortfolioTracker class with a cash balance and an empty portfolio.\n        \"\"\"\n        self.portfolio = []\n        self.cash_balance = cash_balance\n\n    def add_stock(self, stock):\n        \"\"\"\n        Add a stock to the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.add_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        >>> tracker.portfolio\n        [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n        \"\"\"\n        self.portfolio.append(stock)\n\n    def remove_stock(self, stock):\n        \"\"\"\n        Remove a stock from the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.remove_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        True\n        >>> tracker.portfolio\n        []\n\n        \"\"\"\n        for i, s in enumerate(self.portfolio):\n            if s[\"name\"] == stock[\"name\"]:\n                del self.portfolio[i]\n                return True\n        return False\n\n    def buy_stock(self, stock):\n        \"\"\"\n        Buy a stock and add it to the portfolio.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :param quantity: the quantity of the stock to buy,int.\n        :return: True if the stock was bought successfully, False if the cash balance is not enough.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.buy_stock({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        True\n        >>> tracker.portfolio\n        [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n\n        \"\"\"\n        cost = stock[\"price\"] * stock[\"quantity\"]\n        if self.cash_balance >= cost:\n            self.cash_balance -= cost\n            self.portfolio.append(stock)\n            return True\n        return False\n\n    def sell_stock(self, stock):\n        \"\"\"\n        Sell a stock and remove it from the portfolio and add the cash to the cash balance.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :param quantity: the quantity of the stock to sell,int.\n        :return: True if the stock was sold successfully, False if the quantity of the stock is not enough.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.sell_stock({\"name\": 'AAPL', 'price': 150.0, 'quantity': 10})\n        True\n        >>> tracker.portfolio\n        []\n\n        \"\"\"\n        stock_name = stock[\"name\"]\n        price = stock[\"price\"]\n        quantity_to_sell = stock[\"quantity\"]\n\n        found = False\n        for i, s in enumerate(self.portfolio):\n            if s[\"name\"] == stock_name:\n                found = True\n                if s[\"quantity\"] >= quantity_to_sell:\n                    # Calculate proceeds from sale\n                    proceeds = price * quantity_to_sell\n                    self.cash_balance += proceeds\n\n                    # Update quantity in the stock entry\n                    s[\"quantity\"] -= quantity_to_sell\n\n                    # Remove stock entry if quantity is now 0\n                    if s[\"quantity\"] == 0:\n                        del self.portfolio[i]\n                return found\n\n        return False\n\n    def calculate_portfolio_value(self):\n        \"\"\"\n        Calculate the total value of the portfolio.\n        :return: the total value of the portfolio, float.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.calculate_portfolio_value()\n        11500.0\n        \"\"\"\n        total_value = self.cash_balance\n        for stock in self.portfolio:\n            total_value += stock[\"price\"] * stock[\"quantity\"]\n        return total_value\n\n    def get_portfolio_summary(self):\n        \"\"\"\n        Get a summary of the portfolio.\n        :return: a tuple of the total value of the portfolio and a list of dictionaries with keys \"name\" and \"value\"\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.get_portfolio_summary()\n        (11500.0, [{'name': 'AAPL', 'value': 1500.0}])\n\n        \"\"\"\n        total_value = self.calculate_portfolio_value()\n        stock_summary = []\n        for stock in self.portfolio:\n            stock_value = stock[\"price\"] * stock[\"quantity\"]\n            stock_summary.append({\"name\": stock[\"name\"], \"value\": stock_value})\n        return total_value, stock_summary\n\n    def get_stock_value(self, stock):\n        \"\"\"\n        Get the value of a stock.\n        :param stock: a dictionary with keys \"name\", \"price\", and \"quantity\"\n        :return: the value of the stock, float.\n        >>> tracker = StockPortfolioTracker(10000.0)\n        >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]\n        >>> tracker.get_stock_value({\"name\": \"AAPL\", \"price\": 150.0, \"quantity\": 10})\n        1500.0\n\n        \"\"\"\n        return stock[\"price\"] * stock[\"quantity\"]\n"
+}

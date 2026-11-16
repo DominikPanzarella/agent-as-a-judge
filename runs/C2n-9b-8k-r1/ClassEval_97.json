@@ -1,0 +1,190 @@
+{
+  "task_id": "ClassEval_97",
+  "class_name": "Words2Numbers",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "text2int",
+      "first": {
+        "code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Normalize the input text - split on spaces and hyphens\n    textnum = textnum.replace('-', ' ')\n    words = [w.strip() for w in textnum.split()]\n\n    def get_val(word):\n        if word in self.numwords:\n            return self.numwords[word]\n        return None\n\n    total = 0\n    temp = 0\n\n    for word in words:\n        word_lower = word.lower()\n\n        # Skip non-number words\n        if word_lower not in self.numwords:\n            continue\n\n        scale, value = self.numwords[word_lower]\n\n        if scale > 100:\n            # Scale word (hundred, thousand, million, etc.)\n            temp += value * (total + temp) // 1000 if word_lower != \"hundred\" else value * total\n            total = temp\n        else:\n            temp += value\n\n    # Final result\n    result = total + temp\n\n    return str(result)",
+        "valid": true,
+        "reply": "```python\ndef text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Normalize the input text - split on spaces and hyphens\n    textnum = textnum.replace('-', ' ')\n    words = [w.strip() for w in textnum.split()]\n    \n    def get_val(word):\n        if word in self.numwords:\n            return self.numwords[word]\n        return None\n    \n    total = 0\n    temp = 0\n    \n    for word in words:\n        word_lower = word.lower()\n        \n        # Skip non-number words\n        if word_lower not in self.numwords:\n            continue\n        \n        scale, value = self.numwords[word_lower]\n        \n        if scale > 100:\n            # Scale word (hundred, thousand, million, etc.)\n            temp += value * (total + temp) // 1000 if word_lower != \"hundred\" else value * total\n            total = temp\n        else:\n            temp += value\n    \n    # Final result\n    result = total + temp\n    \n    return str(result)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 701,
+        "cached_tokens": 0,
+        "completion_tokens": 1016,
+        "reasoning_tokens": 764,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The scale handling produces incorrect results: for example, \u201cone hundred\u201d returns \"2\" because the hundred branch leaves `temp` unchanged and then adds it to `total` again. Accumulate the current group and multiply it by the scale (with appropriate handling for \u201chundred\u201d versus larger scales) instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The scale handling produces incorrect results: for example, \u201cone hundred\u201d returns \"2\" because the hundred branch leaves `temp` unchanged and then adds it to `total` again. Accumulate the current group and multiply it by the scale (with appropriate handling for \u201chundred\u201d versus larger scales) instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1075,
+            "cached_tokens": 0,
+            "completion_tokens": 334,
+            "reasoning_tokens": 252,
+            "cost": 0.0002745
+          }
+        ],
+        "prompt_tokens": 1075,
+        "cached_tokens": 0,
+        "completion_tokens": 334,
+        "reasoning_tokens": 252,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Normalize the input text - split on spaces and hyphens\n    textnum = textnum.replace('-', ' ')\n    words = [w.strip() for w in textnum.split()]\n\n    def get_value(word):\n        if word.lower() in self.numwords:\n            return self.numwords[word.lower()]\n        return None\n\n    result = 0\n    current = 0\n\n    for word in words:\n        val = get_value(word)\n\n        if val is None:\n            continue\n\n        scale, value = val\n\n        # For units and tens (value < 100), add directly\n        if scale == 0 or scale == 1:\n            current += value\n        # For hundreds (100) or higher scales, multiply the entire current amount by scale\n        else:\n            # First add any accumulated current value multiplied by previous scales\n            # Then add this new value scaled appropriately\n            result += current * scale\n            current = value\n\n    # Add the remaining current amount to the result\n    result += current\n\n    return str(result)",
+        "valid": true,
+        "reply": "```python\ndef text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Normalize the input text - split on spaces and hyphens\n    textnum = textnum.replace('-', ' ')\n    words = [w.strip() for w in textnum.split()]\n    \n    def get_value(word):\n        if word.lower() in self.numwords:\n            return self.numwords[word.lower()]\n        return None\n    \n    result = 0\n    current = 0\n    \n    for word in words:\n        val = get_value(word)\n        \n        if val is None:\n            continue\n        \n        scale, value = val\n        \n        # For units and tens (value < 100), add directly\n        if scale == 0 or scale == 1:\n            current += value\n        # For hundreds (100) or higher scales, multiply the entire current amount by scale\n        else:\n            # First add any accumulated current value multiplied by previous scales\n            # Then add this new value scaled appropriately\n            result += current * scale\n            current = value\n    \n    # Add the remaining current amount to the result\n    result += current\n    \n    return str(result)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1050,
+        "cached_tokens": 0,
+        "completion_tokens": 1101,
+        "reasoning_tokens": 879,
+        "cost": 0.000202011
+      },
+      "final_code": "def text2int(self, textnum):\n    \"\"\"\n    Convert the word string to the corresponding integer string\n    :param textnum: string, the word string to be converted\n    :return: string, the final converted integer string\n    >>> w2n = Words2Numbers()\n    >>> w2n.text2int(\"thirty-two\")\n    \"32\"\n    \"\"\"\n    # Normalize the input text - split on spaces and hyphens\n    textnum = textnum.replace('-', ' ')\n    words = [w.strip() for w in textnum.split()]\n\n    def get_value(word):\n        if word.lower() in self.numwords:\n            return self.numwords[word.lower()]\n        return None\n\n    result = 0\n    current = 0\n\n    for word in words:\n        val = get_value(word)\n\n        if val is None:\n            continue\n\n        scale, value = val\n\n        # For units and tens (value < 100), add directly\n        if scale == 0 or scale == 1:\n            current += value\n        # For hundreds (100) or higher scales, multiply the entire current amount by scale\n        else:\n            # First add any accumulated current value multiplied by previous scales\n            # Then add this new value scaled appropriately\n            result += current * scale\n            current = value\n\n    # Add the remaining current amount to the result\n    result += current\n\n    return str(result)",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "is_valid_input",
+      "first": {
+        "code": "def is_valid_input(self, textnum):\n    \"\"\"\n    Check if the input text contains only valid words that can be converted into numbers.\n    :param textnum: The input text containing words representing numbers.\n    :return: True if input is valid, False otherwise.\n    >>> w2n = Words2Numbers()\n    >>> w2n.is_valid_input(\"thirty-two\")\n    False\n    \"\"\"\n    # Normalize input: replace hyphens and split into words\n    normalized_text = textnum.replace('-', ' ')\n    words = [w.strip() for w in normalized_text.split()]\n\n    # Each word must be in numwords and not be empty\n    for word in words:\n        if word.lower() not in self.numwords:\n            return False\n\n    return len(words) > 0",
+        "valid": true,
+        "reply": "```python\n    def is_valid_input(self, textnum):\n        \"\"\"\n        Check if the input text contains only valid words that can be converted into numbers.\n        :param textnum: The input text containing words representing numbers.\n        :return: True if input is valid, False otherwise.\n        >>> w2n = Words2Numbers()\n        >>> w2n.is_valid_input(\"thirty-two\")\n        False\n        \"\"\"\n        # Normalize input: replace hyphens and split into words\n        normalized_text = textnum.replace('-', ' ')\n        words = [w.strip() for w in normalized_text.split()]\n        \n        # Each word must be in numwords and not be empty\n        for word in words:\n            if word.lower() not in self.numwords:\n                return False\n        \n        return len(words) > 0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1031,
+        "cached_tokens": 0,
+        "completion_tokens": 716,
+        "reasoning_tokens": 579,
+        "cost": 0.000157832
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The documented example expects `is_valid_input(\"thirty-two\")` to return `False`, but this method normalizes the hyphen and recognizes both words, so it returns `True`. Either change the example if hyphenated number words are intended to be valid, or adjust the method to match the documented expectation.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The documented example expects `is_valid_input(\"thirty-two\")` to return `False`, but this method normalizes the hyphen and recognizes both words, so it returns `True`. Either change the example if hyphenated number words are intended to be valid, or adjust the method to match the documented expectation.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1272,
+            "cached_tokens": 0,
+            "completion_tokens": 547,
+            "reasoning_tokens": 464,
+            "cost": 0.0004007
+          }
+        ],
+        "prompt_tokens": 1272,
+        "cached_tokens": 0,
+        "completion_tokens": 547,
+        "reasoning_tokens": 464,
+        "cost": 0.0004007
+      },
+      "revision": {
+        "code": "def is_valid_input(self, textnum):\n    \"\"\"\n    Check if the input text contains only valid words that can be converted into numbers.\n    :param textnum: The input text containing words representing numbers.\n    :return: True if input is valid, False otherwise.\n    >>> w2n = Words2Numbers()\n    >>> w2n.is_valid_input(\"thirty-two\")\n    False\n    \"\"\"\n    # Split on hyphens without normalizing them away - keep hyphenated words intact\n    import re\n\n    # Check if any word in the input (as-is, with hyphens included) is not a valid single unit\n    words = [word.strip() for word in textnum.split()]\n\n    for word in words:\n        # A word with hyphens is not considered valid input for validation purposes\n        if '-' in word:\n            return False\n\n        # Each word must be exactly one valid token from numwords\n        word_lower = word.lower()\n        if word_lower not in self.numwords:\n            return False\n\n    return len(words) > 0",
+        "valid": true,
+        "reply": "```python\n    def is_valid_input(self, textnum):\n        \"\"\"\n        Check if the input text contains only valid words that can be converted into numbers.\n        :param textnum: The input text containing words representing numbers.\n        :return: True if input is valid, False otherwise.\n        >>> w2n = Words2Numbers()\n        >>> w2n.is_valid_input(\"thirty-two\")\n        False\n        \"\"\"\n        # Split on hyphens without normalizing them away - keep hyphenated words intact\n        import re\n        \n        # Check if any word in the input (as-is, with hyphens included) is not a valid single unit\n        words = [word.strip() for word in textnum.split()]\n        \n        for word in words:\n            # A word with hyphens is not considered valid input for validation purposes\n            if '-' in word:\n                return False\n            \n            # Each word must be exactly one valid token from numwords\n            word_lower = word.lower()\n            if word_lower not in self.numwords:\n                return False\n        \n        return len(words) > 0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1256,
+        "cached_tokens": 0,
+        "completion_tokens": 853,
+        "reasoning_tokens": 690,
+        "cost": 0.000190139
+      },
+      "final_code": "def is_valid_input(self, textnum):\n    \"\"\"\n    Check if the input text contains only valid words that can be converted into numbers.\n    :param textnum: The input text containing words representing numbers.\n    :return: True if input is valid, False otherwise.\n    >>> w2n = Words2Numbers()\n    >>> w2n.is_valid_input(\"thirty-two\")\n    False\n    \"\"\"\n    # Split on hyphens without normalizing them away - keep hyphenated words intact\n    import re\n\n    # Check if any word in the input (as-is, with hyphens included) is not a valid single unit\n    words = [word.strip() for word in textnum.split()]\n\n    for word in words:\n        # A word with hyphens is not considered valid input for validation purposes\n        if '-' in word:\n            return False\n\n        # Each word must be exactly one valid token from numwords\n        word_lower = word.lower()\n        if word_lower not in self.numwords:\n            return False\n\n    return len(words) > 0",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "Words2NumbersTestText2Int": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestIsValidInput": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "Words2NumbersTestText2Int": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestIsValidInput": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 4,
+      "errors": 0,
+      "passed": false
+    },
+    "Words2NumbersTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Words2Numbers: \n    def __init__(self):\n        \"\"\"\n        Initialize the word lists and dictionaries required for conversion\n        \"\"\"\n        self.numwords = {}\n        self.units = [\n            \"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\",\n            \"nine\", \"ten\", \"eleven\", \"twelve\", \"thirteen\", \"fourteen\", \"fifteen\",\n            \"sixteen\", \"seventeen\", \"eighteen\", \"nineteen\",\n        ]\n        self.tens = [\"\", \"\", \"twenty\", \"thirty\", \"forty\", \"fifty\", \"sixty\", \"seventy\", \"eighty\", \"ninety\"]\n        self.scales = [\"hundred\", \"thousand\", \"million\", \"billion\", \"trillion\"]\n\n        self.numwords[\"and\"] = (1, 0)\n        for idx, word in enumerate(self.units):\n            self.numwords[word] = (1, idx)\n        for idx, word in enumerate(self.tens):\n            self.numwords[word] = (1, idx * 10)\n        for idx, word in enumerate(self.scales):\n            self.numwords[word] = (10 ** (idx * 3 or 2), 0)\n\n        self.ordinal_words = {'first': 1, 'second': 2, 'third': 3, 'fifth': 5, 'eighth': 8, 'ninth': 9, 'twelfth': 12}\n        self.ordinal_endings = [('ieth', 'y'), ('th', '')]\n\n    def text2int(self, textnum):\n        \"\"\"\n        Convert the word string to the corresponding integer string\n        :param textnum: string, the word string to be converted\n        :return: string, the final converted integer string\n        >>> w2n = Words2Numbers()\n        >>> w2n.text2int(\"thirty-two\")\n        \"32\"\n        \"\"\"\n        # Normalize the input text - split on spaces and hyphens\n        textnum = textnum.replace('-', ' ')\n        words = [w.strip() for w in textnum.split()]\n\n        def get_val(word):\n            if word in self.numwords:\n                return self.numwords[word]\n            return None\n\n        total = 0\n        temp = 0\n\n        for word in words:\n            word_lower = word.lower()\n\n            # Skip non-number words\n            if word_lower not in self.numwords:\n                continue\n\n            scale, value = self.numwords[word_lower]\n\n            if scale > 100:\n                # Scale word (hundred, thousand, million, etc.)\n                temp += value * (total + temp) // 1000 if word_lower != \"hundred\" else value * total\n                total = temp\n            else:\n                temp += value\n\n        # Final result\n        result = total + temp\n\n        return str(result)\n\n    def is_valid_input(self, textnum):\n        \"\"\"\n        Check if the input text contains only valid words that can be converted into numbers.\n        :param textnum: The input text containing words representing numbers.\n        :return: True if input is valid, False otherwise.\n        >>> w2n = Words2Numbers()\n        >>> w2n.is_valid_input(\"thirty-two\")\n        False\n        \"\"\"\n        # Normalize input: replace hyphens and split into words\n        normalized_text = textnum.replace('-', ' ')\n        words = [w.strip() for w in normalized_text.split()]\n\n        # Each word must be in numwords and not be empty\n        for word in words:\n            if word.lower() not in self.numwords:\n                return False\n\n        return len(words) > 0\n",
+  "source": "\n\nclass Words2Numbers: \n    def __init__(self):\n        \"\"\"\n        Initialize the word lists and dictionaries required for conversion\n        \"\"\"\n        self.numwords = {}\n        self.units = [\n            \"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\",\n            \"nine\", \"ten\", \"eleven\", \"twelve\", \"thirteen\", \"fourteen\", \"fifteen\",\n            \"sixteen\", \"seventeen\", \"eighteen\", \"nineteen\",\n        ]\n        self.tens = [\"\", \"\", \"twenty\", \"thirty\", \"forty\", \"fifty\", \"sixty\", \"seventy\", \"eighty\", \"ninety\"]\n        self.scales = [\"hundred\", \"thousand\", \"million\", \"billion\", \"trillion\"]\n\n        self.numwords[\"and\"] = (1, 0)\n        for idx, word in enumerate(self.units):\n            self.numwords[word] = (1, idx)\n        for idx, word in enumerate(self.tens):\n            self.numwords[word] = (1, idx * 10)\n        for idx, word in enumerate(self.scales):\n            self.numwords[word] = (10 ** (idx * 3 or 2), 0)\n\n        self.ordinal_words = {'first': 1, 'second': 2, 'third': 3, 'fifth': 5, 'eighth': 8, 'ninth': 9, 'twelfth': 12}\n        self.ordinal_endings = [('ieth', 'y'), ('th', '')]\n\n    def text2int(self, textnum):\n        \"\"\"\n        Convert the word string to the corresponding integer string\n        :param textnum: string, the word string to be converted\n        :return: string, the final converted integer string\n        >>> w2n = Words2Numbers()\n        >>> w2n.text2int(\"thirty-two\")\n        \"32\"\n        \"\"\"\n        # Normalize the input text - split on spaces and hyphens\n        textnum = textnum.replace('-', ' ')\n        words = [w.strip() for w in textnum.split()]\n\n        def get_value(word):\n            if word.lower() in self.numwords:\n                return self.numwords[word.lower()]\n            return None\n\n        result = 0\n        current = 0\n\n        for word in words:\n            val = get_value(word)\n\n            if val is None:\n                continue\n\n            scale, value = val\n\n            # For units and tens (value < 100), add directly\n            if scale == 0 or scale == 1:\n                current += value\n            # For hundreds (100) or higher scales, multiply the entire current amount by scale\n            else:\n                # First add any accumulated current value multiplied by previous scales\n                # Then add this new value scaled appropriately\n                result += current * scale\n                current = value\n\n        # Add the remaining current amount to the result\n        result += current\n\n        return str(result)\n\n    def is_valid_input(self, textnum):\n        \"\"\"\n        Check if the input text contains only valid words that can be converted into numbers.\n        :param textnum: The input text containing words representing numbers.\n        :return: True if input is valid, False otherwise.\n        >>> w2n = Words2Numbers()\n        >>> w2n.is_valid_input(\"thirty-two\")\n        False\n        \"\"\"\n        # Split on hyphens without normalizing them away - keep hyphenated words intact\n        import re\n\n        # Check if any word in the input (as-is, with hyphens included) is not a valid single unit\n        words = [word.strip() for word in textnum.split()]\n\n        for word in words:\n            # A word with hyphens is not considered valid input for validation purposes\n            if '-' in word:\n                return False\n\n            # Each word must be exactly one valid token from numwords\n            word_lower = word.lower()\n            if word_lower not in self.numwords:\n                return False\n\n        return len(words) > 0\n"
+}

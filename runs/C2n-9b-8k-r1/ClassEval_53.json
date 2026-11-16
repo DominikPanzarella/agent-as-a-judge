@@ -1,0 +1,167 @@
+{
+  "task_id": "ClassEval_53",
+  "class_name": "LongestWord",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "add_word",
+      "first": {
+        "code": "def add_word(self, word):\n    \"\"\"\n    append the input word into self.word_list\n    :param word: str, input word\n    \"\"\"\n    self.word_list.append(word)",
+        "valid": true,
+        "reply": "```python\ndef add_word(self, word):\n    \"\"\"\n    append the input word into self.word_list\n    :param word: str, input word\n    \"\"\"\n    self.word_list.append(word)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 380,
+        "cached_tokens": 0,
+        "completion_tokens": 199,
+        "reasoning_tokens": 152,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The constructor initializes `self.word_list` as a list, and this method appends the input word to it as the docstring requires. It is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The constructor initializes `self.word_list` as a list, and this method appends the input word to it as the docstring requires. It is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 532,
+            "cached_tokens": 0,
+            "completion_tokens": 48,
+            "reasoning_tokens": 0,
+            "cost": 7.72e-05
+          }
+        ],
+        "prompt_tokens": 532,
+        "cached_tokens": 0,
+        "completion_tokens": 48,
+        "reasoning_tokens": 0,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "def add_word(self, word):\n    \"\"\"\n    append the input word into self.word_list\n    :param word: str, input word\n    \"\"\"\n    self.word_list.append(word)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "find_longest_word",
+      "first": {
+        "code": "def find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    >>> longestWord = LongestWord()\n    >>> longestWord.add_word('A')\n    >>> longestWord.add_word('aM')\n    >>> longestWord.find_longest_word('I am a student.')\n    'a'\n    \"\"\"\n    import re\n\n    if not self.word_list:\n        return ''\n\n    # Extract words by removing non-word characters except underscores\n    words = re.findall(r'\\w+', sentence.lower()) if sentence else []\n\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n\n    return longest",
+        "valid": true,
+        "reply": "```python\ndef find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    >>> longestWord = LongestWord()\n    >>> longestWord.add_word('A')\n    >>> longestWord.add_word('aM')\n    >>> longestWord.find_longest_word('I am a student.')\n    'a'\n    \"\"\"\n    import re\n    \n    if not self.word_list:\n        return ''\n    \n    # Extract words by removing non-word characters except underscores\n    words = re.findall(r'\\w+', sentence.lower()) if sentence else []\n    \n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n    \n    return longest\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 436,
+        "cached_tokens": 0,
+        "completion_tokens": 889,
+        "reasoning_tokens": 626,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method lowercases the sentence, so it can match a word-list entry with different capitalization despite the docstring requiring strict case sensitivity. Remove `.lower()` and match the extracted words with their original casing.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method lowercases the sentence, so it can match a word-list entry with different capitalization despite the docstring requiring strict case sensitivity. Remove `.lower()` and match the extracted words with their original casing.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 753,
+            "cached_tokens": 0,
+            "completion_tokens": 130,
+            "reasoning_tokens": 70,
+            "cost": 0.00014030000000000002
+          }
+        ],
+        "prompt_tokens": 753,
+        "cached_tokens": 0,
+        "completion_tokens": 130,
+        "reasoning_tokens": 70,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    >>> longestWord = LongestWord()\n    >>> longestWord.add_word('A')\n    >>> longestWord.add_word('aM')\n    >>> longestWord.find_longest_word('I am a student.')\n    'a'\n    \"\"\"\n    import re\n\n    if not self.word_list:\n        return ''\n\n    # Extract words by removing non-word characters\n    words = re.findall(r'\\w+', sentence)\n\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n\n    return longest",
+        "valid": true,
+        "reply": "```python\ndef find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    >>> longestWord = LongestWord()\n    >>> longestWord.add_word('A')\n    >>> longestWord.add_word('aM')\n    >>> longestWord.find_longest_word('I am a student.')\n    'a'\n    \"\"\"\n    import re\n    \n    if not self.word_list:\n        return ''\n    \n    # Extract words by removing non-word characters\n    words = re.findall(r'\\w+', sentence)\n    \n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n    \n    return longest\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 709,
+        "cached_tokens": 0,
+        "completion_tokens": 914,
+        "reasoning_tokens": 704,
+        "cost": 0.000106332
+      },
+      "final_code": "def find_longest_word(self, sentence):\n    \"\"\"\n    Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n    Words are strictly case sensitive.\n    :param sentence: a sentence str\n    :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n    >>> longestWord = LongestWord()\n    >>> longestWord.add_word('A')\n    >>> longestWord.add_word('aM')\n    >>> longestWord.find_longest_word('I am a student.')\n    'a'\n    \"\"\"\n    import re\n\n    if not self.word_list:\n        return ''\n\n    # Extract words by removing non-word characters\n    words = re.findall(r'\\w+', sentence)\n\n    longest = ''\n    for word in words:\n        if word in self.word_list and len(word) > len(longest):\n            longest = word\n\n    return longest",
+      "passed_first": true,
+      "passed": false
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": false,
+  "tests_first": {
+    "LongestWordTestAddWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "LongestWordTestFindLongestWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "LongestWordTestAddWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "LongestWordTestFindLongestWord": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import re\nimport string\n\nclass LongestWord: \n    def __init__(self):\n        \"\"\"\n        Initialize a list of word.\n        \"\"\"\n        self.word_list = []\n\n    def add_word(self, word):\n        \"\"\"\n        append the input word into self.word_list\n        :param word: str, input word\n        \"\"\"\n        self.word_list.append(word)\n\n    def find_longest_word(self, sentence):\n        \"\"\"\n        Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n        Words are strictly case sensitive.\n        :param sentence: a sentence str\n        :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n        >>> longestWord = LongestWord()\n        >>> longestWord.add_word('A')\n        >>> longestWord.add_word('aM')\n        >>> longestWord.find_longest_word('I am a student.')\n        'a'\n        \"\"\"\n        import re\n\n        if not self.word_list:\n            return ''\n\n        # Extract words by removing non-word characters except underscores\n        words = re.findall(r'\\w+', sentence.lower()) if sentence else []\n\n        longest = ''\n        for word in words:\n            if word in self.word_list and len(word) > len(longest):\n                longest = word\n\n        return longest\n",
+  "source": "import re\nimport string\n\nclass LongestWord: \n    def __init__(self):\n        \"\"\"\n        Initialize a list of word.\n        \"\"\"\n        self.word_list = []\n\n    def add_word(self, word):\n        \"\"\"\n        append the input word into self.word_list\n        :param word: str, input word\n        \"\"\"\n        self.word_list.append(word)\n\n    def find_longest_word(self, sentence):\n        \"\"\"\n        Remove punctuation marks and split a sentence into a list of word. Find the longest splited word that is in the self.word_list.\n        Words are strictly case sensitive.\n        :param sentence: a sentence str\n        :return str: longest splited word that is in the self.word_list. return '' if self.word_list is empty.\n        >>> longestWord = LongestWord()\n        >>> longestWord.add_word('A')\n        >>> longestWord.add_word('aM')\n        >>> longestWord.find_longest_word('I am a student.')\n        'a'\n        \"\"\"\n        import re\n\n        if not self.word_list:\n            return ''\n\n        # Extract words by removing non-word characters\n        words = re.findall(r'\\w+', sentence)\n\n        longest = ''\n        for word in words:\n            if word in self.word_list and len(word) > len(longest):\n                longest = word\n\n        return longest\n"
+}

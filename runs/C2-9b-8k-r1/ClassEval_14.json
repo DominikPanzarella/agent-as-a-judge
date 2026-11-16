@@ -1,0 +1,408 @@
+{
+  "task_id": "ClassEval_14",
+  "class_name": "BookManagementDB",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "first": {
+        "code": "def create_table(self):\n    \"\"\"\n    Creates the book table in the database if it does not already exist.\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.create_table()\n    \"\"\"\n    self.cursor.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS books (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            title TEXT NOT NULL,\n            author TEXT NOT NULL,\n            availability INTEGER DEFAULT 1\n        )\n    \"\"\")\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\n    def create_table(self):\n        \"\"\"\n        Creates the book table in the database if it does not already exist.\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.create_table()\n        \"\"\"\n        self.cursor.execute(\"\"\"\n            CREATE TABLE IF NOT EXISTS books (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                title TEXT NOT NULL,\n                author TEXT NOT NULL,\n                availability INTEGER DEFAULT 1\n            )\n        \"\"\")\n        self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 658,
+        "cached_tokens": 0,
+        "completion_tokens": 298,
+        "reasoning_tokens": 188,
+        "cost": 3.5062e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method creates the `books` table with the fields and default availability needed by the other methods, and commits the change. `CREATE TABLE IF NOT EXISTS` also makes repeated calls safe, so it meets the docstring.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method creates the `books` table with the fields and default availability needed by the other methods, and commits the change. `CREATE TABLE IF NOT EXISTS` also makes repeated calls safe, so it meets the docstring.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 843,
+            "cached_tokens": 0,
+            "completion_tokens": 61,
+            "reasoning_tokens": 0,
+            "cost": 0.00011480000000000001
+          }
+        ],
+        "prompt_tokens": 843,
+        "cached_tokens": 0,
+        "completion_tokens": 61,
+        "reasoning_tokens": 0,
+        "cost": 0.00011480000000000001
+      },
+      "revision": null,
+      "final_code": "def create_table(self):\n    \"\"\"\n    Creates the book table in the database if it does not already exist.\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.create_table()\n    \"\"\"\n    self.cursor.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS books (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            title TEXT NOT NULL,\n            author TEXT NOT NULL,\n            availability INTEGER DEFAULT 1\n        )\n    \"\"\")\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "add_book",
+      "first": {
+        "code": "def add_book(self, title, author):\n    \"\"\"\n    Adds a book to the database with the specified title and author, \n    setting its availability to 1 as free to borrow.\n    :param title: str, book title\n    :param author: str, author name\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.create_table()\n    >>> book_db.add_book('book1', 'author')\n    \"\"\"\n    self.cursor.execute(\n        \"INSERT INTO books (title, author, availability) VALUES (?, ?, ?)\",\n        (title, author, 1)\n    )\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef add_book(self, title, author):\n    \"\"\"\n    Adds a book to the database with the specified title and author, \n    setting its availability to 1 as free to borrow.\n    :param title: str, book title\n    :param author: str, author name\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.create_table()\n    >>> book_db.add_book('book1', 'author')\n    \"\"\"\n    self.cursor.execute(\n        \"INSERT INTO books (title, author, availability) VALUES (?, ?, ?)\",\n        (title, author, 1)\n    )\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 777,
+        "cached_tokens": 0,
+        "completion_tokens": 549,
+        "reasoning_tokens": 412,
+        "cost": 5.0667e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method inserts the supplied title and author with availability set to 1, then commits the change, matching the docstring and the table schema. It uses only fields initialized by the constructor.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method inserts the supplied title and author with availability set to 1, then commits the change, matching the docstring and the table schema. It uses only fields initialized by the constructor.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 984,
+            "cached_tokens": 0,
+            "completion_tokens": 54,
+            "reasoning_tokens": 0,
+            "cost": 0.0001254
+          }
+        ],
+        "prompt_tokens": 984,
+        "cached_tokens": 0,
+        "completion_tokens": 54,
+        "reasoning_tokens": 0,
+        "cost": 0.0001254
+      },
+      "revision": null,
+      "final_code": "def add_book(self, title, author):\n    \"\"\"\n    Adds a book to the database with the specified title and author, \n    setting its availability to 1 as free to borrow.\n    :param title: str, book title\n    :param author: str, author name\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.create_table()\n    >>> book_db.add_book('book1', 'author')\n    \"\"\"\n    self.cursor.execute(\n        \"INSERT INTO books (title, author, availability) VALUES (?, ?, ?)\",\n        (title, author, 1)\n    )\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "remove_book",
+      "first": {
+        "code": "def remove_book(self, book_id):\n    \"\"\"\n    Removes a book from the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.remove_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"DELETE FROM books WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef remove_book(self, book_id):\n    \"\"\"\n    Removes a book from the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.remove_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"DELETE FROM books WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 919,
+        "cached_tokens": 0,
+        "completion_tokens": 1440,
+        "reasoning_tokens": 1436,
+        "cost": 9.7088e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`remove_book` deletes the row whose `id` matches `book_id` and commits the change, using the table and database fields established by the other methods. It correctly handles the documented operation; if no such ID exists, the delete simply has no effect.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`remove_book` deletes the row whose `id` matches `book_id` and commits the change, using the table and database fields established by the other methods. It correctly handles the documented operation; if no such ID exists, the delete simply has no effect.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1066,
+            "cached_tokens": 0,
+            "completion_tokens": 69,
+            "reasoning_tokens": 0,
+            "cost": 0.00014110000000000001
+          }
+        ],
+        "prompt_tokens": 1066,
+        "cached_tokens": 0,
+        "completion_tokens": 69,
+        "reasoning_tokens": 0,
+        "cost": 0.00014110000000000001
+      },
+      "revision": null,
+      "final_code": "def remove_book(self, book_id):\n    \"\"\"\n    Removes a book from the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.remove_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"DELETE FROM books WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "borrow_book",
+      "first": {
+        "code": "def borrow_book(self, book_id):\n    \"\"\"\n    Marks a book as borrowed in the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.borrow_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"UPDATE books SET availability = 0 WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+        "valid": true,
+        "reply": "\n\n```python\n    def borrow_book(self, book_id):\n        \"\"\"\n        Marks a book as borrowed in the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.borrow_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"UPDATE books SET availability = 0 WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1011,
+        "cached_tokens": 0,
+        "completion_tokens": 6326,
+        "reasoning_tokens": 6601,
+        "cost": 0.00105
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method updates the matching book\u2019s availability to 0 and commits the change, which marks it as borrowed as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method updates the matching book\u2019s availability to 0 and commits the change, which marks it as borrowed as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1154,
+            "cached_tokens": 0,
+            "completion_tokens": 92,
+            "reasoning_tokens": 50,
+            "cost": 0.0001614
+          }
+        ],
+        "prompt_tokens": 1154,
+        "cached_tokens": 0,
+        "completion_tokens": 92,
+        "reasoning_tokens": 50,
+        "cost": 0.0001614
+      },
+      "revision": null,
+      "final_code": "def borrow_book(self, book_id):\n    \"\"\"\n    Marks a book as borrowed in the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.borrow_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"UPDATE books SET availability = 0 WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "return_book",
+      "first": {
+        "code": "def return_book(self, book_id):\n    \"\"\"\n    Marks a book as returned in the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.return_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"UPDATE books SET availability = 1 WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+        "valid": true,
+        "reply": "```python\ndef return_book(self, book_id):\n    \"\"\"\n    Marks a book as returned in the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.return_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"UPDATE books SET availability = 1 WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1109,
+        "cached_tokens": 0,
+        "completion_tokens": 385,
+        "reasoning_tokens": 291,
+        "cost": 5.3968e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method updates the specified book\u2019s availability to 1 and commits the change, which marks it as returned. It uses the existing cursor and connection correctly.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method updates the specified book\u2019s availability to 1 and commits the change, which marks it as returned. It uses the existing cursor and connection correctly.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1242,
+            "cached_tokens": 0,
+            "completion_tokens": 73,
+            "reasoning_tokens": 24,
+            "cost": 0.00016069999999999998
+          }
+        ],
+        "prompt_tokens": 1242,
+        "cached_tokens": 0,
+        "completion_tokens": 73,
+        "reasoning_tokens": 24,
+        "cost": 0.00016069999999999998
+      },
+      "revision": null,
+      "final_code": "def return_book(self, book_id):\n    \"\"\"\n    Marks a book as returned in the database based on the given book ID.\n    :param book_id: int\n    >>> book_db = BookManagementDB(\"test.db\")\n    >>> book_db.return_book(1)\n    \"\"\"\n    self.cursor.execute(\n        \"UPDATE books SET availability = 1 WHERE id = ?\",\n        (book_id,)\n    )\n    self.connection.commit()",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "search_books",
+      "first": {
+        "code": "def search_books(self):\n    \"\"\"\n    Retrieves all books from the database and returns their information.\n    :return books: list[tuple], the information of all books in database\n    >>> book_db.search_books()\n    [(1, 'book1', 'author', 1)]\n    \"\"\"\n    self.cursor.execute(\"SELECT id, title, author, availability FROM books\")\n    return self.cursor.fetchall()",
+        "valid": true,
+        "reply": "```python\n    def search_books(self):\n        \"\"\"\n        Retrieves all books from the database and returns their information.\n        :return books: list[tuple], the information of all books in database\n        >>> book_db.search_books()\n        [(1, 'book1', 'author', 1)]\n        \"\"\"\n        self.cursor.execute(\"SELECT id, title, author, availability FROM books\")\n        return self.cursor.fetchall()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1207,
+        "cached_tokens": 0,
+        "completion_tokens": 455,
+        "reasoning_tokens": 395,
+        "cost": 6.0464e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "OK. It selects all four book fields from the `books` table and returns the fetched rows as a list of tuples, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "OK. It selects all four book fields from the `books` table and returns the fetched rows as a list of tuples, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1323,
+            "cached_tokens": 0,
+            "completion_tokens": 44,
+            "reasoning_tokens": 0,
+            "cost": 0.0001543
+          }
+        ],
+        "prompt_tokens": 1323,
+        "cached_tokens": 0,
+        "completion_tokens": 44,
+        "reasoning_tokens": 0,
+        "cost": 0.0001543
+      },
+      "revision": null,
+      "final_code": "def search_books(self):\n    \"\"\"\n    Retrieves all books from the database and returns their information.\n    :return books: list[tuple], the information of all books in database\n    >>> book_db.search_books()\n    [(1, 'book1', 'author', 1)]\n    \"\"\"\n    self.cursor.execute(\"SELECT id, title, author, availability FROM books\")\n    return self.cursor.fetchall()",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "BookManagementDBTestCreateTable": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BookManagementDBTestAddBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestRemoveBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementDBTestBorrowBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestReturnBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestSearchBooks": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BookManagementDBTestCreateTable": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BookManagementDBTestAddBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestRemoveBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementDBTestBorrowBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestReturnBook": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "BookManagementDBTestSearchBooks": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import sqlite3\n\nclass BookManagementDB: \n    def __init__(self, db_name):\n        \"\"\"\n        Initializes the class by creating a database connection and cursor, \n        and creates the book table if it does not already exist\n        :param db_name: str, the name of db file\n        \"\"\"\n        self.connection = sqlite3.connect(db_name)\n        self.cursor = self.connection.cursor()\n        self.create_table()\n\n    def create_table(self):\n        \"\"\"\n        Creates the book table in the database if it does not already exist.\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.create_table()\n        \"\"\"\n        self.cursor.execute(\"\"\"\n            CREATE TABLE IF NOT EXISTS books (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                title TEXT NOT NULL,\n                author TEXT NOT NULL,\n                availability INTEGER DEFAULT 1\n            )\n        \"\"\")\n        self.connection.commit()\n\n    def add_book(self, title, author):\n        \"\"\"\n        Adds a book to the database with the specified title and author, \n        setting its availability to 1 as free to borrow.\n        :param title: str, book title\n        :param author: str, author name\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.create_table()\n        >>> book_db.add_book('book1', 'author')\n        \"\"\"\n        self.cursor.execute(\n            \"INSERT INTO books (title, author, availability) VALUES (?, ?, ?)\",\n            (title, author, 1)\n        )\n        self.connection.commit()\n\n    def remove_book(self, book_id):\n        \"\"\"\n        Removes a book from the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.remove_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"DELETE FROM books WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def borrow_book(self, book_id):\n        \"\"\"\n        Marks a book as borrowed in the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.borrow_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"UPDATE books SET availability = 0 WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def return_book(self, book_id):\n        \"\"\"\n        Marks a book as returned in the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.return_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"UPDATE books SET availability = 1 WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def search_books(self):\n        \"\"\"\n        Retrieves all books from the database and returns their information.\n        :return books: list[tuple], the information of all books in database\n        >>> book_db.search_books()\n        [(1, 'book1', 'author', 1)]\n        \"\"\"\n        self.cursor.execute(\"SELECT id, title, author, availability FROM books\")\n        return self.cursor.fetchall()\n",
+  "source": "import sqlite3\n\nclass BookManagementDB: \n    def __init__(self, db_name):\n        \"\"\"\n        Initializes the class by creating a database connection and cursor, \n        and creates the book table if it does not already exist\n        :param db_name: str, the name of db file\n        \"\"\"\n        self.connection = sqlite3.connect(db_name)\n        self.cursor = self.connection.cursor()\n        self.create_table()\n\n    def create_table(self):\n        \"\"\"\n        Creates the book table in the database if it does not already exist.\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.create_table()\n        \"\"\"\n        self.cursor.execute(\"\"\"\n            CREATE TABLE IF NOT EXISTS books (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                title TEXT NOT NULL,\n                author TEXT NOT NULL,\n                availability INTEGER DEFAULT 1\n            )\n        \"\"\")\n        self.connection.commit()\n\n    def add_book(self, title, author):\n        \"\"\"\n        Adds a book to the database with the specified title and author, \n        setting its availability to 1 as free to borrow.\n        :param title: str, book title\n        :param author: str, author name\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.create_table()\n        >>> book_db.add_book('book1', 'author')\n        \"\"\"\n        self.cursor.execute(\n            \"INSERT INTO books (title, author, availability) VALUES (?, ?, ?)\",\n            (title, author, 1)\n        )\n        self.connection.commit()\n\n    def remove_book(self, book_id):\n        \"\"\"\n        Removes a book from the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.remove_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"DELETE FROM books WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def borrow_book(self, book_id):\n        \"\"\"\n        Marks a book as borrowed in the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.borrow_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"UPDATE books SET availability = 0 WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def return_book(self, book_id):\n        \"\"\"\n        Marks a book as returned in the database based on the given book ID.\n        :param book_id: int\n        >>> book_db = BookManagementDB(\"test.db\")\n        >>> book_db.return_book(1)\n        \"\"\"\n        self.cursor.execute(\n            \"UPDATE books SET availability = 1 WHERE id = ?\",\n            (book_id,)\n        )\n        self.connection.commit()\n\n    def search_books(self):\n        \"\"\"\n        Retrieves all books from the database and returns their information.\n        :return books: list[tuple], the information of all books in database\n        >>> book_db.search_books()\n        [(1, 'book1', 'author', 1)]\n        \"\"\"\n        self.cursor.execute(\"SELECT id, title, author, availability FROM books\")\n        return self.cursor.fetchall()\n"
+}

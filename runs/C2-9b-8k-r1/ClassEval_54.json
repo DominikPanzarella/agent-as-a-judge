@@ -1,0 +1,391 @@
+{
+  "task_id": "ClassEval_54",
+  "class_name": "MahjongConnect",
+  "setup": "C2",
+  "name": "C2-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "create_board",
+      "first": {
+        "code": "def create_board(self):\n    \"\"\"\n    create the game board with the given board size and icons\n    :return: 2-dimensional list, the game board\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    >>> mc.create_board()\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    board = []\n    for _ in range(rows):\n        row = []\n        for col in range(cols):\n            index = col % len(self.ICONS)\n            row.append(self.ICONS[index])\n        board.append(row)\n    return board",
+        "valid": true,
+        "reply": "```python\n    def create_board(self):\n        \"\"\"\n        create the game board with the given board size and icons\n        :return: 2-dimensional list, the game board\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        >>> mc.create_board()\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n        board = []\n        for _ in range(rows):\n            row = []\n            for col in range(cols):\n                index = col % len(self.ICONS)\n                row.append(self.ICONS[index])\n            board.append(row)\n        return board\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1253,
+        "cached_tokens": 0,
+        "completion_tokens": 752,
+        "reasoning_tokens": 528,
+        "cost": 6.3159e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The board construction matches the example for a nonempty `ICONS` list, but if `ICONS` is empty and there are columns, `col % len(self.ICONS)` raises `ZeroDivisionError`. Validate that `ICONS` is nonempty or handle that case explicitly.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The board construction matches the example for a nonempty `ICONS` list, but if `ICONS` is empty and there are columns, `col % len(self.ICONS)` raises `ZeroDivisionError`. Validate that `ICONS` is nonempty or handle that case explicitly.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1499,
+            "cached_tokens": 0,
+            "completion_tokens": 302,
+            "reasoning_tokens": 225,
+            "cost": 0.0003009
+          }
+        ],
+        "prompt_tokens": 1499,
+        "cached_tokens": 0,
+        "completion_tokens": 302,
+        "reasoning_tokens": 225,
+        "cost": 0.0003009
+      },
+      "revision": {
+        "code": "def create_board(self):\n    \"\"\"\n    create the game board with the given board size and icons\n    :return: 2-dimensional list, the game board\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    >>> mc.create_board()\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    board = []\n    if len(self.ICONS) == 0:\n        for _ in range(rows):\n            row = [' '] * cols\n            board.append(row)\n    else:\n        for _ in range(rows):\n            row = []\n            for col in range(cols):\n                index = col % len(self.ICONS)\n                row.append(self.ICONS[index])\n            board.append(row)\n    return board",
+        "valid": true,
+        "reply": "```python\n    def create_board(self):\n        \"\"\"\n        create the game board with the given board size and icons\n        :return: 2-dimensional list, the game board\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        >>> mc.create_board()\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n        board = []\n        if len(self.ICONS) == 0:\n            for _ in range(rows):\n                row = [' '] * cols\n                board.append(row)\n        else:\n            for _ in range(rows):\n                row = []\n                for col in range(cols):\n                    index = col % len(self.ICONS)\n                    row.append(self.ICONS[index])\n                board.append(row)\n        return board\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1549,
+        "cached_tokens": 0,
+        "completion_tokens": 371,
+        "reasoning_tokens": 138,
+        "cost": 5.6292e-05
+      },
+      "final_code": "def create_board(self):\n    \"\"\"\n    create the game board with the given board size and icons\n    :return: 2-dimensional list, the game board\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    >>> mc.create_board()\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    board = []\n    if len(self.ICONS) == 0:\n        for _ in range(rows):\n            row = [' '] * cols\n            board.append(row)\n    else:\n        for _ in range(rows):\n            row = []\n            for col in range(cols):\n                index = col % len(self.ICONS)\n                row.append(self.ICONS[index])\n            board.append(row)\n    return board",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "has_path",
+      "first": {
+        "code": "def has_path(self, pos1, pos2):\n    \"\"\"\n    check if there is a path between two icons\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return: True or False ,representing whether there is a path between the two icons\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist in the board\n    if not self._get_pos_icon(pos1) or not self._get_pos_icon(pos2):\n        return False\n\n    # Same icon at both positions\n    if self._get_pos_icon(pos1) != self._get_pos_icon(pos2):\n        return False\n\n    # Perform BFS to find a path\n    visited = set()\n    queue = [(pos1, [])]\n    visited.add(pos1)\n\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n\n    while queue:\n        current, path = queue.pop(0)\n\n        if current == pos2:\n            return True\n\n        cx, cy = current\n        for dx, dy in directions:\n            nx, ny = cx + dx, cy + dy\n\n            if 0 <= nx < rows and 0 <= ny < cols:\n                if (nx, ny) not in visited:\n                    cell = self.board[nx][ny]\n                    # Path can go through empty spaces or the target position\n                    if cell == ' ' or (nx, ny) == pos2:\n                        visited.add((nx, ny))\n                        queue.append(((nx, ny), path + [(nx, ny)]))\n\n    return False",
+        "valid": true,
+        "reply": "```python\ndef has_path(self, pos1, pos2):\n    \"\"\"\n    check if there is a path between two icons\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return: True or False ,representing whether there is a path between the two icons\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    \n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n        return False\n    \n    # Same position\n    if pos1 == pos2:\n        return False\n    \n    # Check if both positions exist in the board\n    if not self._get_pos_icon(pos1) or not self._get_pos_icon(pos2):\n        return False\n    \n    # Same icon at both positions\n    if self._get_pos_icon(pos1) != self._get_pos_icon(pos2):\n        return False\n    \n    # Perform BFS to find a path\n    visited = set()\n    queue = [(pos1, [])]\n    visited.add(pos1)\n    \n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n    \n    while queue:\n        current, path = queue.pop(0)\n        \n        if current == pos2:\n            return True\n        \n        cx, cy = current\n        for dx, dy in directions:\n            nx, ny = cx + dx, cy + dy\n            \n            if 0 <= nx < rows and 0 <= ny < cols:\n                if (nx, ny) not in visited:\n                    cell = self.board[nx][ny]\n                    # Path can go through empty spaces or the target position\n                    if cell == ' ' or (nx, ny) == pos2:\n                        visited.add((nx, ny))\n                        queue.append(((nx, ny), path + [(nx, ny)]))\n    \n    return False\n\ndef _get_pos_icon(self, pos):\n    \"\"\"Helper to get icon at position\"\"\"\n    x, y = pos\n    if 0 <= x < len(self.board) and 0 <= y < len(self.board[0]):\n        return self.board[x][y]\n    return None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1496,
+        "cached_tokens": 0,
+        "completion_tokens": 1072,
+        "reasoning_tokens": 456,
+        "cost": 8.22e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The class has no `_get_pos_icon` method, so the icon checks raise `AttributeError` whenever the positions are in bounds. Read the icons directly from `self.board[x][y]` or add the missing helper.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The class has no `_get_pos_icon` method, so the icon checks raise `AttributeError` whenever the positions are in bounds. Read the icons directly from `self.board[x][y]` or add the missing helper.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2098,
+            "cached_tokens": 0,
+            "completion_tokens": 328,
+            "reasoning_tokens": 263,
+            "cost": 0.00037380000000000003
+          }
+        ],
+        "prompt_tokens": 2098,
+        "cached_tokens": 0,
+        "completion_tokens": 328,
+        "reasoning_tokens": 263,
+        "cost": 0.00037380000000000003
+      },
+      "revision": {
+        "code": "def has_path(self, pos1, pos2):\n    \"\"\"\n    check if there is a path between two icons\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return: True or False ,representing whether there is a path between the two icons\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist in the board\n    if self.board[x1][y1] is None or self.board[x2][y2] is None:\n        return False\n\n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n\n    # Perform BFS to find a path\n    visited = set()\n    queue = [(pos1, [])]\n    visited.add(pos1)\n\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n\n    while queue:\n        current, path = queue.pop(0)\n\n        if current == pos2:\n            return True\n\n        cx, cy = current\n        for dx, dy in directions:\n            nx, ny = cx + dx, cy + dy\n\n            if 0 <= nx < rows and 0 <= ny < cols:\n                if (nx, ny) not in visited:\n                    cell = self.board[nx][ny]\n                    # Path can go through empty spaces or the target position\n                    if cell == ' ' or (nx, ny) == pos2:\n                        visited.add((nx, ny))\n                        queue.append(((nx, ny), path + [(nx, ny)]))\n\n    return False",
+        "valid": true,
+        "reply": "```python\ndef has_path(self, pos1, pos2):\n    \"\"\"\n    check if there is a path between two icons\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return: True or False ,representing whether there is a path between the two icons\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    \n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n        return False\n    \n    # Same position\n    if pos1 == pos2:\n        return False\n    \n    # Check if both positions exist in the board\n    if self.board[x1][y1] is None or self.board[x2][y2] is None:\n        return False\n    \n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n    \n    # Perform BFS to find a path\n    visited = set()\n    queue = [(pos1, [])]\n    visited.add(pos1)\n    \n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n    \n    while queue:\n        current, path = queue.pop(0)\n        \n        if current == pos2:\n            return True\n        \n        cx, cy = current\n        for dx, dy in directions:\n            nx, ny = cx + dx, cy + dy\n            \n            if 0 <= nx < rows and 0 <= ny < cols:\n                if (nx, ny) not in visited:\n                    cell = self.board[nx][ny]\n                    # Path can go through empty spaces or the target position\n                    if cell == ' ' or (nx, ny) == pos2:\n                        visited.add((nx, ny))\n                        queue.append(((nx, ny), path + [(nx, ny)]))\n    \n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2233,
+        "cached_tokens": 0,
+        "completion_tokens": 1331,
+        "reasoning_tokens": 675,
+        "cost": 0.0001122
+      },
+      "final_code": "def has_path(self, pos1, pos2):\n    \"\"\"\n    check if there is a path between two icons\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return: True or False ,representing whether there is a path between the two icons\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist in the board\n    if self.board[x1][y1] is None or self.board[x2][y2] is None:\n        return False\n\n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n\n    # Perform BFS to find a path\n    visited = set()\n    queue = [(pos1, [])]\n    visited.add(pos1)\n\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n\n    while queue:\n        current, path = queue.pop(0)\n\n        if current == pos2:\n            return True\n\n        cx, cy = current\n        for dx, dy in directions:\n            nx, ny = cx + dx, cy + dy\n\n            if 0 <= nx < rows and 0 <= ny < cols:\n                if (nx, ny) not in visited:\n                    cell = self.board[nx][ny]\n                    # Path can go through empty spaces or the target position\n                    if cell == ' ' or (nx, ny) == pos2:\n                        visited.add((nx, ny))\n                        queue.append(((nx, ny), path + [(nx, ny)]))\n\n    return False",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "is_valid_move",
+      "first": {
+        "code": "def is_valid_move(self, pos1, pos2):\n    \"\"\"\n    check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return:True or False ,representing whether the move of two icons is valid\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n\n    if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and \n            0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist and are not empty\n    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':\n        return False\n\n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n\n    # Check if there is a valid path between the two positions\n    return self.has_path(pos1, pos2)",
+        "valid": true,
+        "reply": "```python\ndef is_valid_move(self, pos1, pos2):\n    \"\"\"\n    check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return:True or False ,representing whether the move of two icons is valid\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n    \n    if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and \n            0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist and are not empty\n    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':\n        return False\n\n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n\n    # Check if there is a valid path between the two positions\n    return self.has_path(pos1, pos2)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2080,
+        "cached_tokens": 0,
+        "completion_tokens": 854,
+        "reasoning_tokens": 433,
+        "cost": 8.9466e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that both positions are in bounds and distinct, that neither cell is empty, and that the icons match; it then delegates path validation to the existing `has_path` method. This satisfies the documented requirements for the stated position inputs.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks that both positions are in bounds and distinct, that neither cell is empty, and that the icons match; it then delegates path validation to the existing `has_path` method. This satisfies the documented requirements for the stated position inputs.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2530,
+            "cached_tokens": 0,
+            "completion_tokens": 424,
+            "reasoning_tokens": 357,
+            "cost": 0.000465
+          }
+        ],
+        "prompt_tokens": 2530,
+        "cached_tokens": 0,
+        "completion_tokens": 424,
+        "reasoning_tokens": 357,
+        "cost": 0.000465
+      },
+      "revision": null,
+      "final_code": "def is_valid_move(self, pos1, pos2):\n    \"\"\"\n    check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)\n    :param pos1: position tuple(x, y) of the first icon\n    :param pos2: position tuple(x, y) of the second icon\n    :return:True or False ,representing whether the move of two icons is valid\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.is_valid_move((0, 0), (1, 0))\n    True\n    \"\"\"\n    # Check if positions are within bounds\n    x1, y1 = pos1\n    x2, y2 = pos2\n\n    if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and \n            0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):\n        return False\n\n    # Same position\n    if pos1 == pos2:\n        return False\n\n    # Check if both positions exist and are not empty\n    if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':\n        return False\n\n    # Same icon at both positions\n    if self.board[x1][y1] != self.board[x2][y2]:\n        return False\n\n    # Check if there is a valid path between the two positions\n    return self.has_path(pos1, pos2)",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "remove_icons",
+      "first": {
+        "code": "def remove_icons(self, pos1, pos2):\n    \"\"\"\n    remove the connected icons on the game board\n    :param pos1: position tuple(x, y) of the first icon to be removed\n    :param pos2: position tuple(x, y) of the second icon to be removed\n    :return: None\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.remove_icons((0, 0), (1, 0))\n    mc.board = [[' ', 'b', 'c', 'a'],\n                [' ', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    x1, y1 = pos1\n    x2, y2 = pos2\n    self.board[x1][y1] = ' '\n    self.board[x2][y2] = ' '",
+        "valid": true,
+        "reply": "```python\ndef remove_icons(self, pos1, pos2):\n    \"\"\"\n    remove the connected icons on the game board\n    :param pos1: position tuple(x, y) of the first icon to be removed\n    :param pos2: position tuple(x, y) of the second icon to be removed\n    :return: None\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.remove_icons((0, 0), (1, 0))\n    mc.board = [[' ', 'b', 'c', 'a'],\n                [' ', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    x1, y1 = pos1\n    x2, y2 = pos2\n    self.board[x1][y1] = ' '\n    self.board[x2][y2] = ' '\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2517,
+        "cached_tokens": 0,
+        "completion_tokens": 1240,
+        "reasoning_tokens": 871,
+        "cost": 0.000116319
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`remove_icons` clears both cells unconditionally, so callers can remove mismatched or disconnected icons (and out-of-range positions can raise `IndexError`). Check `self.is_valid_move(pos1, pos2)` before clearing the cells.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`remove_icons` clears both cells unconditionally, so callers can remove mismatched or disconnected icons (and out-of-range positions can raise `IndexError`). Check `self.is_valid_move(pos1, pos2)` before clearing the cells.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2789,
+            "cached_tokens": 0,
+            "completion_tokens": 705,
+            "reasoning_tokens": 638,
+            "cost": 0.0006314000000000001
+          }
+        ],
+        "prompt_tokens": 2789,
+        "cached_tokens": 0,
+        "completion_tokens": 705,
+        "reasoning_tokens": 638,
+        "cost": 0.0006314000000000001
+      },
+      "revision": {
+        "code": "def remove_icons(self, pos1, pos2):\n    \"\"\"\n    remove the connected icons on the game board\n    :param pos1: position tuple(x, y) of the first icon to be removed\n    :param pos2: position tuple(x, y) of the second icon to be removed\n    :return: None\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.remove_icons((0, 0), (1, 0))\n    mc.board = [[' ', 'b', 'c', 'a'],\n                [' ', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    # Check if the move is valid before removing\n    if not self.is_valid_move(pos1, pos2):\n        return\n\n    x1, y1 = pos1\n    x2, y2 = pos2\n    self.board[x1][y1] = ' '\n    self.board[x2][y2] = ' '",
+        "valid": true,
+        "reply": "```python\ndef remove_icons(self, pos1, pos2):\n    \"\"\"\n    remove the connected icons on the game board\n    :param pos1: position tuple(x, y) of the first icon to be removed\n    :param pos2: position tuple(x, y) of the second icon to be removed\n    :return: None\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.remove_icons((0, 0), (1, 0))\n    mc.board = [[' ', 'b', 'c', 'a'],\n                [' ', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    # Check if the move is valid before removing\n    if not self.is_valid_move(pos1, pos2):\n        return\n    \n    x1, y1 = pos1\n    x2, y2 = pos2\n    self.board[x1][y1] = ' '\n    self.board[x2][y2] = ' '\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2886,
+        "cached_tokens": 0,
+        "completion_tokens": 800,
+        "reasoning_tokens": 442,
+        "cost": 0.000109122
+      },
+      "final_code": "def remove_icons(self, pos1, pos2):\n    \"\"\"\n    remove the connected icons on the game board\n    :param pos1: position tuple(x, y) of the first icon to be removed\n    :param pos2: position tuple(x, y) of the second icon to be removed\n    :return: None\n    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n    mc.board = [['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    >>> mc.remove_icons((0, 0), (1, 0))\n    mc.board = [[' ', 'b', 'c', 'a'],\n                [' ', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a'],\n                ['a', 'b', 'c', 'a']]\n    \"\"\"\n    # Check if the move is valid before removing\n    if not self.is_valid_move(pos1, pos2):\n        return\n\n    x1, y1 = pos1\n    x2, y2 = pos2\n    self.board[x1][y1] = ' '\n    self.board[x2][y2] = ' '",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "is_game_over",
+      "first": {
+        "code": "def is_game_over(self):\n    \"\"\"\n    Check if the game is over (i.e., if there are no more icons on the game board)\n    :return: True or False ,representing whether the game is over\n    >>> mc = MahjongConnect([4, 4] ['a', 'b', 'c'])\n    >>> mc.board = [[' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' ']]\n    >>> mc.is_game_over()\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n\n    for row in range(rows):\n        for col in range(cols):\n            if self.board[row][col] != ' ':\n                return False\n\n    return True",
+        "valid": true,
+        "reply": "```python\ndef is_game_over(self):\n    \"\"\"\n    Check if the game is over (i.e., if there are no more icons on the game board)\n    :return: True or False ,representing whether the game is over\n    >>> mc = MahjongConnect([4, 4] ['a', 'b', 'c'])\n    >>> mc.board = [[' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' ']]\n    >>> mc.is_game_over()\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n    \n    for row in range(rows):\n        for col in range(cols):\n            if self.board[row][col] != ' ':\n                return False\n    \n    return True\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2823,
+        "cached_tokens": 0,
+        "completion_tokens": 602,
+        "reasoning_tokens": 403,
+        "cost": 9.9699e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly returns False if any board cell is not the empty-space marker used by `create_board` and `remove_icons`, and True if all cells are empty.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly returns False if any board cell is not the empty-space marker used by `create_board` and `remove_icons`, and True if all cells are empty.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2986,
+            "cached_tokens": 0,
+            "completion_tokens": 187,
+            "reasoning_tokens": 135,
+            "cost": 0.00039210000000000004
+          }
+        ],
+        "prompt_tokens": 2986,
+        "cached_tokens": 0,
+        "completion_tokens": 187,
+        "reasoning_tokens": 135,
+        "cost": 0.00039210000000000004
+      },
+      "revision": null,
+      "final_code": "def is_game_over(self):\n    \"\"\"\n    Check if the game is over (i.e., if there are no more icons on the game board)\n    :return: True or False ,representing whether the game is over\n    >>> mc = MahjongConnect([4, 4] ['a', 'b', 'c'])\n    >>> mc.board = [[' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' '],\n                    [' ', ' ', ' ', ' ']]\n    >>> mc.is_game_over()\n    True\n    \"\"\"\n    rows, cols = self.BOARD_SIZE\n\n    for row in range(rows):\n        for col in range(cols):\n            if self.board[row][col] != ' ':\n                return False\n\n    return True",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "MahjongConnectTestCreateBoard": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTestIsValidMove": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 2,
+      "passed": false
+    },
+    "MahjongConnectTestHasPath": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 4,
+      "passed": false
+    },
+    "MahjongConnectTestRemoveIcons": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTestIsGameOver": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "MahjongConnectTestCreateBoard": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTestIsValidMove": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTestHasPath": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "MahjongConnectTestRemoveIcons": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTestIsGameOver": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MahjongConnectTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import random\n\nclass MahjongConnect: \n    def __init__(self, BOARD_SIZE, ICONS):\n        \"\"\"\n        initialize the board size and the icon list, create the game board\n        :param BOARD_SIZE: list of two integer numbers, representing the number of rows and columns of the game board\n        :param ICONS: list of string, representing the icons\n        >>>mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.BOARD_SIZE = [4, 4]\n        mc.ICONS = ['a', 'b', 'c']\n        mc.board = mc.create_board()\n        \"\"\"\n        self.BOARD_SIZE = BOARD_SIZE\n        self.ICONS = ICONS\n        self.board = self.create_board()\n\n    def create_board(self):\n        \"\"\"\n        create the game board with the given board size and icons\n        :return: 2-dimensional list, the game board\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        >>> mc.create_board()\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n        board = []\n        for _ in range(rows):\n            row = []\n            for col in range(cols):\n                index = col % len(self.ICONS)\n                row.append(self.ICONS[index])\n            board.append(row)\n        return board\n\n    def is_valid_move(self, pos1, pos2):\n        \"\"\"\n        check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)\n        :param pos1: position tuple(x, y) of the first icon\n        :param pos2: position tuple(x, y) of the second icon\n        :return:True or False ,representing whether the move of two icons is valid\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.is_valid_move((0, 0), (1, 0))\n        True\n        \"\"\"\n        # Check if positions are within bounds\n        x1, y1 = pos1\n        x2, y2 = pos2\n\n        if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and \n                0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):\n            return False\n\n        # Same position\n        if pos1 == pos2:\n            return False\n\n        # Check if both positions exist and are not empty\n        if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':\n            return False\n\n        # Same icon at both positions\n        if self.board[x1][y1] != self.board[x2][y2]:\n            return False\n\n        # Check if there is a valid path between the two positions\n        return self.has_path(pos1, pos2)\n\n    def has_path(self, pos1, pos2):\n        \"\"\"\n        check if there is a path between two icons\n        :param pos1: position tuple(x, y) of the first icon\n        :param pos2: position tuple(x, y) of the second icon\n        :return: True or False ,representing whether there is a path between the two icons\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.is_valid_move((0, 0), (1, 0))\n        True\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n\n        # Check if positions are within bounds\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n            return False\n\n        # Same position\n        if pos1 == pos2:\n            return False\n\n        # Check if both positions exist in the board\n        if not self._get_pos_icon(pos1) or not self._get_pos_icon(pos2):\n            return False\n\n        # Same icon at both positions\n        if self._get_pos_icon(pos1) != self._get_pos_icon(pos2):\n            return False\n\n        # Perform BFS to find a path\n        visited = set()\n        queue = [(pos1, [])]\n        visited.add(pos1)\n\n        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n\n        while queue:\n            current, path = queue.pop(0)\n\n            if current == pos2:\n                return True\n\n            cx, cy = current\n            for dx, dy in directions:\n                nx, ny = cx + dx, cy + dy\n\n                if 0 <= nx < rows and 0 <= ny < cols:\n                    if (nx, ny) not in visited:\n                        cell = self.board[nx][ny]\n                        # Path can go through empty spaces or the target position\n                        if cell == ' ' or (nx, ny) == pos2:\n                            visited.add((nx, ny))\n                            queue.append(((nx, ny), path + [(nx, ny)]))\n\n        return False\n\n    def remove_icons(self, pos1, pos2):\n        \"\"\"\n        remove the connected icons on the game board\n        :param pos1: position tuple(x, y) of the first icon to be removed\n        :param pos2: position tuple(x, y) of the second icon to be removed\n        :return: None\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.remove_icons((0, 0), (1, 0))\n        mc.board = [[' ', 'b', 'c', 'a'],\n                    [' ', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        x1, y1 = pos1\n        x2, y2 = pos2\n        self.board[x1][y1] = ' '\n        self.board[x2][y2] = ' '\n\n    def is_game_over(self):\n        \"\"\"\n        Check if the game is over (i.e., if there are no more icons on the game board)\n        :return: True or False ,representing whether the game is over\n        >>> mc = MahjongConnect([4, 4] ['a', 'b', 'c'])\n        >>> mc.board = [[' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' ']]\n        >>> mc.is_game_over()\n        True\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n\n        for row in range(rows):\n            for col in range(cols):\n                if self.board[row][col] != ' ':\n                    return False\n\n        return True\n",
+  "source": "import random\n\nclass MahjongConnect: \n    def __init__(self, BOARD_SIZE, ICONS):\n        \"\"\"\n        initialize the board size and the icon list, create the game board\n        :param BOARD_SIZE: list of two integer numbers, representing the number of rows and columns of the game board\n        :param ICONS: list of string, representing the icons\n        >>>mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.BOARD_SIZE = [4, 4]\n        mc.ICONS = ['a', 'b', 'c']\n        mc.board = mc.create_board()\n        \"\"\"\n        self.BOARD_SIZE = BOARD_SIZE\n        self.ICONS = ICONS\n        self.board = self.create_board()\n\n    def create_board(self):\n        \"\"\"\n        create the game board with the given board size and icons\n        :return: 2-dimensional list, the game board\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        >>> mc.create_board()\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n        board = []\n        if len(self.ICONS) == 0:\n            for _ in range(rows):\n                row = [' '] * cols\n                board.append(row)\n        else:\n            for _ in range(rows):\n                row = []\n                for col in range(cols):\n                    index = col % len(self.ICONS)\n                    row.append(self.ICONS[index])\n                board.append(row)\n        return board\n\n    def is_valid_move(self, pos1, pos2):\n        \"\"\"\n        check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)\n        :param pos1: position tuple(x, y) of the first icon\n        :param pos2: position tuple(x, y) of the second icon\n        :return:True or False ,representing whether the move of two icons is valid\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.is_valid_move((0, 0), (1, 0))\n        True\n        \"\"\"\n        # Check if positions are within bounds\n        x1, y1 = pos1\n        x2, y2 = pos2\n\n        if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1] and \n                0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):\n            return False\n\n        # Same position\n        if pos1 == pos2:\n            return False\n\n        # Check if both positions exist and are not empty\n        if self.board[x1][y1] == ' ' or self.board[x2][y2] == ' ':\n            return False\n\n        # Same icon at both positions\n        if self.board[x1][y1] != self.board[x2][y2]:\n            return False\n\n        # Check if there is a valid path between the two positions\n        return self.has_path(pos1, pos2)\n\n    def has_path(self, pos1, pos2):\n        \"\"\"\n        check if there is a path between two icons\n        :param pos1: position tuple(x, y) of the first icon\n        :param pos2: position tuple(x, y) of the second icon\n        :return: True or False ,representing whether there is a path between the two icons\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.is_valid_move((0, 0), (1, 0))\n        True\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n\n        # Check if positions are within bounds\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if not (0 <= x1 < rows and 0 <= y1 < cols and 0 <= x2 < rows and 0 <= y2 < cols):\n            return False\n\n        # Same position\n        if pos1 == pos2:\n            return False\n\n        # Check if both positions exist in the board\n        if self.board[x1][y1] is None or self.board[x2][y2] is None:\n            return False\n\n        # Same icon at both positions\n        if self.board[x1][y1] != self.board[x2][y2]:\n            return False\n\n        # Perform BFS to find a path\n        visited = set()\n        queue = [(pos1, [])]\n        visited.add(pos1)\n\n        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right\n\n        while queue:\n            current, path = queue.pop(0)\n\n            if current == pos2:\n                return True\n\n            cx, cy = current\n            for dx, dy in directions:\n                nx, ny = cx + dx, cy + dy\n\n                if 0 <= nx < rows and 0 <= ny < cols:\n                    if (nx, ny) not in visited:\n                        cell = self.board[nx][ny]\n                        # Path can go through empty spaces or the target position\n                        if cell == ' ' or (nx, ny) == pos2:\n                            visited.add((nx, ny))\n                            queue.append(((nx, ny), path + [(nx, ny)]))\n\n        return False\n\n    def remove_icons(self, pos1, pos2):\n        \"\"\"\n        remove the connected icons on the game board\n        :param pos1: position tuple(x, y) of the first icon to be removed\n        :param pos2: position tuple(x, y) of the second icon to be removed\n        :return: None\n        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])\n        mc.board = [['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        >>> mc.remove_icons((0, 0), (1, 0))\n        mc.board = [[' ', 'b', 'c', 'a'],\n                    [' ', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a'],\n                    ['a', 'b', 'c', 'a']]\n        \"\"\"\n        # Check if the move is valid before removing\n        if not self.is_valid_move(pos1, pos2):\n            return\n\n        x1, y1 = pos1\n        x2, y2 = pos2\n        self.board[x1][y1] = ' '\n        self.board[x2][y2] = ' '\n\n    def is_game_over(self):\n        \"\"\"\n        Check if the game is over (i.e., if there are no more icons on the game board)\n        :return: True or False ,representing whether the game is over\n        >>> mc = MahjongConnect([4, 4] ['a', 'b', 'c'])\n        >>> mc.board = [[' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' '],\n                        [' ', ' ', ' ', ' ']]\n        >>> mc.is_game_over()\n        True\n        \"\"\"\n        rows, cols = self.BOARD_SIZE\n\n        for row in range(rows):\n            for col in range(cols):\n                if self.board[row][col] != ' ':\n                    return False\n\n        return True\n"
+}

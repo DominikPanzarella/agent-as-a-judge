@@ -1,0 +1,383 @@
+{
+  "task_id": "ClassEval_45",
+  "class_name": "ImageProcessor",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "load_image",
+      "first": {
+        "code": "def load_image(self, image_path):\n    \"\"\"\n    Use Image util in PIL to open a image\n    :param image_path: str, path of image that is to be\n    >>> processor.load_image('test.jpg')\n    >>> processor.image\n    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>\n    \"\"\"\n    self.image = Image.open(image_path)",
+        "valid": true,
+        "reply": "```python\ndef load_image(self, image_path):\n    \"\"\"\n    Use Image util in PIL to open a image\n    :param image_path: str, path of image that is to be\n    >>> processor.load_image('test.jpg')\n    >>> processor.image\n    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>\n    \"\"\"\n    self.image = Image.open(image_path)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 608,
+        "cached_tokens": 0,
+        "completion_tokens": 433,
+        "reasoning_tokens": 314,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method uses `Image.open(image_path)` and stores the resulting image object in `self.image`, as the docstring requires. No concrete issue is apparent for the documented use.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method uses `Image.open(image_path)` and stores the resulting image object in `self.image`, as the docstring requires. No concrete issue is apparent for the documented use.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 790,
+            "cached_tokens": 0,
+            "completion_tokens": 107,
+            "reasoning_tokens": 53,
+            "cost": 0.0001325
+          }
+        ],
+        "prompt_tokens": 790,
+        "cached_tokens": 0,
+        "completion_tokens": 107,
+        "reasoning_tokens": 53,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "def load_image(self, image_path):\n    \"\"\"\n    Use Image util in PIL to open a image\n    :param image_path: str, path of image that is to be\n    >>> processor.load_image('test.jpg')\n    >>> processor.image\n    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>\n    \"\"\"\n    self.image = Image.open(image_path)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "save_image",
+      "first": {
+        "code": "def save_image(self, save_path):\n    \"\"\"\n    Save image to a path if image has opened\n    :param save_path: str, the path that the image will be saved\n    >>> processor.load_image('test.jpg')\n    >>> processor.save_image('test2.jpg')\n    \"\"\"\n    self.image.save(save_path)",
+        "valid": true,
+        "reply": "```python\ndef save_image(self, save_path):\n    \"\"\"\n    Save image to a path if image has opened\n    :param save_path: str, the path that the image will be saved\n    >>> processor.load_image('test.jpg')\n    >>> processor.save_image('test2.jpg')\n    \"\"\"\n    self.image.save(save_path)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 731,
+        "cached_tokens": 0,
+        "completion_tokens": 364,
+        "reasoning_tokens": 299,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If no image has been opened, `self.image` is `None` and calling `.save()` raises `AttributeError`. Check that `self.image` is set before saving (and handle the unopened case).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If no image has been opened, `self.image` is `None` and calling `.save()` raises `AttributeError`. Check that `self.image` is set before saving (and handle the unopened case).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 922,
+            "cached_tokens": 0,
+            "completion_tokens": 98,
+            "reasoning_tokens": 36,
+            "cost": 0.0001412
+          }
+        ],
+        "prompt_tokens": 922,
+        "cached_tokens": 0,
+        "completion_tokens": 98,
+        "reasoning_tokens": 36,
+        "cost": 0.0001412
+      },
+      "revision": {
+        "code": "def save_image(self, save_path):\n    \"\"\"\n    Save image to a path if image has opened\n    :param save_path: str, the path that the image will be saved\n    >>> processor.load_image('test.jpg')\n    >>> processor.save_image('test2.jpg')\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image.save(save_path)",
+        "valid": true,
+        "reply": "\n\n```python\ndef save_image(self, save_path):\n    \"\"\"\n    Save image to a path if image has opened\n    :param save_path: str, the path that the image will be saved\n    >>> processor.load_image('test.jpg')\n    >>> processor.save_image('test2.jpg')\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image.save(save_path)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 890,
+        "cached_tokens": 0,
+        "completion_tokens": 417,
+        "reasoning_tokens": 335,
+        "cost": 0.00015155
+      },
+      "final_code": "def save_image(self, save_path):\n    \"\"\"\n    Save image to a path if image has opened\n    :param save_path: str, the path that the image will be saved\n    >>> processor.load_image('test.jpg')\n    >>> processor.save_image('test2.jpg')\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image.save(save_path)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "resize_image",
+      "first": {
+        "code": "def resize_image(self, width, height):\n    \"\"\"\n    Risize the image if image has opened.\n    :param width: int, the target width of image\n    :param height: int, the target height of image\n    >>> processor.load_image('test.jpg')\n    >>> processor.resize_image(300, 300)\n    >>> processor.image.width\n    300\n    >>> processor.image.height\n    300\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.resize((width, height))",
+        "valid": true,
+        "reply": "\n\n```python\ndef resize_image(self, width, height):\n    \"\"\"\n    Risize the image if image has opened.\n    :param width: int, the target width of image\n    :param height: int, the target height of image\n    >>> processor.load_image('test.jpg')\n    >>> processor.resize_image(300, 300)\n    >>> processor.image.width\n    300\n    >>> processor.image.height\n    300\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.resize((width, height))\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 829,
+        "cached_tokens": 0,
+        "completion_tokens": 2450,
+        "reasoning_tokens": 2554,
+        "cost": 0.0004504
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that an image is loaded, resizes it to the requested width and height, and stores the resized image back in `self.image`, matching the documented behavior. No concrete issue is apparent for the documented use.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks that an image is loaded, resizes it to the requested width and height, and stores the resized image back in `self.image`, matching the documented behavior. No concrete issue is apparent for the documented use.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1139,
+            "cached_tokens": 0,
+            "completion_tokens": 61,
+            "reasoning_tokens": 0,
+            "cost": 0.0001444
+          }
+        ],
+        "prompt_tokens": 1139,
+        "cached_tokens": 0,
+        "completion_tokens": 61,
+        "reasoning_tokens": 0,
+        "cost": 0.0001444
+      },
+      "revision": null,
+      "final_code": "def resize_image(self, width, height):\n    \"\"\"\n    Risize the image if image has opened.\n    :param width: int, the target width of image\n    :param height: int, the target height of image\n    >>> processor.load_image('test.jpg')\n    >>> processor.resize_image(300, 300)\n    >>> processor.image.width\n    300\n    >>> processor.image.height\n    300\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.resize((width, height))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "rotate_image",
+      "first": {
+        "code": "def rotate_image(self, degrees):\n    \"\"\"\n    rotate image if image has opened\n    :param degrees: float, the degrees that the image will be rotated\n    >>> processor.load_image('test.jpg')\n    >>> processor.resize_image(90)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.rotate(degrees)",
+        "valid": true,
+        "reply": "\n\n```python\ndef rotate_image(self, degrees):\n    \"\"\"\n    rotate image if image has opened\n    :param degrees: float, the degrees that the image will be rotated\n    >>> processor.load_image('test.jpg')\n    >>> processor.resize_image(90)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.rotate(degrees)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 971,
+        "cached_tokens": 0,
+        "completion_tokens": 470,
+        "reasoning_tokens": 417,
+        "cost": 0.0001676
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method correctly checks for a loaded image and rotates it, but its example calls `resize_image(90)`, which is missing the required `height` argument and does not test rotation. Change the example to `processor.rotate_image(90)`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method correctly checks for a loaded image and rotates it, but its example calls `resize_image(90)`, which is missing the required `height` argument and does not test rotation. Change the example to `processor.rotate_image(90)`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1278,
+            "cached_tokens": 0,
+            "completion_tokens": 438,
+            "reasoning_tokens": 368,
+            "cost": 0.0003468
+          }
+        ],
+        "prompt_tokens": 1278,
+        "cached_tokens": 0,
+        "completion_tokens": 438,
+        "reasoning_tokens": 368,
+        "cost": 0.0003468
+      },
+      "revision": {
+        "code": "def rotate_image(self, degrees):\n    \"\"\"\n    rotate image if image has opened\n    :param degrees: float, the degrees that the image will be rotated\n    >>> processor.load_image('test.jpg')\n    >>> processor.rotate_image(90)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.rotate(degrees)",
+        "valid": true,
+        "reply": "\n\n```python\ndef rotate_image(self, degrees):\n    \"\"\"\n    rotate image if image has opened\n    :param degrees: float, the degrees that the image will be rotated\n    >>> processor.load_image('test.jpg')\n    >>> processor.rotate_image(90)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.rotate(degrees)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1162,
+        "cached_tokens": 0,
+        "completion_tokens": 485,
+        "reasoning_tokens": 431,
+        "cost": 0.00018895
+      },
+      "final_code": "def rotate_image(self, degrees):\n    \"\"\"\n    rotate image if image has opened\n    :param degrees: float, the degrees that the image will be rotated\n    >>> processor.load_image('test.jpg')\n    >>> processor.rotate_image(90)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = self.image.rotate(degrees)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "adjust_brightness",
+      "first": {
+        "code": "def adjust_brightness(self, factor):\n    \"\"\"\n    Adjust the brightness of image if image has opened.\n    :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.\n    >>> processor.load_image('test.jpg')\n    >>> processor.adjust_brightness(0.5)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = ImageEnhance.Brightness(self.image).enhance(factor)",
+        "valid": true,
+        "reply": "\n\n```python\ndef adjust_brightness(self, factor):\n    \"\"\"\n    Adjust the brightness of image if image has opened.\n    :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.\n    >>> processor.load_image('test.jpg')\n    >>> processor.adjust_brightness(0.5)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = ImageEnhance.Brightness(self.image).enhance(factor)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1066,
+        "cached_tokens": 0,
+        "completion_tokens": 336,
+        "reasoning_tokens": 220,
+        "cost": 0.000157
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that an image is loaded, then uses Pillow\u2019s `ImageEnhance.Brightness` to apply the factor and stores the result back in `self.image`. This matches the documented behavior, including the stated effects of factors 0.0 and 1.0.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks that an image is loaded, then uses Pillow\u2019s `ImageEnhance.Brightness` to apply the factor and stores the result back in `self.image`. This matches the documented behavior, including the stated effects of factors 0.0 and 1.0.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1475,
+            "cached_tokens": 0,
+            "completion_tokens": 135,
+            "reasoning_tokens": 61,
+            "cost": 0.000215
+          }
+        ],
+        "prompt_tokens": 1475,
+        "cached_tokens": 0,
+        "completion_tokens": 135,
+        "reasoning_tokens": 61,
+        "cost": 0.000215
+      },
+      "revision": null,
+      "final_code": "def adjust_brightness(self, factor):\n    \"\"\"\n    Adjust the brightness of image if image has opened.\n    :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.\n    >>> processor.load_image('test.jpg')\n    >>> processor.adjust_brightness(0.5)\n    \"\"\"\n    if self.image is None:\n        raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n    self.image = ImageEnhance.Brightness(self.image).enhance(factor)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "ImageProcessorTestLoadImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestSaveImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestResizeImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestRotateImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestAdjustBrightness": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "ImageProcessorTestLoadImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestSaveImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestResizeImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestRotateImage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestAdjustBrightness": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ImageProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "from PIL import Image, ImageEnhance, ImageChops\n\nclass ImageProcessor: \n    def __init__(self):\n        \"\"\"\n        Initialize self.image\n        \"\"\"\n        self.image = None\n\n    def load_image(self, image_path):\n        \"\"\"\n        Use Image util in PIL to open a image\n        :param image_path: str, path of image that is to be\n        >>> processor.load_image('test.jpg')\n        >>> processor.image\n        <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>\n        \"\"\"\n        self.image = Image.open(image_path)\n\n    def save_image(self, save_path):\n        \"\"\"\n        Save image to a path if image has opened\n        :param save_path: str, the path that the image will be saved\n        >>> processor.load_image('test.jpg')\n        >>> processor.save_image('test2.jpg')\n        \"\"\"\n        self.image.save(save_path)\n\n    def resize_image(self, width, height):\n        \"\"\"\n        Risize the image if image has opened.\n        :param width: int, the target width of image\n        :param height: int, the target height of image\n        >>> processor.load_image('test.jpg')\n        >>> processor.resize_image(300, 300)\n        >>> processor.image.width\n        300\n        >>> processor.image.height\n        300\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = self.image.resize((width, height))\n\n    def rotate_image(self, degrees):\n        \"\"\"\n        rotate image if image has opened\n        :param degrees: float, the degrees that the image will be rotated\n        >>> processor.load_image('test.jpg')\n        >>> processor.resize_image(90)\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = self.image.rotate(degrees)\n\n    def adjust_brightness(self, factor):\n        \"\"\"\n        Adjust the brightness of image if image has opened.\n        :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.\n        >>> processor.load_image('test.jpg')\n        >>> processor.adjust_brightness(0.5)\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = ImageEnhance.Brightness(self.image).enhance(factor)\n",
+  "source": "from PIL import Image, ImageEnhance, ImageChops\n\nclass ImageProcessor: \n    def __init__(self):\n        \"\"\"\n        Initialize self.image\n        \"\"\"\n        self.image = None\n\n    def load_image(self, image_path):\n        \"\"\"\n        Use Image util in PIL to open a image\n        :param image_path: str, path of image that is to be\n        >>> processor.load_image('test.jpg')\n        >>> processor.image\n        <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=3072x4096 at 0x194F2412A48>\n        \"\"\"\n        self.image = Image.open(image_path)\n\n    def save_image(self, save_path):\n        \"\"\"\n        Save image to a path if image has opened\n        :param save_path: str, the path that the image will be saved\n        >>> processor.load_image('test.jpg')\n        >>> processor.save_image('test2.jpg')\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image.save(save_path)\n\n    def resize_image(self, width, height):\n        \"\"\"\n        Risize the image if image has opened.\n        :param width: int, the target width of image\n        :param height: int, the target height of image\n        >>> processor.load_image('test.jpg')\n        >>> processor.resize_image(300, 300)\n        >>> processor.image.width\n        300\n        >>> processor.image.height\n        300\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = self.image.resize((width, height))\n\n    def rotate_image(self, degrees):\n        \"\"\"\n        rotate image if image has opened\n        :param degrees: float, the degrees that the image will be rotated\n        >>> processor.load_image('test.jpg')\n        >>> processor.rotate_image(90)\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = self.image.rotate(degrees)\n\n    def adjust_brightness(self, factor):\n        \"\"\"\n        Adjust the brightness of image if image has opened.\n        :param factor: float, brightness of an image. A factor of 0.0 gives a black image. A factor of 1.0 gives the original image.\n        >>> processor.load_image('test.jpg')\n        >>> processor.adjust_brightness(0.5)\n        \"\"\"\n        if self.image is None:\n            raise AttributeError(\"No image has been loaded yet. Call load_image() first.\")\n        self.image = ImageEnhance.Brightness(self.image).enhance(factor)\n"
+}

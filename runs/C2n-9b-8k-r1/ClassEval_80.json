@@ -1,0 +1,302 @@
+{
+  "task_id": "ClassEval_80",
+  "class_name": "SQLQueryBuilder",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "select",
+      "first": {
+        "code": "@staticmethod\ndef select(table, columns='*', where=None):\n    \"\"\"\n    Generate the SELECT SQL statement from the given parameters.\n    :param table: str, the query table in database.\n    :param columns: list of str, ['col1', 'col2'].\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    return query: str, the SQL query statement.\n    >>> SQLQueryBuilder.select('table1', columns = [\"col1\",\"col2\"], where = {\"age\": 15})\n    \"SELECT col1, col2 FROM table1 WHERE age='15'\"\n    \"\"\"\n    if columns == '*':\n        columns = '*'\n    else:\n        columns = ', '.join(columns)\n\n    query = f\"SELECT {columns} FROM {table}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef select(table, columns='*', where=None):\n    \"\"\"\n    Generate the SELECT SQL statement from the given parameters.\n    :param table: str, the query table in database.\n    :param columns: list of str, ['col1', 'col2'].\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    return query: str, the SQL query statement.\n    >>> SQLQueryBuilder.select('table1', columns = [\"col1\",\"col2\"], where = {\"age\": 15})\n    \"SELECT col1, col2 FROM table1 WHERE age='15'\"\n    \"\"\"\n    if columns == '*':\n        columns = '*'\n    else:\n        columns = ', '.join(columns)\n    \n    query = f\"SELECT {columns} FROM {table}\"\n    \n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n    \n    return query\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 700,
+        "cached_tokens": 0,
+        "completion_tokens": 1045,
+        "reasoning_tokens": 788,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method produces the documented SELECT syntax for the stated inputs, including joining column names and adding `AND`-joined conditions when `where` is nonempty. It is correct for the documented parameter types.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method produces the documented SELECT syntax for the stated inputs, including joining column names and adding `AND`-joined conditions when `where` is nonempty. It is correct for the documented parameter types.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1024,
+            "cached_tokens": 0,
+            "completion_tokens": 189,
+            "reasoning_tokens": 130,
+            "cost": 0.00019690000000000002
+          }
+        ],
+        "prompt_tokens": 1024,
+        "cached_tokens": 0,
+        "completion_tokens": 189,
+        "reasoning_tokens": 130,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef select(table, columns='*', where=None):\n    \"\"\"\n    Generate the SELECT SQL statement from the given parameters.\n    :param table: str, the query table in database.\n    :param columns: list of str, ['col1', 'col2'].\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    return query: str, the SQL query statement.\n    >>> SQLQueryBuilder.select('table1', columns = [\"col1\",\"col2\"], where = {\"age\": 15})\n    \"SELECT col1, col2 FROM table1 WHERE age='15'\"\n    \"\"\"\n    if columns == '*':\n        columns = '*'\n    else:\n        columns = ', '.join(columns)\n\n    query = f\"SELECT {columns} FROM {table}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert",
+      "first": {
+        "code": "@staticmethod\ndef insert(table, data):\n    \"\"\"\n    Generate the INSERT SQL statement from the given parameters.\n    :param table: str, the table to be inserted in database.\n    :param data: dict, the key and value in SQL insert statement\n    :return query: str, the SQL insert statement.\n    >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})\n    \"INSERT INTO table1 (name, age) VALUES ('Test', '14')\"\n    \"\"\"\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n    query = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n    return query",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef insert(table, data):\n    \"\"\"\n    Generate the INSERT SQL statement from the given parameters.\n    :param table: str, the table to be inserted in database.\n    :param data: dict, the key and value in SQL insert statement\n    :return query: str, the SQL insert statement.\n    >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})\n    \"INSERT INTO table1 (name, age) VALUES ('Test', '14')\"\n    \"\"\"\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n    query = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n    return query\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 952,
+        "cached_tokens": 0,
+        "completion_tokens": 507,
+        "reasoning_tokens": 329,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method produces the documented INSERT statement for the example and correctly pairs the dictionary\u2019s keys with its values in iteration order. It is correct for the documented dictionary input.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method produces the documented INSERT statement for the example and correctly pairs the dictionary\u2019s keys with its values in iteration order. It is correct for the documented dictionary input.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1192,
+            "cached_tokens": 0,
+            "completion_tokens": 49,
+            "reasoning_tokens": 0,
+            "cost": 0.0001437
+          }
+        ],
+        "prompt_tokens": 1192,
+        "cached_tokens": 0,
+        "completion_tokens": 49,
+        "reasoning_tokens": 0,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef insert(table, data):\n    \"\"\"\n    Generate the INSERT SQL statement from the given parameters.\n    :param table: str, the table to be inserted in database.\n    :param data: dict, the key and value in SQL insert statement\n    :return query: str, the SQL insert statement.\n    >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})\n    \"INSERT INTO table1 (name, age) VALUES ('Test', '14')\"\n    \"\"\"\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n    query = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n    return query",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "delete",
+      "first": {
+        "code": "@staticmethod\ndef delete(table, where=None):\n    \"\"\"\n    Generate the DELETE SQL statement from the given parameters.\n    :param table: str, the table that will be excuted with DELETE operation in database\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    :return query: str, the SQL delete statement.\n    >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})\n    \"DELETE FROM table1 WHERE name='Test' AND age='14'\"\n    \"\"\"\n    query = f\"DELETE FROM {table}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef delete(table, where=None):\n    \"\"\"\n    Generate the DELETE SQL statement from the given parameters.\n    :param table: str, the table that will be excuted with DELETE operation in database\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    :return query: str, the SQL delete statement.\n    >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})\n    \"DELETE FROM table1 WHERE name='Test' AND age='14'\"\n    \"\"\"\n    query = f\"DELETE FROM {table}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1120,
+        "cached_tokens": 0,
+        "completion_tokens": 370,
+        "reasoning_tokens": 173,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method builds `DELETE FROM <table>` and, when `where` is nonempty, joins its conditions with `AND` using the documented quoted-value format. With `where=None` or an empty dictionary, it correctly returns a DELETE statement without a WHERE clause.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method builds `DELETE FROM <table>` and, when `where` is nonempty, joins its conditions with `AND` using the documented quoted-value format. With `where=None` or an empty dictionary, it correctly returns a DELETE statement without a WHERE clause.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1370,
+            "cached_tokens": 0,
+            "completion_tokens": 124,
+            "reasoning_tokens": 52,
+            "cost": 0.000199
+          }
+        ],
+        "prompt_tokens": 1370,
+        "cached_tokens": 0,
+        "completion_tokens": 124,
+        "reasoning_tokens": 52,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef delete(table, where=None):\n    \"\"\"\n    Generate the DELETE SQL statement from the given parameters.\n    :param table: str, the table that will be excuted with DELETE operation in database\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    :return query: str, the SQL delete statement.\n    >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})\n    \"DELETE FROM table1 WHERE name='Test' AND age='14'\"\n    \"\"\"\n    query = f\"DELETE FROM {table}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update",
+      "first": {
+        "code": "@staticmethod\ndef update(table, data, where=None):\n    \"\"\"\n    Generate the UPDATE SQL statement from the given parameters.\n    :param table: str, the table that will be executed with UPDATE operation in database\n    :param data: dict, the key and value in SQL update statement\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})\n    \"UPDATE table1 SET name='Test2', age='15' WHERE name='Test'\"\n    \"\"\"\n    columns = ', '.join(f\"{key}='{value}'\" for key, value in data.items())\n    query = f\"UPDATE {table} SET {columns}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef update(table, data, where=None):\n    \"\"\"\n    Generate the UPDATE SQL statement from the given parameters.\n    :param table: str, the table that will be executed with UPDATE operation in database\n    :param data: dict, the key and value in SQL update statement\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})\n    \"UPDATE table1 SET name='Test2', age='15' WHERE name='Test'\"\n    \"\"\"\n    columns = ', '.join(f\"{key}='{value}'\" for key, value in data.items())\n    query = f\"UPDATE {table} SET {columns}\"\n    \n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n    \n    return query\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1313,
+        "cached_tokens": 0,
+        "completion_tokens": 432,
+        "reasoning_tokens": 191,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method builds the SET assignments and optional WHERE conditions in the same format as the other methods, and it produces the documented example query. No concrete mismatch with the docstring is apparent.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method builds the SET assignments and optional WHERE conditions in the same format as the other methods, and it produces the documented example query. No concrete mismatch with the docstring is apparent.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1590,
+            "cached_tokens": 0,
+            "completion_tokens": 129,
+            "reasoning_tokens": 74,
+            "cost": 0.0002235
+          }
+        ],
+        "prompt_tokens": 1590,
+        "cached_tokens": 0,
+        "completion_tokens": 129,
+        "reasoning_tokens": 74,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef update(table, data, where=None):\n    \"\"\"\n    Generate the UPDATE SQL statement from the given parameters.\n    :param table: str, the table that will be executed with UPDATE operation in database\n    :param data: dict, the key and value in SQL update statement\n    :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n    >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})\n    \"UPDATE table1 SET name='Test2', age='15' WHERE name='Test'\"\n    \"\"\"\n    columns = ', '.join(f\"{key}='{value}'\" for key, value in data.items())\n    query = f\"UPDATE {table} SET {columns}\"\n\n    if where:\n        where_conditions = []\n        for key, value in where.items():\n            where_conditions.append(f\"{key}='{value}'\")\n        query += \" WHERE \" + \" AND \".join(where_conditions)\n\n    return query",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        \"\"\"\n        Generate the SELECT SQL statement from the given parameters.\n        :param table: str, the query table in database.\n        :param columns: list of str, ['col1', 'col2'].\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        return query: str, the SQL query statement.\n        >>> SQLQueryBuilder.select('table1', columns = [\"col1\",\"col2\"], where = {\"age\": 15})\n        \"SELECT col1, col2 FROM table1 WHERE age='15'\"\n        \"\"\"\n        if columns == '*':\n            columns = '*'\n        else:\n            columns = ', '.join(columns)\n\n        query = f\"SELECT {columns} FROM {table}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n\n    @staticmethod\n    def insert(table, data):\n        \"\"\"\n        Generate the INSERT SQL statement from the given parameters.\n        :param table: str, the table to be inserted in database.\n        :param data: dict, the key and value in SQL insert statement\n        :return query: str, the SQL insert statement.\n        >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})\n        \"INSERT INTO table1 (name, age) VALUES ('Test', '14')\"\n        \"\"\"\n        columns = ', '.join(data.keys())\n        values = ', '.join(f\"'{value}'\" for value in data.values())\n        query = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n        return query\n\n    @staticmethod\n    def delete(table, where=None):\n        \"\"\"\n        Generate the DELETE SQL statement from the given parameters.\n        :param table: str, the table that will be excuted with DELETE operation in database\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        :return query: str, the SQL delete statement.\n        >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})\n        \"DELETE FROM table1 WHERE name='Test' AND age='14'\"\n        \"\"\"\n        query = f\"DELETE FROM {table}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n\n    @staticmethod\n    def update(table, data, where=None):\n        \"\"\"\n        Generate the UPDATE SQL statement from the given parameters.\n        :param table: str, the table that will be executed with UPDATE operation in database\n        :param data: dict, the key and value in SQL update statement\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})\n        \"UPDATE table1 SET name='Test2', age='15' WHERE name='Test'\"\n        \"\"\"\n        columns = ', '.join(f\"{key}='{value}'\" for key, value in data.items())\n        query = f\"UPDATE {table} SET {columns}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n",
+  "source": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        \"\"\"\n        Generate the SELECT SQL statement from the given parameters.\n        :param table: str, the query table in database.\n        :param columns: list of str, ['col1', 'col2'].\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        return query: str, the SQL query statement.\n        >>> SQLQueryBuilder.select('table1', columns = [\"col1\",\"col2\"], where = {\"age\": 15})\n        \"SELECT col1, col2 FROM table1 WHERE age='15'\"\n        \"\"\"\n        if columns == '*':\n            columns = '*'\n        else:\n            columns = ', '.join(columns)\n\n        query = f\"SELECT {columns} FROM {table}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n\n    @staticmethod\n    def insert(table, data):\n        \"\"\"\n        Generate the INSERT SQL statement from the given parameters.\n        :param table: str, the table to be inserted in database.\n        :param data: dict, the key and value in SQL insert statement\n        :return query: str, the SQL insert statement.\n        >>> SQLQueryBuilder.insert('table1', {'name': 'Test', 'age': 14})\n        \"INSERT INTO table1 (name, age) VALUES ('Test', '14')\"\n        \"\"\"\n        columns = ', '.join(data.keys())\n        values = ', '.join(f\"'{value}'\" for value in data.values())\n        query = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n        return query\n\n    @staticmethod\n    def delete(table, where=None):\n        \"\"\"\n        Generate the DELETE SQL statement from the given parameters.\n        :param table: str, the table that will be excuted with DELETE operation in database\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        :return query: str, the SQL delete statement.\n        >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})\n        \"DELETE FROM table1 WHERE name='Test' AND age='14'\"\n        \"\"\"\n        query = f\"DELETE FROM {table}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n\n    @staticmethod\n    def update(table, data, where=None):\n        \"\"\"\n        Generate the UPDATE SQL statement from the given parameters.\n        :param table: str, the table that will be executed with UPDATE operation in database\n        :param data: dict, the key and value in SQL update statement\n        :param where: dict, {key1: value1, key2: value2 ...}. The query condition.\n        >>> SQLQueryBuilder.update('table1', {'name': 'Test2', 'age': 15}, where = {'name':'Test'})\n        \"UPDATE table1 SET name='Test2', age='15' WHERE name='Test'\"\n        \"\"\"\n        columns = ', '.join(f\"{key}='{value}'\" for key, value in data.items())\n        query = f\"UPDATE {table} SET {columns}\"\n\n        if where:\n            where_conditions = []\n            for key, value in where.items():\n                where_conditions.append(f\"{key}='{value}'\")\n            query += \" WHERE \" + \" AND \".join(where_conditions)\n\n        return query\n"
+}

@@ -1,0 +1,245 @@
+{
+  "task_id": "ClassEval_26",
+  "class_name": "CSVProcessor",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "read_csv",
+      "first": {
+        "code": "def read_csv(self, file_name):\n    \"\"\"\n    Read the csv file by file_name, get the title and data from it\n    :param file_name: str, name of the csv file\n    :return title, data: (list, list), first row is title, the rest is data\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    \"\"\"\n    with open(file_name, 'r', newline='') as csvfile:\n        reader = csv.reader(csvfile)\n        title = next(reader)\n        data = [row for row in reader]\n    return title, data",
+        "valid": true,
+        "reply": "```python\n    def read_csv(self, file_name):\n        \"\"\"\n        Read the csv file by file_name, get the title and data from it\n        :param file_name: str, name of the csv file\n        :return title, data: (list, list), first row is title, the rest is data\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.read_csv('read_test.csv')\n        (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n        \"\"\"\n        with open(file_name, 'r', newline='') as csvfile:\n            reader = csv.reader(csvfile)\n            title = next(reader)\n            data = [row for row in reader]\n        return title, data\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 646,
+        "cached_tokens": 0,
+        "completion_tokens": 607,
+        "reasoning_tokens": 408,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method uses `csv.reader`, treats the first row as the title, and returns all remaining rows as data, as specified. An empty file would raise `StopIteration`, but the docstring does not require special handling for empty files.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method uses `csv.reader`, treats the first row as the title, and returns all remaining rows as data, as specified. An empty file would raise `StopIteration`, but the docstring does not require special handling for empty files.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 914,
+            "cached_tokens": 0,
+            "completion_tokens": 181,
+            "reasoning_tokens": 115,
+            "cost": 0.0001819
+          }
+        ],
+        "prompt_tokens": 914,
+        "cached_tokens": 0,
+        "completion_tokens": 181,
+        "reasoning_tokens": 115,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "def read_csv(self, file_name):\n    \"\"\"\n    Read the csv file by file_name, get the title and data from it\n    :param file_name: str, name of the csv file\n    :return title, data: (list, list), first row is title, the rest is data\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    \"\"\"\n    with open(file_name, 'r', newline='') as csvfile:\n        reader = csv.reader(csvfile)\n        title = next(reader)\n        data = [row for row in reader]\n    return title, data",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "write_csv",
+      "first": {
+        "code": "def write_csv(self, data, file_name):\n    \"\"\"\n    Write data into a csv file.\n    :param file_name: str, name of the csv file\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')\n    1\n    \"\"\"\n    try:\n        with open(file_name, 'w', newline='') as csvfile:\n            writer = csv.writer(csvfile)\n            writer.writerows(data)\n        return 1\n    except Exception:\n        return 0",
+        "valid": true,
+        "reply": "```python\ndef write_csv(self, data, file_name):\n    \"\"\"\n    Write data into a csv file.\n    :param file_name: str, name of the csv file\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')\n    1\n    \"\"\"\n    try:\n        with open(file_name, 'w', newline='') as csvfile:\n            writer = csv.writer(csvfile)\n            writer.writerows(data)\n        return 1\n    except Exception:\n        return 0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 827,
+        "cached_tokens": 0,
+        "completion_tokens": 661,
+        "reasoning_tokens": 484,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method writes each row of `data` to `file_name` using `csv.writer` and returns 1 on success or 0 if an exception occurs. This matches the docstring and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method writes each row of `data` to `file_name` using `csv.writer` and returns 1 on success or 0 if an exception occurs. This matches the docstring and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1139,
+            "cached_tokens": 0,
+            "completion_tokens": 155,
+            "reasoning_tokens": 96,
+            "cost": 0.00019140000000000002
+          }
+        ],
+        "prompt_tokens": 1139,
+        "cached_tokens": 0,
+        "completion_tokens": 155,
+        "reasoning_tokens": 96,
+        "cost": 0.00019140000000000002
+      },
+      "revision": null,
+      "final_code": "def write_csv(self, data, file_name):\n    \"\"\"\n    Write data into a csv file.\n    :param file_name: str, name of the csv file\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')\n    1\n    \"\"\"\n    try:\n        with open(file_name, 'w', newline='') as csvfile:\n            writer = csv.writer(csvfile)\n            writer.writerows(data)\n        return 1\n    except Exception:\n        return 0",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "process_csv_data",
+      "first": {
+        "code": "def process_csv_data(self, N, save_file_name):\n    \"\"\"\n    Read a csv file into variable title and data.\n    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n    Add '_process' suffix after old file name, as a new file name.\n    :param N: int, the N th column(from 0)\n    :param save_file_name, the name of file that needs to be processed.\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n    1\n    >>> csvProcessor.read_csv('read_test_process.csv')\n    (['a', 'b', 'c', 'd'], [['HELLO']])\n    \"\"\"\n    try:\n        title, data = self.read_csv(save_file_name)\n    except Exception:\n        return 0\n\n    # Check if N is valid for the first row\n    if not data or N >= len(data[0]):\n        return 0\n\n    # Create new data with only column N, capitalized\n    new_data = []\n    for row in data:\n        if N < len(row):\n            new_row = [row[N].capitalize()]\n            new_data.append(new_row)\n        else:\n            return 0\n\n    # New title stays same, but we can create corresponding titles\n    # Using the same title structure as original\n    new_title = title.copy()\n\n    # Create new file name with _process suffix\n    if '.' in save_file_name:\n        base_name, ext = save_file_name.rsplit('.', 1)\n        new_file_name = f\"{base_name}_process.{ext}\"\n    else:\n        new_file_name = f\"{save_file_name}_process.csv\"\n\n    # Write the new data\n    result = self.write_csv([new_title] + new_data, new_file_name)\n    return result",
+        "valid": true,
+        "reply": "```python\ndef process_csv_data(self, N, save_file_name):\n    \"\"\"\n    Read a csv file into variable title and data.\n    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n    Add '_process' suffix after old file name, as a new file name.\n    :param N: int, the N th column(from 0)\n    :param save_file_name, the name of file that needs to be processed.\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n    1\n    >>> csvProcessor.read_csv('read_test_process.csv')\n    (['a', 'b', 'c', 'd'], [['HELLO']])\n    \"\"\"\n    try:\n        title, data = self.read_csv(save_file_name)\n    except Exception:\n        return 0\n    \n    # Check if N is valid for the first row\n    if not data or N >= len(data[0]):\n        return 0\n    \n    # Create new data with only column N, capitalized\n    new_data = []\n    for row in data:\n        if N < len(row):\n            new_row = [row[N].capitalize()]\n            new_data.append(new_row)\n        else:\n            return 0\n    \n    # New title stays same, but we can create corresponding titles\n    # Using the same title structure as original\n    new_title = title.copy()\n    \n    # Create new file name with _process suffix\n    if '.' in save_file_name:\n        base_name, ext = save_file_name.rsplit('.', 1)\n        new_file_name = f\"{base_name}_process.{ext}\"\n    else:\n        new_file_name = f\"{save_file_name}_process.csv\"\n    \n    # Write the new data\n    result = self.write_csv([new_title] + new_data, new_file_name)\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 984,
+        "cached_tokens": 768,
+        "completion_tokens": 1374,
+        "reasoning_tokens": 851,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The docstring\u2019s example requires the selected value `hElLo` to become `HELLO`, but `str.capitalize()` produces `Hello`; use `str.upper()` instead. Also reject negative `N`, since it currently selects a column from the end rather than an Nth column counted from 0.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The docstring\u2019s example requires the selected value `hElLo` to become `HELLO`, but `str.capitalize()` produces `Hello`; use `str.upper()` instead. Also reject negative `N`, since it currently selects a column from the end rather than an Nth column counted from 0.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1645,
+            "cached_tokens": 0,
+            "completion_tokens": 244,
+            "reasoning_tokens": 163,
+            "cost": 0.0002865
+          }
+        ],
+        "prompt_tokens": 1645,
+        "cached_tokens": 0,
+        "completion_tokens": 244,
+        "reasoning_tokens": 163,
+        "cost": 0.0002865
+      },
+      "revision": {
+        "code": "def process_csv_data(self, N, save_file_name):\n    \"\"\"\n    Read a csv file into variable title and data.\n    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n    Add '_process' suffix after old file name, as a new file name.\n    :param N: int, the N th column(from 0)\n    :param save_file_name, the name of file that needs to be processed.\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n    1\n    >>> csvProcessor.read_csv('read_test_process.csv')\n    (['a', 'b', 'c', 'd'], [['HELLO']])\n    \"\"\"\n    try:\n        title, data = self.read_csv(save_file_name)\n    except Exception:\n        return 0\n\n    # Check if N is valid (non-negative and within column range)\n    if N < 0 or not data or N >= len(data[0]):\n        return 0\n\n    # Create new data with only column N, uppercased\n    new_data = []\n    for row in data:\n        if N < len(row):\n            new_row = [row[N].upper()]\n            new_data.append(new_row)\n        else:\n            return 0\n\n    # Create new file name with _process suffix\n    if '.' in save_file_name:\n        base_name, ext = save_file_name.rsplit('.', 1)\n        new_file_name = f\"{base_name}_process.{ext}\"\n    else:\n        new_file_name = f\"{save_file_name}_process.csv\"\n\n    # Write the new data\n    result = self.write_csv([title] + new_data, new_file_name)\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef process_csv_data(self, N, save_file_name):\n    \"\"\"\n    Read a csv file into variable title and data.\n    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n    Add '_process' suffix after old file name, as a new file name.\n    :param N: int, the N th column(from 0)\n    :param save_file_name, the name of file that needs to be processed.\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n    1\n    >>> csvProcessor.read_csv('read_test_process.csv')\n    (['a', 'b', 'c', 'd'], [['HELLO']])\n    \"\"\"\n    try:\n        title, data = self.read_csv(save_file_name)\n    except Exception:\n        return 0\n    \n    # Check if N is valid (non-negative and within column range)\n    if N < 0 or not data or N >= len(data[0]):\n        return 0\n    \n    # Create new data with only column N, uppercased\n    new_data = []\n    for row in data:\n        if N < len(row):\n            new_row = [row[N].upper()]\n            new_data.append(new_row)\n        else:\n            return 0\n    \n    # Create new file name with _process suffix\n    if '.' in save_file_name:\n        base_name, ext = save_file_name.rsplit('.', 1)\n        new_file_name = f\"{base_name}_process.{ext}\"\n    else:\n        new_file_name = f\"{save_file_name}_process.csv\"\n    \n    # Write the new data\n    result = self.write_csv([title] + new_data, new_file_name)\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1580,
+        "cached_tokens": 0,
+        "completion_tokens": 576,
+        "reasoning_tokens": 106,
+        "cost": 0.0002444
+      },
+      "final_code": "def process_csv_data(self, N, save_file_name):\n    \"\"\"\n    Read a csv file into variable title and data.\n    Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n    Add '_process' suffix after old file name, as a new file name.\n    :param N: int, the N th column(from 0)\n    :param save_file_name, the name of file that needs to be processed.\n    :return:int, if success return 1, or 0 otherwise\n    >>> csvProcessor = CSVProcessor()\n    >>> csvProcessor.read_csv('read_test.csv')\n    (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n    >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n    1\n    >>> csvProcessor.read_csv('read_test_process.csv')\n    (['a', 'b', 'c', 'd'], [['HELLO']])\n    \"\"\"\n    try:\n        title, data = self.read_csv(save_file_name)\n    except Exception:\n        return 0\n\n    # Check if N is valid (non-negative and within column range)\n    if N < 0 or not data or N >= len(data[0]):\n        return 0\n\n    # Create new data with only column N, uppercased\n    new_data = []\n    for row in data:\n        if N < len(row):\n            new_row = [row[N].upper()]\n            new_data.append(new_row)\n        else:\n            return 0\n\n    # Create new file name with _process suffix\n    if '.' in save_file_name:\n        base_name, ext = save_file_name.rsplit('.', 1)\n        new_file_name = f\"{base_name}_process.{ext}\"\n    else:\n        new_file_name = f\"{save_file_name}_process.csv\"\n\n    # Write the new data\n    result = self.write_csv([title] + new_data, new_file_name)\n    return result",
+      "passed_first": false,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": true,
+  "tests_first": {
+    "CSVProcessorTestReadCSV": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CSVProcessorTestWriteCSV": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CSVProcessorTestProcessCSVData": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "CSVProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "CSVProcessorTestReadCSV": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CSVProcessorTestWriteCSV": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CSVProcessorTestProcessCSVData": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "CSVProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import csv\n\nclass CSVProcessor: \n    def __init__(self):\n        pass\n\n    def read_csv(self, file_name):\n        \"\"\"\n        Read the csv file by file_name, get the title and data from it\n        :param file_name: str, name of the csv file\n        :return title, data: (list, list), first row is title, the rest is data\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.read_csv('read_test.csv')\n        (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n        \"\"\"\n        with open(file_name, 'r', newline='') as csvfile:\n            reader = csv.reader(csvfile)\n            title = next(reader)\n            data = [row for row in reader]\n        return title, data\n\n    def write_csv(self, data, file_name):\n        \"\"\"\n        Write data into a csv file.\n        :param file_name: str, name of the csv file\n        :return:int, if success return 1, or 0 otherwise\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')\n        1\n        \"\"\"\n        try:\n            with open(file_name, 'w', newline='') as csvfile:\n                writer = csv.writer(csvfile)\n                writer.writerows(data)\n            return 1\n        except Exception:\n            return 0\n\n    def process_csv_data(self, N, save_file_name):\n        \"\"\"\n        Read a csv file into variable title and data.\n        Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n        Add '_process' suffix after old file name, as a new file name.\n        :param N: int, the N th column(from 0)\n        :param save_file_name, the name of file that needs to be processed.\n        :return:int, if success return 1, or 0 otherwise\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.read_csv('read_test.csv')\n        (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n        >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n        1\n        >>> csvProcessor.read_csv('read_test_process.csv')\n        (['a', 'b', 'c', 'd'], [['HELLO']])\n        \"\"\"\n        try:\n            title, data = self.read_csv(save_file_name)\n        except Exception:\n            return 0\n\n        # Check if N is valid for the first row\n        if not data or N >= len(data[0]):\n            return 0\n\n        # Create new data with only column N, capitalized\n        new_data = []\n        for row in data:\n            if N < len(row):\n                new_row = [row[N].capitalize()]\n                new_data.append(new_row)\n            else:\n                return 0\n\n        # New title stays same, but we can create corresponding titles\n        # Using the same title structure as original\n        new_title = title.copy()\n\n        # Create new file name with _process suffix\n        if '.' in save_file_name:\n            base_name, ext = save_file_name.rsplit('.', 1)\n            new_file_name = f\"{base_name}_process.{ext}\"\n        else:\n            new_file_name = f\"{save_file_name}_process.csv\"\n\n        # Write the new data\n        result = self.write_csv([new_title] + new_data, new_file_name)\n        return result\n",
+  "source": "import csv\n\nclass CSVProcessor: \n    def __init__(self):\n        pass\n\n    def read_csv(self, file_name):\n        \"\"\"\n        Read the csv file by file_name, get the title and data from it\n        :param file_name: str, name of the csv file\n        :return title, data: (list, list), first row is title, the rest is data\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.read_csv('read_test.csv')\n        (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n        \"\"\"\n        with open(file_name, 'r', newline='') as csvfile:\n            reader = csv.reader(csvfile)\n            title = next(reader)\n            data = [row for row in reader]\n        return title, data\n\n    def write_csv(self, data, file_name):\n        \"\"\"\n        Write data into a csv file.\n        :param file_name: str, name of the csv file\n        :return:int, if success return 1, or 0 otherwise\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')\n        1\n        \"\"\"\n        try:\n            with open(file_name, 'w', newline='') as csvfile:\n                writer = csv.writer(csvfile)\n                writer.writerows(data)\n            return 1\n        except Exception:\n            return 0\n\n    def process_csv_data(self, N, save_file_name):\n        \"\"\"\n        Read a csv file into variable title and data.\n        Only remain the N th (from 0) column data and Capitalize them, store the title and new data into a new csv file.\n        Add '_process' suffix after old file name, as a new file name.\n        :param N: int, the N th column(from 0)\n        :param save_file_name, the name of file that needs to be processed.\n        :return:int, if success return 1, or 0 otherwise\n        >>> csvProcessor = CSVProcessor()\n        >>> csvProcessor.read_csv('read_test.csv')\n        (['a', 'b', 'c', 'd'], [['hElLo', 'YoU', 'ME', 'LoW']])\n        >>> csvProcessor.process_csv_data(0, 'read_test.csv')\n        1\n        >>> csvProcessor.read_csv('read_test_process.csv')\n        (['a', 'b', 'c', 'd'], [['HELLO']])\n        \"\"\"\n        try:\n            title, data = self.read_csv(save_file_name)\n        except Exception:\n            return 0\n\n        # Check if N is valid (non-negative and within column range)\n        if N < 0 or not data or N >= len(data[0]):\n            return 0\n\n        # Create new data with only column N, uppercased\n        new_data = []\n        for row in data:\n            if N < len(row):\n                new_row = [row[N].upper()]\n                new_data.append(new_row)\n            else:\n                return 0\n\n        # Create new file name with _process suffix\n        if '.' in save_file_name:\n            base_name, ext = save_file_name.rsplit('.', 1)\n            new_file_name = f\"{base_name}_process.{ext}\"\n        else:\n            new_file_name = f\"{save_file_name}_process.csv\"\n\n        # Write the new data\n        result = self.write_csv([title] + new_data, new_file_name)\n        return result\n"
+}

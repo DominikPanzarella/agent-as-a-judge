@@ -1,0 +1,190 @@
+{
+  "task_id": "ClassEval_46",
+  "class_name": "Interpolation",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "interpolate_1d",
+      "first": {
+        "code": "def interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n    for xi in x_interp:\n        # Handle edge cases\n        if xi <= x[0]:\n            i = 0\n        elif xi >= x[-1]:\n            i = len(x) - 2\n        else:\n            # Find the index where xi lies between x[i] and x[i+1]\n            i = next(j for j, val in enumerate(x[:-1]) if val <= xi)\n\n        # Perform linear interpolation\n        yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "```python\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n    for xi in x_interp:\n        # Handle edge cases\n        if xi <= x[0]:\n            i = 0\n        elif xi >= x[-1]:\n            i = len(x) - 2\n        else:\n            # Find the index where xi lies between x[i] and x[i+1]\n            i = next(j for j, val in enumerate(x[:-1]) if val <= xi)\n        \n        # Perform linear interpolation\n        yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n        result.append(yi)\n    \n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 549,
+        "cached_tokens": 0,
+        "completion_tokens": 1039,
+        "reasoning_tokens": 581,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For an interpolation point between later x-values, the search selects the first x-value less than or equal to it rather than the interval containing it; this can produce an incorrect result for non-linear data. Find the greatest index i with x[i] <= xi (or otherwise locate the containing interval).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For an interpolation point between later x-values, the search selects the first x-value less than or equal to it rather than the interval containing it; this can produce an incorrect result for non-linear data. Find the greatest index i with x[i] <= xi (or otherwise locate the containing interval).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 943,
+            "cached_tokens": 0,
+            "completion_tokens": 247,
+            "reasoning_tokens": 168,
+            "cost": 0.0002178
+          }
+        ],
+        "prompt_tokens": 943,
+        "cached_tokens": 0,
+        "completion_tokens": 247,
+        "reasoning_tokens": 168,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": {
+        "code": "def interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi <= x[i+1]\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n\n        # Perform linear interpolation\n        yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi <= x[i+1]\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n        \n        # Perform linear interpolation\n        yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n        result.append(yi)\n    \n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 900,
+        "cached_tokens": 0,
+        "completion_tokens": 1374,
+        "reasoning_tokens": 780,
+        "cost": 0.0002961
+      },
+      "final_code": "def interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi <= x[i+1]\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n\n        # Perform linear interpolation\n        yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n        result.append(yi)\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "interpolate_2d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        # Find index i in x direction\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n\n        # Find index j in y direction\n        j = 0\n        for k in range(len(y) - 1):\n            if y[k] <= yi <= y[k + 1]:\n                j = k\n                break\n        else:\n            # Clamp to boundaries if yi is outside the range\n            if yi < y[0]:\n                j = 0\n            elif yi > y[-1]:\n                j = len(y) - 2\n\n        # Get the four surrounding z values\n        z00 = z[i][j]\n        z10 = z[i + 1][j]\n        z01 = z[i][j + 1]\n        z11 = z[i + 1][j + 1]\n\n        # Bilinear interpolation\n        # First interpolate along x direction\n        t_x = (xi - x[i]) / (x[i + 1] - x[i])\n        z1 = z00 + t_x * (z10 - z00)\n        z2 = z01 + t_x * (z11 - z01)\n\n        # Then interpolate along y direction\n        t_y = (yi - y[j]) / (y[j + 1] - y[j])\n        zi = z1 + t_y * (z2 - z1)\n\n        result.append(zi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        # Find index i in x direction\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n\n        # Find index j in y direction\n        j = 0\n        for k in range(len(y) - 1):\n            if y[k] <= yi <= y[k + 1]:\n                j = k\n                break\n        else:\n            # Clamp to boundaries if yi is outside the range\n            if yi < y[0]:\n                j = 0\n            elif yi > y[-1]:\n                j = len(y) - 2\n\n        # Get the four surrounding z values\n        z00 = z[i][j]\n        z10 = z[i + 1][j]\n        z01 = z[i][j + 1]\n        z11 = z[i + 1][j + 1]\n\n        # Bilinear interpolation\n        # First interpolate along x direction\n        t_x = (xi - x[i]) / (x[i + 1] - x[i])\n        z1 = z00 + t_x * (z10 - z00)\n        z2 = z01 + t_x * (z11 - z01)\n\n        # Then interpolate along y direction\n        t_y = (yi - y[j]) / (y[j + 1] - y[j])\n        zi = z1 + t_y * (z2 - z1)\n\n        result.append(zi)\n\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 888,
+        "cached_tokens": 0,
+        "completion_tokens": 4473,
+        "reasoning_tokens": 2591,
+        "cost": 0.00075975
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method indexes the grid as `z[x_index][y_index]`, but a conventional 2D grid stores rows by y and columns by x, so it should access `z[y_index][x_index]` (and the corresponding four corners). The diagonal doctest does not expose this transposition; test an off-diagonal point and document the intended layout.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method indexes the grid as `z[x_index][y_index]`, but a conventional 2D grid stores rows by y and columns by x, so it should access `z[y_index][x_index]` (and the corresponding four corners). The diagonal doctest does not expose this transposition; test an off-diagonal point and document the intended layout.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1586,
+            "cached_tokens": 0,
+            "completion_tokens": 1101,
+            "reasoning_tokens": 1008,
+            "cost": 0.0007091
+          }
+        ],
+        "prompt_tokens": 1586,
+        "cached_tokens": 0,
+        "completion_tokens": 1101,
+        "reasoning_tokens": 1008,
+        "cost": 0.0007091
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "Parasail",
+        "prompt_tokens": 1587,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 8000,
+        "cost": 0.0021587
+      },
+      "final_code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        # Find index i in x direction\n        i = 0\n        for j in range(len(x) - 1):\n            if x[j] <= xi <= x[j + 1]:\n                i = j\n                break\n        else:\n            # Clamp to boundaries if xi is outside the range\n            if xi < x[0]:\n                i = 0\n            elif xi > x[-1]:\n                i = len(x) - 2\n\n        # Find index j in y direction\n        j = 0\n        for k in range(len(y) - 1):\n            if y[k] <= yi <= y[k + 1]:\n                j = k\n                break\n        else:\n            # Clamp to boundaries if yi is outside the range\n            if yi < y[0]:\n                j = 0\n            elif yi > y[-1]:\n                j = len(y) - 2\n\n        # Get the four surrounding z values\n        z00 = z[i][j]\n        z10 = z[i + 1][j]\n        z01 = z[i][j + 1]\n        z11 = z[i + 1][j + 1]\n\n        # Bilinear interpolation\n        # First interpolate along x direction\n        t_x = (xi - x[i]) / (x[i + 1] - x[i])\n        z1 = z00 + t_x * (z10 - z00)\n        z2 = z01 + t_x * (z11 - z01)\n\n        # Then interpolate along y direction\n        t_y = (yi - y[j]) / (y[j + 1] - y[j])\n        zi = z1 + t_y * (z2 - z1)\n\n        result.append(zi)\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n        for xi in x_interp:\n            # Handle edge cases\n            if xi <= x[0]:\n                i = 0\n            elif xi >= x[-1]:\n                i = len(x) - 2\n            else:\n                # Find the index where xi lies between x[i] and x[i+1]\n                i = next(j for j, val in enumerate(x[:-1]) if val <= xi)\n\n            # Perform linear interpolation\n            yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n\n        \"\"\"\n        result = []\n        for xi, yi in zip(x_interp, y_interp):\n            # Find index i in x direction\n            i = 0\n            for j in range(len(x) - 1):\n                if x[j] <= xi <= x[j + 1]:\n                    i = j\n                    break\n            else:\n                # Clamp to boundaries if xi is outside the range\n                if xi < x[0]:\n                    i = 0\n                elif xi > x[-1]:\n                    i = len(x) - 2\n\n            # Find index j in y direction\n            j = 0\n            for k in range(len(y) - 1):\n                if y[k] <= yi <= y[k + 1]:\n                    j = k\n                    break\n            else:\n                # Clamp to boundaries if yi is outside the range\n                if yi < y[0]:\n                    j = 0\n                elif yi > y[-1]:\n                    j = len(y) - 2\n\n            # Get the four surrounding z values\n            z00 = z[i][j]\n            z10 = z[i + 1][j]\n            z01 = z[i][j + 1]\n            z11 = z[i + 1][j + 1]\n\n            # Bilinear interpolation\n            # First interpolate along x direction\n            t_x = (xi - x[i]) / (x[i + 1] - x[i])\n            z1 = z00 + t_x * (z10 - z00)\n            z2 = z01 + t_x * (z11 - z01)\n\n            # Then interpolate along y direction\n            t_y = (yi - y[j]) / (y[j + 1] - y[j])\n            zi = z1 + t_y * (z2 - z1)\n\n            result.append(zi)\n\n        return result\n",
+  "source": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n        for xi in x_interp:\n            # Find the index i such that x[i] <= xi <= x[i+1]\n            i = 0\n            for j in range(len(x) - 1):\n                if x[j] <= xi <= x[j + 1]:\n                    i = j\n                    break\n            else:\n                # Clamp to boundaries if xi is outside the range\n                if xi < x[0]:\n                    i = 0\n                elif xi > x[-1]:\n                    i = len(x) - 2\n\n            # Perform linear interpolation\n            yi = y[i] + (xi - x[i]) * (y[i + 1] - y[i]) / (x[i + 1] - x[i])\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n\n        \"\"\"\n        result = []\n        for xi, yi in zip(x_interp, y_interp):\n            # Find index i in x direction\n            i = 0\n            for j in range(len(x) - 1):\n                if x[j] <= xi <= x[j + 1]:\n                    i = j\n                    break\n            else:\n                # Clamp to boundaries if xi is outside the range\n                if xi < x[0]:\n                    i = 0\n                elif xi > x[-1]:\n                    i = len(x) - 2\n\n            # Find index j in y direction\n            j = 0\n            for k in range(len(y) - 1):\n                if y[k] <= yi <= y[k + 1]:\n                    j = k\n                    break\n            else:\n                # Clamp to boundaries if yi is outside the range\n                if yi < y[0]:\n                    j = 0\n                elif yi > y[-1]:\n                    j = len(y) - 2\n\n            # Get the four surrounding z values\n            z00 = z[i][j]\n            z10 = z[i + 1][j]\n            z01 = z[i][j + 1]\n            z11 = z[i + 1][j + 1]\n\n            # Bilinear interpolation\n            # First interpolate along x direction\n            t_x = (xi - x[i]) / (x[i + 1] - x[i])\n            z1 = z00 + t_x * (z10 - z00)\n            z2 = z01 + t_x * (z11 - z01)\n\n            # Then interpolate along y direction\n            t_y = (yi - y[j]) / (y[j + 1] - y[j])\n            zi = z1 + t_y * (z2 - z1)\n\n            result.append(zi)\n\n        return result\n"
+}

@@ -1,0 +1,396 @@
+{
+  "task_id": "ClassEval_22",
+  "class_name": "ClassRegistrationSystem",
+  "setup": "C3",
+  "name": "C3-9b-8k-r1",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r1",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "register_student",
+      "first": {
+        "code": "def register_student(self, student):\n    \"\"\"\n    register a student to the system, add the student to the students list, if the student is already registered, return 0, else return 1\n    \"\"\"\n    student_name = student.get('name')\n    if any(stu.get('name') == student_name for stu in self.students):\n        return 0\n    self.students.append(student)\n    self.students_registration_classes[student_name] = []\n    return 1",
+        "valid": true,
+        "reply": "```python\n    def register_student(self, student):\n        \"\"\"\n        register a student to the system, add the student to the students list, if the student is already registered, return 0, else return 1\n        \"\"\"\n        student_name = student.get('name')\n        if any(stu.get('name') == student_name for stu in self.students):\n            return 0\n        self.students.append(student)\n        self.students_registration_classes[student_name] = []\n        return 1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 776,
+        "cached_tokens": 0,
+        "completion_tokens": 3111,
+        "reasoning_tokens": 3417,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks for an existing student with the same name, returns 0 for duplicates, and otherwise adds the student, initializes their class list using the field defined by the constructor, and returns 1. This matches the docstring.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks for an existing student with the same name, returns 0 for duplicates, and otherwise adds the student, initializes their class list using the field defined by the constructor, and returns 1. This matches the docstring.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 955,
+            "cached_tokens": 0,
+            "completion_tokens": 163,
+            "reasoning_tokens": 98,
+            "cost": 0.000177
+          }
+        ],
+        "prompt_tokens": 955,
+        "cached_tokens": 0,
+        "completion_tokens": 163,
+        "reasoning_tokens": 98,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "revision": null,
+      "final_code": "def register_student(self, student):\n    \"\"\"\n    register a student to the system, add the student to the students list, if the student is already registered, return 0, else return 1\n    \"\"\"\n    student_name = student.get('name')\n    if any(stu.get('name') == student_name for stu in self.students):\n        return 0\n    self.students.append(student)\n    self.students_registration_classes[student_name] = []\n    return 1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "register_class",
+      "first": {
+        "code": "def register_class(self, student_name, class_name):\n    \"\"\"\n    register a class to the student.\n    :param student_name: str\n    :param class_name: str\n    :return a list of class names that the student has registered\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n    [\"CS101\", \"CS102\"]\n    \"\"\"\n    if student_name not in self.students_registration_classes:\n        return []\n\n    self.students_registration_classes[student_name].append(class_name)\n    return self.students_registration_classes[student_name]",
+        "valid": true,
+        "reply": "```python\ndef register_class(self, student_name, class_name):\n    \"\"\"\n    register a class to the student.\n    :param student_name: str\n    :param class_name: str\n    :return a list of class names that the student has registered\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n    [\"CS101\", \"CS102\"]\n    \"\"\"\n    if student_name not in self.students_registration_classes:\n        return []\n    \n    self.students_registration_classes[student_name].append(class_name)\n    return self.students_registration_classes[student_name]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 892,
+        "cached_tokens": 0,
+        "completion_tokens": 1175,
+        "reasoning_tokens": 1127,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The docstring example calls `register_class` for John without first registering him, but this method returns `[]` for both calls, so it cannot produce the documented `['CS101', 'CS102']`. Initialize a class list for an unknown student, or update the example to register John first and specify that only registered students can be assigned classes.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The docstring example calls `register_class` for John without first registering him, but this method returns `[]` for both calls, so it cannot produce the documented `['CS101', 'CS102']`. Initialize a class list for an unknown student, or update the example to register John first and specify that only registered students can be assigned classes.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1174,
+            "cached_tokens": 0,
+            "completion_tokens": 316,
+            "reasoning_tokens": 226,
+            "cost": 0.00027539999999999997
+          }
+        ],
+        "prompt_tokens": 1174,
+        "cached_tokens": 0,
+        "completion_tokens": 316,
+        "reasoning_tokens": 226,
+        "cost": 0.00027539999999999997
+      },
+      "revision": {
+        "code": "def register_class(self, student_name, class_name):\n    \"\"\"\n    register a class to the student.\n    :param student_name: str\n    :param class_name: str\n    :return a list of class names that the student has registered\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n    [\"CS101\", \"CS102\"]\n    \"\"\"\n    if student_name not in self.students_registration_classes:\n        self.students_registration_classes[student_name] = []\n\n    self.students_registration_classes[student_name].append(class_name)\n    return self.students_registration_classes[student_name]",
+        "valid": true,
+        "reply": "```python\ndef register_class(self, student_name, class_name):\n    \"\"\"\n    register a class to the student.\n    :param student_name: str\n    :param class_name: str\n    :return a list of class names that the student has registered\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n    [\"CS101\", \"CS102\"]\n    \"\"\"\n    if student_name not in self.students_registration_classes:\n        self.students_registration_classes[student_name] = []\n    \n    self.students_registration_classes[student_name].append(class_name)\n    return self.students_registration_classes[student_name]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1174,
+        "cached_tokens": 0,
+        "completion_tokens": 589,
+        "reasoning_tokens": 491,
+        "cost": 0.000183997
+      },
+      "final_code": "def register_class(self, student_name, class_name):\n    \"\"\"\n    register a class to the student.\n    :param student_name: str\n    :param class_name: str\n    :return a list of class names that the student has registered\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n    >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n    [\"CS101\", \"CS102\"]\n    \"\"\"\n    if student_name not in self.students_registration_classes:\n        self.students_registration_classes[student_name] = []\n\n    self.students_registration_classes[student_name].append(class_name)\n    return self.students_registration_classes[student_name]",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "get_students_by_major",
+      "first": {
+        "code": "def get_students_by_major(self, major):\n    \"\"\"\n    get all students in the major\n    :param major: str\n    :return a list of student name\n    >>> registration_system = ClassRegistrationSystem()\n    >>> student1 = {\"name\": \"John\", \"major\": \"Computer Science\"}\n    >>> registration_system.register_student(student1)\n    >>> registration_system.get_students_by_major(\"Computer Science\")\n    [\"John\"]\n    \"\"\"\n    return [student['name'] for student in self.students if student.get('major') == major]",
+        "valid": true,
+        "reply": "```python\ndef get_students_by_major(self, major):\n    \"\"\"\n    get all students in the major\n    :param major: str\n    :return a list of student name\n    >>> registration_system = ClassRegistrationSystem()\n    >>> student1 = {\"name\": \"John\", \"major\": \"Computer Science\"}\n    >>> registration_system.register_student(student1)\n    >>> registration_system.get_students_by_major(\"Computer Science\")\n    [\"John\"]\n    \"\"\"\n    return [student['name'] for student in self.students if student.get('major') == major]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1064,
+        "cached_tokens": 0,
+        "completion_tokens": 444,
+        "reasoning_tokens": 342,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method filters the student dictionaries by the requested major and returns their names, matching the docstring and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method filters the student dictionaries by the requested major and returns their names, matching the docstring and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1391,
+            "cached_tokens": 0,
+            "completion_tokens": 115,
+            "reasoning_tokens": 75,
+            "cost": 0.00019659999999999998
+          }
+        ],
+        "prompt_tokens": 1391,
+        "cached_tokens": 0,
+        "completion_tokens": 115,
+        "reasoning_tokens": 75,
+        "cost": 0.00019659999999999998
+      },
+      "revision": null,
+      "final_code": "def get_students_by_major(self, major):\n    \"\"\"\n    get all students in the major\n    :param major: str\n    :return a list of student name\n    >>> registration_system = ClassRegistrationSystem()\n    >>> student1 = {\"name\": \"John\", \"major\": \"Computer Science\"}\n    >>> registration_system.register_student(student1)\n    >>> registration_system.get_students_by_major(\"Computer Science\")\n    [\"John\"]\n    \"\"\"\n    return [student['name'] for student in self.students if student.get('major') == major]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_all_major",
+      "first": {
+        "code": "def get_all_major(self):\n    \"\"\"\n    get all majors in the system\n    :return a list of majors\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}],\n    >>> registration_system.get_all_major(student1)\n    [\"Computer Science\"]\n    \"\"\"\n    majors = {}\n    for student in self.students:\n        major = student.get('major')\n        majors[major] = None\n    return list(majors.keys())",
+        "valid": true,
+        "reply": "```python\ndef get_all_major(self):\n    \"\"\"\n    get all majors in the system\n    :return a list of majors\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}],\n    >>> registration_system.get_all_major(student1)\n    [\"Computer Science\"]\n    \"\"\"\n    majors = {}\n    for student in self.students:\n        major = student.get('major')\n        majors[major] = None\n    return list(majors.keys())\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1182,
+        "cached_tokens": 0,
+        "completion_tokens": 549,
+        "reasoning_tokens": 489,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r1"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The implementation returns unique majors for a list of student dictionaries, but the documented example fails: the trailing comma makes `students` a tuple containing a list, and the call passes an unsupported argument. Remove the comma and call `get_all_major()` with no arguments.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The implementation returns unique majors for a list of student dictionaries, but the documented example fails: the trailing comma makes `students` a tuple containing a list, and the call passes an unsupported argument. Remove the comma and call `get_all_major()` with no arguments.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1525,
+            "cached_tokens": 0,
+            "completion_tokens": 300,
+            "reasoning_tokens": 228,
+            "cost": 0.0003025
+          }
+        ],
+        "prompt_tokens": 1525,
+        "cached_tokens": 0,
+        "completion_tokens": 300,
+        "reasoning_tokens": 228,
+        "cost": 0.0003025
+      },
+      "revision": {
+        "code": "def get_all_major(self):\n    \"\"\"\n    get all majors in the system\n    :return a list of majors\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}]\n    >>> registration_system.get_all_major()\n    [\"Computer Science\"]\n    \"\"\"\n    majors = {}\n    for student in self.students:\n        major = student.get('major')\n        majors[major] = None\n    return list(majors.keys())",
+        "valid": true,
+        "reply": "```python\ndef get_all_major(self):\n    \"\"\"\n    get all majors in the system\n    :return a list of majors\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}]\n    >>> registration_system.get_all_major()\n    [\"Computer Science\"]\n    \"\"\"\n    majors = {}\n    for student in self.students:\n        major = student.get('major')\n        majors[major] = None\n    return list(majors.keys())\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1397,
+        "cached_tokens": 0,
+        "completion_tokens": 441,
+        "reasoning_tokens": 371,
+        "cost": 0.000184383
+      },
+      "final_code": "def get_all_major(self):\n    \"\"\"\n    get all majors in the system\n    :return a list of majors\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}]\n    >>> registration_system.get_all_major()\n    [\"Computer Science\"]\n    \"\"\"\n    majors = {}\n    for student in self.students:\n        major = student.get('major')\n        majors[major] = None\n    return list(majors.keys())",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_most_popular_class_in_major",
+      "first": {
+        "code": "def get_most_popular_class_in_major(self, major):\n    \"\"\"\n    get the class with the highest enrollment in the major.\n    :return a string of the most popular class in this major\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n    >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                            \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n    >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n    \"Data Structures\"\n    \"\"\"\n    major_students = [student['name'] for student in self.students if student.get('major') == major]\n    class_counts = {}\n    for student_name in major_students:\n        for class_name in self.students_registration_classes.get(student_name, []):\n            class_counts[class_name] = class_counts.get(class_name, 0) + 1\n    if not class_counts:\n        return \"\"\n    return max(class_counts, key=class_counts.get)",
+        "valid": true,
+        "reply": "```python\ndef get_most_popular_class_in_major(self, major):\n    \"\"\"\n    get the class with the highest enrollment in the major.\n    :return a string of the most popular class in this major\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n    >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                            \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n    >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n    \"Data Structures\"\n    \"\"\"\n    major_students = [student['name'] for student in self.students if student.get('major') == major]\n    class_counts = {}\n    for student_name in major_students:\n        for class_name in self.students_registration_classes.get(student_name, []):\n            class_counts[class_name] = class_counts.get(class_name, 0) + 1\n    if not class_counts:\n        return \"\"\n    return max(class_counts, key=class_counts.get)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1300,
+        "cached_tokens": 0,
+        "completion_tokens": 905,
+        "reasoning_tokens": 737,
+        "cost": 0.000237365
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "In the documented example, Algorithms and Data Structures are tied at two students each, but `max` returns the first inserted tie, Algorithms, rather than the expected Data Structures. Specify a tie-breaking rule that selects Data Structures here, or change the example so its expected class is uniquely most popular.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "In the documented example, Algorithms and Data Structures are tied at two students each, but `max` returns the first inserted tie, Algorithms, rather than the expected Data Structures. Specify a tie-breaking rule that selects Data Structures here, or change the example so its expected class is uniquely most popular.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1857,
+            "cached_tokens": 0,
+            "completion_tokens": 300,
+            "reasoning_tokens": 222,
+            "cost": 0.00033570000000000003
+          }
+        ],
+        "prompt_tokens": 1857,
+        "cached_tokens": 0,
+        "completion_tokens": 300,
+        "reasoning_tokens": 222,
+        "cost": 0.00033570000000000003
+      },
+      "revision": {
+        "code": "def get_most_popular_class_in_major(self, major):\n    \"\"\"\n    get the class with the highest enrollment in the major.\n    :return a string of the most popular class in this major\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n    >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                            \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n    >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n    \"Data Structures\"\n    \"\"\"\n    major_students = [student['name'] for student in self.students if student.get('major') == major]\n    class_counts = {}\n    for student_name in major_students:\n        for class_name in self.students_registration_classes.get(student_name, []):\n            class_counts[class_name] = class_counts.get(class_name, 0) + 1\n    if not class_counts:\n        return \"\"\n    max_count = max(class_counts.values())\n    candidates = [cls for cls, cnt in class_counts.items() if cnt == max_count]\n    return max(candidates)",
+        "valid": true,
+        "reply": "```python\ndef get_most_popular_class_in_major(self, major):\n    \"\"\"\n    get the class with the highest enrollment in the major.\n    :return a string of the most popular class in this major\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n    >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                            \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n    >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n    \"Data Structures\"\n    \"\"\"\n    major_students = [student['name'] for student in self.students if student.get('major') == major]\n    class_counts = {}\n    for student_name in major_students:\n        for class_name in self.students_registration_classes.get(student_name, []):\n            class_counts[class_name] = class_counts.get(class_name, 0) + 1\n    if not class_counts:\n        return \"\"\n    max_count = max(class_counts.values())\n    candidates = [cls for cls, cnt in class_counts.items() if cnt == max_count]\n    return max(candidates)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1678,
+        "cached_tokens": 0,
+        "completion_tokens": 1134,
+        "reasoning_tokens": 970,
+        "cost": 0.000301842
+      },
+      "final_code": "def get_most_popular_class_in_major(self, major):\n    \"\"\"\n    get the class with the highest enrollment in the major.\n    :return a string of the most popular class in this major\n    >>> registration_system = ClassRegistrationSystem()\n    >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                         {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n    >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                            \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n    >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n    \"Data Structures\"\n    \"\"\"\n    major_students = [student['name'] for student in self.students if student.get('major') == major]\n    class_counts = {}\n    for student_name in major_students:\n        for class_name in self.students_registration_classes.get(student_name, []):\n            class_counts[class_name] = class_counts.get(class_name, 0) + 1\n    if not class_counts:\n        return \"\"\n    max_count = max(class_counts.values())\n    candidates = [cls for cls, cnt in class_counts.items() if cnt == max_count]\n    return max(candidates)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": true,
+  "tests_first": {
+    "ClassRegistrationSystemTestRegisterStudent": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestRegisterClass": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "ClassRegistrationSystemTestGetStudent": {
+      "status": "ok",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestGetMajor": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestPopularClass": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "ClassRegistrationSystemTestRegisterStudent": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestRegisterClass": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestGetStudent": {
+      "status": "ok",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestGetMajor": {
+      "status": "ok",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTestPopularClass": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ClassRegistrationSystemTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass ClassRegistrationSystem: \n    def __init__(self):\n        \"\"\"\n        Initialize the registration system with the attribute students and students_registration_class.\n        students is a list of student dictionaries, each student dictionary has the key of name and major.\n        students_registration_class is a dictionaries, key is the student name, value is a list of class names\n        \"\"\"\n        self.students = []\n        self.students_registration_classes = {}\n\n    def register_student(self, student):\n        \"\"\"\n        register a student to the system, add the student to the students list, if the student is already registered, return 0, else return 1\n        \"\"\"\n        student_name = student.get('name')\n        if any(stu.get('name') == student_name for stu in self.students):\n            return 0\n        self.students.append(student)\n        self.students_registration_classes[student_name] = []\n        return 1\n\n    def register_class(self, student_name, class_name):\n        \"\"\"\n        register a class to the student.\n        :param student_name: str\n        :param class_name: str\n        :return a list of class names that the student has registered\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n        >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n        [\"CS101\", \"CS102\"]\n        \"\"\"\n        if student_name not in self.students_registration_classes:\n            return []\n\n        self.students_registration_classes[student_name].append(class_name)\n        return self.students_registration_classes[student_name]\n\n    def get_students_by_major(self, major):\n        \"\"\"\n        get all students in the major\n        :param major: str\n        :return a list of student name\n        >>> registration_system = ClassRegistrationSystem()\n        >>> student1 = {\"name\": \"John\", \"major\": \"Computer Science\"}\n        >>> registration_system.register_student(student1)\n        >>> registration_system.get_students_by_major(\"Computer Science\")\n        [\"John\"]\n        \"\"\"\n        return [student['name'] for student in self.students if student.get('major') == major]\n\n    def get_all_major(self):\n        \"\"\"\n        get all majors in the system\n        :return a list of majors\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}],\n        >>> registration_system.get_all_major(student1)\n        [\"Computer Science\"]\n        \"\"\"\n        majors = {}\n        for student in self.students:\n            major = student.get('major')\n            majors[major] = None\n        return list(majors.keys())\n\n    def get_most_popular_class_in_major(self, major):\n        \"\"\"\n        get the class with the highest enrollment in the major.\n        :return a string of the most popular class in this major\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                             {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                             {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n        >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                                \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n        >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n        \"Data Structures\"\n        \"\"\"\n        major_students = [student['name'] for student in self.students if student.get('major') == major]\n        class_counts = {}\n        for student_name in major_students:\n            for class_name in self.students_registration_classes.get(student_name, []):\n                class_counts[class_name] = class_counts.get(class_name, 0) + 1\n        if not class_counts:\n            return \"\"\n        return max(class_counts, key=class_counts.get)\n",
+  "source": "\n\nclass ClassRegistrationSystem: \n    def __init__(self):\n        \"\"\"\n        Initialize the registration system with the attribute students and students_registration_class.\n        students is a list of student dictionaries, each student dictionary has the key of name and major.\n        students_registration_class is a dictionaries, key is the student name, value is a list of class names\n        \"\"\"\n        self.students = []\n        self.students_registration_classes = {}\n\n    def register_student(self, student):\n        \"\"\"\n        register a student to the system, add the student to the students list, if the student is already registered, return 0, else return 1\n        \"\"\"\n        student_name = student.get('name')\n        if any(stu.get('name') == student_name for stu in self.students):\n            return 0\n        self.students.append(student)\n        self.students_registration_classes[student_name] = []\n        return 1\n\n    def register_class(self, student_name, class_name):\n        \"\"\"\n        register a class to the student.\n        :param student_name: str\n        :param class_name: str\n        :return a list of class names that the student has registered\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.register_class(student_name=\"John\", class_name=\"CS101\")\n        >>> registration_system.register_class(student_name=\"John\", class_name=\"CS102\")\n        [\"CS101\", \"CS102\"]\n        \"\"\"\n        if student_name not in self.students_registration_classes:\n            self.students_registration_classes[student_name] = []\n\n        self.students_registration_classes[student_name].append(class_name)\n        return self.students_registration_classes[student_name]\n\n    def get_students_by_major(self, major):\n        \"\"\"\n        get all students in the major\n        :param major: str\n        :return a list of student name\n        >>> registration_system = ClassRegistrationSystem()\n        >>> student1 = {\"name\": \"John\", \"major\": \"Computer Science\"}\n        >>> registration_system.register_student(student1)\n        >>> registration_system.get_students_by_major(\"Computer Science\")\n        [\"John\"]\n        \"\"\"\n        return [student['name'] for student in self.students if student.get('major') == major]\n\n    def get_all_major(self):\n        \"\"\"\n        get all majors in the system\n        :return a list of majors\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"}]\n        >>> registration_system.get_all_major()\n        [\"Computer Science\"]\n        \"\"\"\n        majors = {}\n        for student in self.students:\n            major = student.get('major')\n            majors[major] = None\n        return list(majors.keys())\n\n    def get_most_popular_class_in_major(self, major):\n        \"\"\"\n        get the class with the highest enrollment in the major.\n        :return a string of the most popular class in this major\n        >>> registration_system = ClassRegistrationSystem()\n        >>> registration_system.students = [{\"name\": \"John\", \"major\": \"Computer Science\"},\n                                             {\"name\": \"Bob\", \"major\": \"Computer Science\"},\n                                             {\"name\": \"Alice\", \"major\": \"Computer Science\"}]\n        >>> registration_system.students_registration_classes = {\"John\": [\"Algorithms\", \"Data Structures\"],\n                                                \"Bob\": [\"Operating Systems\", \"Data Structures\", \"Algorithms\"]}\n        >>> registration_system.get_most_popular_class_in_major(\"Computer Science\")\n        \"Data Structures\"\n        \"\"\"\n        major_students = [student['name'] for student in self.students if student.get('major') == major]\n        class_counts = {}\n        for student_name in major_students:\n            for class_name in self.students_registration_classes.get(student_name, []):\n                class_counts[class_name] = class_counts.get(class_name, 0) + 1\n        if not class_counts:\n            return \"\"\n        max_count = max(class_counts.values())\n        candidates = [cls for cls, cnt in class_counts.items() if cnt == max_count]\n        return max(candidates)\n"
+}
