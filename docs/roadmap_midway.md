@@ -111,8 +111,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 - [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of the pilot methods
   (`label_sheet.py`, two raters, then consensus) and the error analysis of 20 disagreements of C2
   (`analyze.py --sample 20`).
-- [ ] **Control and repetitions** (23 to 29 Nov), after the instructors' answer. The rejected
-  methods rewritten without the judge's reason on the 61 classes, and C2 and C3 repeated.
+- [ ] **Control and repetitions** (23 to 29 Nov), approved by the instructors. The rejected
+  methods rewritten without the judge's reason on the 61 classes, and C2 and C3 repeated three
+  times, with the coder's limit at 8000 tokens.
 - [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
 - [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
   the same number of attempts, and with rewriting without feedback.
@@ -122,6 +123,17 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
+
+## Decisions after the first full run (the instructors' answer to our mail)
+
+- [x] **Three repetitions** of C2 and C3.
+- [x] **The control without the judge's reason** on the 61 classes: the rejected methods are
+  rewritten without the reason, to separate the feedback from the second attempt.
+- [x] **C3 can stay as it is.** More advice comes after the midway report, without changing
+  what is planned.
+- [x] **The coder's limit doubles** from 4000 to 8000 output tokens, and no further.
+- [x] **The judge's reviews stay on file**, to quote as examples in the final report. Every run
+  file in `runs/` already holds the verdict and the reason of each review.
 
 ## Decisions of 12 November (the simplest version for the midway)
 
@@ -201,9 +213,9 @@ Engineering AI Systems, USI
 
 - [x] **Coder** (11 Nov): qwen3.5-9b. In the pilot it passed 61 to 68% of the methods (the 27B
   82%), and the judge caught 15 of its 22 failures.
-- [x] **Repetitions** (11 Nov): one full run, then we decide with the instructors. A simulation on
-  the 251 test methods: an effect like the pilot's is detected 16% of the time with one run, about
-  48% with three.
+- [x] **Repetitions** (11 Nov): one full run, then we decide with the instructors, who chose
+  three. A simulation on the 251 test methods: an effect like the pilot's is detected 16% of the
+  time with one run, about 48% with three.
 - [x] **Same budget across setups**: one revision per method in C2.
 - [x] **The lab note "classes with the 1st methods implemented"** meant the method order, already
   done.
