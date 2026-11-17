@@ -74,9 +74,9 @@ harness runs all its tests on the first and on the final versions: that is the g
   verdict how sure it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the
   method again, at most twice (`--min-confidence`). On the pilot classes the confidence was 95
   or more for 68 of 71 verdicts, right or wrong.
-- **Control of C2** (built on 16 November, not run yet). With `--no-reason` the coder learns after
-  a NOT OK that the method was rejected, without the judge's reason. Paired with a C2 run
-  through `--reuse`, it separates the effect of the reason from that of a second attempt.
+- **Control of C2** (16 November). With `--no-reason` the coder learns after a NOT OK that the
+  method was rejected, without the judge's reason. Paired with a C2 run through `--reuse`, it
+  separates the effect of the reason from that of a second attempt.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.
@@ -97,9 +97,9 @@ harness runs all its tests on the first and on the final versions: that is the g
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
   verdict.
 
-After the midway: our labels and the error analysis, the control without feedback and the
-repetitions on the 61 classes, a judge that writes tests of its own from the docstring and runs
-them, more than one rewrite when the judge is sure, and the other variants in the
+After the midway: our labels and the error analysis, two more repetitions with the control on
+the 61 classes, a judge that writes tests of its own from the docstring and runs them, more than
+one rewrite when the judge is sure, and the other variants in the
 [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
@@ -195,7 +195,7 @@ One full run of each setup on the 61 test classes (251 methods), on 12 November:
 
 - **RQ1.** After the feedback more methods pass in both setups. In the pilot, rewriting a
   rejected method without feedback did about as well, so the gain is feedback and second
-  attempt together; the full runs have no such control yet.
+  attempt together; these two runs have no such control, the repetition below has one.
 - **RQ2.** C3 against C2 on the final versions: -1.6 points [-4.7, +1.5], McNemar p = 0.42.
   With the memory the judge changes 10 of 95 verdicts on the same code, as many as between two
   passes of the same judge on the pilot (7 of 71).
@@ -209,6 +209,29 @@ One full run of each setup on the 61 test classes (251 methods), on 12 November:
 
 In C2, 21 of the 251 first replies (8%) had no usable method: the coder spent its 4000 tokens
 on reasoning. They get no review and count as failing before and after.
+
+**First repetition with 8000 tokens (16 November).** The coder's limit doubled to 8000 output
+tokens, and the control ran next to C2 and C3.
+
+| | C2 | C3 | Control (C2 without the reason) |
+|---|---|---|---|
+| Methods passing, first versions | 190 (75.7%) | 190 (75.7%) | 190 (75.7%) |
+| Methods passing, final versions | 197 (78.5%) | 193 (76.9%) | 189 (75.3%) |
+| Final minus first, in points, with 95% interval | +2.8 [-0.4, +5.9] | +1.2 [-1.8, +4.3] | -0.4 [-2.8, +1.9] |
+| Methods fixed, broken | 10, 3 | 8, 5 | 4, 5 |
+| NOT OK and revisions | 78 | 82 | 82 |
+| Judge on first versions: TPR, TNR, kappa | 0.77, 0.61, 0.33 | 0.74, 0.60, 0.29 | 0.76, 0.66, 0.36 |
+| Cost | 0.10 $ | 0.12 $ | 0.08 $ |
+
+![Each full run: methods passing, and what a rewrite does](docs/figures/full_runs_compared.png)
+
+- **RQ1.** With better first versions the gain of C2 falls from 8.4 to 2.8 points, and its
+  interval contains zero. The control ends 3.2 points below C2 [-6.4, 0.0], McNemar p = 0.10.
+  On the 49 methods that the same review rejects in both runs, the coder fixes 2 and breaks 2
+  with the reason, 3 and 4 without it. The reason adds little to a second attempt so far.
+- **RQ2.** C3 against C2: -1.6 points [-4.0, +0.8], McNemar p = 0.34, as on 12 November. On
+  the 173 methods with the same first version, 141 pass in both runs.
+- With 8000 tokens, 5 of the 251 first replies have no usable method.
 
 ## 7. References and data
 

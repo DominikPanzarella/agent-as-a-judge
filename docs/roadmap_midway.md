@@ -113,8 +113,10 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   (`analyze.py --sample 20`).
 - [ ] **Control and repetitions** (23 to 29 Nov), approved by the instructors. The rejected
   methods rewritten without the judge's reason on the 61 classes, and C2 and C3 repeated three
-  times, with the coder's limit at 8000 tokens. Built on 16 November (`loop.py --no-reason`,
-  `--max-tokens`, default 8000) and checked without requests; no run yet.
+  times, with the coder's limit at 8000 tokens (`loop.py --no-reason`, `--max-tokens`).
+  First repetition on 16 November (0.31 $): C2 from 190 to 197 methods, +2.8 points
+  [-0.4, +5.9]; C3 from 190 to 193; control from 190 to 189. Control against C2: -3.2 points
+  [-6.4, 0.0], McNemar p = 0.10. Two repetitions to go.
 - [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
 - [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
   the same number of attempts, and with rewriting without feedback.
