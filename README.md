@@ -97,10 +97,9 @@ harness runs all its tests on the first and on the final versions: that is the g
   whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
   verdict.
 
-After the midway: our labels and the error analysis, two more repetitions with the control on
-the 61 classes, a judge that writes tests of its own from the docstring and runs them, more than
-one rewrite when the judge is sure, and the other variants in the
-[roadmap](docs/roadmap_midway.md).
+After the midway: our labels and the error analysis, a judge that writes tests of its own from
+the docstring and runs them, more than one rewrite when the judge is sure, and the other variants
+in the [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -153,6 +152,7 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/plot_results.py               # charts -> docs/figures/
 .venv/bin/python scripts/compare_judges.py             # the judge's prompts on the pilot classes
 .venv/bin/python scripts/analyze.py --classes test C2-9b C3-9b
+.venv/bin/python scripts/analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k   # the repetitions together
 ```
 
 `analyze.py` reports pass rates before and after the feedback, the judge's TPR and TNR, McNemar
@@ -195,7 +195,7 @@ One full run of each setup on the 61 test classes (251 methods), on 12 November:
 
 - **RQ1.** After the feedback more methods pass in both setups. In the pilot, rewriting a
   rejected method without feedback did about as well, so the gain is feedback and second
-  attempt together; these two runs have no such control, the repetition below has one.
+  attempt together; these two runs have no such control, the repetitions below have one.
 - **RQ2.** C3 against C2 on the final versions: -1.6 points [-4.7, +1.5], McNemar p = 0.42.
   With the memory the judge changes 10 of 95 verdicts on the same code, as many as between two
   passes of the same judge on the pilot (7 of 71).
@@ -210,28 +210,35 @@ One full run of each setup on the 61 test classes (251 methods), on 12 November:
 In C2, 21 of the 251 first replies (8%) had no usable method: the coder spent its 4000 tokens
 on reasoning. They get no review and count as failing before and after.
 
-**First repetition with 8000 tokens (16 November).** The coder's limit doubled to 8000 output
-tokens, and the control ran next to C2 and C3.
+**Three repetitions with 8000 tokens (16 and 17 November).** The coder's limit doubled to 8000
+output tokens, and a control ran next to C2 and C3. Methods passing in the first and final
+versions, of 251 per run:
 
 | | C2 | C3 | Control (C2 without the reason) |
 |---|---|---|---|
-| Methods passing, first versions | 190 (75.7%) | 190 (75.7%) | 190 (75.7%) |
-| Methods passing, final versions | 197 (78.5%) | 193 (76.9%) | 189 (75.3%) |
-| Final minus first, in points, with 95% interval | +2.8 [-0.4, +5.9] | +1.2 [-1.8, +4.3] | -0.4 [-2.8, +1.9] |
-| Methods fixed, broken | 10, 3 | 8, 5 | 4, 5 |
-| NOT OK and revisions | 78 | 82 | 82 |
-| Judge on first versions: TPR, TNR, kappa | 0.77, 0.61, 0.33 | 0.74, 0.60, 0.29 | 0.76, 0.66, 0.36 |
-| Cost | 0.10 $ | 0.12 $ | 0.08 $ |
+| Repetition 1 | 190 → 197 | 190 → 193 | 190 → 189 |
+| Repetition 2 | 191 → 190 | 192 → 192 | 192 → 197 |
+| Repetition 3 | 190 → 196 | 190 → 194 | 186 → 188 |
+| Together, of 753 | 571 → 583 | 572 → 579 | 568 → 574 |
+| Final minus first, in points, with 95% interval | +1.6 [-1.4, +4.5] | +0.9 [-1.7, +3.5] | +0.8 [-1.1, +2.6] |
+| Methods fixed, broken | 34, 22 | 29, 22 | 24, 18 |
+| NOT OK and revisions | 232 | 241 | 243 |
+| Cost of the three runs | 0.36 $ | 0.34 $ | 0.26 $ |
 
-![Each full run: methods passing, and what a rewrite does](docs/figures/full_runs_compared.png)
+![Methods passing, and what a rewrite does to the rejected ones](docs/figures/full_runs_compared.png)
 
-- **RQ1.** With better first versions the gain of C2 falls from 8.4 to 2.8 points, and its
-  interval contains zero. The control ends 3.2 points below C2 [-6.4, 0.0], McNemar p = 0.10.
-  On the 49 methods that the same review rejects in both runs, the coder fixes 2 and breaks 2
-  with the reason, 3 and 4 without it. The reason adds little to a second attempt so far.
-- **RQ2.** C3 against C2: -1.6 points [-4.0, +0.8], McNemar p = 0.34, as on 12 November. On
-  the 173 methods with the same first version, 141 pass in both runs.
-- With 8000 tokens, 5 of the 251 first replies have no usable method.
+- **RQ1.** With 8000 tokens the first versions already pass more often, and the gain of C2 falls
+  from 8.4 to 1.6 points, with an interval that contains zero. The control ends 1.2 points below
+  C2 [-3.0, +0.8]. On the 138 methods that the same review rejects in C2 and in the control, the
+  coder fixes 10 of 49 and breaks 11 of 89 with the reason, 9 and 8 without it. Once the first
+  versions are good, we see no gain from the feedback, with or without the reason.
+- **RQ2.** C3 against C2: -0.5 points [-2.0, +1.0]. On 359 reviews of the same code, the memory
+  changes 30 verdicts.
+- **RQ3.** More than half of the judge's rejections hit methods that already pass (58%), and a
+  rewrite breaks about one in six of them. Kappa against the tests: 0.33, 0.31 and 0.28 in C2.
+- With 8000 tokens, 4 or 5 of the 251 first replies of C2 have no usable method.
+
+The numbers come from `analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k`.
 
 ## 7. References and data
 

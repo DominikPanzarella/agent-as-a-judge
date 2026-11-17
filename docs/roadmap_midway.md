@@ -111,12 +111,13 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 - [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of the pilot methods
   (`label_sheet.py`, two raters, then consensus) and the error analysis of 20 disagreements of C2
   (`analyze.py --sample 20`).
-- [ ] **Control and repetitions** (23 to 29 Nov), approved by the instructors. The rejected
-  methods rewritten without the judge's reason on the 61 classes, and C2 and C3 repeated three
-  times, with the coder's limit at 8000 tokens (`loop.py --no-reason`, `--max-tokens`).
-  First repetition on 16 November (0.31 $): C2 from 190 to 197 methods, +2.8 points
-  [-0.4, +5.9]; C3 from 190 to 193; control from 190 to 189. Control against C2: -3.2 points
-  [-6.4, 0.0], McNemar p = 0.10. Two repetitions to go.
+- [x] **Control and repetitions** (16 and 17 Nov, 0.96 $), approved by the instructors. C2, C3 and
+  the control without the judge's reason, three times each on the 61 classes, with the coder's
+  limit at 8000 tokens (`loop.py --no-reason`, `--max-tokens`; `analyze.py --pool`).
+  Together: C2 from 571 to 583 methods of 753, +1.6 points [-1.4, +4.5]; C3 +0.9 [-1.7, +3.5];
+  control +0.8 [-1.1, +2.6]. Control against C2: -1.2 [-3.0, +0.8]; C3 against C2: -0.5
+  [-2.0, +1.0]. With good first versions the feedback, the reason and the memory give no gain
+  that we can tell from zero.
 - [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
 - [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
   the same number of attempts, and with rewriting without feedback.

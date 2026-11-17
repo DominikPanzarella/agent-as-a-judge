@@ -4,16 +4,19 @@ For each run: methods and classes passing (with and without the weak methods) an
 judge, its agreement, kappa, TPR and TNR on the first versions, and the final versions against
 the first ones. For each pair of runs, and for final against first versions: an exact McNemar
 test and a bootstrap interval over classes. --sample N writes N disagreements per run to
-runs/error_analysis_<run>.csv, to classify by hand.
+runs/error_analysis_<run>.csv, to classify by hand. --pool takes the repetitions of each setup
+(<prefix>-r1, -r2, ...) together and compares the setups on all of them.
 
     .venv/bin/python scripts/analyze.py --classes dev C0 C2-v2-medium
     .venv/bin/python scripts/analyze.py --classes test C2-9b C3-9b
     .venv/bin/python scripts/analyze.py --classes test C2-9b --sample 20
+    .venv/bin/python scripts/analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k
 """
 import argparse
 import csv
 import json
 import random
+from collections import Counter
 from itertools import combinations
 
 import numpy as np
@@ -136,9 +139,77 @@ def sample_disagreements(name, results, n):
     print(f"  {len(chosen)} of {len(rows)} disagreements of {name} -> {out.relative_to(ROOT)}")
 
 
+def repetitions(prefix):
+    """The runs of one setup that differ only in the repetition: <prefix>-r1, <prefix>-r2, ..."""
+    return sorted(f.name for f in (ROOT / "runs").glob(f"{prefix}-r[0-9]*") if f.is_dir())
+
+
+def pooled(names, task_ids):
+    """The repetitions of one setup as one set of outcomes. The class stays the unit of the
+    bootstrap, so the repetition goes into the method name."""
+    first, final, runs = {}, {}, []
+    for i, name in enumerate(names, start=1):
+        results = load_run(name, task_ids)
+        runs.append(results)
+        first.update({(t, f"{m}#{i}"): v for (t, m), v in first_outcomes(results).items()})
+        final.update({(t, f"{m}#{i}"): v for (t, m), v in outcomes(results).items()})
+    return first, final, runs
+
+
+def same_inputs(runs_a, runs_b):
+    """Two setups where the second reuses the first: what changes on the methods they share."""
+    rejected = Counter()
+    reviews = changed = 0
+    for a, b in zip(runs_a, runs_b):
+        old = {(t, m["method_name"]): m for t, r in a.items() for m in r["methods"]}
+        for t, r in b.items():
+            for m in r["methods"]:
+                o, review = old[(t, m["method_name"])], m["review"] or {}
+                if review.get("reused") and review["verdict"] == "NOT OK":
+                    rejected["failing" if not o["passed_first"] else "passing"] += 1
+                    for label, x in (("a", o), ("b", m)):
+                        rejected[f"fixed_{label}"] += bool(not x["passed_first"] and x["passed"])
+                        rejected[f"broken_{label}"] += bool(x["passed_first"] and not x["passed"])
+                elif (review and o["review"] and not review.get("reused") and m["first"]["valid"]
+                      and o["first"]["valid"] and m["first"]["code"] == o["first"]["code"]):
+                    reviews += 1
+                    changed += review["verdict"] != o["review"]["verdict"]
+    return rejected, reviews, changed
+
+
+def pool(prefixes, task_ids):
+    """The repetitions of each setup together, and the setups against each other."""
+    print("\nREPETITIONS TOGETHER (bootstrap over classes)")
+    pools = {}
+    for prefix in prefixes:
+        names = repetitions(prefix)
+        if not names:
+            print(f"  {prefix}: no folder runs/{prefix}-r1, -r2, ...")
+            continue
+        first, final, runs = pooled(names, task_ids)
+        pools[prefix] = (final, runs)
+        print(f"  {prefix}: {len(names)} runs, methods passing {share(list(first.values()))} in the first versions, "
+              f"{share(list(final.values()))} in the final ones")
+        paired("first versions", first, "final versions", final)
+    for (name_a, (a, runs_a)), (name_b, (b, runs_b)) in combinations(pools.items(), 2):
+        paired(name_a, a, name_b, b)
+        if all(r and next(iter(r.values())).get("reuse", "").startswith(name_a) for r in runs_b):
+            rejected, reviews, changed = same_inputs(runs_a, runs_b)
+            kind = next(iter(runs_b[0].values()))
+            if kind.get("feedback") == "verdict":
+                print(f"    rejected by the same review in both: {rejected['failing'] + rejected['passing']} methods; "
+                      f"of the {rejected['failing']} failing ones, fixed {rejected['fixed_a']} in {name_a} and "
+                      f"{rejected['fixed_b']} in {name_b}; of the {rejected['passing']} passing ones, broken "
+                      f"{rejected['broken_a']} and {rejected['broken_b']}")
+            if kind["setup"] == "C3":
+                print(f"    new reviews of the same code in {name_b}: {reviews}, verdict changed in {changed}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Pass rates, judge scores and comparisons between runs.")
-    parser.add_argument("runs", nargs="+", help="folders in runs/, such as C2-9b C3-9b")
+    parser.add_argument("runs", nargs="*", help="folders in runs/, such as C2-9b C3-9b")
+    parser.add_argument("--pool", nargs="+", default=[], metavar="PREFIX",
+                        help="setups whose repetitions are analysed together, such as C2-9b-8k C2n-9b-8k")
     parser.add_argument("--classes", choices=["dev", "test", "all"], default="test",
                         help="dev: the 10 development classes; test: the other 61 (default); all: the 71")
     parser.add_argument("--sample", type=int, default=0, help="disagreements to write for the error analysis")
@@ -152,9 +223,12 @@ def main():
             print(f"\n{name}: no results on these classes")
             continue
         describe(name, results, weak)
-    print("\nCOMPARISONS (method by method, classes present in both runs)")
+    if len(runs) > 1:
+        print("\nCOMPARISONS (method by method, classes present in both runs)")
     for (name_a, a), (name_b, b) in combinations([(n, r) for n, r in runs.items() if r], 2):
         compare(name_a, a, name_b, b)
+    if args.pool:
+        pool(args.pool, task_ids)
     if args.sample:
         print("\nERROR ANALYSIS")
         for name, results in runs.items():
