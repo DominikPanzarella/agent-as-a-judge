@@ -7,9 +7,9 @@ before and after the feedback (setups_first_final.png), and the judge's TPR and 
 intervals (judge_rates.png, from pilot_controls.py). For the full runs on the 61 test classes:
 the methods passing before and after the feedback (full_first_final.png), the differences with
 their intervals (full_differences.png) and the judge against the tests (full_judge.png). The
-runs of 12 November next to the three repetitions with 8000 tokens, with what a rewrite does
-to the methods the judge rejects (full_runs_compared.png). The colors are checked for color
-blindness, and every mark carries its value.
+run of 12 November and the three repetitions with 8000 tokens, run by run and setup by setup
+(full_runs_compared.png). The colors are checked for color blindness, and every mark carries
+its value.
 
     .venv/bin/python scripts/plot_results.py
 """
@@ -34,13 +34,12 @@ BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK_2, GRID, SURFACE = "#0b0b0b", "#52514e", "#e4e3df", "#ffffff"
 JUDGES = [("v1", "low"), ("v1", "medium"), ("v2", "low"), ("v2", "medium")]
 FULL = [("C2", "C2-9b"), ("C3", "C3-9b")]  # the full runs on the 61 test classes
-# The runs of 12 November, where the coder had 4000 output tokens, next to the three repetitions
-# with 8000 tokens taken together. The control is C2 where the coder gets the verdict without the
-# judge's reason.
-COMPARED = [("C2, 12 Nov", ["C2-9b"]), ("C3, 12 Nov", ["C3-9b"]),
-            ("C2, three runs", ["C2-9b-8k-r1", "C2-9b-8k-r2", "C2-9b-8k-r3"]),
-            ("C3, three runs", ["C3-9b-8k-r1", "C3-9b-8k-r2", "C3-9b-8k-r3"]),
-            ("Control, three runs", ["C2n-9b-8k-r1", "C2n-9b-8k-r2", "C2n-9b-8k-r3"])]
+# Every full run, setup by setup. On 12 November the coder had 4000 output tokens; runs 1 to 3
+# had 8000. The control is C2 where the coder gets the verdict without the judge's reason.
+COMPARED = [("C2", {"12 Nov": "C2-9b", "Run 1": "C2-9b-8k-r1", "Run 2": "C2-9b-8k-r2", "Run 3": "C2-9b-8k-r3"}),
+            ("C3", {"12 Nov": "C3-9b", "Run 1": "C3-9b-8k-r1", "Run 2": "C3-9b-8k-r2", "Run 3": "C3-9b-8k-r3"}),
+            ("Control", {"Run 1": "C2n-9b-8k-r1", "Run 2": "C2n-9b-8k-r2", "Run 3": "C2n-9b-8k-r3"})]
+RUNS = ["12 Nov", "Run 1", "Run 2", "Run 3"]
 
 plt.rcParams.update({
     "font.family": ["Helvetica", "Arial", "DejaVu Sans"], "font.size": 11,
@@ -319,67 +318,42 @@ def full_runs():
 
 
 def runs_compared():
-    """The runs of 12 November next to the three repetitions with 8000 tokens: the share of methods
-    passing before and after the feedback, and what a rewrite does to the methods the judge rejects."""
+    """Every full run, one row per run and one panel per setup: methods passing in the first and
+    in the final versions."""
     task_ids = harness.class_ids("test")
-    kinds = [("fixed", AQUA, SURFACE), ("still failing", "#a8a7a2", INK), ("still passing", GRID, INK),
-             ("broken", INK, SURFACE)]
-    rows = []
-    for label, names in COMPARED:
-        loaded = [analyze.load_run(name, task_ids) for name in names]
-        if any(len(results) != len(task_ids) for results in loaded):
-            continue
-        methods = [m for results in loaded for r in results.values() for m in r["methods"]]
-        rejected = [m for m in methods if (m.get("review") or {}).get("verdict") == "NOT OK"]
-        after = Counter("fixed" if not m["passed_first"] and m["passed"] else "broken" if m["passed_first"] and not m["passed"]
-                        else "still passing" if m["passed"] else "still failing" for m in rejected)
-        rows.append((label, 100 * sum(bool(m["passed_first"]) for m in methods) / len(methods),
-                     100 * sum(bool(m["passed"]) for m in methods) / len(methods),
-                     {kind: 100 * after[kind] / len(rejected) for kind, _, _ in kinds}))
-    if len(rows) < 2:
-        print("fewer than two full runs to compare")
-        return
-    height = 1.75 + 0.42 * len(rows)
-    fig, (left, right) = plt.subplots(1, 2, figsize=(8, height), dpi=200, sharey=True)
-    fig.text(0.02, 0.97, "Methods passing, and what a rewrite does to the rejected ones", fontsize=14,
+    height = 1.75 + 0.42 * len(RUNS)
+    fig, axes = plt.subplots(1, len(COMPARED), figsize=(8, height), dpi=200, sharey=True, sharex=True)
+    fig.text(0.02, 0.97, "Methods passing before and after the feedback, run by run", fontsize=14,
              fontweight="bold", va="top")
-    fig.text(0.02, 0.97 - 0.42 / height, f"{len(task_ids)} test classes, 251 methods per run. The coder had 4000 output "
-             "tokens on 12 November, 8000 in the three runs", fontsize=10.5, color=INK_2, va="top")
-    ys = list(range(len(rows)))[::-1]
-    for y, (label, a, b, after) in zip(ys, rows):
-        left.plot([a, b], [y, y], color=GRID, linewidth=3, zorder=1)
-        left.scatter([a], [y], s=70, color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=3,
-                     label="first versions" if y == ys[0] else None)
-        left.scatter([b], [y], s=70, color=ORANGE, edgecolor=SURFACE, linewidth=1.5, zorder=4,
-                     label="final versions" if y == ys[0] else None)
-        for value, side in ((min(a, b), -1), (max(a, b), 1)):
-            left.annotate(f"{value:.1f}", (value, y), xytext=(9 * side, 0), textcoords="offset points",
-                          ha="right" if side < 0 else "left", va="center", fontsize=9, color=INK_2)
-        x = 0
-        for kind, color, ink in kinds:
-            k = after[kind]
-            right.barh(y, k, left=x, height=0.56, color=color, edgecolor=SURFACE, linewidth=1.5, zorder=2,
-                       label=kind if y == ys[0] else None)
-            if kind == "broken":
-                right.text(x + k + 1.2, y, f"{k:.0f}", va="center", fontsize=9, color=INK_2)
-            elif k >= 3:
-                right.text(x + k / 2, y, f"{k:.0f}", ha="center", va="center", fontsize=9, color=ink)
-            x += k
-    left.set_yticks(ys, [r[0] for r in rows])
-    left.set_ylim(-0.6, len(rows) - 0.4)
-    low, high = min(min(r[1], r[2]) for r in rows), max(max(r[1], r[2]) for r in rows)
-    left.set_xlim(low - 4.5, high + 4.5)
-    left.set_xlabel("methods passing, %")
-    right.set_xlim(0, 108)
-    right.set_xticks([0, 25, 50, 75, 100])
-    right.set_xlabel("methods the judge rejects, after the rewrite, %")
-    for ax in (left, right):
+    fig.text(0.02, 0.97 - 0.42 / height, f"Of 251 methods in {len(task_ids)} test classes. The coder had 4000 output "
+             "tokens on 12 November, 8000 in runs 1 to 3", fontsize=10.5, color=INK_2, va="top")
+    ys = {run: y for y, run in zip(range(len(RUNS))[::-1], RUNS)}
+    values = []
+    for ax, (setup, names) in zip(axes, COMPARED):
+        ax.set_title(setup, fontsize=11, fontweight="bold", loc="left", pad=6)
+        for run, name in names.items():
+            results = analyze.load_run(name, task_ids)
+            if len(results) != len(task_ids):
+                continue
+            a, b = sum(analyze.first_outcomes(results).values()), sum(analyze.outcomes(results).values())
+            values += [a, b]
+            y = ys[run]
+            ax.plot([a, b], [y, y], color=GRID, linewidth=3, zorder=1)
+            ax.scatter([a], [y], s=70, color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=3,
+                       label="first versions" if ax is axes[0] and run == "Run 1" else None)
+            ax.scatter([b], [y], s=70, color=ORANGE, edgecolor=SURFACE, linewidth=1.5, zorder=4,
+                       label="final versions" if ax is axes[0] and run == "Run 1" else None)
+            ax.annotate(f"{a} → {b}", (max(a, b), y), xytext=(8, 0), textcoords="offset points",
+                        va="center", fontsize=9, color=INK_2)
         ax.tick_params(axis="y", length=0)
         ax.tick_params(axis="x", labelsize=9.5)
-        ax.xaxis.label.set_size(9.5)
-        ax.legend(loc="lower left", fontsize=9, ncol=4, bbox_to_anchor=(0.0, 1.0), handletextpad=0.3,
-                  columnspacing=0.9, handlelength=1.0, borderaxespad=0.1)
-    fig.subplots_adjust(left=0.2, right=0.98, top=1 - 1.0 / height, bottom=0.42 / height + 0.06, wspace=0.06)
+    axes[0].set_yticks(list(ys.values()), list(ys))
+    axes[0].set_ylim(-0.6, len(RUNS) - 0.4)
+    axes[0].set_xlim(min(values) - 6, max(values) + 22)
+    axes[1].set_xlabel("methods passing (of 251)", fontsize=9.5)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="upper right", fontsize=9, ncol=2,
+               bbox_to_anchor=(0.98, 1 - 0.78 / height), handletextpad=0.3, columnspacing=0.9)
+    fig.subplots_adjust(left=0.1, right=0.98, top=1 - 1.25 / height, bottom=0.42 / height + 0.06, wspace=0.08)
     fig.savefig(OUT / "full_runs_compared.png")
     plt.close(fig)
     print("docs/figures/full_runs_compared.png")

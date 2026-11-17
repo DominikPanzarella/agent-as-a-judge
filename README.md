@@ -225,7 +225,7 @@ versions, of 251 per run:
 | NOT OK and revisions | 232 | 241 | 243 |
 | Cost of the three runs | 0.36 $ | 0.34 $ | 0.26 $ |
 
-![Methods passing, and what a rewrite does to the rejected ones](docs/figures/full_runs_compared.png)
+![Methods passing before and after the feedback, run by run](docs/figures/full_runs_compared.png)
 
 - **RQ1.** With 8000 tokens the first versions already pass more often, and the gain of C2 falls
   from 8.4 to 1.6 points, with an interval that contains zero. The control ends 1.2 points below
