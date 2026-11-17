@@ -1,0 +1,266 @@
+{
+  "task_id": "ClassEval_35",
+  "class_name": "EightPuzzle",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "find_blank",
+      "first": {
+        "code": "def find_blank(self, state):\n    \"\"\"\n    Find the blank position of current state, which is the 0 element.\n    :param state: a 3*3 size list of Integer, stores the current state.\n    :return i, j: two Integers, represent the coordinate of the blank block.\n    >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    >>> eightPuzzle.find_blank([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    (2, 1)\n    \"\"\"\n    for i in range(3):\n        for j in range(3):\n            if state[i][j] == 0:\n                return i, j",
+        "valid": true,
+        "reply": "```python\ndef find_blank(self, state):\n    \"\"\"\n    Find the blank position of current state, which is the 0 element.\n    :param state: a 3*3 size list of Integer, stores the current state.\n    :return i, j: two Integers, represent the coordinate of the blank block.\n    >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    >>> eightPuzzle.find_blank([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    (2, 1)\n    \"\"\"\n    for i in range(3):\n        for j in range(3):\n            if state[i][j] == 0:\n                return i, j\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 947,
+        "cached_tokens": 0,
+        "completion_tokens": 3452,
+        "reasoning_tokens": 2946,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method scans every cell in the documented 3\u00d73 state and returns the row and column of the blank tile as a tuple, as specified. Assuming the state contains a 0, it is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method scans every cell in the documented 3\u00d73 state and returns the row and column of the blank tile as a tuple, as specified. Assuming the state contains a 0, it is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1201,
+            "cached_tokens": 1198,
+            "completion_tokens": 132,
+            "reasoning_tokens": 72,
+            "cost": 7.828e-05
+          }
+        ],
+        "prompt_tokens": 1201,
+        "cached_tokens": 1198,
+        "completion_tokens": 132,
+        "reasoning_tokens": 72,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def find_blank(self, state):\n    \"\"\"\n    Find the blank position of current state, which is the 0 element.\n    :param state: a 3*3 size list of Integer, stores the current state.\n    :return i, j: two Integers, represent the coordinate of the blank block.\n    >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    >>> eightPuzzle.find_blank([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    (2, 1)\n    \"\"\"\n    for i in range(3):\n        for j in range(3):\n            if state[i][j] == 0:\n                return i, j",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "move",
+      "first": {
+        "code": "def move(self, state, direction):\n    \"\"\"\n    Find the blank block, then makes the board moves forward the given direction.\n    :param state: a 3*3 size list of Integer, stores the state before moving.\n    :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'\n    :return new_state: a 3*3 size list of Integer, stores the state after moving.\n    >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')\n    [[2, 3, 4], [5, 8, 1], [0, 6, 7]]\n    \"\"\"\n    i, j = self.find_blank(state)\n\n    # Determine the new position based on direction\n    if direction == 'up':\n        new_i, new_j = i - 1, j\n    elif direction == 'down':\n        new_i, new_j = i + 1, j\n    elif direction == 'left':\n        new_i, new_j = i, j - 1\n    elif direction == 'right':\n        new_i, new_j = i, j + 1\n    else:\n        raise ValueError(f\"Invalid direction: {direction}\")\n\n    # Check if the move is within bounds\n    if not (0 <= new_i < 3 and 0 <= new_j < 3):\n        raise ValueError(f\"Move out of bounds in direction: {direction}\")\n\n    # Create a deep copy of the state\n    new_state = [row[:] for row in state]\n\n    # Swap the blank with the target position\n    temp = new_state[i][j]\n    new_state[i][j] = new_state[new_i][new_j]\n    new_state[new_i][new_j] = temp\n\n    return new_state",
+        "valid": true,
+        "reply": "```python\ndef move(self, state, direction):\n    \"\"\"\n    Find the blank block, then makes the board moves forward the given direction.\n    :param state: a 3*3 size list of Integer, stores the state before moving.\n    :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'\n    :return new_state: a 3*3 size list of Integer, stores the state after moving.\n    >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')\n    [[2, 3, 4], [5, 8, 1], [0, 6, 7]]\n    \"\"\"\n    i, j = self.find_blank(state)\n    \n    # Determine the new position based on direction\n    if direction == 'up':\n        new_i, new_j = i - 1, j\n    elif direction == 'down':\n        new_i, new_j = i + 1, j\n    elif direction == 'left':\n        new_i, new_j = i, j - 1\n    elif direction == 'right':\n        new_i, new_j = i, j + 1\n    else:\n        raise ValueError(f\"Invalid direction: {direction}\")\n    \n    # Check if the move is within bounds\n    if not (0 <= new_i < 3 and 0 <= new_j < 3):\n        raise ValueError(f\"Move out of bounds in direction: {direction}\")\n    \n    # Create a deep copy of the state\n    new_state = [row[:] for row in state]\n    \n    # Swap the blank with the target position\n    temp = new_state[i][j]\n    new_state[i][j] = new_state[new_i][new_j]\n    new_state[new_i][new_j] = temp\n    \n    return new_state\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1146,
+        "cached_tokens": 0,
+        "completion_tokens": 1510,
+        "reasoning_tokens": 858,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method finds the blank, moves it one cell in the requested direction, checks that the destination is within the 3\u00d73 board, and swaps tiles in a copy so the input state is unchanged. Its behavior matches the documented example and directions.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method finds the blank, moves it one cell in the requested direction, checks that the destination is within the 3\u00d73 board, and swaps tiles in a copy so the input state is unchanged. Its behavior matches the documented example and directions.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1669,
+            "cached_tokens": 0,
+            "completion_tokens": 130,
+            "reasoning_tokens": 62,
+            "cost": 0.0002319
+          }
+        ],
+        "prompt_tokens": 1669,
+        "cached_tokens": 0,
+        "completion_tokens": 130,
+        "reasoning_tokens": 62,
+        "cost": 0.0002319
+      },
+      "revision": null,
+      "final_code": "def move(self, state, direction):\n    \"\"\"\n    Find the blank block, then makes the board moves forward the given direction.\n    :param state: a 3*3 size list of Integer, stores the state before moving.\n    :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'\n    :return new_state: a 3*3 size list of Integer, stores the state after moving.\n    >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')\n    [[2, 3, 4], [5, 8, 1], [0, 6, 7]]\n    \"\"\"\n    i, j = self.find_blank(state)\n\n    # Determine the new position based on direction\n    if direction == 'up':\n        new_i, new_j = i - 1, j\n    elif direction == 'down':\n        new_i, new_j = i + 1, j\n    elif direction == 'left':\n        new_i, new_j = i, j - 1\n    elif direction == 'right':\n        new_i, new_j = i, j + 1\n    else:\n        raise ValueError(f\"Invalid direction: {direction}\")\n\n    # Check if the move is within bounds\n    if not (0 <= new_i < 3 and 0 <= new_j < 3):\n        raise ValueError(f\"Move out of bounds in direction: {direction}\")\n\n    # Create a deep copy of the state\n    new_state = [row[:] for row in state]\n\n    # Swap the blank with the target position\n    temp = new_state[i][j]\n    new_state[i][j] = new_state[new_i][new_j]\n    new_state[new_i][new_j] = temp\n\n    return new_state",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "get_possible_moves",
+      "first": {
+        "code": "```python\n    def get_possible_moves(self, state):\n        \"\"\"\n        According the current state, find all the possible moving directions. Only has 4 direction 'up', 'down', 'left', 'right'.\n        :param state: a 3*3 size list of Integer, stores the current state.\n        :return moves: a list of str, store all the possible moving directions according to the current state.\n        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        ['up', 'left', 'right']",
+        "valid": false,
+        "reply": "```python\n    def get_possible_moves(self, state):\n        \"\"\"\n        According the current state, find all the possible moving directions. Only has 4 direction 'up', 'down', 'left', 'right'.\n        :param state: a 3*3 size list of Integer, stores the current state.\n        :return moves: a list of str, store all the possible moving directions according to the current state.\n        >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        ['up', 'left', 'right']",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1566,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 7339,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "solve",
+      "first": {
+        "code": "def solve(self):\n    \"\"\"\n    Use BFS algorithm to find the path solution which makes the initial state to the goal method.\n    Maintain a list as a queue, named as open_list, append the initial state.\n    Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.\n    Traversal the possible_moves list and invoke move method to get several new states.Then append them.\n    redo the above steps until the open_list is empty or the state has changed to the goal state.\n    :return path: list of str, the solution to the goal state.\n    >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])\n    >>> eightPuzzle.solve()\n    ['right']\n    \"\"\"\n    from collections import deque\n\n    initial_state = self.initial_state\n    goal_state = self.goal_state\n\n    # Check if already in goal state\n    if initial_state == goal_state:\n        return []\n\n    # Queue for BFS: stores tuples of (state, path)\n    open_list = deque([(initial_state, [])])\n\n    # Set to track visited states (tuple representation for hashability)\n    visited = {tuple(tuple(row) for row in initial_state)}\n\n    while open_list:\n        current_state, path = open_list.popleft()\n\n        # Convert current state to tuple for comparison\n        current_tuple = tuple(tuple(row) for row in current_state)\n\n        # Get all possible moves from current state\n        possible_moves = self.get_possible_moves(current_state)\n\n        for direction in possible_moves:\n            new_state = self.move(current_state, direction)\n\n            # Create tuple representation of new state for hashing\n            new_tuple = tuple(tuple(row) for row in new_state)\n\n            # Skip if we've already visited this state\n            if new_tuple in visited:\n                continue\n\n            # Check if we reached the goal state\n            if new_tuple == tuple(tuple(row) for row in goal_state):\n                return path + [direction]\n\n            # Add new state to visited and queue\n            visited.add(new_tuple)\n            open_list.append((new_state, path + [direction]))\n\n    return None  # No solution found",
+        "valid": true,
+        "reply": "```python\ndef solve(self):\n    \"\"\"\n    Use BFS algorithm to find the path solution which makes the initial state to the goal method.\n    Maintain a list as a queue, named as open_list, append the initial state.\n    Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.\n    Traversal the possible_moves list and invoke move method to get several new states.Then append them.\n    redo the above steps until the open_list is empty or the state has changed to the goal state.\n    :return path: list of str, the solution to the goal state.\n    >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])\n    >>> eightPuzzle.solve()\n    ['right']\n    \"\"\"\n    from collections import deque\n    \n    initial_state = self.initial_state\n    goal_state = self.goal_state\n    \n    # Check if already in goal state\n    if initial_state == goal_state:\n        return []\n    \n    # Queue for BFS: stores tuples of (state, path)\n    open_list = deque([(initial_state, [])])\n    \n    # Set to track visited states (tuple representation for hashability)\n    visited = {tuple(tuple(row) for row in initial_state)}\n    \n    while open_list:\n        current_state, path = open_list.popleft()\n        \n        # Convert current state to tuple for comparison\n        current_tuple = tuple(tuple(row) for row in current_state)\n        \n        # Get all possible moves from current state\n        possible_moves = self.get_possible_moves(current_state)\n        \n        for direction in possible_moves:\n            new_state = self.move(current_state, direction)\n            \n            # Create tuple representation of new state for hashing\n            new_tuple = tuple(tuple(row) for row in new_state)\n            \n            # Skip if we've already visited this state\n            if new_tuple in visited:\n                continue\n            \n            # Check if we reached the goal state\n            if new_tuple == tuple(tuple(row) for row in goal_state):\n                return path + [direction]\n            \n            # Add new state to visited and queue\n            visited.add(new_tuple)\n            open_list.append((new_state, path + [direction]))\n    \n    return None  # No solution found\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1564,
+        "cached_tokens": 0,
+        "completion_tokens": 1090,
+        "reasoning_tokens": 605,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`get_possible_moves` is still only a stub in the provided class, so it returns `None`; `solve` then raises a `TypeError` when it tries to iterate over `possible_moves`. Implement `get_possible_moves` to return the valid directions for the state before using `solve`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`get_possible_moves` is still only a stub in the provided class, so it returns `None`; `solve` then raises a `TypeError` when it tries to iterate over `possible_moves`. Implement `get_possible_moves` to return the valid directions for the state before using `solve`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2182,
+            "cached_tokens": 0,
+            "completion_tokens": 166,
+            "reasoning_tokens": 86,
+            "cost": 0.00030120000000000006
+          }
+        ],
+        "prompt_tokens": 2182,
+        "cached_tokens": 0,
+        "completion_tokens": 166,
+        "reasoning_tokens": 86,
+        "cost": 0.00030120000000000006
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "\n\n```python\ndef get_possible_moves(self, state):\n    \"\"\"\n    According the current state, find all the possible moving directions. Only has 4 direction 'up', 'down', 'left', 'right'.\n    :param state: a 3*3 size list of Integer, stores the current state.\n    :return moves: a list of str, store all the possible moving directions according to the current state.\n    >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    >>> eightPuzzle.get_possible_moves([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n    ['up', 'left', 'right']\n    \"\"\"\n    i, j = self.find_blank(state)\n    possible_moves = []\n    \n    if i > 0:\n        possible_moves.append('up')\n    if i < 2:\n        possible_moves.append('down')\n    if j > 0:\n        possible_moves.append('left')\n    if j < 2:\n        possible_moves.append('right')\n    \n    return possible_moves\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 2166,
+        "cached_tokens": 0,
+        "completion_tokens": 762,
+        "reasoning_tokens": 493,
+        "cost": 0.0004071
+      },
+      "final_code": "def solve(self):\n    \"\"\"\n    Use BFS algorithm to find the path solution which makes the initial state to the goal method.\n    Maintain a list as a queue, named as open_list, append the initial state.\n    Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.\n    Traversal the possible_moves list and invoke move method to get several new states.Then append them.\n    redo the above steps until the open_list is empty or the state has changed to the goal state.\n    :return path: list of str, the solution to the goal state.\n    >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])\n    >>> eightPuzzle.solve()\n    ['right']\n    \"\"\"\n    from collections import deque\n\n    initial_state = self.initial_state\n    goal_state = self.goal_state\n\n    # Check if already in goal state\n    if initial_state == goal_state:\n        return []\n\n    # Queue for BFS: stores tuples of (state, path)\n    open_list = deque([(initial_state, [])])\n\n    # Set to track visited states (tuple representation for hashability)\n    visited = {tuple(tuple(row) for row in initial_state)}\n\n    while open_list:\n        current_state, path = open_list.popleft()\n\n        # Convert current state to tuple for comparison\n        current_tuple = tuple(tuple(row) for row in current_state)\n\n        # Get all possible moves from current state\n        possible_moves = self.get_possible_moves(current_state)\n\n        for direction in possible_moves:\n            new_state = self.move(current_state, direction)\n\n            # Create tuple representation of new state for hashing\n            new_tuple = tuple(tuple(row) for row in new_state)\n\n            # Skip if we've already visited this state\n            if new_tuple in visited:\n                continue\n\n            # Check if we reached the goal state\n            if new_tuple == tuple(tuple(row) for row in goal_state):\n                return path + [direction]\n\n            # Add new state to visited and queue\n            visited.add(new_tuple)\n            open_list.append((new_state, path + [direction]))\n\n    return None  # No solution found",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "EightPuzzleTestFindBlank": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EightPuzzleTestMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "EightPuzzleTestGetPossibleMoves": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "EightPuzzleTestSolve": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    }
+  },
+  "tests": {
+    "EightPuzzleTestFindBlank": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EightPuzzleTestMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "EightPuzzleTestGetPossibleMoves": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "EightPuzzleTestSolve": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass EightPuzzle: \n    def __init__(self, initial_state):\n        \"\"\"\n        Initializing the initial state of Eight Puzzle Game, stores in attribute self.initial_state.\n        And set the goal state of this game, stores in self.goal_state. In this case, set the size as 3*3\n        :param initial_state: a 3*3 size list of Integer, stores the initial state\n        \"\"\"\n        self.initial_state = initial_state\n        self.goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]\n\n    def find_blank(self, state):\n        \"\"\"\n        Find the blank position of current state, which is the 0 element.\n        :param state: a 3*3 size list of Integer, stores the current state.\n        :return i, j: two Integers, represent the coordinate of the blank block.\n        >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        >>> eightPuzzle.find_blank([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        (2, 1)\n        \"\"\"\n        for i in range(3):\n            for j in range(3):\n                if state[i][j] == 0:\n                    return i, j\n\n    def move(self, state, direction):\n        \"\"\"\n        Find the blank block, then makes the board moves forward the given direction.\n        :param state: a 3*3 size list of Integer, stores the state before moving.\n        :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'\n        :return new_state: a 3*3 size list of Integer, stores the state after moving.\n        >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')\n        [[2, 3, 4], [5, 8, 1], [0, 6, 7]]\n        \"\"\"\n        i, j = self.find_blank(state)\n\n        # Determine the new position based on direction\n        if direction == 'up':\n            new_i, new_j = i - 1, j\n        elif direction == 'down':\n            new_i, new_j = i + 1, j\n        elif direction == 'left':\n            new_i, new_j = i, j - 1\n        elif direction == 'right':\n            new_i, new_j = i, j + 1\n        else:\n            raise ValueError(f\"Invalid direction: {direction}\")\n\n        # Check if the move is within bounds\n        if not (0 <= new_i < 3 and 0 <= new_j < 3):\n            raise ValueError(f\"Move out of bounds in direction: {direction}\")\n\n        # Create a deep copy of the state\n        new_state = [row[:] for row in state]\n\n        # Swap the blank with the target position\n        temp = new_state[i][j]\n        new_state[i][j] = new_state[new_i][new_j]\n        new_state[new_i][new_j] = temp\n\n        return new_state\n\n    def get_possible_moves(self, state):\n        return None\n\n    def solve(self):\n        \"\"\"\n        Use BFS algorithm to find the path solution which makes the initial state to the goal method.\n        Maintain a list as a queue, named as open_list, append the initial state.\n        Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.\n        Traversal the possible_moves list and invoke move method to get several new states.Then append them.\n        redo the above steps until the open_list is empty or the state has changed to the goal state.\n        :return path: list of str, the solution to the goal state.\n        >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])\n        >>> eightPuzzle.solve()\n        ['right']\n        \"\"\"\n        from collections import deque\n\n        initial_state = self.initial_state\n        goal_state = self.goal_state\n\n        # Check if already in goal state\n        if initial_state == goal_state:\n            return []\n\n        # Queue for BFS: stores tuples of (state, path)\n        open_list = deque([(initial_state, [])])\n\n        # Set to track visited states (tuple representation for hashability)\n        visited = {tuple(tuple(row) for row in initial_state)}\n\n        while open_list:\n            current_state, path = open_list.popleft()\n\n            # Convert current state to tuple for comparison\n            current_tuple = tuple(tuple(row) for row in current_state)\n\n            # Get all possible moves from current state\n            possible_moves = self.get_possible_moves(current_state)\n\n            for direction in possible_moves:\n                new_state = self.move(current_state, direction)\n\n                # Create tuple representation of new state for hashing\n                new_tuple = tuple(tuple(row) for row in new_state)\n\n                # Skip if we've already visited this state\n                if new_tuple in visited:\n                    continue\n\n                # Check if we reached the goal state\n                if new_tuple == tuple(tuple(row) for row in goal_state):\n                    return path + [direction]\n\n                # Add new state to visited and queue\n                visited.add(new_tuple)\n                open_list.append((new_state, path + [direction]))\n\n        return None  # No solution found\n",
+  "source": "\n\nclass EightPuzzle: \n    def __init__(self, initial_state):\n        \"\"\"\n        Initializing the initial state of Eight Puzzle Game, stores in attribute self.initial_state.\n        And set the goal state of this game, stores in self.goal_state. In this case, set the size as 3*3\n        :param initial_state: a 3*3 size list of Integer, stores the initial state\n        \"\"\"\n        self.initial_state = initial_state\n        self.goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]\n\n    def find_blank(self, state):\n        \"\"\"\n        Find the blank position of current state, which is the 0 element.\n        :param state: a 3*3 size list of Integer, stores the current state.\n        :return i, j: two Integers, represent the coordinate of the blank block.\n        >>> eightPuzzle = EightPuzzle([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        >>> eightPuzzle.find_blank([[2, 3, 4], [5, 8, 1], [6, 0, 7]])\n        (2, 1)\n        \"\"\"\n        for i in range(3):\n            for j in range(3):\n                if state[i][j] == 0:\n                    return i, j\n\n    def move(self, state, direction):\n        \"\"\"\n        Find the blank block, then makes the board moves forward the given direction.\n        :param state: a 3*3 size list of Integer, stores the state before moving.\n        :param direction: str, only has 4 direction 'up', 'down', 'left', 'right'\n        :return new_state: a 3*3 size list of Integer, stores the state after moving.\n        >>> eightPuzzle.move([[2, 3, 4], [5, 8, 1], [6, 0, 7]], 'left')\n        [[2, 3, 4], [5, 8, 1], [0, 6, 7]]\n        \"\"\"\n        i, j = self.find_blank(state)\n\n        # Determine the new position based on direction\n        if direction == 'up':\n            new_i, new_j = i - 1, j\n        elif direction == 'down':\n            new_i, new_j = i + 1, j\n        elif direction == 'left':\n            new_i, new_j = i, j - 1\n        elif direction == 'right':\n            new_i, new_j = i, j + 1\n        else:\n            raise ValueError(f\"Invalid direction: {direction}\")\n\n        # Check if the move is within bounds\n        if not (0 <= new_i < 3 and 0 <= new_j < 3):\n            raise ValueError(f\"Move out of bounds in direction: {direction}\")\n\n        # Create a deep copy of the state\n        new_state = [row[:] for row in state]\n\n        # Swap the blank with the target position\n        temp = new_state[i][j]\n        new_state[i][j] = new_state[new_i][new_j]\n        new_state[new_i][new_j] = temp\n\n        return new_state\n\n    def get_possible_moves(self, state):\n        return None\n\n    def solve(self):\n        \"\"\"\n        Use BFS algorithm to find the path solution which makes the initial state to the goal method.\n        Maintain a list as a queue, named as open_list, append the initial state.\n        Always visit and pop the 0 index element, invoke get_possible_moves method find all the possible directions.\n        Traversal the possible_moves list and invoke move method to get several new states.Then append them.\n        redo the above steps until the open_list is empty or the state has changed to the goal state.\n        :return path: list of str, the solution to the goal state.\n        >>> eightPuzzle = EightPuzzle([[1, 2, 3], [4, 5, 6], [7, 0, 8]])\n        >>> eightPuzzle.solve()\n        ['right']\n        \"\"\"\n        from collections import deque\n\n        initial_state = self.initial_state\n        goal_state = self.goal_state\n\n        # Check if already in goal state\n        if initial_state == goal_state:\n            return []\n\n        # Queue for BFS: stores tuples of (state, path)\n        open_list = deque([(initial_state, [])])\n\n        # Set to track visited states (tuple representation for hashability)\n        visited = {tuple(tuple(row) for row in initial_state)}\n\n        while open_list:\n            current_state, path = open_list.popleft()\n\n            # Convert current state to tuple for comparison\n            current_tuple = tuple(tuple(row) for row in current_state)\n\n            # Get all possible moves from current state\n            possible_moves = self.get_possible_moves(current_state)\n\n            for direction in possible_moves:\n                new_state = self.move(current_state, direction)\n\n                # Create tuple representation of new state for hashing\n                new_tuple = tuple(tuple(row) for row in new_state)\n\n                # Skip if we've already visited this state\n                if new_tuple in visited:\n                    continue\n\n                # Check if we reached the goal state\n                if new_tuple == tuple(tuple(row) for row in goal_state):\n                    return path + [direction]\n\n                # Add new state to visited and queue\n                visited.add(new_tuple)\n                open_list.append((new_state, path + [direction]))\n\n        return None  # No solution found\n"
+}

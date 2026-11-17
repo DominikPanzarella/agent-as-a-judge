@@ -1,0 +1,252 @@
+{
+  "task_id": "ClassEval_50",
+  "class_name": "JSONProcessor",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "read_json",
+      "first": {
+        "code": "def read_json(self, file_path):\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n        return data\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef read_json(self, file_path):\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n        return data\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 621,
+        "cached_tokens": 0,
+        "completion_tokens": 513,
+        "reasoning_tokens": 464,
+        "cost": 7.5708e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "A valid JSON file containing a list, string, or other non-object value is returned as that value, even though the docstring promises a dict. Validate that the parsed data is a dict and return the documented error value for other types.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "A valid JSON file containing a list, string, or other non-object value is returned as that value, even though the docstring promises a dict. Validate that the parsed data is a dict and return the documented error value for other types.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 776,
+            "cached_tokens": 0,
+            "completion_tokens": 414,
+            "reasoning_tokens": 347,
+            "cost": 0.00028460000000000003
+          }
+        ],
+        "prompt_tokens": 776,
+        "cached_tokens": 0,
+        "completion_tokens": 414,
+        "reasoning_tokens": 347,
+        "cost": 0.00028460000000000003
+      },
+      "revision": {
+        "code": "def read_json(self, file_path):\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n        if not isinstance(data, dict):\n            return -1\n        return data\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef read_json(self, file_path):\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n        if not isinstance(data, dict):\n            return -1\n        return data\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 771,
+        "cached_tokens": 0,
+        "completion_tokens": 365,
+        "reasoning_tokens": 298,
+        "cost": 7.197e-05
+      },
+      "final_code": "def read_json(self, file_path):\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n        if not isinstance(data, dict):\n            return -1\n        return data\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "write_json",
+      "first": {
+        "code": "def write_json(self, data, file_path):\n    if not isinstance(data, dict):\n        return -1\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef write_json(self, data, file_path):\n    if not isinstance(data, dict):\n        return -1\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 705,
+        "cached_tokens": 0,
+        "completion_tokens": 638,
+        "reasoning_tokens": 637,
+        "cost": 9.0453e-05
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns 1 when a dictionary is successfully written and -1 for invalid input or any writing/serialization error, as the docstring specifies. No class fields or other methods are needed.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns 1 when a dictionary is successfully written and -1 for invalid input or any writing/serialization error, as the docstring specifies. No class fields or other methods are needed.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 859,
+            "cached_tokens": 0,
+            "completion_tokens": 128,
+            "reasoning_tokens": 71,
+            "cost": 0.0001499
+          }
+        ],
+        "prompt_tokens": 859,
+        "cached_tokens": 0,
+        "completion_tokens": 128,
+        "reasoning_tokens": 71,
+        "cost": 0.0001499
+      },
+      "revision": null,
+      "final_code": "def write_json(self, data, file_path):\n    if not isinstance(data, dict):\n        return -1\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "process_json",
+      "first": {
+        "code": "def process_json(self, file_path, remove_key):\n    try:\n        data = self.read_json(file_path)\n        if data == 0 or data == -1:\n            return 0\n\n        if remove_key not in data:\n            return 0\n\n        del data[remove_key]\n\n        return self.write_json(data, file_path)\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef process_json(self, file_path, remove_key):\n    try:\n        data = self.read_json(file_path)\n        if data == 0 or data == -1:\n            return 0\n        \n        if remove_key not in data:\n            return 0\n        \n        del data[remove_key]\n        \n        return self.write_json(data, file_path)\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 770,
+        "cached_tokens": 576,
+        "completion_tokens": 692,
+        "reasoning_tokens": 589,
+        "cost": 0.000152536
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When `read_json` returns `-1` for a read error, this method returns `0`, which the docstring reserves for a missing file or absent key. Handle `-1` separately and return `-1` for the read error.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When `read_json` returns `-1` for a read error, this method returns `0`, which the docstring reserves for a missing file or absent key. Handle `-1` separately and return `-1` for the read error.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 938,
+            "cached_tokens": 0,
+            "completion_tokens": 378,
+            "reasoning_tokens": 308,
+            "cost": 0.0002828
+          }
+        ],
+        "prompt_tokens": 938,
+        "cached_tokens": 0,
+        "completion_tokens": 378,
+        "reasoning_tokens": 308,
+        "cost": 0.0002828
+      },
+      "revision": {
+        "code": "def process_json(self, file_path, remove_key):\n    try:\n        data = self.read_json(file_path)\n\n        if data == 0:\n            return 0  # File does not exist\n\n        if data == -1:\n            return -1  # Read error occurred\n\n        if remove_key not in data:\n            return 0\n\n        del data[remove_key]\n\n        write_result = self.write_json(data, file_path)\n        return write_result\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef process_json(self, file_path, remove_key):\n    try:\n        data = self.read_json(file_path)\n        \n        if data == 0:\n            return 0  # File does not exist\n        \n        if data == -1:\n            return -1  # Read error occurred\n        \n        if remove_key not in data:\n            return 0\n        \n        del data[remove_key]\n        \n        write_result = self.write_json(data, file_path)\n        return write_result\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 950,
+        "cached_tokens": 0,
+        "completion_tokens": 362,
+        "reasoning_tokens": 259,
+        "cost": 0.00013066
+      },
+      "final_code": "def process_json(self, file_path, remove_key):\n    try:\n        data = self.read_json(file_path)\n\n        if data == 0:\n            return 0  # File does not exist\n\n        if data == -1:\n            return -1  # Read error occurred\n\n        if remove_key not in data:\n            return 0\n\n        del data[remove_key]\n\n        write_result = self.write_json(data, file_path)\n        return write_result\n    except Exception:\n        return -1",
+      "passed_first": true,
+      "passed": false
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": false,
+  "tests_first": {
+    "JSONProcessorTestReadJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestWriteJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestProcessJsonExistingKey": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "JSONProcessorTestReadJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestWriteJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestProcessJsonExistingKey": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "JSONProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import json\nimport os\n\nclass JSONProcessor:\n\n    def read_json(self, file_path):\n        try:\n            with open(file_path, 'r') as f:\n                data = json.load(f)\n            return data\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n\n    def write_json(self, data, file_path):\n        if not isinstance(data, dict):\n            return -1\n        try:\n            with open(file_path, 'w') as f:\n                json.dump(data, f)\n            return 1\n        except Exception:\n            return -1\n\n    def process_json(self, file_path, remove_key):\n        try:\n            data = self.read_json(file_path)\n            if data == 0 or data == -1:\n                return 0\n\n            if remove_key not in data:\n                return 0\n\n            del data[remove_key]\n\n            return self.write_json(data, file_path)\n        except Exception:\n            return -1\n",
+  "source": "import json\nimport os\n\nclass JSONProcessor:\n\n    def read_json(self, file_path):\n        try:\n            with open(file_path, 'r') as f:\n                data = json.load(f)\n            if not isinstance(data, dict):\n                return -1\n            return data\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n\n    def write_json(self, data, file_path):\n        if not isinstance(data, dict):\n            return -1\n        try:\n            with open(file_path, 'w') as f:\n                json.dump(data, f)\n            return 1\n        except Exception:\n            return -1\n\n    def process_json(self, file_path, remove_key):\n        try:\n            data = self.read_json(file_path)\n\n            if data == 0:\n                return 0  # File does not exist\n\n            if data == -1:\n                return -1  # Read error occurred\n\n            if remove_key not in data:\n                return 0\n\n            del data[remove_key]\n\n            write_result = self.write_json(data, file_path)\n            return write_result\n        except Exception:\n            return -1\n"
+}

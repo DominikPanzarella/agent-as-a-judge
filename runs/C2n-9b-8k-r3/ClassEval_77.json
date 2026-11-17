@@ -1,0 +1,340 @@
+{
+  "task_id": "ClassEval_77",
+  "class_name": "Snake",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "random_food_position",
+      "first": {
+        "code": "def random_food_position(self):\n    \"\"\"\n    Randomly generate a new food position, but don't place it on the snake.\n    :return: None, Change the food position\n    \"\"\"\n    while True:\n        # Calculate max possible blocks\n        max_x_blocks = self.SCREEN_WIDTH // self.BLOCK_SIZE - 1\n        max_y_blocks = self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1\n\n        # Generate random position aligned to BLOCK_SIZE grid\n        random_x = random.randint(0, max_x_blocks) * self.BLOCK_SIZE\n        random_y = random.randint(0, max_y_blocks) * self.BLOCK_SIZE\n        random_pos = (random_x, random_y)\n\n        # Check if position is not on snake body\n        if random_pos not in self.positions:\n            self.food_position = random_pos\n            break",
+        "valid": true,
+        "reply": "```python\ndef random_food_position(self):\n    \"\"\"\n    Randomly generate a new food position, but don't place it on the snake.\n    :return: None, Change the food position\n    \"\"\"\n    while True:\n        # Calculate max possible blocks\n        max_x_blocks = self.SCREEN_WIDTH // self.BLOCK_SIZE - 1\n        max_y_blocks = self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1\n        \n        # Generate random position aligned to BLOCK_SIZE grid\n        random_x = random.randint(0, max_x_blocks) * self.BLOCK_SIZE\n        random_y = random.randint(0, max_y_blocks) * self.BLOCK_SIZE\n        random_pos = (random_x, random_y)\n        \n        # Check if position is not on snake body\n        if random_pos not in self.positions:\n            self.food_position = random_pos\n            break\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 778,
+        "cached_tokens": 0,
+        "completion_tokens": 782,
+        "reasoning_tokens": 644,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If the snake occupies every grid position, the loop can never find a valid food position and runs forever. Detect when no unoccupied position is available and handle that case, or choose from the available positions after checking whether any exist.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If the snake occupies every grid position, the loop can never find a valid food position and runs forever. Detect when no unoccupied position is available and handle that case, or choose from the available positions after checking whether any exist.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1035,
+            "cached_tokens": 0,
+            "completion_tokens": 390,
+            "reasoning_tokens": 325,
+            "cost": 0.0002985
+          }
+        ],
+        "prompt_tokens": 1035,
+        "cached_tokens": 0,
+        "completion_tokens": 390,
+        "reasoning_tokens": 325,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def random_food_position(self):\n    \"\"\"\n    Randomly generate a new food position, but don't place it on the snake.\n    :return: None, Change the food position\n    \"\"\"\n    while True:\n        x = random.randint(0, self.SCREEN_WIDTH // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        y = random.randint(0, self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        pos = (x, y)\n        if pos not in self.positions:\n            self.food_position = pos\n            break",
+        "valid": true,
+        "reply": "\n\n```python\ndef random_food_position(self):\n    \"\"\"\n    Randomly generate a new food position, but don't place it on the snake.\n    :return: None, Change the food position\n    \"\"\"\n    while True:\n        x = random.randint(0, self.SCREEN_WIDTH // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        y = random.randint(0, self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        pos = (x, y)\n        if pos not in self.positions:\n            self.food_position = pos\n            break\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1009,
+        "cached_tokens": 0,
+        "completion_tokens": 1187,
+        "reasoning_tokens": 1050,
+        "cost": 0.00039765
+      },
+      "final_code": "def random_food_position(self):\n    \"\"\"\n    Randomly generate a new food position, but don't place it on the snake.\n    :return: None, Change the food position\n    \"\"\"\n    while True:\n        x = random.randint(0, self.SCREEN_WIDTH // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        y = random.randint(0, self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n        pos = (x, y)\n        if pos not in self.positions:\n            self.food_position = pos\n            break",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "reset",
+      "first": {
+        "code": "def reset(self):\n    \"\"\"\n    Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.reset()\n    self.length = 1\n    self.positions = [(50, 50)]\n    self.score = 0\n    self.random_food_position()\n    \"\"\"\n    self.length = 1\n    self.score = 0\n    self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n    self.random_food_position()",
+        "valid": true,
+        "reply": "\n\n```python\ndef reset(self):\n    \"\"\"\n    Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.reset()\n    self.length = 1\n    self.positions = [(50, 50)]\n    self.score = 0\n    self.random_food_position()\n    \"\"\"\n    self.length = 1\n    self.score = 0\n    self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n    self.random_food_position()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 918,
+        "cached_tokens": 0,
+        "completion_tokens": 7927,
+        "reasoning_tokens": 7744,
+        "cost": 0.00207355
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`reset` uses `// 2`, while the constructor and docstring define the head position using `/ 2`; for odd screen dimensions, reset therefore places the head somewhere different from its initialized center. Use the same division as the constructor, or change both to a consistent integer-center rule.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`reset` uses `// 2`, while the constructor and docstring define the head position using `/ 2`; for odd screen dimensions, reset therefore places the head somewhere different from its initialized center. Use the same division as the constructor, or change both to a consistent integer-center rule.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1146,
+            "cached_tokens": 0,
+            "completion_tokens": 344,
+            "reasoning_tokens": 266,
+            "cost": 0.00028660000000000003
+          }
+        ],
+        "prompt_tokens": 1146,
+        "cached_tokens": 0,
+        "completion_tokens": 344,
+        "reasoning_tokens": 266,
+        "cost": 0.00028660000000000003
+      },
+      "revision": {
+        "code": "def reset(self):\n    \"\"\"\n    Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.reset()\n    self.length = 1\n    self.positions = [(50, 50)]\n    self.score = 0\n    self.random_food_position()\n    \"\"\"\n    self.length = 1\n    self.score = 0\n    self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n    self.random_food_position()",
+        "valid": true,
+        "reply": "\n\n```python\ndef reset(self):\n    \"\"\"\n    Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.reset()\n    self.length = 1\n    self.positions = [(50, 50)]\n    self.score = 0\n    self.random_food_position()\n    \"\"\"\n    self.length = 1\n    self.score = 0\n    self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n    self.random_food_position()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1136,
+        "cached_tokens": 576,
+        "completion_tokens": 766,
+        "reasoning_tokens": 583,
+        "cost": 0.0003051
+      },
+      "final_code": "def reset(self):\n    \"\"\"\n    Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.reset()\n    self.length = 1\n    self.positions = [(50, 50)]\n    self.score = 0\n    self.random_food_position()\n    \"\"\"\n    self.length = 1\n    self.score = 0\n    self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n    self.random_food_position()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "eat_food",
+      "first": {
+        "code": "def eat_food(self):\n    \"\"\"\n    Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n    don't place it on the snake.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.move((1,1))\n    >>> snake.eat_food()\n    self.length = 2\n    self.score = 10\n    \"\"\"\n    self.length += 1\n    self.score += 100\n    self.random_food_position()",
+        "valid": true,
+        "reply": "\n\n```python\n    def eat_food(self):\n        \"\"\"\n        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n        don't place it on the snake.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.move((1,1))\n        >>> snake.eat_food()\n        self.length = 2\n        self.score = 10\n        \"\"\"\n        self.length += 1\n        self.score += 100\n        self.random_food_position()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1095,
+        "cached_tokens": 576,
+        "completion_tokens": 1679,
+        "reasoning_tokens": 1530,
+        "cost": 0.00052925
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The implementation follows the prose by adding 100 points, but the docstring example expects the score to be 10 after calling `eat_food`. Make the example and the intended score increment consistent (for example, change the expected score to 100).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The implementation follows the prose by adding 100 points, but the docstring example expects the score to be 10 after calling `eat_food`. Make the example and the intended score increment consistent (for example, change the expected score to 100).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1269,
+            "cached_tokens": 0,
+            "completion_tokens": 541,
+            "reasoning_tokens": 471,
+            "cost": 0.00039739999999999996
+          }
+        ],
+        "prompt_tokens": 1269,
+        "cached_tokens": 0,
+        "completion_tokens": 541,
+        "reasoning_tokens": 471,
+        "cost": 0.00039739999999999996
+      },
+      "revision": {
+        "code": "def eat_food(self):\n    \"\"\"\n    Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n    don't place it on the snake.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.move((1,1))\n    >>> snake.eat_food()\n    self.length = 2\n    self.score = 10\n    \"\"\"\n    self.length += 1\n    self.score += 100\n    self.random_food_position()",
+        "valid": true,
+        "reply": "\n\n```python\n    def eat_food(self):\n        \"\"\"\n        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n        don't place it on the snake.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.move((1,1))\n        >>> snake.eat_food()\n        self.length = 2\n        self.score = 10\n        \"\"\"\n        self.length += 1\n        self.score += 100\n        self.random_food_position()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1281,
+        "cached_tokens": 576,
+        "completion_tokens": 780,
+        "reasoning_tokens": 631,
+        "cost": 0.0003231
+      },
+      "final_code": "def eat_food(self):\n    \"\"\"\n    Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n    don't place it on the snake.\n    :return: None\n    >>> snake = Snake(100, 100, 1, (51, 51))\n    >>> snake.move((1,1))\n    >>> snake.eat_food()\n    self.length = 2\n    self.score = 10\n    \"\"\"\n    self.length += 1\n    self.score += 100\n    self.random_food_position()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "move",
+      "first": {
+        "code": "def move(self, direction):\n    \"\"\"\n    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n    :param direction: tuple, representing the direction of movement (x, y).\n    :return: None\n    >>> snake.move((1,1))\n    self.length = 1\n    self.positions = [(51, 51), (50, 50)]\n    self.score = 10\n    \"\"\"\n    head_x, head_y = self.positions[0]\n    new_x = head_x + direction[0]\n    new_y = head_y + direction[1]\n    new_head = (new_x, new_y)\n\n    # Check collision with body\n    if new_head in self.positions[1:]:\n        self.reset()\n        return\n\n    # Move snake: add new head to front\n    self.positions.insert(0, new_head)\n\n    # Check if we ate food\n    if new_head == self.food_position:\n        self.eat_food()\n    else:\n        # Remove tail to maintain length\n        self.positions.pop()",
+        "valid": true,
+        "reply": "\n\n```python\ndef move(self, direction):\n    \"\"\"\n    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n    :param direction: tuple, representing the direction of movement (x, y).\n    :return: None\n    >>> snake.move((1,1))\n    self.length = 1\n    self.positions = [(51, 51), (50, 50)]\n    self.score = 10\n    \"\"\"\n    head_x, head_y = self.positions[0]\n    new_x = head_x + direction[0]\n    new_y = head_y + direction[1]\n    new_head = (new_x, new_y)\n    \n    # Check collision with body\n    if new_head in self.positions[1:]:\n        self.reset()\n        return\n    \n    # Move snake: add new head to front\n    self.positions.insert(0, new_head)\n    \n    # Check if we ate food\n    if new_head == self.food_position:\n        self.eat_food()\n    else:\n        # Remove tail to maintain length\n        self.positions.pop()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1235,
+        "cached_tokens": 576,
+        "completion_tokens": 1002,
+        "reasoning_tokens": 708,
+        "cost": 0.000374
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When the new head reaches the food, `move` calls `eat_food`, which increases the length to 2 and score to 100, but `move`'s example expects length 1 and score 10. Update the example to match `eat_food`'s behavior, or change the behavior and the `eat_food` contract consistently.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When the new head reaches the food, `move` calls `eat_food`, which increases the length to 2 and score to 100, but `move`'s example expects length 1 and score 10. Update the example to match `eat_food`'s behavior, or change the behavior and the `eat_food` contract consistently.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1529,
+            "cached_tokens": 0,
+            "completion_tokens": 774,
+            "reasoning_tokens": 684,
+            "cost": 0.0005399
+          }
+        ],
+        "prompt_tokens": 1529,
+        "cached_tokens": 0,
+        "completion_tokens": 774,
+        "reasoning_tokens": 684,
+        "cost": 0.0005399
+      },
+      "revision": {
+        "code": "def move(self, direction):\n    \"\"\"\n    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n    :param direction: tuple, representing the direction of movement (x, y).\n    :return: None\n    >>> snake.move((1,1))\n    self.length = 1\n    self.positions = [(51, 51), (50, 50)]\n    self.score = 10\n    \"\"\"\n    head_x, head_y = self.positions[0]\n    new_x = head_x + direction[0]\n    new_y = head_y + direction[1]\n    new_head = (new_x, new_y)\n\n    # Check collision with body (excluding head itself)\n    if new_head in self.positions[1:]:\n        self.reset()\n        return\n\n    # Add new head\n    self.positions.insert(0, new_head)\n\n    # Check if we ate food\n    if new_head == self.food_position:\n        self.eat_food()\n    else:\n        # Remove tail to maintain length\n        self.positions.pop()",
+        "valid": true,
+        "reply": "\n\n```python\ndef move(self, direction):\n    \"\"\"\n    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n    :param direction: tuple, representing the direction of movement (x, y).\n    :return: None\n    >>> snake.move((1,1))\n    self.length = 1\n    self.positions = [(51, 51), (50, 50)]\n    self.score = 10\n    \"\"\"\n    head_x, head_y = self.positions[0]\n    new_x = head_x + direction[0]\n    new_y = head_y + direction[1]\n    new_head = (new_x, new_y)\n    \n    # Check collision with body (excluding head itself)\n    if new_head in self.positions[1:]:\n        self.reset()\n        return\n    \n    # Add new head\n    self.positions.insert(0, new_head)\n    \n    # Check if we ate food\n    if new_head == self.food_position:\n        self.eat_food()\n    else:\n        # Remove tail to maintain length\n        self.positions.pop()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1564,
+        "cached_tokens": 1152,
+        "completion_tokens": 2869,
+        "reasoning_tokens": 2575,
+        "cost": 0.00087365
+      },
+      "final_code": "def move(self, direction):\n    \"\"\"\n    Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n    :param direction: tuple, representing the direction of movement (x, y).\n    :return: None\n    >>> snake.move((1,1))\n    self.length = 1\n    self.positions = [(51, 51), (50, 50)]\n    self.score = 10\n    \"\"\"\n    head_x, head_y = self.positions[0]\n    new_x = head_x + direction[0]\n    new_y = head_y + direction[1]\n    new_head = (new_x, new_y)\n\n    # Check collision with body (excluding head itself)\n    if new_head in self.positions[1:]:\n        self.reset()\n        return\n\n    # Add new head\n    self.positions.insert(0, new_head)\n\n    # Check if we ate food\n    if new_head == self.food_position:\n        self.eat_food()\n    else:\n        # Remove tail to maintain length\n        self.positions.pop()",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "SnakeTestMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestRandomFoodPosition": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestReset": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestEatFood": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "SnakeTestMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestRandomFoodPosition": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestReset": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTestEatFood": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SnakeTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import random\n\nclass Snake: \n    def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE, food_position):\n        \"\"\"\n        Initialize the length of the snake, screen width, screen height, block size, snake head position, score, and food position.\n        :param SCREEN_WIDTH: int\n        :param SCREEN_HEIGHT: int\n        :param BLOCK_SIZE: int, Size of moving units\n        :param food_position: tuple, representing the position(x, y) of food.\n        \"\"\"\n        self.length = 1\n        self.SCREEN_WIDTH = SCREEN_WIDTH\n        self.SCREEN_HEIGHT = SCREEN_HEIGHT\n        self.BLOCK_SIZE = BLOCK_SIZE\n        self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]\n        self.score = 0\n        self.food_position = food_position\n\n    def move(self, direction):\n        \"\"\"\n        Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n        :param direction: tuple, representing the direction of movement (x, y).\n        :return: None\n        >>> snake.move((1,1))\n        self.length = 1\n        self.positions = [(51, 51), (50, 50)]\n        self.score = 10\n        \"\"\"\n        head_x, head_y = self.positions[0]\n        new_x = head_x + direction[0]\n        new_y = head_y + direction[1]\n        new_head = (new_x, new_y)\n\n        # Check collision with body\n        if new_head in self.positions[1:]:\n            self.reset()\n            return\n\n        # Move snake: add new head to front\n        self.positions.insert(0, new_head)\n\n        # Check if we ate food\n        if new_head == self.food_position:\n            self.eat_food()\n        else:\n            # Remove tail to maintain length\n            self.positions.pop()\n\n    def random_food_position(self):\n        \"\"\"\n        Randomly generate a new food position, but don't place it on the snake.\n        :return: None, Change the food position\n        \"\"\"\n        while True:\n            # Calculate max possible blocks\n            max_x_blocks = self.SCREEN_WIDTH // self.BLOCK_SIZE - 1\n            max_y_blocks = self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1\n\n            # Generate random position aligned to BLOCK_SIZE grid\n            random_x = random.randint(0, max_x_blocks) * self.BLOCK_SIZE\n            random_y = random.randint(0, max_y_blocks) * self.BLOCK_SIZE\n            random_pos = (random_x, random_y)\n\n            # Check if position is not on snake body\n            if random_pos not in self.positions:\n                self.food_position = random_pos\n                break\n\n    def reset(self):\n        \"\"\"\n        Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.reset()\n        self.length = 1\n        self.positions = [(50, 50)]\n        self.score = 0\n        self.random_food_position()\n        \"\"\"\n        self.length = 1\n        self.score = 0\n        self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n        self.random_food_position()\n\n    def eat_food(self):\n        \"\"\"\n        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n        don't place it on the snake.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.move((1,1))\n        >>> snake.eat_food()\n        self.length = 2\n        self.score = 10\n        \"\"\"\n        self.length += 1\n        self.score += 100\n        self.random_food_position()\n",
+  "source": "import random\n\nclass Snake: \n    def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE, food_position):\n        \"\"\"\n        Initialize the length of the snake, screen width, screen height, block size, snake head position, score, and food position.\n        :param SCREEN_WIDTH: int\n        :param SCREEN_HEIGHT: int\n        :param BLOCK_SIZE: int, Size of moving units\n        :param food_position: tuple, representing the position(x, y) of food.\n        \"\"\"\n        self.length = 1\n        self.SCREEN_WIDTH = SCREEN_WIDTH\n        self.SCREEN_HEIGHT = SCREEN_HEIGHT\n        self.BLOCK_SIZE = BLOCK_SIZE\n        self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]\n        self.score = 0\n        self.food_position = food_position\n\n    def move(self, direction):\n        \"\"\"\n        Move the snake in the specified direction. If the new position of the snake's head is equal to the position of the food, then eat the food; If the position of the snake's head is equal to the position of its body, then start over, otherwise its own length plus one.\n        :param direction: tuple, representing the direction of movement (x, y).\n        :return: None\n        >>> snake.move((1,1))\n        self.length = 1\n        self.positions = [(51, 51), (50, 50)]\n        self.score = 10\n        \"\"\"\n        head_x, head_y = self.positions[0]\n        new_x = head_x + direction[0]\n        new_y = head_y + direction[1]\n        new_head = (new_x, new_y)\n\n        # Check collision with body (excluding head itself)\n        if new_head in self.positions[1:]:\n            self.reset()\n            return\n\n        # Add new head\n        self.positions.insert(0, new_head)\n\n        # Check if we ate food\n        if new_head == self.food_position:\n            self.eat_food()\n        else:\n            # Remove tail to maintain length\n            self.positions.pop()\n\n    def random_food_position(self):\n        \"\"\"\n        Randomly generate a new food position, but don't place it on the snake.\n        :return: None, Change the food position\n        \"\"\"\n        while True:\n            x = random.randint(0, self.SCREEN_WIDTH // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n            y = random.randint(0, self.SCREEN_HEIGHT // self.BLOCK_SIZE - 1) * self.BLOCK_SIZE\n            pos = (x, y)\n            if pos not in self.positions:\n                self.food_position = pos\n                break\n\n    def reset(self):\n        \"\"\"\n        Reset the snake to its initial state. Set the length to 1, the snake head position to ((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)), the score to 0, and randomly generate new food position.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.reset()\n        self.length = 1\n        self.positions = [(50, 50)]\n        self.score = 0\n        self.random_food_position()\n        \"\"\"\n        self.length = 1\n        self.score = 0\n        self.positions = [((self.SCREEN_WIDTH // 2), (self.SCREEN_HEIGHT // 2))]\n        self.random_food_position()\n\n    def eat_food(self):\n        \"\"\"\n        Increase the length of the snake by 1 and increase the score by 100. Randomly generate a new food position, but\n        don't place it on the snake.\n        :return: None\n        >>> snake = Snake(100, 100, 1, (51, 51))\n        >>> snake.move((1,1))\n        >>> snake.eat_food()\n        self.length = 2\n        self.score = 10\n        \"\"\"\n        self.length += 1\n        self.score += 100\n        self.random_food_position()\n"
+}

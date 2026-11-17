@@ -1,0 +1,256 @@
+{
+  "task_id": "ClassEval_32",
+  "class_name": "DecryptionUtils",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "caesar_decipher",
+      "first": {
+        "code": "def caesar_decipher(self, ciphertext, shift):\n    \"\"\"\n    Deciphers the given ciphertext using the Caesar cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :param shift: The shift to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.caesar_decipher('ifmmp', 1)\n    'hello'\n\n    \"\"\"\n    plaintext = []\n    for char in ciphertext:\n        if char.islower():\n            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))\n            plaintext.append(decrypted_char)\n        elif char.isupper():\n            decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))\n            plaintext.append(decrypted_char)\n        else:\n            plaintext.append(char)\n    return ''.join(plaintext)",
+        "valid": true,
+        "reply": "```python\ndef caesar_decipher(self, ciphertext, shift):\n    \"\"\"\n    Deciphers the given ciphertext using the Caesar cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :param shift: The shift to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.caesar_decipher('ifmmp', 1)\n    'hello'\n\n    \"\"\"\n    plaintext = []\n    for char in ciphertext:\n        if char.islower():\n            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))\n            plaintext.append(decrypted_char)\n        elif char.isupper():\n            decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))\n            plaintext.append(decrypted_char)\n        else:\n            plaintext.append(char)\n    return ''.join(plaintext)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 506,
+        "cached_tokens": 0,
+        "completion_tokens": 683,
+        "reasoning_tokens": 433,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly subtracts the shift modulo 26 for lowercase and uppercase letters and preserves other characters, matching the documented Caesar decryption behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly subtracts the shift modulo 26 for lowercase and uppercase letters and preserves other characters, matching the documented Caesar decryption behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 809,
+            "cached_tokens": 0,
+            "completion_tokens": 240,
+            "reasoning_tokens": 194,
+            "cost": 0.0002009
+          }
+        ],
+        "prompt_tokens": 809,
+        "cached_tokens": 0,
+        "completion_tokens": 240,
+        "reasoning_tokens": 194,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def caesar_decipher(self, ciphertext, shift):\n    \"\"\"\n    Deciphers the given ciphertext using the Caesar cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :param shift: The shift to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.caesar_decipher('ifmmp', 1)\n    'hello'\n\n    \"\"\"\n    plaintext = []\n    for char in ciphertext:\n        if char.islower():\n            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))\n            plaintext.append(decrypted_char)\n        elif char.isupper():\n            decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))\n            plaintext.append(decrypted_char)\n        else:\n            plaintext.append(char)\n    return ''.join(plaintext)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "vigenere_decipher",
+      "first": {
+        "code": "def vigenere_decipher(self, ciphertext):\n    \"\"\"\n    Deciphers the given ciphertext using the Vigenere cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.vigenere_decipher('ifmmp')\n    'ybocl'\n\n    \"\"\"\n    key = self.key\n    key_length = len(key)\n    plaintext = []\n\n    for i, char in enumerate(ciphertext):\n        if char.islower():\n            key_char = key[i % key_length]\n            key_val = ord(key_char.lower()) - ord('a')\n            decrypted_val = (ord(char) - ord('a') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('a')))\n        elif char.isupper():\n            key_char = key[i % key_length]\n            key_val = ord(key_char.upper()) - ord('A')\n            decrypted_val = (ord(char) - ord('A') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('A')))\n        else:\n            plaintext.append(char)\n\n    return ''.join(plaintext)",
+        "valid": true,
+        "reply": "```python\ndef vigenere_decipher(self, ciphertext):\n    \"\"\"\n    Deciphers the given ciphertext using the Vigenere cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.vigenere_decipher('ifmmp')\n    'ybocl'\n\n    \"\"\"\n    key = self.key\n    key_length = len(key)\n    plaintext = []\n    \n    for i, char in enumerate(ciphertext):\n        if char.islower():\n            key_char = key[i % key_length]\n            key_val = ord(key_char.lower()) - ord('a')\n            decrypted_val = (ord(char) - ord('a') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('a')))\n        elif char.isupper():\n            key_char = key[i % key_length]\n            key_val = ord(key_char.upper()) - ord('A')\n            decrypted_val = (ord(char) - ord('A') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('A')))\n        else:\n            plaintext.append(char)\n    \n    return ''.join(plaintext)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 731,
+        "cached_tokens": 0,
+        "completion_tokens": 773,
+        "reasoning_tokens": 393,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method preserves nonalphabetic characters but still advances the key index for them, so punctuation or spaces shift the key used for subsequent letters. Advance a separate key position only when processing a letter (or explicitly define that nonletters consume key characters).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method preserves nonalphabetic characters but still advances the key index for them, so punctuation or spaces shift the key used for subsequent letters. Advance a separate key position only when processing a letter (or explicitly define that nonletters consume key characters).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1066,
+            "cached_tokens": 0,
+            "completion_tokens": 439,
+            "reasoning_tokens": 370,
+            "cost": 0.0003261
+          }
+        ],
+        "prompt_tokens": 1066,
+        "cached_tokens": 0,
+        "completion_tokens": 439,
+        "reasoning_tokens": 370,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def vigenere_decipher(self, ciphertext):\n    \"\"\"\n    Deciphers the given ciphertext using the Vigenere cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.vigenere_decipher('ifmmp')\n    'ybocl'\n\n    \"\"\"\n    key = self.key.lower()\n    key_length = len(key)\n    plaintext = []\n\n    for i, char in enumerate(ciphertext):\n        if char.islower():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('a') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('a')))\n        elif char.isupper():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('A') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('A')))\n        else:\n            plaintext.append(char)\n\n    return ''.join(plaintext)",
+        "valid": true,
+        "reply": "\n\n```python\ndef vigenere_decipher(self, ciphertext):\n    \"\"\"\n    Deciphers the given ciphertext using the Vigenere cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.vigenere_decipher('ifmmp')\n    'ybocl'\n\n    \"\"\"\n    key = self.key.lower()\n    key_length = len(key)\n    plaintext = []\n    \n    for i, char in enumerate(ciphertext):\n        if char.islower():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('a') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('a')))\n        elif char.isupper():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('A') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('A')))\n        else:\n            plaintext.append(char)\n    \n    return ''.join(plaintext)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1051,
+        "cached_tokens": 0,
+        "completion_tokens": 1123,
+        "reasoning_tokens": 846,
+        "cost": 0.00038585
+      },
+      "final_code": "def vigenere_decipher(self, ciphertext):\n    \"\"\"\n    Deciphers the given ciphertext using the Vigenere cipher\n    :param ciphertext: The ciphertext to decipher,str.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.vigenere_decipher('ifmmp')\n    'ybocl'\n\n    \"\"\"\n    key = self.key.lower()\n    key_length = len(key)\n    plaintext = []\n\n    for i, char in enumerate(ciphertext):\n        if char.islower():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('a') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('a')))\n        elif char.isupper():\n            key_char = key[i % key_length]\n            key_val = ord(key_char) - ord('a')\n            decrypted_val = (ord(char) - ord('A') - key_val) % 26\n            plaintext.append(chr(decrypted_val + ord('A')))\n        else:\n            plaintext.append(char)\n\n    return ''.join(plaintext)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "rail_fence_decipher",
+      "first": {
+        "code": "def rail_fence_decipher(self, encrypted_text, rails):\n    \"\"\"\n    Deciphers the given ciphertext using the Rail Fence cipher\n    :param encrypted_text: The ciphertext to decipher,str.\n    :param rails: The number of rails to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n    'Hello, World!'\n    \"\"\"\n    if rails <= 1:\n        return encrypted_text\n\n    length = len(encrypted_text)\n    grid = [[] for _ in range(rails)]\n\n    # Determine the cycle of the pattern\n    # For Rail Fence, the pattern goes: 0, 1, 2, ..., rails-1, rails-2, ..., 1, 0, 1...\n    # Cycle length for rails: 2 * (rails - 1)\n    cycle = 2 * (rails - 1)\n\n    # Fill the grid rows based on the zigzag pattern\n    row = 0\n    going_down = False\n    for i in range(length):\n        grid[row].append(encrypted_text[i])\n        if row == 0 or row == rails - 1:\n            going_down = not going_down\n        if going_down:\n            row += 1\n        else:\n            row -= 1\n\n    # Read the ciphertext row by row to get original order\n    plaintext = []\n    for row in grid:\n        plaintext.extend(row)\n\n    # Now reconstruct by reading in zigzag pattern\n    result = []\n    row_ptr = [0] * rails\n    row = 0\n    going_down = False\n\n    for _ in range(length):\n        result.append(grid[row].pop(0))\n        if row == 0 or row == rails - 1:\n            going_down = not going_down\n        if going_down:\n            row += 1\n        else:\n            row -= 1\n\n    return ''.join(result)",
+        "valid": true,
+        "reply": "\n\n```python\ndef rail_fence_decipher(self, encrypted_text, rails):\n    \"\"\"\n    Deciphers the given ciphertext using the Rail Fence cipher\n    :param encrypted_text: The ciphertext to decipher,str.\n    :param rails: The number of rails to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n    'Hello, World!'\n    \"\"\"\n    if rails <= 1:\n        return encrypted_text\n    \n    length = len(encrypted_text)\n    grid = [[] for _ in range(rails)]\n    \n    # Determine the cycle of the pattern\n    # For Rail Fence, the pattern goes: 0, 1, 2, ..., rails-1, rails-2, ..., 1, 0, 1...\n    # Cycle length for rails: 2 * (rails - 1)\n    cycle = 2 * (rails - 1)\n    \n    # Fill the grid rows based on the zigzag pattern\n    row = 0\n    going_down = False\n    for i in range(length):\n        grid[row].append(encrypted_text[i])\n        if row == 0 or row == rails - 1:\n            going_down = not going_down\n        if going_down:\n            row += 1\n        else:\n            row -= 1\n    \n    # Read the ciphertext row by row to get original order\n    plaintext = []\n    for row in grid:\n        plaintext.extend(row)\n    \n    # Now reconstruct by reading in zigzag pattern\n    result = []\n    row_ptr = [0] * rails\n    row = 0\n    going_down = False\n    \n    for _ in range(length):\n        result.append(grid[row].pop(0))\n        if row == 0 or row == rails - 1:\n            going_down = not going_down\n        if going_down:\n            row += 1\n        else:\n            row -= 1\n    \n    return ''.join(result)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 998,
+        "cached_tokens": 576,
+        "completion_tokens": 1126,
+        "reasoning_tokens": 664,
+        "cost": 0.0003813
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method places the ciphertext characters into rows in zigzag order, then reads them back in that same order, so it returns the encrypted text unchanged rather than decrypting it (the given example fails). To fix it, first determine how many characters belong on each rail, fill the rails from the row-wise ciphertext, and then reconstruct the plaintext in zigzag order.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method places the ciphertext characters into rows in zigzag order, then reads them back in that same order, so it returns the encrypted text unchanged rather than decrypting it (the given example fails). To fix it, first determine how many characters belong on each rail, fill the rails from the row-wise ciphertext, and then reconstruct the plaintext in zigzag order.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1490,
+            "cached_tokens": 0,
+            "completion_tokens": 189,
+            "reasoning_tokens": 97,
+            "cost": 0.0002435
+          }
+        ],
+        "prompt_tokens": 1490,
+        "cached_tokens": 0,
+        "completion_tokens": 189,
+        "reasoning_tokens": 97,
+        "cost": 0.0002435
+      },
+      "revision": {
+        "code": "def rail_fence_decipher(self, encrypted_text, rails):\n    \"\"\"\n    Deciphers the given ciphertext using the Rail Fence cipher\n    :param encrypted_text: The ciphertext to decipher,str.\n    :param rails: The number of rails to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n    'Hello, World!'\n    \"\"\"\n    if rails <= 1 or rails > len(encrypted_text):\n        return encrypted_text\n\n    length = len(encrypted_text)\n    rail_sizes = [0] * rails\n\n    # Calculate how many characters go in each rail\n    row = 0\n    direction = 1\n    for _ in range(length):\n        rail_sizes[row] += 1\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n\n    # Create a grid to track positions\n    rail_positions = [[] for _ in range(rails)]\n\n    # Fill each rail with the correct number of positions\n    start = 0\n    idx = [0] * rails\n    for r in range(rails):\n        rail_positions[r] = list(range(idx[r], idx[r] + rail_sizes[r]))\n        idx[r] += rail_sizes[r]\n\n    # Determine the actual position indices for each character in zigzag order\n    pos_array = []\n    row = 0\n    direction = 1\n    for _ in range(length):\n        pos_array.append(row)\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n\n    # Create groups of characters by row\n    rail_chars = [[] for _ in range(rails)]\n    full_pos = 0\n    for r in range(rails):\n        # Count how many characters should go in this rail\n        count = 0\n        i = 0\n        while i < length and rail_chars[r] is not None:\n            if pos_array[i] == r:\n                rail_chars[r].append(full_pos)\n                count += 1\n            i += 1\n\n    # Reconstruct the original message\n    result = [''] * length\n    char_idx = [0] * rails\n    for i, row in enumerate(pos_array):\n        offset = i % rails if i < rails else 0\n        rail_index = char_idx[row]\n        char_idx[row] += 1\n        result[i] = encrypted_text[rail_chars[row][offset]] if rail_chars[row] else ''\n\n    return ''.join(result)",
+        "valid": true,
+        "reply": "\n\n```python\ndef rail_fence_decipher(self, encrypted_text, rails):\n    \"\"\"\n    Deciphers the given ciphertext using the Rail Fence cipher\n    :param encrypted_text: The ciphertext to decipher,str.\n    :param rails: The number of rails to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n    'Hello, World!'\n    \"\"\"\n    if rails <= 1 or rails > len(encrypted_text):\n        return encrypted_text\n    \n    length = len(encrypted_text)\n    rail_sizes = [0] * rails\n    \n    # Calculate how many characters go in each rail\n    row = 0\n    direction = 1\n    for _ in range(length):\n        rail_sizes[row] += 1\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n    \n    # Create a grid to track positions\n    rail_positions = [[] for _ in range(rails)]\n    \n    # Fill each rail with the correct number of positions\n    start = 0\n    idx = [0] * rails\n    for r in range(rails):\n        rail_positions[r] = list(range(idx[r], idx[r] + rail_sizes[r]))\n        idx[r] += rail_sizes[r]\n    \n    # Determine the actual position indices for each character in zigzag order\n    pos_array = []\n    row = 0\n    direction = 1\n    for _ in range(length):\n        pos_array.append(row)\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n    \n    # Create groups of characters by row\n    rail_chars = [[] for _ in range(rails)]\n    full_pos = 0\n    for r in range(rails):\n        # Count how many characters should go in this rail\n        count = 0\n        i = 0\n        while i < length and rail_chars[r] is not None:\n            if pos_array[i] == r:\n                rail_chars[r].append(full_pos)\n                count += 1\n            i += 1\n    \n    # Reconstruct the original message\n    result = [''] * length\n    char_idx = [0] * rails\n    for i, row in enumerate(pos_array):\n        offset = i % rails if i < rails else 0\n        rail_index = char_idx[row]\n        char_idx[row] += 1\n        result[i] = encrypted_text[rail_chars[row][offset]] if rail_chars[row] else ''\n    \n    return ''.join(result)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1501,
+        "cached_tokens": 0,
+        "completion_tokens": 2138,
+        "reasoning_tokens": 1543,
+        "cost": 0.0006846
+      },
+      "final_code": "def rail_fence_decipher(self, encrypted_text, rails):\n    \"\"\"\n    Deciphers the given ciphertext using the Rail Fence cipher\n    :param encrypted_text: The ciphertext to decipher,str.\n    :param rails: The number of rails to use for decryption,int.\n    :return: The deciphered plaintext,str.\n    >>> d = DecryptionUtils('key')\n    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n    'Hello, World!'\n    \"\"\"\n    if rails <= 1 or rails > len(encrypted_text):\n        return encrypted_text\n\n    length = len(encrypted_text)\n    rail_sizes = [0] * rails\n\n    # Calculate how many characters go in each rail\n    row = 0\n    direction = 1\n    for _ in range(length):\n        rail_sizes[row] += 1\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n\n    # Create a grid to track positions\n    rail_positions = [[] for _ in range(rails)]\n\n    # Fill each rail with the correct number of positions\n    start = 0\n    idx = [0] * rails\n    for r in range(rails):\n        rail_positions[r] = list(range(idx[r], idx[r] + rail_sizes[r]))\n        idx[r] += rail_sizes[r]\n\n    # Determine the actual position indices for each character in zigzag order\n    pos_array = []\n    row = 0\n    direction = 1\n    for _ in range(length):\n        pos_array.append(row)\n        if row == 0 or row == rails - 1:\n            direction = -direction\n        row += direction\n\n    # Create groups of characters by row\n    rail_chars = [[] for _ in range(rails)]\n    full_pos = 0\n    for r in range(rails):\n        # Count how many characters should go in this rail\n        count = 0\n        i = 0\n        while i < length and rail_chars[r] is not None:\n            if pos_array[i] == r:\n                rail_chars[r].append(full_pos)\n                count += 1\n            i += 1\n\n    # Reconstruct the original message\n    result = [''] * length\n    char_idx = [0] * rails\n    for i, row in enumerate(pos_array):\n        offset = i % rails if i < rails else 0\n        rail_index = char_idx[row]\n        char_idx[row] += 1\n        result[i] = encrypted_text[rail_chars[row][offset]] if rail_chars[row] else ''\n\n    return ''.join(result)",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "DecryptionUtilsTestCaesarDecipher": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DecryptionUtilsTestVigenereDecipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DecryptionUtilsTestRailFenceDecipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "DecryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "DecryptionUtilsTestCaesarDecipher": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DecryptionUtilsTestVigenereDecipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DecryptionUtilsTestRailFenceDecipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DecryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass DecryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the decryption utility with a key.\n        :param key: The key to use for decryption,str.\n        \"\"\"\n        self.key = key\n\n    def caesar_decipher(self, ciphertext, shift):\n        \"\"\"\n        Deciphers the given ciphertext using the Caesar cipher\n        :param ciphertext: The ciphertext to decipher,str.\n        :param shift: The shift to use for decryption,int.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.caesar_decipher('ifmmp', 1)\n        'hello'\n\n        \"\"\"\n        plaintext = []\n        for char in ciphertext:\n            if char.islower():\n                decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))\n                plaintext.append(decrypted_char)\n            elif char.isupper():\n                decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))\n                plaintext.append(decrypted_char)\n            else:\n                plaintext.append(char)\n        return ''.join(plaintext)\n\n    def vigenere_decipher(self, ciphertext):\n        \"\"\"\n        Deciphers the given ciphertext using the Vigenere cipher\n        :param ciphertext: The ciphertext to decipher,str.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.vigenere_decipher('ifmmp')\n        'ybocl'\n\n        \"\"\"\n        key = self.key\n        key_length = len(key)\n        plaintext = []\n\n        for i, char in enumerate(ciphertext):\n            if char.islower():\n                key_char = key[i % key_length]\n                key_val = ord(key_char.lower()) - ord('a')\n                decrypted_val = (ord(char) - ord('a') - key_val) % 26\n                plaintext.append(chr(decrypted_val + ord('a')))\n            elif char.isupper():\n                key_char = key[i % key_length]\n                key_val = ord(key_char.upper()) - ord('A')\n                decrypted_val = (ord(char) - ord('A') - key_val) % 26\n                plaintext.append(chr(decrypted_val + ord('A')))\n            else:\n                plaintext.append(char)\n\n        return ''.join(plaintext)\n\n    def rail_fence_decipher(self, encrypted_text, rails):\n        \"\"\"\n        Deciphers the given ciphertext using the Rail Fence cipher\n        :param encrypted_text: The ciphertext to decipher,str.\n        :param rails: The number of rails to use for decryption,int.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n        'Hello, World!'\n        \"\"\"\n        if rails <= 1:\n            return encrypted_text\n\n        length = len(encrypted_text)\n        grid = [[] for _ in range(rails)]\n\n        # Determine the cycle of the pattern\n        # For Rail Fence, the pattern goes: 0, 1, 2, ..., rails-1, rails-2, ..., 1, 0, 1...\n        # Cycle length for rails: 2 * (rails - 1)\n        cycle = 2 * (rails - 1)\n\n        # Fill the grid rows based on the zigzag pattern\n        row = 0\n        going_down = False\n        for i in range(length):\n            grid[row].append(encrypted_text[i])\n            if row == 0 or row == rails - 1:\n                going_down = not going_down\n            if going_down:\n                row += 1\n            else:\n                row -= 1\n\n        # Read the ciphertext row by row to get original order\n        plaintext = []\n        for row in grid:\n            plaintext.extend(row)\n\n        # Now reconstruct by reading in zigzag pattern\n        result = []\n        row_ptr = [0] * rails\n        row = 0\n        going_down = False\n\n        for _ in range(length):\n            result.append(grid[row].pop(0))\n            if row == 0 or row == rails - 1:\n                going_down = not going_down\n            if going_down:\n                row += 1\n            else:\n                row -= 1\n\n        return ''.join(result)\n",
+  "source": "\n\nclass DecryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the decryption utility with a key.\n        :param key: The key to use for decryption,str.\n        \"\"\"\n        self.key = key\n\n    def caesar_decipher(self, ciphertext, shift):\n        \"\"\"\n        Deciphers the given ciphertext using the Caesar cipher\n        :param ciphertext: The ciphertext to decipher,str.\n        :param shift: The shift to use for decryption,int.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.caesar_decipher('ifmmp', 1)\n        'hello'\n\n        \"\"\"\n        plaintext = []\n        for char in ciphertext:\n            if char.islower():\n                decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))\n                plaintext.append(decrypted_char)\n            elif char.isupper():\n                decrypted_char = chr((ord(char) - ord('A') - shift) % 26 + ord('A'))\n                plaintext.append(decrypted_char)\n            else:\n                plaintext.append(char)\n        return ''.join(plaintext)\n\n    def vigenere_decipher(self, ciphertext):\n        \"\"\"\n        Deciphers the given ciphertext using the Vigenere cipher\n        :param ciphertext: The ciphertext to decipher,str.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.vigenere_decipher('ifmmp')\n        'ybocl'\n\n        \"\"\"\n        key = self.key.lower()\n        key_length = len(key)\n        plaintext = []\n\n        for i, char in enumerate(ciphertext):\n            if char.islower():\n                key_char = key[i % key_length]\n                key_val = ord(key_char) - ord('a')\n                decrypted_val = (ord(char) - ord('a') - key_val) % 26\n                plaintext.append(chr(decrypted_val + ord('a')))\n            elif char.isupper():\n                key_char = key[i % key_length]\n                key_val = ord(key_char) - ord('a')\n                decrypted_val = (ord(char) - ord('A') - key_val) % 26\n                plaintext.append(chr(decrypted_val + ord('A')))\n            else:\n                plaintext.append(char)\n\n        return ''.join(plaintext)\n\n    def rail_fence_decipher(self, encrypted_text, rails):\n        \"\"\"\n        Deciphers the given ciphertext using the Rail Fence cipher\n        :param encrypted_text: The ciphertext to decipher,str.\n        :param rails: The number of rails to use for decryption,int.\n        :return: The deciphered plaintext,str.\n        >>> d = DecryptionUtils('key')\n        >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)\n        'Hello, World!'\n        \"\"\"\n        if rails <= 1 or rails > len(encrypted_text):\n            return encrypted_text\n\n        length = len(encrypted_text)\n        rail_sizes = [0] * rails\n\n        # Calculate how many characters go in each rail\n        row = 0\n        direction = 1\n        for _ in range(length):\n            rail_sizes[row] += 1\n            if row == 0 or row == rails - 1:\n                direction = -direction\n            row += direction\n\n        # Create a grid to track positions\n        rail_positions = [[] for _ in range(rails)]\n\n        # Fill each rail with the correct number of positions\n        start = 0\n        idx = [0] * rails\n        for r in range(rails):\n            rail_positions[r] = list(range(idx[r], idx[r] + rail_sizes[r]))\n            idx[r] += rail_sizes[r]\n\n        # Determine the actual position indices for each character in zigzag order\n        pos_array = []\n        row = 0\n        direction = 1\n        for _ in range(length):\n            pos_array.append(row)\n            if row == 0 or row == rails - 1:\n                direction = -direction\n            row += direction\n\n        # Create groups of characters by row\n        rail_chars = [[] for _ in range(rails)]\n        full_pos = 0\n        for r in range(rails):\n            # Count how many characters should go in this rail\n            count = 0\n            i = 0\n            while i < length and rail_chars[r] is not None:\n                if pos_array[i] == r:\n                    rail_chars[r].append(full_pos)\n                    count += 1\n                i += 1\n\n        # Reconstruct the original message\n        result = [''] * length\n        char_idx = [0] * rails\n        for i, row in enumerate(pos_array):\n            offset = i % rails if i < rails else 0\n            rail_index = char_idx[row]\n            char_idx[row] += 1\n            result[i] = encrypted_text[rail_chars[row][offset]] if rail_chars[row] else ''\n\n        return ''.join(result)\n"
+}

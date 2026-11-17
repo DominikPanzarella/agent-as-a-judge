@@ -1,0 +1,244 @@
+{
+  "task_id": "ClassEval_86",
+  "class_name": "TicTacToe",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "make_move",
+      "first": {
+        "code": "def make_move(self, row, col):\n    \"\"\"\n    Place the current player's mark at the specified position on the board and switch the mark.\n    :param row: int, the row index of the position\n    :param col: int, the column index of the position\n    :return: bool, indicating whether the move was successful or not\n    \"\"\"\n    if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]) and self.board[row][col] == ' ':\n        self.board[row][col] = self.current_player\n        self.current_player = 'O' if self.current_player == 'X' else 'X'\n        return True\n    return False",
+        "valid": true,
+        "reply": "```python\ndef make_move(self, row, col):\n    \"\"\"\n    Place the current player's mark at the specified position on the board and switch the mark.\n    :param row: int, the row index of the position\n    :param col: int, the column index of the position\n    :return: bool, indicating whether the move was successful or not\n    \"\"\"\n    if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]) and self.board[row][col] == ' ':\n        self.board[row][col] = self.current_player\n        self.current_player = 'O' if self.current_player == 'X' else 'X'\n        return True\n    return False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 548,
+        "cached_tokens": 0,
+        "completion_tokens": 915,
+        "reasoning_tokens": 758,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks that the coordinates are within the board and the cell is empty, then places the current mark and switches players; invalid or occupied positions return `False` without changing the game. This matches the documented behavior for integer row and column indices.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks that the coordinates are within the board and the cell is empty, then places the current mark and switches players; invalid or occupied positions return `False` without changing the game. This matches the documented behavior for integer row and column indices.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 804,
+            "cached_tokens": 0,
+            "completion_tokens": 257,
+            "reasoning_tokens": 189,
+            "cost": 0.0002089
+          }
+        ],
+        "prompt_tokens": 804,
+        "cached_tokens": 0,
+        "completion_tokens": 257,
+        "reasoning_tokens": 189,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def make_move(self, row, col):\n    \"\"\"\n    Place the current player's mark at the specified position on the board and switch the mark.\n    :param row: int, the row index of the position\n    :param col: int, the column index of the position\n    :return: bool, indicating whether the move was successful or not\n    \"\"\"\n    if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]) and self.board[row][col] == ' ':\n        self.board[row][col] = self.current_player\n        self.current_player = 'O' if self.current_player == 'X' else 'X'\n        return True\n    return False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "check_winner",
+      "first": {
+        "code": "def check_winner(self):\n    \"\"\"\n    Check if there is a winner on the board in rows, columns and diagonals three directions\n    :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n    \"\"\"\n    N = len(self.board)\n\n    # Check rows\n    for row in range(N):\n        mark = self.board[row][0]\n        if mark != ' ' and all(self.board[row][col] == mark for col in range(N)):\n            return mark\n\n    # Check columns\n    for col in range(N):\n        mark = self.board[0][col]\n        if mark != ' ' and all(self.board[row][col] == mark for row in range(N)):\n            return mark\n\n    # Check main diagonal\n    mark = self.board[0][0]\n    if mark != ' ' and all(self.board[i][i] == mark for i in range(N)):\n        return mark\n\n    # Check anti-diagonal\n    mark = self.board[0][N - 1]\n    if mark != ' ' and all(self.board[i][N - 1 - i] == mark for i in range(N)):\n        return mark\n\n    return None",
+        "valid": true,
+        "reply": "```python\n    def check_winner(self):\n        \"\"\"\n        Check if there is a winner on the board in rows, columns and diagonals three directions\n        :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n        \"\"\"\n        N = len(self.board)\n        \n        # Check rows\n        for row in range(N):\n            mark = self.board[row][0]\n            if mark != ' ' and all(self.board[row][col] == mark for col in range(N)):\n                return mark\n        \n        # Check columns\n        for col in range(N):\n            mark = self.board[0][col]\n            if mark != ' ' and all(self.board[row][col] == mark for row in range(N)):\n                return mark\n        \n        # Check main diagonal\n        mark = self.board[0][0]\n        if mark != ' ' and all(self.board[i][i] == mark for i in range(N)):\n            return mark\n        \n        # Check anti-diagonal\n        mark = self.board[0][N - 1]\n        if mark != ' ' and all(self.board[i][N - 1 - i] == mark for i in range(N)):\n            return mark\n        \n        return None\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 714,
+        "cached_tokens": 0,
+        "completion_tokens": 807,
+        "reasoning_tokens": 535,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The constructor creates a board with 3 rows and `N` columns, but this method assumes a square board based on the row count. For `N` other than 3 it can miss wins or raise `IndexError`; use the actual row and column dimensions (or make the constructor create an `N`\u00d7`N` board).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The constructor creates a board with 3 rows and `N` columns, but this method assumes a square board based on the row count. For `N` other than 3 it can miss wins or raise `IndexError`; use the actual row and column dimensions (or make the constructor create an `N`\u00d7`N` board).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1144,
+            "cached_tokens": 0,
+            "completion_tokens": 418,
+            "reasoning_tokens": 329,
+            "cost": 0.0003234
+          }
+        ],
+        "prompt_tokens": 1144,
+        "cached_tokens": 0,
+        "completion_tokens": 418,
+        "reasoning_tokens": 329,
+        "cost": 0.0003234
+      },
+      "revision": {
+        "code": "def check_winner(self):\n    \"\"\"\n    Check if there is a winner on the board in rows, columns and diagonals three directions\n    :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n    \"\"\"\n    num_rows = len(self.board)\n    num_cols = len(self.board[0])\n\n    # Check rows\n    for row in range(num_rows):\n        mark = self.board[row][0]\n        if mark != ' ' and all(self.board[row][col] == mark for col in range(num_cols)):\n            return mark\n\n    # Check columns\n    for col in range(num_cols):\n        mark = self.board[0][col]\n        if mark != ' ' and all(self.board[row][col] == mark for row in range(num_rows)):\n            return mark\n\n    # Check diagonals (only win if square sub-dimensions match)\n    min_dim = min(num_rows, num_cols)\n    if min_dim >= 1:\n        # Main diagonal\n        mark = self.board[0][0]\n        if mark != ' ' and all(self.board[i][i] == mark for i in range(min_dim)):\n            return mark\n\n    # Only check anti-diagonal for square boards\n    if num_rows == num_cols and num_rows >= 2:\n        mark = self.board[0][num_cols - 1]\n        if mark != ' ' and all(self.board[i][num_cols - 1 - i] == mark for i in range(num_cols)):\n            return mark\n\n    return None",
+        "valid": true,
+        "reply": "\n\n```python\n    def check_winner(self):\n        \"\"\"\n        Check if there is a winner on the board in rows, columns and diagonals three directions\n        :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n        \"\"\"\n        num_rows = len(self.board)\n        num_cols = len(self.board[0])\n        \n        # Check rows\n        for row in range(num_rows):\n            mark = self.board[row][0]\n            if mark != ' ' and all(self.board[row][col] == mark for col in range(num_cols)):\n                return mark\n        \n        # Check columns\n        for col in range(num_cols):\n            mark = self.board[0][col]\n            if mark != ' ' and all(self.board[row][col] == mark for row in range(num_rows)):\n                return mark\n        \n        # Check diagonals (only win if square sub-dimensions match)\n        min_dim = min(num_rows, num_cols)\n        if min_dim >= 1:\n            # Main diagonal\n            mark = self.board[0][0]\n            if mark != ' ' and all(self.board[i][i] == mark for i in range(min_dim)):\n                return mark\n        \n        # Only check anti-diagonal for square boards\n        if num_rows == num_cols and num_rows >= 2:\n            mark = self.board[0][num_cols - 1]\n            if mark != ' ' and all(self.board[i][num_cols - 1 - i] == mark for i in range(num_cols)):\n                return mark\n        \n        return None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1100,
+        "cached_tokens": 0,
+        "completion_tokens": 1828,
+        "reasoning_tokens": 1472,
+        "cost": 0.000567
+      },
+      "final_code": "def check_winner(self):\n    \"\"\"\n    Check if there is a winner on the board in rows, columns and diagonals three directions\n    :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n    \"\"\"\n    num_rows = len(self.board)\n    num_cols = len(self.board[0])\n\n    # Check rows\n    for row in range(num_rows):\n        mark = self.board[row][0]\n        if mark != ' ' and all(self.board[row][col] == mark for col in range(num_cols)):\n            return mark\n\n    # Check columns\n    for col in range(num_cols):\n        mark = self.board[0][col]\n        if mark != ' ' and all(self.board[row][col] == mark for row in range(num_rows)):\n            return mark\n\n    # Check diagonals (only win if square sub-dimensions match)\n    min_dim = min(num_rows, num_cols)\n    if min_dim >= 1:\n        # Main diagonal\n        mark = self.board[0][0]\n        if mark != ' ' and all(self.board[i][i] == mark for i in range(min_dim)):\n            return mark\n\n    # Only check anti-diagonal for square boards\n    if num_rows == num_cols and num_rows >= 2:\n        mark = self.board[0][num_cols - 1]\n        if mark != ' ' and all(self.board[i][num_cols - 1 - i] == mark for i in range(num_cols)):\n            return mark\n\n    return None",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "is_board_full",
+      "first": {
+        "code": "def is_board_full(self):\n    \"\"\"\n    Check if the game board is completely filled.\n    :return: bool, indicating whether the game board is full or not\n    \"\"\"\n    return all(cell != ' ' for row in self.board for cell in row)",
+        "valid": true,
+        "reply": "\n\n```python\ndef is_board_full(self):\n    \"\"\"\n    Check if the game board is completely filled.\n    :return: bool, indicating whether the game board is full or not\n    \"\"\"\n    return all(cell != ' ' for row in self.board for cell in row)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1062,
+        "cached_tokens": 0,
+        "completion_tokens": 339,
+        "reasoning_tokens": 287,
+        "cost": 0.00015705
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method checks every cell and returns `False` if any cell is empty, otherwise `True`, matching the documented behavior for the board created by the constructor.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method checks every cell and returns `False` if any cell is empty, otherwise `True`, matching the documented behavior for the board created by the constructor.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1362,
+            "cached_tokens": 0,
+            "completion_tokens": 175,
+            "reasoning_tokens": 125,
+            "cost": 0.00022370000000000002
+          }
+        ],
+        "prompt_tokens": 1362,
+        "cached_tokens": 0,
+        "completion_tokens": 175,
+        "reasoning_tokens": 125,
+        "cost": 0.00022370000000000002
+      },
+      "revision": null,
+      "final_code": "def is_board_full(self):\n    \"\"\"\n    Check if the game board is completely filled.\n    :return: bool, indicating whether the game board is full or not\n    \"\"\"\n    return all(cell != ' ' for row in self.board for cell in row)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "TicTacToeTestMakeMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestCheckWinner": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestIsBoardFull": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "TicTacToeTestMakeMove": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestCheckWinner": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestIsBoardFull": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TicTacToeTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass TicTacToe: \n    def __init__(self, N=3):\n        \"\"\"\n        Initialize a 3x3 game board with all empty spaces and current symble player, default is 'X'.\n        \"\"\"\n        self.board = [[' ' for _ in range(N)] for _ in range(3)]\n        self.current_player = 'X'\n\n    def make_move(self, row, col):\n        \"\"\"\n        Place the current player's mark at the specified position on the board and switch the mark.\n        :param row: int, the row index of the position\n        :param col: int, the column index of the position\n        :return: bool, indicating whether the move was successful or not\n        \"\"\"\n        if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]) and self.board[row][col] == ' ':\n            self.board[row][col] = self.current_player\n            self.current_player = 'O' if self.current_player == 'X' else 'X'\n            return True\n        return False\n\n    def check_winner(self):\n        \"\"\"\n        Check if there is a winner on the board in rows, columns and diagonals three directions\n        :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n        \"\"\"\n        N = len(self.board)\n\n        # Check rows\n        for row in range(N):\n            mark = self.board[row][0]\n            if mark != ' ' and all(self.board[row][col] == mark for col in range(N)):\n                return mark\n\n        # Check columns\n        for col in range(N):\n            mark = self.board[0][col]\n            if mark != ' ' and all(self.board[row][col] == mark for row in range(N)):\n                return mark\n\n        # Check main diagonal\n        mark = self.board[0][0]\n        if mark != ' ' and all(self.board[i][i] == mark for i in range(N)):\n            return mark\n\n        # Check anti-diagonal\n        mark = self.board[0][N - 1]\n        if mark != ' ' and all(self.board[i][N - 1 - i] == mark for i in range(N)):\n            return mark\n\n        return None\n\n    def is_board_full(self):\n        \"\"\"\n        Check if the game board is completely filled.\n        :return: bool, indicating whether the game board is full or not\n        \"\"\"\n        return all(cell != ' ' for row in self.board for cell in row)\n",
+  "source": "\n\nclass TicTacToe: \n    def __init__(self, N=3):\n        \"\"\"\n        Initialize a 3x3 game board with all empty spaces and current symble player, default is 'X'.\n        \"\"\"\n        self.board = [[' ' for _ in range(N)] for _ in range(3)]\n        self.current_player = 'X'\n\n    def make_move(self, row, col):\n        \"\"\"\n        Place the current player's mark at the specified position on the board and switch the mark.\n        :param row: int, the row index of the position\n        :param col: int, the column index of the position\n        :return: bool, indicating whether the move was successful or not\n        \"\"\"\n        if 0 <= row < len(self.board) and 0 <= col < len(self.board[0]) and self.board[row][col] == ' ':\n            self.board[row][col] = self.current_player\n            self.current_player = 'O' if self.current_player == 'X' else 'X'\n            return True\n        return False\n\n    def check_winner(self):\n        \"\"\"\n        Check if there is a winner on the board in rows, columns and diagonals three directions\n        :return: str or None, the mark of the winner ('X' or 'O'), or None if there is no winner yet\n        \"\"\"\n        num_rows = len(self.board)\n        num_cols = len(self.board[0])\n\n        # Check rows\n        for row in range(num_rows):\n            mark = self.board[row][0]\n            if mark != ' ' and all(self.board[row][col] == mark for col in range(num_cols)):\n                return mark\n\n        # Check columns\n        for col in range(num_cols):\n            mark = self.board[0][col]\n            if mark != ' ' and all(self.board[row][col] == mark for row in range(num_rows)):\n                return mark\n\n        # Check diagonals (only win if square sub-dimensions match)\n        min_dim = min(num_rows, num_cols)\n        if min_dim >= 1:\n            # Main diagonal\n            mark = self.board[0][0]\n            if mark != ' ' and all(self.board[i][i] == mark for i in range(min_dim)):\n                return mark\n\n        # Only check anti-diagonal for square boards\n        if num_rows == num_cols and num_rows >= 2:\n            mark = self.board[0][num_cols - 1]\n            if mark != ' ' and all(self.board[i][num_cols - 1 - i] == mark for i in range(num_cols)):\n                return mark\n\n        return None\n\n    def is_board_full(self):\n        \"\"\"\n        Check if the game board is completely filled.\n        :return: bool, indicating whether the game board is full or not\n        \"\"\"\n        return all(cell != ' ' for row in self.board for cell in row)\n"
+}

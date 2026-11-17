@@ -1,0 +1,170 @@
+{
+  "task_id": "ClassEval_5",
+  "class_name": "AutomaticGuitarSimulator",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "display",
+      "first": {
+        "code": "def display(self, key, value):\n    \"\"\"\n    Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s\n    :param key:str, chord\n    :param value:str, play tune\n    :return: str\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> context.display(\"C\", \"53231323\")\n    Normal Guitar Playing -- Chord: C, Play Tune: 53231323\n    \"\"\"\n    result = f\"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}\"\n    print(result)\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef display(self, key, value):\n    \"\"\"\n    Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s\n    :param key:str, chord\n    :param value:str, play tune\n    :return: str\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> context.display(\"C\", \"53231323\")\n    Normal Guitar Playing -- Chord: C, Play Tune: 53231323\n    \"\"\"\n    result = f\"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}\"\n    print(result)\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 585,
+        "cached_tokens": 0,
+        "completion_tokens": 509,
+        "reasoning_tokens": 256,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method formats the chord and tune in the specified layout, prints the result, and returns it as a string, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method formats the chord and tune in the specified layout, prints the result, and returns it as a string, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 770,
+            "cached_tokens": 0,
+            "completion_tokens": 69,
+            "reasoning_tokens": 25,
+            "cost": 0.0001115
+          }
+        ],
+        "prompt_tokens": 770,
+        "cached_tokens": 0,
+        "completion_tokens": 69,
+        "reasoning_tokens": 25,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def display(self, key, value):\n    \"\"\"\n    Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s\n    :param key:str, chord\n    :param value:str, play tune\n    :return: str\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> context.display(\"C\", \"53231323\")\n    Normal Guitar Playing -- Chord: C, Play Tune: 53231323\n    \"\"\"\n    result = f\"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}\"\n    print(result)\n    return result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "interpret",
+      "first": {
+        "code": "def interpret(self, display=False):\n    \"\"\"\n    Interpret the music score to be played\n    :param display:Bool, representing whether to print the interpreted score\n    :return: list of dict, The dict includes two fields, Chord and Tune, which are letters and numbers, respectively. If the input is empty or contains only whitespace, an empty list is returned.\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> play_list = context.interpret(display = False)\n    [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]\n    \"\"\"\n    if not self.play_text or not self.play_text.strip():\n        return []\n\n    pairs = self.play_text.split()\n    result = []\n\n    for pair in pairs:\n        chord = \"\"\n        tune = \"\"\n        for char in pair:\n            if not char.isdigit():\n                chord += char\n            else:\n                tune += char\n        result.append({'Chord': chord, 'Tune': tune})\n\n    if display:\n        for item in result:\n            self.display(item['Chord'], item['Tune'])\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef interpret(self, display=False):\n    \"\"\"\n    Interpret the music score to be played\n    :param display:Bool, representing whether to print the interpreted score\n    :return: list of dict, The dict includes two fields, Chord and Tune, which are letters and numbers, respectively. If the input is empty or contains only whitespace, an empty list is returned.\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> play_list = context.interpret(display = False)\n    [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]\n    \"\"\"\n    if not self.play_text or not self.play_text.strip():\n        return []\n    \n    pairs = self.play_text.split()\n    result = []\n    \n    for pair in pairs:\n        chord = \"\"\n        tune = \"\"\n        for char in pair:\n            if not char.isdigit():\n                chord += char\n            else:\n                tune += char\n        result.append({'Chord': chord, 'Tune': tune})\n    \n    if display:\n        for item in result:\n            self.display(item['Chord'], item['Tune'])\n    \n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 782,
+        "cached_tokens": 0,
+        "completion_tokens": 2482,
+        "reasoning_tokens": 1942,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method splits the score into whitespace-separated chord/tune pairs, separates each pair into non-digit chord text and digit tune text, and returns the required list; it also handles empty or whitespace-only input and optionally calls the existing `display` method. This matches the documented behavior for the stated score format.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method splits the score into whitespace-separated chord/tune pairs, separates each pair into non-digit chord text and digit tune text, and returns the required list; it also handles empty or whitespace-only input and optionally calls the existing `display` method. This matches the documented behavior for the stated score format.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1061,
+            "cached_tokens": 0,
+            "completion_tokens": 266,
+            "reasoning_tokens": 187,
+            "cost": 0.0002391
+          }
+        ],
+        "prompt_tokens": 1061,
+        "cached_tokens": 0,
+        "completion_tokens": 266,
+        "reasoning_tokens": 187,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def interpret(self, display=False):\n    \"\"\"\n    Interpret the music score to be played\n    :param display:Bool, representing whether to print the interpreted score\n    :return: list of dict, The dict includes two fields, Chord and Tune, which are letters and numbers, respectively. If the input is empty or contains only whitespace, an empty list is returned.\n    >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n    >>> play_list = context.interpret(display = False)\n    [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]\n    \"\"\"\n    if not self.play_text or not self.play_text.strip():\n        return []\n\n    pairs = self.play_text.split()\n    result = []\n\n    for pair in pairs:\n        chord = \"\"\n        tune = \"\"\n        for char in pair:\n            if not char.isdigit():\n                chord += char\n            else:\n                tune += char\n        result.append({'Chord': chord, 'Tune': tune})\n\n    if display:\n        for item in result:\n            self.display(item['Chord'], item['Tune'])\n\n    return result",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "AutomaticGuitarSimulatorTestInterpret": {
+      "status": "ok",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AutomaticGuitarSimulatorTestDisplay": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AutomaticGuitarSimulatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "AutomaticGuitarSimulatorTestInterpret": {
+      "status": "ok",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AutomaticGuitarSimulatorTestDisplay": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AutomaticGuitarSimulatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass AutomaticGuitarSimulator: \n    def __init__(self, text) -> None:\n        \"\"\"\n        Initialize the score to be played\n        :param text:str, score to be played\n        \"\"\"\n        self.play_text = text\n\n    def interpret(self, display=False):\n        \"\"\"\n        Interpret the music score to be played\n        :param display:Bool, representing whether to print the interpreted score\n        :return: list of dict, The dict includes two fields, Chord and Tune, which are letters and numbers, respectively. If the input is empty or contains only whitespace, an empty list is returned.\n        >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n        >>> play_list = context.interpret(display = False)\n        [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]\n        \"\"\"\n        if not self.play_text or not self.play_text.strip():\n            return []\n\n        pairs = self.play_text.split()\n        result = []\n\n        for pair in pairs:\n            chord = \"\"\n            tune = \"\"\n            for char in pair:\n                if not char.isdigit():\n                    chord += char\n                else:\n                    tune += char\n            result.append({'Chord': chord, 'Tune': tune})\n\n        if display:\n            for item in result:\n                self.display(item['Chord'], item['Tune'])\n\n        return result\n\n    def display(self, key, value):\n        \"\"\"\n        Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s\n        :param key:str, chord\n        :param value:str, play tune\n        :return: str\n        >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n        >>> context.display(\"C\", \"53231323\")\n        Normal Guitar Playing -- Chord: C, Play Tune: 53231323\n        \"\"\"\n        result = f\"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}\"\n        print(result)\n        return result\n",
+  "source": "\n\nclass AutomaticGuitarSimulator: \n    def __init__(self, text) -> None:\n        \"\"\"\n        Initialize the score to be played\n        :param text:str, score to be played\n        \"\"\"\n        self.play_text = text\n\n    def interpret(self, display=False):\n        \"\"\"\n        Interpret the music score to be played\n        :param display:Bool, representing whether to print the interpreted score\n        :return: list of dict, The dict includes two fields, Chord and Tune, which are letters and numbers, respectively. If the input is empty or contains only whitespace, an empty list is returned.\n        >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n        >>> play_list = context.interpret(display = False)\n        [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]\n        \"\"\"\n        if not self.play_text or not self.play_text.strip():\n            return []\n\n        pairs = self.play_text.split()\n        result = []\n\n        for pair in pairs:\n            chord = \"\"\n            tune = \"\"\n            for char in pair:\n                if not char.isdigit():\n                    chord += char\n                else:\n                    tune += char\n            result.append({'Chord': chord, 'Tune': tune})\n\n        if display:\n            for item in result:\n                self.display(item['Chord'], item['Tune'])\n\n        return result\n\n    def display(self, key, value):\n        \"\"\"\n        Print out chord and play tune with following format: Normal Guitar Playing -- Chord: %s, Play Tune: %s\n        :param key:str, chord\n        :param value:str, play tune\n        :return: str\n        >>> context = AutomaticGuitarSimulator(\"C53231323 Em43231323 F43231323 G63231323\")\n        >>> context.display(\"C\", \"53231323\")\n        Normal Guitar Playing -- Chord: C, Play Tune: 53231323\n        \"\"\"\n        result = f\"Normal Guitar Playing -- Chord: {key}, Play Tune: {value}\"\n        print(result)\n        return result\n"
+}

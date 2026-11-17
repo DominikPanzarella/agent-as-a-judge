@@ -1,0 +1,318 @@
+{
+  "task_id": "ClassEval_13",
+  "class_name": "BookManagement",
+  "setup": "C3",
+  "name": "C3-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r2",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "add_book",
+      "first": {
+        "code": "def add_book(self, title, quantity=1):\n    \"\"\"\n    Add one or several books to inventory which is sorted by book title.\n    :param title: str, the book title\n    :param quantity: int, default value is 1.\n    \"\"\"\n    if title in self.inventory:\n        self.inventory[title] += quantity\n    else:\n        self.inventory[title] = quantity",
+        "valid": true,
+        "reply": "\n\n```python\ndef add_book(self, title, quantity=1):\n    \"\"\"\n    Add one or several books to inventory which is sorted by book title.\n    :param title: str, the book title\n    :param quantity: int, default value is 1.\n    \"\"\"\n    if title in self.inventory:\n        self.inventory[title] += quantity\n    else:\n        self.inventory[title] = quantity\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 526,
+        "cached_tokens": 0,
+        "completion_tokens": 553,
+        "reasoning_tokens": 516,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method adds and accumulates quantities, but it does not keep the inventory sorted by book title as the docstring requires. It should ensure the dictionary is reordered by title after adding or updating a book.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method adds and accumulates quantities, but it does not keep the inventory sorted by book title as the docstring requires. It should ensure the dictionary is reordered by title after adding or updating a book.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 708,
+            "cached_tokens": 0,
+            "completion_tokens": 109,
+            "reasoning_tokens": 49,
+            "cost": 0.0001253
+          }
+        ],
+        "prompt_tokens": 708,
+        "cached_tokens": 0,
+        "completion_tokens": 109,
+        "reasoning_tokens": 49,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "revision": {
+        "code": "def add_book(self, title, quantity=1):\n    \"\"\"\n    Add one or several books to inventory which is sorted by book title.\n    :param title: str, the book title\n    :param quantity: int, default value is 1.\n    \"\"\"\n    if title in self.inventory:\n        self.inventory[title] += quantity\n    else:\n        self.inventory[title] = quantity\n\n    # Reorder inventory to keep it sorted by title\n    self.inventory = dict(sorted(self.inventory.items()))",
+        "valid": true,
+        "reply": "```python\ndef add_book(self, title, quantity=1):\n    \"\"\"\n    Add one or several books to inventory which is sorted by book title.\n    :param title: str, the book title\n    :param quantity: int, default value is 1.\n    \"\"\"\n    if title in self.inventory:\n        self.inventory[title] += quantity\n    else:\n        self.inventory[title] = quantity\n    \n    # Reorder inventory to keep it sorted by title\n    self.inventory = dict(sorted(self.inventory.items()))\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 700,
+        "cached_tokens": 0,
+        "completion_tokens": 687,
+        "reasoning_tokens": 636,
+        "cost": 0.000167528
+      },
+      "final_code": "def add_book(self, title, quantity=1):\n    \"\"\"\n    Add one or several books to inventory which is sorted by book title.\n    :param title: str, the book title\n    :param quantity: int, default value is 1.\n    \"\"\"\n    if title in self.inventory:\n        self.inventory[title] += quantity\n    else:\n        self.inventory[title] = quantity\n\n    # Reorder inventory to keep it sorted by title\n    self.inventory = dict(sorted(self.inventory.items()))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "remove_book",
+      "first": {
+        "code": "def remove_book(self, title, quantity):\n    \"\"\"\n    Remove one or several books from inventory which is sorted by book title.\n    Raise false while get invalid input.\n    :param title: str, the book title\n    :param quantity: int\n    \"\"\"\n    if title not in self.inventory:\n        raise KeyError(f\"Book '{title}' not found in inventory\")\n\n    if quantity < 0 or quantity > self.inventory[title]:\n        raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n\n    self.inventory[title] -= quantity\n\n    if self.inventory[title] == 0:\n        del self.inventory[title]\n\n    self.inventory = dict(sorted(self.inventory.items()))",
+        "valid": true,
+        "reply": "```python\ndef remove_book(self, title, quantity):\n    \"\"\"\n    Remove one or several books from inventory which is sorted by book title.\n    Raise false while get invalid input.\n    :param title: str, the book title\n    :param quantity: int\n    \"\"\"\n    if title not in self.inventory:\n        raise KeyError(f\"Book '{title}' not found in inventory\")\n    \n    if quantity < 0 or quantity > self.inventory[title]:\n        raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n    \n    self.inventory[title] -= quantity\n    \n    if self.inventory[title] == 0:\n        del self.inventory[title]\n    \n    self.inventory = dict(sorted(self.inventory.items()))\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 650,
+        "cached_tokens": 0,
+        "completion_tokens": 856,
+        "reasoning_tokens": 780,
+        "cost": 0.000186964
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method allows `quantity == 0`, so it succeeds without removing any books even though the docstring says to remove one or several. Reject zero as invalid (for example, check `quantity <= 0`); the other removal and sorting behavior is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method allows `quantity == 0`, so it succeeds without removing any books even though the docstring says to remove one or several. Reject zero as invalid (for example, check `quantity <= 0`); the other removal and sorting behavior is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 968,
+            "cached_tokens": 0,
+            "completion_tokens": 353,
+            "reasoning_tokens": 281,
+            "cost": 0.00027330000000000003
+          }
+        ],
+        "prompt_tokens": 968,
+        "cached_tokens": 0,
+        "completion_tokens": 353,
+        "reasoning_tokens": 281,
+        "cost": 0.00027330000000000003
+      },
+      "revision": {
+        "code": "def remove_book(self, title, quantity):\n    \"\"\"\n    Remove one or several books from inventory which is sorted by book title.\n    Raise false while get invalid input.\n    :param title: str, the book title\n    :param quantity: int\n    \"\"\"\n    if title not in self.inventory:\n        raise KeyError(f\"Book '{title}' not found in inventory\")\n\n    if quantity <= 0 or quantity > self.inventory[title]:\n        raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n\n    self.inventory[title] -= quantity\n\n    if self.inventory[title] == 0:\n        del self.inventory[title]\n\n    self.inventory = dict(sorted(self.inventory.items()))",
+        "valid": true,
+        "reply": "```python\ndef remove_book(self, title, quantity):\n    \"\"\"\n    Remove one or several books from inventory which is sorted by book title.\n    Raise false while get invalid input.\n    :param title: str, the book title\n    :param quantity: int\n    \"\"\"\n    if title not in self.inventory:\n        raise KeyError(f\"Book '{title}' not found in inventory\")\n    \n    if quantity <= 0 or quantity > self.inventory[title]:\n        raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n    \n    self.inventory[title] -= quantity\n    \n    if self.inventory[title] == 0:\n        del self.inventory[title]\n    \n    self.inventory = dict(sorted(self.inventory.items()))\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 910,
+        "cached_tokens": 640,
+        "completion_tokens": 282,
+        "reasoning_tokens": 118,
+        "cost": 0.000123388
+      },
+      "final_code": "def remove_book(self, title, quantity):\n    \"\"\"\n    Remove one or several books from inventory which is sorted by book title.\n    Raise false while get invalid input.\n    :param title: str, the book title\n    :param quantity: int\n    \"\"\"\n    if title not in self.inventory:\n        raise KeyError(f\"Book '{title}' not found in inventory\")\n\n    if quantity <= 0 or quantity > self.inventory[title]:\n        raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n\n    self.inventory[title] -= quantity\n\n    if self.inventory[title] == 0:\n        del self.inventory[title]\n\n    self.inventory = dict(sorted(self.inventory.items()))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "view_inventory",
+      "first": {
+        "code": "def view_inventory(self):\n    \"\"\"\n    Get the inventory of the Book Management.\n    :return self.inventory: dictionary, {title(str): quantity(int), ...}\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.add_book(\"book2\", 1)\n    >>> bookManagement.view_inventory()\n    {'book1': 1, 'book2': 1}\n    \"\"\"\n    return self.inventory",
+        "valid": true,
+        "reply": "```python\ndef view_inventory(self):\n    \"\"\"\n    Get the inventory of the Book Management.\n    :return self.inventory: dictionary, {title(str): quantity(int), ...}\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.add_book(\"book2\", 1)\n    >>> bookManagement.view_inventory()\n    {'book1': 1, 'book2': 1}\n    \"\"\"\n    return self.inventory\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 810,
+        "cached_tokens": 0,
+        "completion_tokens": 329,
+        "reasoning_tokens": 230,
+        "cost": 0.000126756
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`view_inventory` returns `self.inventory`, the dictionary specified by the docstring. The earlier add and remove methods maintain its title ordering, so the method is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`view_inventory` returns `self.inventory`, the dictionary specified by the docstring. The earlier add and remove methods maintain its title ordering, so the method is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1141,
+            "cached_tokens": 0,
+            "completion_tokens": 93,
+            "reasoning_tokens": 41,
+            "cost": 0.00016060000000000003
+          }
+        ],
+        "prompt_tokens": 1141,
+        "cached_tokens": 0,
+        "completion_tokens": 93,
+        "reasoning_tokens": 41,
+        "cost": 0.00016060000000000003
+      },
+      "revision": null,
+      "final_code": "def view_inventory(self):\n    \"\"\"\n    Get the inventory of the Book Management.\n    :return self.inventory: dictionary, {title(str): quantity(int), ...}\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.add_book(\"book2\", 1)\n    >>> bookManagement.view_inventory()\n    {'book1': 1, 'book2': 1}\n    \"\"\"\n    return self.inventory",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "view_book_quantity",
+      "first": {
+        "code": "def view_book_quantity(self, title):\n    \"\"\"\n    Get the quantity of a book.\n    :param title: str, the title of the book.\n    :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventroty\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.view_book_quantity(\"book3\")\n    0\n    \"\"\"\n    return self.inventory.get(title, 0)",
+        "valid": true,
+        "reply": "```python\ndef view_book_quantity(self, title):\n    \"\"\"\n    Get the quantity of a book.\n    :param title: str, the title of the book.\n    :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventroty\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.view_book_quantity(\"book3\")\n    0\n    \"\"\"\n    return self.inventory.get(title, 0)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 917,
+        "cached_tokens": 0,
+        "completion_tokens": 479,
+        "reasoning_tokens": 365,
+        "cost": 0.000158842
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`self.inventory.get(title, 0)` returns the stored quantity when the title exists and 0 when it does not, as the docstring requires. The method uses the inventory field initialized by the constructor, so it is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`self.inventory.get(title, 0)` returns the stored quantity when the title exists and 0 when it does not, as the docstring requires. The method uses the inventory field initialized by the constructor, so it is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1291,
+            "cached_tokens": 0,
+            "completion_tokens": 63,
+            "reasoning_tokens": 0,
+            "cost": 0.0001606
+          }
+        ],
+        "prompt_tokens": 1291,
+        "cached_tokens": 0,
+        "completion_tokens": 63,
+        "reasoning_tokens": 0,
+        "cost": 0.0001606
+      },
+      "revision": null,
+      "final_code": "def view_book_quantity(self, title):\n    \"\"\"\n    Get the quantity of a book.\n    :param title: str, the title of the book.\n    :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventroty\n    >>> bookManagement = BookManagement()\n    >>> bookManagement.add_book(\"book1\", 1)\n    >>> bookManagement.view_book_quantity(\"book3\")\n    0\n    \"\"\"\n    return self.inventory.get(title, 0)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "BookManagementTestAddBook": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestRemoveBook": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestViewInventory": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestViewBookQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BookManagementTestAddBook": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestRemoveBook": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestViewInventory": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestViewBookQuantity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BookManagementTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass BookManagement: \n    def __init__(self):\n        \"\"\"\n        Initialize the inventory of Book Manager.\n        \"\"\"\n        self.inventory = {}\n\n    def add_book(self, title, quantity=1):\n        \"\"\"\n        Add one or several books to inventory which is sorted by book title.\n        :param title: str, the book title\n        :param quantity: int, default value is 1.\n        \"\"\"\n        if title in self.inventory:\n            self.inventory[title] += quantity\n        else:\n            self.inventory[title] = quantity\n\n    def remove_book(self, title, quantity):\n        \"\"\"\n        Remove one or several books from inventory which is sorted by book title.\n        Raise false while get invalid input.\n        :param title: str, the book title\n        :param quantity: int\n        \"\"\"\n        if title not in self.inventory:\n            raise KeyError(f\"Book '{title}' not found in inventory\")\n\n        if quantity < 0 or quantity > self.inventory[title]:\n            raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n\n        self.inventory[title] -= quantity\n\n        if self.inventory[title] == 0:\n            del self.inventory[title]\n\n        self.inventory = dict(sorted(self.inventory.items()))\n\n    def view_inventory(self):\n        \"\"\"\n        Get the inventory of the Book Management.\n        :return self.inventory: dictionary, {title(str): quantity(int), ...}\n        >>> bookManagement = BookManagement()\n        >>> bookManagement.add_book(\"book1\", 1)\n        >>> bookManagement.add_book(\"book2\", 1)\n        >>> bookManagement.view_inventory()\n        {'book1': 1, 'book2': 1}\n        \"\"\"\n        return self.inventory\n\n    def view_book_quantity(self, title):\n        \"\"\"\n        Get the quantity of a book.\n        :param title: str, the title of the book.\n        :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventroty\n        >>> bookManagement = BookManagement()\n        >>> bookManagement.add_book(\"book1\", 1)\n        >>> bookManagement.view_book_quantity(\"book3\")\n        0\n        \"\"\"\n        return self.inventory.get(title, 0)\n",
+  "source": "\n\nclass BookManagement: \n    def __init__(self):\n        \"\"\"\n        Initialize the inventory of Book Manager.\n        \"\"\"\n        self.inventory = {}\n\n    def add_book(self, title, quantity=1):\n        \"\"\"\n        Add one or several books to inventory which is sorted by book title.\n        :param title: str, the book title\n        :param quantity: int, default value is 1.\n        \"\"\"\n        if title in self.inventory:\n            self.inventory[title] += quantity\n        else:\n            self.inventory[title] = quantity\n\n        # Reorder inventory to keep it sorted by title\n        self.inventory = dict(sorted(self.inventory.items()))\n\n    def remove_book(self, title, quantity):\n        \"\"\"\n        Remove one or several books from inventory which is sorted by book title.\n        Raise false while get invalid input.\n        :param title: str, the book title\n        :param quantity: int\n        \"\"\"\n        if title not in self.inventory:\n            raise KeyError(f\"Book '{title}' not found in inventory\")\n\n        if quantity <= 0 or quantity > self.inventory[title]:\n            raise ValueError(f\"Invalid quantity for book '{title}'. Available: {self.inventory[title]}\")\n\n        self.inventory[title] -= quantity\n\n        if self.inventory[title] == 0:\n            del self.inventory[title]\n\n        self.inventory = dict(sorted(self.inventory.items()))\n\n    def view_inventory(self):\n        \"\"\"\n        Get the inventory of the Book Management.\n        :return self.inventory: dictionary, {title(str): quantity(int), ...}\n        >>> bookManagement = BookManagement()\n        >>> bookManagement.add_book(\"book1\", 1)\n        >>> bookManagement.add_book(\"book2\", 1)\n        >>> bookManagement.view_inventory()\n        {'book1': 1, 'book2': 1}\n        \"\"\"\n        return self.inventory\n\n    def view_book_quantity(self, title):\n        \"\"\"\n        Get the quantity of a book.\n        :param title: str, the title of the book.\n        :return quantity: the quantity of this book title. return 0 when the title does not exist in self.inventroty\n        >>> bookManagement = BookManagement()\n        >>> bookManagement.add_book(\"book1\", 1)\n        >>> bookManagement.view_book_quantity(\"book3\")\n        0\n        \"\"\"\n        return self.inventory.get(title, 0)\n"
+}

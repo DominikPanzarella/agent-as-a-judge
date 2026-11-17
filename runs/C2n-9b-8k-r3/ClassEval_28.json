@@ -1,0 +1,340 @@
+{
+  "task_id": "ClassEval_28",
+  "class_name": "DatabaseProcessor",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "first": {
+        "code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "```python\ndef create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 654,
+        "cached_tokens": 0,
+        "completion_tokens": 674,
+        "reasoning_tokens": 467,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The table and column names are interpolated directly into SQL, so names containing spaces or SQL syntax can cause errors or alter the statement. Validate or safely quote these identifiers before constructing the query.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The table and column names are interpolated directly into SQL, so names containing spaces or SQL syntax can cause errors or alter the statement. Validate or safely quote these identifiers before constructing the query.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 936,
+            "cached_tokens": 0,
+            "completion_tokens": 198,
+            "reasoning_tokens": 141,
+            "cost": 0.00019260000000000002
+          }
+        ],
+        "prompt_tokens": 936,
+        "cached_tokens": 0,
+        "completion_tokens": 198,
+        "reasoning_tokens": 141,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    import re\n\n    # Validate inputs to prevent SQL injection\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name) or not allowed_pattern.match(key1) or not allowed_pattern.match(key2):\n        raise ValueError(\"Invalid table or column name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    import re\n    \n    # Validate inputs to prevent SQL injection\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name) or not allowed_pattern.match(key1) or not allowed_pattern.match(key2):\n        raise ValueError(\"Invalid table or column name\")\n    \n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 903,
+        "cached_tokens": 0,
+        "completion_tokens": 638,
+        "reasoning_tokens": 446,
+        "cost": 0.000186
+      },
+      "final_code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    import re\n\n    # Validate inputs to prevent SQL injection\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name) or not allowed_pattern.match(key1) or not allowed_pattern.match(key2):\n        raise ValueError(\"Invalid table or column name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert_into_database",
+      "first": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    import re\n\n    # Validate table name to prevent SQL injection\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate data structure\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    if len(data) > 0:\n        # Get column names from first row (exclude 'id' as it's auto-generated)\n        columns = [col for col in data[0].keys() if col != 'id']\n        columns_str = ', '.join(columns)\n        placeholders = ', '.join(['?' for _ in range(len(columns))])\n\n    if len(data) > 0:\n        # Ensure all rows have the same columns\n        for i, row in enumerate(data[1:], start=2):\n            if set(row.keys()) != set(data[0].keys()):\n                raise ValueError(f\"Row {i} has different keys than other rows\")\n\n        # Insert each row\n        for row in data:\n            values = [row[col] for col in columns]\n            cursor.execute(f'INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})', values)\n\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        import re\n\n        # Validate table name to prevent SQL injection\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        # Validate data structure\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n        \n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        \n        if len(data) > 0:\n            # Get column names from first row (exclude 'id' as it's auto-generated)\n            columns = [col for col in data[0].keys() if col != 'id']\n            columns_str = ', '.join(columns)\n            placeholders = ', '.join(['?' for _ in range(len(columns))])\n        \n        if len(data) > 0:\n            # Ensure all rows have the same columns\n            for i, row in enumerate(data[1:], start=2):\n                if set(row.keys()) != set(data[0].keys()):\n                    raise ValueError(f\"Row {i} has different keys than other rows\")\n            \n            # Insert each row\n            for row in data:\n                values = [row[col] for col in columns]\n                cursor.execute(f'INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})', values)\n        \n        conn.commit()\n        conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 947,
+        "cached_tokens": 0,
+        "completion_tokens": 2492,
+        "reasoning_tokens": 2291,
+        "cost": 0.0004685
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "Column names taken from `data` are interpolated directly into the SQL statement without validation or safe quoting, so malformed or malicious keys can cause errors or SQL injection. Validate the keys against the table\u2019s allowed columns (or safely quote identifiers); also handle rows with no insertable columns, which currently produce invalid SQL.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "Column names taken from `data` are interpolated directly into the SQL statement without validation or safe quoting, so malformed or malicious keys can cause errors or SQL injection. Validate the keys against the table\u2019s allowed columns (or safely quote identifiers); also handle rows with no insertable columns, which currently produce invalid SQL.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1417,
+            "cached_tokens": 0,
+            "completion_tokens": 329,
+            "reasoning_tokens": 247,
+            "cost": 0.00030620000000000007
+          }
+        ],
+        "prompt_tokens": 1417,
+        "cached_tokens": 0,
+        "completion_tokens": 329,
+        "reasoning_tokens": 247,
+        "cost": 0.00030620000000000007
+      },
+      "revision": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    import re\n\n    # Validate table name\n    if not table_name or not isinstance(table_name, str):\n        raise ValueError(\"Table name must be a non-empty string\")\n\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate data structure\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    if len(data) == 0:\n        return\n\n    row = data[0]\n    if not isinstance(row, dict):\n        raise ValueError(\"Each row should be a dictionary\")\n\n    # Validate column names (excluding 'id' as it's auto-generated)\n    columns = [col for col in row.keys() if col != 'id']\n    for col in columns:\n        if not allowed_pattern.match(str(col)):\n            raise ValueError(f\"Invalid column name: {col}\")\n\n    # Verify all rows have same structure\n    for i, item in enumerate(data[1:], start=2):\n        if not isinstance(item, dict):\n            raise ValueError(f\"Row {i} is not a dictionary\")\n        custom_cols = [col for col in item.keys() if col != 'id']\n        if set(custom_cols) != set(columns):\n            raise ValueError(f\"Row {i} has different columns than other rows\")\n\n    # Create DataFrame and insert using pandas to_sql for safer handling\n    df = pd.DataFrame(data)\n\n    conn = sqlite3.connect(self.database_name)\n    # Write to database without 'id' column as it will be auto-generated\n    table_columns = ', '.join(columns)\n    # Use parameterized approach via pandas\n    df[columns].to_sql(name=table_name, con=conn, if_exists='append', index=False)\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        import re\n        \n        # Validate table name\n        if not table_name or not isinstance(table_name, str):\n            raise ValueError(\"Table name must be a non-empty string\")\n            \n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n            \n        # Validate data structure\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n            \n        if len(data) == 0:\n            return\n            \n        row = data[0]\n        if not isinstance(row, dict):\n            raise ValueError(\"Each row should be a dictionary\")\n            \n        # Validate column names (excluding 'id' as it's auto-generated)\n        columns = [col for col in row.keys() if col != 'id']\n        for col in columns:\n            if not allowed_pattern.match(str(col)):\n                raise ValueError(f\"Invalid column name: {col}\")\n        \n        # Verify all rows have same structure\n        for i, item in enumerate(data[1:], start=2):\n            if not isinstance(item, dict):\n                raise ValueError(f\"Row {i} is not a dictionary\")\n            custom_cols = [col for col in item.keys() if col != 'id']\n            if set(custom_cols) != set(columns):\n                raise ValueError(f\"Row {i} has different columns than other rows\")\n        \n        # Create DataFrame and insert using pandas to_sql for safer handling\n        df = pd.DataFrame(data)\n        \n        conn = sqlite3.connect(self.database_name)\n        # Write to database without 'id' column as it will be auto-generated\n        table_columns = ', '.join(columns)\n        # Use parameterized approach via pandas\n        df[columns].to_sql(name=table_name, con=conn, if_exists='append', index=False)\n        conn.commit()\n        conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1420,
+        "cached_tokens": 0,
+        "completion_tokens": 1664,
+        "reasoning_tokens": 1327,
+        "cost": 0.0003916
+      },
+      "final_code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n            {'name': 'John', 'age': 25},\n            {'name': 'Alice', 'age': 30}\n        ])\n    \"\"\"\n    import re\n\n    # Validate table name\n    if not table_name or not isinstance(table_name, str):\n        raise ValueError(\"Table name must be a non-empty string\")\n\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate data structure\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    if len(data) == 0:\n        return\n\n    row = data[0]\n    if not isinstance(row, dict):\n        raise ValueError(\"Each row should be a dictionary\")\n\n    # Validate column names (excluding 'id' as it's auto-generated)\n    columns = [col for col in row.keys() if col != 'id']\n    for col in columns:\n        if not allowed_pattern.match(str(col)):\n            raise ValueError(f\"Invalid column name: {col}\")\n\n    # Verify all rows have same structure\n    for i, item in enumerate(data[1:], start=2):\n        if not isinstance(item, dict):\n            raise ValueError(f\"Row {i} is not a dictionary\")\n        custom_cols = [col for col in item.keys() if col != 'id']\n        if set(custom_cols) != set(columns):\n            raise ValueError(f\"Row {i} has different columns than other rows\")\n\n    # Create DataFrame and insert using pandas to_sql for safer handling\n    df = pd.DataFrame(data)\n\n    conn = sqlite3.connect(self.database_name)\n    # Write to database without 'id' column as it will be auto-generated\n    table_columns = ', '.join(columns)\n    # Use parameterized approach via pandas\n    df[columns].to_sql(name=table_name, con=conn, if_exists='append', index=False)\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "search_database",
+      "first": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    import re\n\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f\"SELECT * FROM {table_name} WHERE name = ?\", (name,))\n    rows = cursor.fetchall()\n    conn.close()\n    return rows if rows else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    import re\n\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f\"SELECT * FROM {table_name} WHERE name = ?\", (name,))\n    rows = cursor.fetchall()\n    conn.close()\n    return rows if rows else None\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1475,
+        "cached_tokens": 0,
+        "completion_tokens": 7748,
+        "reasoning_tokens": 8202,
+        "cost": 0.0013097
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method always queries a column literally named `name`, but `create_table` allows the first column to have another name via `key1`, so searching such a table raises an SQLite error. Use the configured first-column name or otherwise ensure the search column matches the table schema.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method always queries a column literally named `name`, but `create_table` allows the first column to have another name via `key1`, so searching such a table raises an SQLite error. Use the configured first-column name or otherwise ensure the search column matches the table schema.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1727,
+            "cached_tokens": 0,
+            "completion_tokens": 365,
+            "reasoning_tokens": 290,
+            "cost": 0.00035520000000000007
+          }
+        ],
+        "prompt_tokens": 1727,
+        "cached_tokens": 0,
+        "completion_tokens": 365,
+        "reasoning_tokens": 290,
+        "cost": 0.00035520000000000007
+      },
+      "revision": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for (search value for key1 column).\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    import sqlite3\n    import gc\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"SELECT * FROM ? WHERE ? = ?\", (table_name, name,))\n    rows = cursor.fetchall()\n    conn.close()\n\n    return rows if rows else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for (search value for key1 column).\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    import sqlite3\n    import gc\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"SELECT * FROM ? WHERE ? = ?\", (table_name, name,))\n    rows = cursor.fetchall()\n    conn.close()\n                                                                                                                                                                 \n    return rows if rows else None\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1742,
+        "cached_tokens": 0,
+        "completion_tokens": 692,
+        "reasoning_tokens": 476,
+        "cost": 0.000278
+      },
+      "final_code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for (search value for key1 column).\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    import sqlite3\n    import gc\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"SELECT * FROM ? WHERE ? = ?\", (table_name, name,))\n    rows = cursor.fetchall()\n    conn.close()\n\n    return rows if rows else None",
+      "passed_first": true,
+      "passed": false
+    },
+    {
+      "method_name": "delete_from_database",
+      "first": {
+        "code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    import re\n    import sqlite3\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate name parameter\n    if not isinstance(name, str):\n        raise ValueError(\"Name must be a string\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    import re\n    import sqlite3\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate name parameter\n    if not isinstance(name, str):\n        raise ValueError(\"Name must be a string\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1716,
+        "cached_tokens": 0,
+        "completion_tokens": 1349,
+        "reasoning_tokens": 1191,
+        "cost": 0.00037395
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "SQLite placeholders can bind values, not table or column names, so this query raises an error; it also has three placeholders but supplies only two values. Validate and interpolate the table and matching column identifiers, then bind `name` as the value.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "SQLite placeholders can bind values, not table or column names, so this query raises an error; it also has three placeholders but supplies only two values. Validate and interpolate the table and matching column identifiers, then bind `name` as the value.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1945,
+            "cached_tokens": 0,
+            "completion_tokens": 239,
+            "reasoning_tokens": 171,
+            "cost": 0.000314
+          }
+        ],
+        "prompt_tokens": 1945,
+        "cached_tokens": 0,
+        "completion_tokens": 239,
+        "reasoning_tokens": 171,
+        "cost": 0.000314
+      },
+      "revision": {
+        "code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    import re\n    import sqlite3\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate name parameter\n    if not isinstance(name, str):\n        raise ValueError(\"Name must be a string\")\n\n    allowed_pattern_name = allowed_pattern\n    if not allowed_pattern_name.match(name):\n        raise ValueError(\"Invalid search name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    import re\n    import sqlite3\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate name parameter\n    if not isinstance(name, str):\n        raise ValueError(\"Name must be a string\")\n    \n    allowed_pattern_name = allowed_pattern\n    if not allowed_pattern_name.match(name):\n        raise ValueError(\"Invalid search name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1974,
+        "cached_tokens": 0,
+        "completion_tokens": 830,
+        "reasoning_tokens": 583,
+        "cost": 0.0004049
+      },
+      "final_code": "def delete_from_database(self, table_name, name):\n    \"\"\"\n    Delete rows from the specified table in the database with a matching name.\n    :param table_name: str, the name of the table to delete rows from.\n    :param name: str, the name to match for deletion.\n    >>> db.delete_from_database('user', 'John')\n    \"\"\"\n    import re\n    import sqlite3\n\n    # Validate table name\n    allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n    if not allowed_pattern.match(table_name):\n        raise ValueError(\"Invalid table name\")\n\n    # Validate name parameter\n    if not isinstance(name, str):\n        raise ValueError(\"Name must be a string\")\n\n    allowed_pattern_name = allowed_pattern\n    if not allowed_pattern_name.match(name):\n        raise ValueError(\"Invalid search name\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n    conn.commit()\n    conn.close()",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''\n            CREATE TABLE IF NOT EXISTS {table_name} (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                {key1} TEXT,\n                {key2} INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        import re\n\n        # Validate table name to prevent SQL injection\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        # Validate data structure\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        if len(data) > 0:\n            # Get column names from first row (exclude 'id' as it's auto-generated)\n            columns = [col for col in data[0].keys() if col != 'id']\n            columns_str = ', '.join(columns)\n            placeholders = ', '.join(['?' for _ in range(len(columns))])\n\n        if len(data) > 0:\n            # Ensure all rows have the same columns\n            for i, row in enumerate(data[1:], start=2):\n                if set(row.keys()) != set(data[0].keys()):\n                    raise ValueError(f\"Row {i} has different keys than other rows\")\n\n            # Insert each row\n            for row in data:\n                values = [row[col] for col in columns]\n                cursor.execute(f'INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})', values)\n\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for.\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        import re\n\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f\"SELECT * FROM {table_name} WHERE name = ?\", (name,))\n        rows = cursor.fetchall()\n        conn.close()\n        return rows if rows else None\n\n    def delete_from_database(self, table_name, name):\n        \"\"\"\n        Delete rows from the specified table in the database with a matching name.\n        :param table_name: str, the name of the table to delete rows from.\n        :param name: str, the name to match for deletion.\n        >>> db.delete_from_database('user', 'John')\n        \"\"\"\n        import re\n        import sqlite3\n\n        # Validate table name\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        # Validate name parameter\n        if not isinstance(name, str):\n            raise ValueError(\"Name must be a string\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n        conn.commit()\n        conn.close()\n",
+  "source": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        import re\n\n        # Validate inputs to prevent SQL injection\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name) or not allowed_pattern.match(key1) or not allowed_pattern.match(key2):\n            raise ValueError(\"Invalid table or column name\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''\n            CREATE TABLE IF NOT EXISTS {table_name} (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                {key1} TEXT,\n                {key2} INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n        \"\"\"\n        import re\n\n        # Validate table name\n        if not table_name or not isinstance(table_name, str):\n            raise ValueError(\"Table name must be a non-empty string\")\n\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        # Validate data structure\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n\n        if len(data) == 0:\n            return\n\n        row = data[0]\n        if not isinstance(row, dict):\n            raise ValueError(\"Each row should be a dictionary\")\n\n        # Validate column names (excluding 'id' as it's auto-generated)\n        columns = [col for col in row.keys() if col != 'id']\n        for col in columns:\n            if not allowed_pattern.match(str(col)):\n                raise ValueError(f\"Invalid column name: {col}\")\n\n        # Verify all rows have same structure\n        for i, item in enumerate(data[1:], start=2):\n            if not isinstance(item, dict):\n                raise ValueError(f\"Row {i} is not a dictionary\")\n            custom_cols = [col for col in item.keys() if col != 'id']\n            if set(custom_cols) != set(columns):\n                raise ValueError(f\"Row {i} has different columns than other rows\")\n\n        # Create DataFrame and insert using pandas to_sql for safer handling\n        df = pd.DataFrame(data)\n\n        conn = sqlite3.connect(self.database_name)\n        # Write to database without 'id' column as it will be auto-generated\n        table_columns = ', '.join(columns)\n        # Use parameterized approach via pandas\n        df[columns].to_sql(name=table_name, con=conn, if_exists='append', index=False)\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for (search value for key1 column).\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        import sqlite3\n        import gc\n\n        # Validate table name\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(\"SELECT * FROM ? WHERE ? = ?\", (table_name, name,))\n        rows = cursor.fetchall()\n        conn.close()\n\n        return rows if rows else None\n\n    def delete_from_database(self, table_name, name):\n        \"\"\"\n        Delete rows from the specified table in the database with a matching name.\n        :param table_name: str, the name of the table to delete rows from.\n        :param name: str, the name to match for deletion.\n        >>> db.delete_from_database('user', 'John')\n        \"\"\"\n        import re\n        import sqlite3\n\n        # Validate table name\n        allowed_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*$')\n        if not allowed_pattern.match(table_name):\n            raise ValueError(\"Invalid table name\")\n\n        # Validate name parameter\n        if not isinstance(name, str):\n            raise ValueError(\"Name must be a string\")\n\n        allowed_pattern_name = allowed_pattern\n        if not allowed_pattern_name.match(name):\n            raise ValueError(\"Invalid search name\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(\"DELETE FROM ? WHERE ? = ?\", (table_name, name))\n        conn.commit()\n        conn.close()\n"
+}

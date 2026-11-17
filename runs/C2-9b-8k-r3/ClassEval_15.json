@@ -1,0 +1,249 @@
+{
+  "task_id": "ClassEval_15",
+  "class_name": "BoyerMooreSearch",
+  "setup": "C2",
+  "name": "C2-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "match_in_pattern",
+      "first": {
+        "code": "def match_in_pattern(self, char):\n    \"\"\"\n    Finds the rightmost occurrence of a character in the pattern.\n    :param char: The character to be searched for, str.\n    :return: The index of the rightmost occurrence of the character in the pattern, int.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.match_in_pattern(\"A\")\n    0\n\n    \"\"\"\n    for i in range(len(self.pattern) - 1, -1, -1):\n        if self.pattern[i] == char:\n            return i\n    return -1",
+        "valid": true,
+        "reply": "\n\n```python\n    def match_in_pattern(self, char):\n        \"\"\"\n        Finds the rightmost occurrence of a character in the pattern.\n        :param char: The character to be searched for, str.\n        :return: The index of the rightmost occurrence of the character in the pattern, int.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n        >>> boyerMooreSearch.match_in_pattern(\"A\")\n        0\n\n        \"\"\"\n        for i in range(len(self.pattern) - 1, -1, -1):\n            if self.pattern[i] == char:\n                return i\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 572,
+        "cached_tokens": 0,
+        "completion_tokens": 616,
+        "reasoning_tokens": 450,
+        "cost": 0.0001496
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method scans the pattern from right to left and returns the first matching index, which is the rightmost occurrence; it returns -1 when the character is absent.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method scans the pattern from right to left and returns the first matching index, which is the rightmost occurrence; it returns -1 when the character is absent.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 811,
+            "cached_tokens": 0,
+            "completion_tokens": 104,
+            "reasoning_tokens": 53,
+            "cost": 0.0001331
+          }
+        ],
+        "prompt_tokens": 811,
+        "cached_tokens": 0,
+        "completion_tokens": 104,
+        "reasoning_tokens": 53,
+        "cost": 0.0001331
+      },
+      "revision": null,
+      "final_code": "def match_in_pattern(self, char):\n    \"\"\"\n    Finds the rightmost occurrence of a character in the pattern.\n    :param char: The character to be searched for, str.\n    :return: The index of the rightmost occurrence of the character in the pattern, int.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.match_in_pattern(\"A\")\n    0\n\n    \"\"\"\n    for i in range(len(self.pattern) - 1, -1, -1):\n        if self.pattern[i] == char:\n            return i\n    return -1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "mismatch_in_text",
+      "first": {
+        "code": "def mismatch_in_text(self, currentPos):\n    \"\"\"\n    Determines the position of the first dismatch between the pattern and the text.\n    :param currentPos: The current position in the text, int.\n    :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n    >>> boyerMooreSearch.mismatch_in_text(0)\n    2\n\n    \"\"\"\n    for i in range(self.patLen - 1, -1, -1):\n        if self.pattern[i] != self.text[currentPos + i]:\n            return i\n    return -1",
+        "valid": true,
+        "reply": "\n\n```python\ndef mismatch_in_text(self, currentPos):\n    \"\"\"\n    Determines the position of the first dismatch between the pattern and the text.\n    :param currentPos: The current position in the text, int.\n    :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n    >>> boyerMooreSearch.mismatch_in_text(0)\n    2\n\n    \"\"\"\n    for i in range(self.patLen - 1, -1, -1):\n        if self.pattern[i] != self.text[currentPos + i]:\n            return i\n    return -1\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 728,
+        "cached_tokens": 0,
+        "completion_tokens": 1123,
+        "reasoning_tokens": 884,
+        "cost": 0.00024125
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "It raises `IndexError` when `currentPos + patLen` exceeds the text length, even though the docstring does not restrict `currentPos` to a position where the whole pattern fits. Check the bounds first and return an appropriate result (or explicitly document and enforce that precondition).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "It raises `IndexError` when `currentPos + patLen` exceeds the text length, even though the docstring does not restrict `currentPos` to a position where the whole pattern fits. Check the bounds first and return an appropriate result (or explicitly document and enforce that precondition).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 972,
+            "cached_tokens": 0,
+            "completion_tokens": 400,
+            "reasoning_tokens": 321,
+            "cost": 0.0002972
+          }
+        ],
+        "prompt_tokens": 972,
+        "cached_tokens": 0,
+        "completion_tokens": 400,
+        "reasoning_tokens": 321,
+        "cost": 0.0002972
+      },
+      "revision": {
+        "code": "def mismatch_in_text(self, currentPos):\n    \"\"\"\n    Determines the position of the first dismatch between the pattern and the text.\n    :param currentPos: The current position in the text, int.\n    :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n    >>> boyerMooreSearch.mismatch_in_text(0)\n    2\n\n    \"\"\"\n    if currentPos + self.patLen > self.textLen:\n        return -1\n\n    for i in range(self.patLen - 1, -1, -1):\n        if self.pattern[i] != self.text[currentPos + i]:\n            return i\n    return -1",
+        "valid": true,
+        "reply": "```python\ndef mismatch_in_text(self, currentPos):\n    \"\"\"\n    Determines the position of the first dismatch between the pattern and the text.\n    :param currentPos: The current position in the text, int.\n    :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n    >>> boyerMooreSearch.mismatch_in_text(0)\n    2\n\n    \"\"\"\n    if currentPos + self.patLen > self.textLen:\n        return -1\n    \n    for i in range(self.patLen - 1, -1, -1):\n        if self.pattern[i] != self.text[currentPos + i]:\n            return i\n    return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 991,
+        "cached_tokens": 0,
+        "completion_tokens": 527,
+        "reasoning_tokens": 347,
+        "cost": 0.000127214
+      },
+      "final_code": "def mismatch_in_text(self, currentPos):\n    \"\"\"\n    Determines the position of the first dismatch between the pattern and the text.\n    :param currentPos: The current position in the text, int.\n    :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n    >>> boyerMooreSearch.mismatch_in_text(0)\n    2\n\n    \"\"\"\n    if currentPos + self.patLen > self.textLen:\n        return -1\n\n    for i in range(self.patLen - 1, -1, -1):\n        if self.pattern[i] != self.text[currentPos + i]:\n            return i\n    return -1",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "bad_character_heuristic",
+      "first": {
+        "code": "def bad_character_heuristic(self):\n    \"\"\"\n    Finds all occurrences of the pattern in the text.\n    :return: A list of all positions of the pattern in the text, list.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.bad_character_heuristic()\n    [0, 3]\n\n    \"\"\"\n    # Build bad character table\n    bad_char_table = {}\n    for i, char in enumerate(self.pattern):\n        bad_char_table[char] = i\n\n    matches = []\n    i = 0\n    while i <= self.textLen - self.patLen:\n        # Check for match starting at position i\n        j = 0\n        while j < self.patLen:\n            if self.pattern[j] != self.text[i + j]:\n                break\n            j += 1\n\n        if j == self.patLen:\n            matches.append(i)\n            i += j\n        elif j < self.patLen:\n            # Mismatch found at position j in pattern\n            mismatch_char = self.text[i + j]\n            shift = self.patLen\n\n            if mismatch_char in bad_char_table:\n                last_position = bad_char_table[mismatch_char]\n                shift = j - last_position\n                if shift < 0:\n                    shift = abs(shift)\n\n            i += shift\n\n    return matches",
+        "valid": true,
+        "reply": "```python\ndef bad_character_heuristic(self):\n    \"\"\"\n    Finds all occurrences of the pattern in the text.\n    :return: A list of all positions of the pattern in the text, list.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.bad_character_heuristic()\n    [0, 3]\n    \n    \"\"\"\n    # Build bad character table\n    bad_char_table = {}\n    for i, char in enumerate(self.pattern):\n        bad_char_table[char] = i\n    \n    matches = []\n    i = 0\n    while i <= self.textLen - self.patLen:\n        # Check for match starting at position i\n        j = 0\n        while j < self.patLen:\n            if self.pattern[j] != self.text[i + j]:\n                break\n            j += 1\n        \n        if j == self.patLen:\n            matches.append(i)\n            i += j\n        elif j < self.patLen:\n            # Mismatch found at position j in pattern\n            mismatch_char = self.text[i + j]\n            shift = self.patLen\n            \n            if mismatch_char in bad_char_table:\n                last_position = bad_char_table[mismatch_char]\n                shift = j - last_position\n                if shift < 0:\n                    shift = abs(shift)\n            \n            i += shift\n    \n    return matches\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 904,
+        "cached_tokens": 0,
+        "completion_tokens": 1741,
+        "reasoning_tokens": 1646,
+        "cost": 0.000249634
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "It can skip valid occurrences: after a match it advances by the full pattern length, so for text `\"AAA\"` and pattern `\"AA\"` it returns `[0]` instead of `[0, 1]`. Its mismatch shift also uses the absolute difference from the pattern\u2019s rightmost occurrence, which can skip matches; use a shift that accounts for the rightmost occurrence strictly before the mismatch (and is at least 1), and preserve overlapping matches.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "It can skip valid occurrences: after a match it advances by the full pattern length, so for text `\"AAA\"` and pattern `\"AA\"` it returns `[0]` instead of `[0, 1]`. Its mismatch shift also uses the absolute difference from the pattern\u2019s rightmost occurrence, which can skip matches; use a shift that accounts for the rightmost occurrence strictly before the mismatch (and is at least 1), and preserve overlapping matches.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1285,
+            "cached_tokens": 0,
+            "completion_tokens": 515,
+            "reasoning_tokens": 401,
+            "cost": 0.000386
+          }
+        ],
+        "prompt_tokens": 1285,
+        "cached_tokens": 0,
+        "completion_tokens": 515,
+        "reasoning_tokens": 401,
+        "cost": 0.000386
+      },
+      "revision": {
+        "code": "def bad_character_heuristic(self):\n    \"\"\"\n    Finds all occurrences of the pattern in the text.\n    :return: A list of all positions of the pattern in the text, list.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.bad_character_heuristic()\n    [0, 3]\n\n    \"\"\"\n    # Build bad character table with RIGHTMOST occurrence index\n    bad_char_table = {}\n    for i, char in enumerate(self.pattern):\n        bad_char_table[char] = i\n\n    matches = []\n    i = 0\n    while i <= self.textLen - self.patLen:\n        # Try to match pattern at current position i\n        match_start = i\n        m = 0\n        while m < self.patLen:\n            if self.pattern[m] != self.text[match_start + m]:\n                break\n            m += 1\n\n        if m == self.patLen:\n            # Full match found\n            matches.append(match_start)\n            i += 1  # Allow overlapping matches\n        else:\n            # Mismatch at position m in pattern (text[match_start+m])\n            mismatch_pos_in_text = match_start + m\n            mismatch_char = self.text[mismatch_pos_in_text]\n\n            shift = self.patLen\n\n            if mismatch_char in bad_char_table:\n                last_occurrence = bad_char_table[mismatch_char]\n                # Calculate shift: we want last occurrence to align with mismatch\n                # Shift = mismatch_position_in_text - last_occurrence_of_char_in_pattern\n                shift = mismatch_pos_in_text - last_occurrence\n\n                # Ensure shift is positive (at least 1) to avoid moving backward\n                if shift <= 0:\n                    shift = 1\n\n            i += shift\n\n    return matches",
+        "valid": true,
+        "reply": "```python\ndef bad_character_heuristic(self):\n    \"\"\"\n    Finds all occurrences of the pattern in the text.\n    :return: A list of all positions of the pattern in the text, list.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.bad_character_heuristic()\n    [0, 3]\n    \n    \"\"\"\n    # Build bad character table with RIGHTMOST occurrence index\n    bad_char_table = {}\n    for i, char in enumerate(self.pattern):\n        bad_char_table[char] = i\n    \n    matches = []\n    i = 0\n    while i <= self.textLen - self.patLen:\n        # Try to match pattern at current position i\n        match_start = i\n        m = 0\n        while m < self.patLen:\n            if self.pattern[m] != self.text[match_start + m]:\n                break\n            m += 1\n        \n        if m == self.patLen:\n            # Full match found\n            matches.append(match_start)\n            i += 1  # Allow overlapping matches\n        else:\n            # Mismatch at position m in pattern (text[match_start+m])\n            mismatch_pos_in_text = match_start + m\n            mismatch_char = self.text[mismatch_pos_in_text]\n            \n            shift = self.patLen\n            \n            if mismatch_char in bad_char_table:\n                last_occurrence = bad_char_table[mismatch_char]\n                # Calculate shift: we want last occurrence to align with mismatch\n                # Shift = mismatch_position_in_text - last_occurrence_of_char_in_pattern\n                shift = mismatch_pos_in_text - last_occurrence\n                \n                # Ensure shift is positive (at least 1) to avoid moving backward\n                if shift <= 0:\n                    shift = 1\n            \n            i += shift\n    \n    return matches\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1350,
+        "cached_tokens": 0,
+        "completion_tokens": 1222,
+        "reasoning_tokens": 954,
+        "cost": 0.000226732
+      },
+      "final_code": "def bad_character_heuristic(self):\n    \"\"\"\n    Finds all occurrences of the pattern in the text.\n    :return: A list of all positions of the pattern in the text, list.\n    >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n    >>> boyerMooreSearch.bad_character_heuristic()\n    [0, 3]\n\n    \"\"\"\n    # Build bad character table with RIGHTMOST occurrence index\n    bad_char_table = {}\n    for i, char in enumerate(self.pattern):\n        bad_char_table[char] = i\n\n    matches = []\n    i = 0\n    while i <= self.textLen - self.patLen:\n        # Try to match pattern at current position i\n        match_start = i\n        m = 0\n        while m < self.patLen:\n            if self.pattern[m] != self.text[match_start + m]:\n                break\n            m += 1\n\n        if m == self.patLen:\n            # Full match found\n            matches.append(match_start)\n            i += 1  # Allow overlapping matches\n        else:\n            # Mismatch at position m in pattern (text[match_start+m])\n            mismatch_pos_in_text = match_start + m\n            mismatch_char = self.text[mismatch_pos_in_text]\n\n            shift = self.patLen\n\n            if mismatch_char in bad_char_table:\n                last_occurrence = bad_char_table[mismatch_char]\n                # Calculate shift: we want last occurrence to align with mismatch\n                # Shift = mismatch_position_in_text - last_occurrence_of_char_in_pattern\n                shift = mismatch_pos_in_text - last_occurrence\n\n                # Ensure shift is positive (at least 1) to avoid moving backward\n                if shift <= 0:\n                    shift = 1\n\n            i += shift\n\n    return matches",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "BoyerMooreSearchTestMatchInPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BoyerMooreSearchTestMismatchInText": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BoyerMooreSearchTestBadCharacterHeuristic": {
+      "status": "timeout",
+      "passed": false
+    },
+    "BoyerMooreSearchTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BoyerMooreSearchTestMatchInPattern": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BoyerMooreSearchTestMismatchInText": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "BoyerMooreSearchTestBadCharacterHeuristic": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "BoyerMooreSearchTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass BoyerMooreSearch: \n    def __init__(self, text, pattern):\n        \"\"\"\n        Initializes the BoyerMooreSearch class with the given text and pattern.\n        :param text: The text to be searched, str.\n        :param pattern: The pattern to be searched for, str.\n        \"\"\"\n        self.text, self.pattern = text, pattern\n        self.textLen, self.patLen = len(text), len(pattern)\n\n    def match_in_pattern(self, char):\n        \"\"\"\n        Finds the rightmost occurrence of a character in the pattern.\n        :param char: The character to be searched for, str.\n        :return: The index of the rightmost occurrence of the character in the pattern, int.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n        >>> boyerMooreSearch.match_in_pattern(\"A\")\n        0\n\n        \"\"\"\n        for i in range(len(self.pattern) - 1, -1, -1):\n            if self.pattern[i] == char:\n                return i\n        return -1\n\n    def mismatch_in_text(self, currentPos):\n        \"\"\"\n        Determines the position of the first dismatch between the pattern and the text.\n        :param currentPos: The current position in the text, int.\n        :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n        >>> boyerMooreSearch.mismatch_in_text(0)\n        2\n\n        \"\"\"\n        for i in range(self.patLen - 1, -1, -1):\n            if self.pattern[i] != self.text[currentPos + i]:\n                return i\n        return -1\n\n    def bad_character_heuristic(self):\n        \"\"\"\n        Finds all occurrences of the pattern in the text.\n        :return: A list of all positions of the pattern in the text, list.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n        >>> boyerMooreSearch.bad_character_heuristic()\n        [0, 3]\n\n        \"\"\"\n        # Build bad character table\n        bad_char_table = {}\n        for i, char in enumerate(self.pattern):\n            bad_char_table[char] = i\n\n        matches = []\n        i = 0\n        while i <= self.textLen - self.patLen:\n            # Check for match starting at position i\n            j = 0\n            while j < self.patLen:\n                if self.pattern[j] != self.text[i + j]:\n                    break\n                j += 1\n\n            if j == self.patLen:\n                matches.append(i)\n                i += j\n            elif j < self.patLen:\n                # Mismatch found at position j in pattern\n                mismatch_char = self.text[i + j]\n                shift = self.patLen\n\n                if mismatch_char in bad_char_table:\n                    last_position = bad_char_table[mismatch_char]\n                    shift = j - last_position\n                    if shift < 0:\n                        shift = abs(shift)\n\n                i += shift\n\n        return matches\n",
+  "source": "\n\nclass BoyerMooreSearch: \n    def __init__(self, text, pattern):\n        \"\"\"\n        Initializes the BoyerMooreSearch class with the given text and pattern.\n        :param text: The text to be searched, str.\n        :param pattern: The pattern to be searched for, str.\n        \"\"\"\n        self.text, self.pattern = text, pattern\n        self.textLen, self.patLen = len(text), len(pattern)\n\n    def match_in_pattern(self, char):\n        \"\"\"\n        Finds the rightmost occurrence of a character in the pattern.\n        :param char: The character to be searched for, str.\n        :return: The index of the rightmost occurrence of the character in the pattern, int.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n        >>> boyerMooreSearch.match_in_pattern(\"A\")\n        0\n\n        \"\"\"\n        for i in range(len(self.pattern) - 1, -1, -1):\n            if self.pattern[i] == char:\n                return i\n        return -1\n\n    def mismatch_in_text(self, currentPos):\n        \"\"\"\n        Determines the position of the first dismatch between the pattern and the text.\n        :param currentPos: The current position in the text, int.\n        :return: The position of the first dismatch between the pattern and the text, int, otherwise -1.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"ABC\")\n        >>> boyerMooreSearch.mismatch_in_text(0)\n        2\n\n        \"\"\"\n        if currentPos + self.patLen > self.textLen:\n            return -1\n\n        for i in range(self.patLen - 1, -1, -1):\n            if self.pattern[i] != self.text[currentPos + i]:\n                return i\n        return -1\n\n    def bad_character_heuristic(self):\n        \"\"\"\n        Finds all occurrences of the pattern in the text.\n        :return: A list of all positions of the pattern in the text, list.\n        >>> boyerMooreSearch = BoyerMooreSearch(\"ABAABA\", \"AB\")\n        >>> boyerMooreSearch.bad_character_heuristic()\n        [0, 3]\n\n        \"\"\"\n        # Build bad character table with RIGHTMOST occurrence index\n        bad_char_table = {}\n        for i, char in enumerate(self.pattern):\n            bad_char_table[char] = i\n\n        matches = []\n        i = 0\n        while i <= self.textLen - self.patLen:\n            # Try to match pattern at current position i\n            match_start = i\n            m = 0\n            while m < self.patLen:\n                if self.pattern[m] != self.text[match_start + m]:\n                    break\n                m += 1\n\n            if m == self.patLen:\n                # Full match found\n                matches.append(match_start)\n                i += 1  # Allow overlapping matches\n            else:\n                # Mismatch at position m in pattern (text[match_start+m])\n                mismatch_pos_in_text = match_start + m\n                mismatch_char = self.text[mismatch_pos_in_text]\n\n                shift = self.patLen\n\n                if mismatch_char in bad_char_table:\n                    last_occurrence = bad_char_table[mismatch_char]\n                    # Calculate shift: we want last occurrence to align with mismatch\n                    # Shift = mismatch_position_in_text - last_occurrence_of_char_in_pattern\n                    shift = mismatch_pos_in_text - last_occurrence\n\n                    # Ensure shift is positive (at least 1) to avoid moving backward\n                    if shift <= 0:\n                        shift = 1\n\n                i += shift\n\n        return matches\n"
+}

@@ -1,0 +1,279 @@
+{
+  "task_id": "ClassEval_93",
+  "class_name": "VectorUtil",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "similarity",
+      "first": {
+        "code": "@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    return np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    return np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 903,
+        "cached_tokens": 0,
+        "completion_tokens": 821,
+        "reasoning_tokens": 488,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly computes cosine similarity for nonzero vectors of matching dimensions, as shown by the example. It does not handle zero vectors, for which the denominator is zero and the result is NaN or a warning; the docstring does not specify behavior for that case.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly computes cosine similarity for nonzero vectors of matching dimensions, as shown by the example. It does not handle zero vectors, for which the denominator is zero and the result is NaN or a warning; the docstring does not specify behavior for that case.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1134,
+            "cached_tokens": 1131,
+            "completion_tokens": 70,
+            "reasoning_tokens": 0,
+            "cost": 4.661e-05
+          }
+        ],
+        "prompt_tokens": 1134,
+        "cached_tokens": 1131,
+        "completion_tokens": 70,
+        "reasoning_tokens": 0,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef similarity(vector_1, vector_2):\n    \"\"\"\n    Compute the cosine similarity between one vector and another vector.\n    :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n    :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n    >>> vector_1 = np.array([1, 1])\n    >>> vector_2 = np.array([1, 0])\n    >>> VectorUtil.similarity(vector_1, vector_2)\n    0.7071067811865475\n    \"\"\"\n    return np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "cosine_similarities",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1122,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 8436,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "n_similarity",
+      "first": {
+        "code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n    0.9897287473881233\n    \"\"\"\n    similarities = []\n    for v1 in vector_list_1:\n        for v2 in vector_list_2:\n            sim = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))\n            similarities.append(sim)\n    return np.array([np.mean(similarities)])",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n    0.9897287473881233\n    \"\"\"\n    similarities = []\n    for v1 in vector_list_1:\n        for v2 in vector_list_2:\n            sim = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))\n            similarities.append(sim)\n    return np.array([np.mean(similarities)])\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1119,
+        "cached_tokens": 0,
+        "completion_tokens": 825,
+        "reasoning_tokens": 565,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "This averages every pairwise cosine similarity, but similarity between two sets should be computed from their aggregate vectors (as in `gensim.matutils`), so it does not produce the documented example\u2019s result. Compute the cosine similarity between the normalized mean vectors of the two lists, and return that scalar rather than a one-element array.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "This averages every pairwise cosine similarity, but similarity between two sets should be computed from their aggregate vectors (as in `gensim.matutils`), so it does not produce the documented example\u2019s result. Compute the cosine similarity between the normalized mean vectors of the two lists, and return that scalar rather than a one-element array.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1444,
+            "cached_tokens": 0,
+            "completion_tokens": 510,
+            "reasoning_tokens": 425,
+            "cost": 0.00039939999999999995
+          }
+        ],
+        "prompt_tokens": 1444,
+        "cached_tokens": 0,
+        "completion_tokens": 510,
+        "reasoning_tokens": 425,
+        "cost": 0.00039939999999999995
+      },
+      "revision": {
+        "code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n    0.9897287473881233\n    \"\"\"\n    avg_v1 = np.mean(vector_list_1, axis=0)\n    avg_v2 = np.mean(vector_list_2, axis=0)\n    return np.dot(avg_v1, avg_v2) / (np.linalg.norm(avg_v1) * np.linalg.norm(avg_v2))",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n    0.9897287473881233\n    \"\"\"\n    avg_v1 = np.mean(vector_list_1, axis=0)\n    avg_v2 = np.mean(vector_list_2, axis=0)\n    return np.dot(avg_v1, avg_v2) / (np.linalg.norm(avg_v1) * np.linalg.norm(avg_v2))\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1481,
+        "cached_tokens": 0,
+        "completion_tokens": 5967,
+        "reasoning_tokens": 5715,
+        "cost": 0.00163985
+      },
+      "final_code": "@staticmethod\ndef n_similarity(vector_list_1, vector_list_2):\n    \"\"\"\n    Compute cosine similarity between two sets of vectors.\n    :param vector_list_1: list of numpy vector\n    :param vector_list_2: list of numpy vector\n    :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n    >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n    >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n    >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n    0.9897287473881233\n    \"\"\"\n    avg_v1 = np.mean(vector_list_1, axis=0)\n    avg_v2 = np.mean(vector_list_2, axis=0)\n    return np.dot(avg_v1, avg_v2) / (np.linalg.norm(avg_v1) * np.linalg.norm(avg_v2))",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "compute_idf_weight_dict",
+      "first": {
+        "code": "@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = np.log((total_num + 1) / (count + 1))\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = np.log((total_num + 1) / (count + 1))\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1367,
+        "cached_tokens": 0,
+        "completion_tokens": 663,
+        "reasoning_tokens": 464,
+        "cost": 0.00030245
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method computes `log((total_num + 1) / (count + 1))` for each entry and returns the results in a dictionary, matching the documented formula and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method computes `log((total_num + 1) / (count + 1))` for each entry and returns the results in a dictionary, matching the documented formula and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1698,
+            "cached_tokens": 0,
+            "completion_tokens": 133,
+            "reasoning_tokens": 77,
+            "cost": 0.00023630000000000002
+          }
+        ],
+        "prompt_tokens": 1698,
+        "cached_tokens": 0,
+        "completion_tokens": 133,
+        "reasoning_tokens": 77,
+        "cost": 0.00023630000000000002
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef compute_idf_weight_dict(total_num, number_dict):\n    \"\"\"\n    Calculate log(total_num+1/count+1) for each count in number_dict\n    :param total_num: int\n    :param number_dict: dict\n    :return: dict\n    >>> num_dict = {'key1':0.1, 'key2':0.5}\n    >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n    {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n    \"\"\"\n    result = {}\n    for key, count in number_dict.items():\n        result[key] = np.log((total_num + 1) / (count + 1))\n    return result",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "VectorUtilTestSimilarity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "VectorUtilTestCosineSimilarities": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "VectorUtilTestNSimilarity": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "VectorUtilTestComputeIdfWeightDict": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "VectorUtilTestSimilarity": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "passed": false
+    },
+    "VectorUtilTestCosineSimilarities": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "VectorUtilTestNSimilarity": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTestComputeIdfWeightDict": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "VectorUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "import numpy as np\nfrom gensim import matutils\nfrom numpy import dot, array\n\nclass VectorUtil:\n\n    @staticmethod\n    def similarity(vector_1, vector_2):\n        \"\"\"\n        Compute the cosine similarity between one vector and another vector.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n        >>> vector_1 = np.array([1, 1])\n        >>> vector_2 = np.array([1, 0])\n        >>> VectorUtil.similarity(vector_1, vector_2)\n        0.7071067811865475\n        \"\"\"\n        return np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))\n\n    @staticmethod\n    def cosine_similarities(vector_1, vectors_all):\n        return None\n\n    @staticmethod\n    def n_similarity(vector_list_1, vector_list_2):\n        \"\"\"\n        Compute cosine similarity between two sets of vectors.\n        :param vector_list_1: list of numpy vector\n        :param vector_list_2: list of numpy vector\n        :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n        >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n        >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n        >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n        0.9897287473881233\n        \"\"\"\n        similarities = []\n        for v1 in vector_list_1:\n            for v2 in vector_list_2:\n                sim = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))\n                similarities.append(sim)\n        return np.array([np.mean(similarities)])\n\n    @staticmethod\n    def compute_idf_weight_dict(total_num, number_dict):\n        \"\"\"\n        Calculate log(total_num+1/count+1) for each count in number_dict\n        :param total_num: int\n        :param number_dict: dict\n        :return: dict\n        >>> num_dict = {'key1':0.1, 'key2':0.5}\n        >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n        {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n        \"\"\"\n        result = {}\n        for key, count in number_dict.items():\n            result[key] = np.log((total_num + 1) / (count + 1))\n        return result\n",
+  "source": "import numpy as np\nfrom gensim import matutils\nfrom numpy import dot, array\n\nclass VectorUtil:\n\n    @staticmethod\n    def similarity(vector_1, vector_2):\n        \"\"\"\n        Compute the cosine similarity between one vector and another vector.\n        :param vector_1: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :param vector_2: numpy.ndarray, Vector from which similarities are to be computed, expected shape (dim,).\n        :return: numpy.ndarray, Contains cosine distance between `vector_1` and `vector_2`\n        >>> vector_1 = np.array([1, 1])\n        >>> vector_2 = np.array([1, 0])\n        >>> VectorUtil.similarity(vector_1, vector_2)\n        0.7071067811865475\n        \"\"\"\n        return np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))\n\n    @staticmethod\n    def cosine_similarities(vector_1, vectors_all):\n        return None\n\n    @staticmethod\n    def n_similarity(vector_list_1, vector_list_2):\n        \"\"\"\n        Compute cosine similarity between two sets of vectors.\n        :param vector_list_1: list of numpy vector\n        :param vector_list_2: list of numpy vector\n        :return: numpy.ndarray, Similarities between vector_list_1 and vector_list_2.\n        >>> vector_list1 = [np.array([1, 2, 3]), np.array([4, 5, 6])]\n        >>> vector_list2 = [np.array([7, 8, 9]), np.array([10, 11, 12])]\n        >>> VectorUtil.n_similarity(vector_list1, vector_list_2)\n        0.9897287473881233\n        \"\"\"\n        avg_v1 = np.mean(vector_list_1, axis=0)\n        avg_v2 = np.mean(vector_list_2, axis=0)\n        return np.dot(avg_v1, avg_v2) / (np.linalg.norm(avg_v1) * np.linalg.norm(avg_v2))\n\n    @staticmethod\n    def compute_idf_weight_dict(total_num, number_dict):\n        \"\"\"\n        Calculate log(total_num+1/count+1) for each count in number_dict\n        :param total_num: int\n        :param number_dict: dict\n        :return: dict\n        >>> num_dict = {'key1':0.1, 'key2':0.5}\n        >>> VectorUtil.compute_idf_weight_dict(2, num_dict)\n        {'key1': 1.0033021088637848, 'key2': 0.6931471805599453}\n        \"\"\"\n        result = {}\n        for key, count in number_dict.items():\n            result[key] = np.log((total_num + 1) / (count + 1))\n        return result\n"
+}

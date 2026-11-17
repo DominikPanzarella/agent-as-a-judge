@@ -1,0 +1,391 @@
+{
+  "task_id": "ClassEval_56",
+  "class_name": "MetricsCalculator",
+  "setup": "C2",
+  "name": "C2-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "update",
+      "first": {
+        "code": "def update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    for pred, true_val in zip(predicted_labels, true_labels):\n        if pred == 1 and true_val == 1:\n            self.true_positives += 1\n        elif pred == 1 and true_val == 0:\n            self.false_positives += 1\n        elif pred == 0 and true_val == 1:\n            self.false_negatives += 1\n        elif pred == 0 and true_val == 0:\n            self.true_negatives += 1",
+        "valid": true,
+        "reply": "```python\ndef update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    for pred, true_val in zip(predicted_labels, true_labels):\n        if pred == 1 and true_val == 1:\n            self.true_positives += 1\n        elif pred == 1 and true_val == 0:\n            self.false_positives += 1\n        elif pred == 0 and true_val == 1:\n            self.false_negatives += 1\n        elif pred == 0 and true_val == 0:\n            self.true_negatives += 1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 756,
+        "cached_tokens": 0,
+        "completion_tokens": 4705,
+        "reasoning_tokens": 4281,
+        "cost": 0.000678178
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`zip` silently stops at the shorter list, so samples in the longer list are ignored when the inputs have different lengths. Validate that the lists are equal length or otherwise handle the unmatched labels.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`zip` silently stops at the shorter list, so samples in the longer list are ignored when the inputs have different lengths. Validate that the lists are equal length or otherwise handle the unmatched labels.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1123,
+            "cached_tokens": 0,
+            "completion_tokens": 261,
+            "reasoning_tokens": 203,
+            "cost": 0.00024280000000000002
+          }
+        ],
+        "prompt_tokens": 1123,
+        "cached_tokens": 0,
+        "completion_tokens": 261,
+        "reasoning_tokens": 203,
+        "cost": 0.00024280000000000002
+      },
+      "revision": {
+        "code": "def update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    for pred, true_val in zip(predicted_labels, true_labels):\n        if pred == 1 and true_val == 1:\n            self.true_positives += 1\n        elif pred == 1 and true_val == 0:\n            self.false_positives += 1\n        elif pred == 0 and true_val == 1:\n            self.false_negatives += 1\n        elif pred == 0 and true_val == 0:\n            self.true_negatives += 1",
+        "valid": true,
+        "reply": "```python\ndef update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n    \n    for pred, true_val in zip(predicted_labels, true_labels):\n        if pred == 1 and true_val == 1:\n            self.true_positives += 1\n        elif pred == 1 and true_val == 0:\n            self.false_positives += 1\n        elif pred == 0 and true_val == 1:\n            self.false_negatives += 1\n        elif pred == 0 and true_val == 0:\n            self.true_negatives += 1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1095,
+        "cached_tokens": 0,
+        "completion_tokens": 493,
+        "reasoning_tokens": 195,
+        "cost": 0.00016045
+      },
+      "final_code": "def update(self, predicted_labels, true_labels):\n    \"\"\"\n    Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: None, change the number of corresponding samples\n    >>> mc = MetricsCalculator()\n    >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n    (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    for pred, true_val in zip(predicted_labels, true_labels):\n        if pred == 1 and true_val == 1:\n            self.true_positives += 1\n        elif pred == 1 and true_val == 0:\n            self.false_positives += 1\n        elif pred == 0 and true_val == 1:\n            self.false_negatives += 1\n        elif pred == 0 and true_val == 0:\n            self.true_negatives += 1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "precision",
+      "first": {
+        "code": "def precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n\n    tp_fp = true_positives + false_positives\n\n    if tp_fp == 0:\n        return 0.0\n\n    return true_positives / tp_fp",
+        "valid": true,
+        "reply": "```python\ndef precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n    \n    tp_fp = true_positives + false_positives\n    \n    if tp_fp == 0:\n        return 0.0\n    \n    return true_positives / tp_fp\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1077,
+        "cached_tokens": 0,
+        "completion_tokens": 704,
+        "reasoning_tokens": 474,
+        "cost": 0.000186296
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method silently truncates unequal-length label lists because it uses `zip`, producing a precision value from only the paired prefix. Check that the lengths match and raise `ValueError`, as `update` does.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method silently truncates unequal-length label lists because it uses `zip`, producing a precision value from only the paired prefix. Check that the lengths match and raise `ValueError`, as `update` does.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1384,
+            "cached_tokens": 0,
+            "completion_tokens": 228,
+            "reasoning_tokens": 167,
+            "cost": 0.0002524
+          }
+        ],
+        "prompt_tokens": 1384,
+        "cached_tokens": 0,
+        "completion_tokens": 228,
+        "reasoning_tokens": 167,
+        "cost": 0.0002524
+      },
+      "revision": {
+        "code": "def precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n\n    tp_fp = true_positives + false_positives\n\n    if tp_fp == 0:\n        return 0.0\n\n    return true_positives / tp_fp",
+        "valid": true,
+        "reply": "```python\ndef precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n    \n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n    \n    tp_fp = true_positives + false_positives\n    \n    if tp_fp == 0:\n        return 0.0\n    \n    return true_positives / tp_fp\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1365,
+        "cached_tokens": 0,
+        "completion_tokens": 432,
+        "reasoning_tokens": 139,
+        "cost": 0.00017628
+      },
+      "final_code": "def precision(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate precision\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n\n    tp_fp = true_positives + false_positives\n\n    if tp_fp == 0:\n        return 0.0\n\n    return true_positives / tp_fp",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "recall",
+      "first": {
+        "code": "def recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fn = true_positives + false_negatives\n\n    if tp_fn == 0:\n        return 0.0\n\n    return true_positives / tp_fn",
+        "valid": true,
+        "reply": "```python\ndef recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fn = true_positives + false_negatives\n\n    if tp_fn == 0:\n        return 0.0\n\n    return true_positives / tp_fn\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1331,
+        "cached_tokens": 0,
+        "completion_tokens": 573,
+        "reasoning_tokens": 305,
+        "cost": 0.000191618
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly computes recall as true positives divided by true positives plus false negatives, checks that the label lists have equal lengths, and returns 0.0 when there are no actual positive labels. It also produces the documented 0.5 for the example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly computes recall as true positives divided by true positives plus false negatives, checks that the label lists have equal lengths, and returns 0.0 when there are no actual positive labels. It also produces the documented 0.5 for the example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1683,
+            "cached_tokens": 0,
+            "completion_tokens": 68,
+            "reasoning_tokens": 0,
+            "cost": 0.0002023
+          }
+        ],
+        "prompt_tokens": 1683,
+        "cached_tokens": 0,
+        "completion_tokens": 68,
+        "reasoning_tokens": 0,
+        "cost": 0.0002023
+      },
+      "revision": null,
+      "final_code": "def recall(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fn = true_positives + false_negatives\n\n    if tp_fn == 0:\n        return 0.0\n\n    return true_positives / tp_fn",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "f1_score",
+      "first": {
+        "code": "def f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fp = true_positives + false_positives\n    tp_fn = true_positives + false_negatives\n\n    precision = true_positives / tp_fp if tp_fp > 0 else 0.0\n    recall = true_positives / tp_fn if tp_fn > 0 else 0.0\n\n    if precision + recall == 0:\n        return 0.0\n\n    return 2 * (precision * recall) / (precision + recall)",
+        "valid": true,
+        "reply": "```python\ndef f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fp = true_positives + false_positives\n    tp_fn = true_positives + false_negatives\n\n    precision = true_positives / tp_fp if tp_fp > 0 else 0.0\n    recall = true_positives / tp_fn if tp_fn > 0 else 0.0\n\n    if precision + recall == 0:\n        return 0.0\n\n    return 2 * (precision * recall) / (precision + recall)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1588,
+        "cached_tokens": 0,
+        "completion_tokens": 1173,
+        "reasoning_tokens": 861,
+        "cost": 0.000292234
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method computes precision and recall from the supplied labels, returns 0.0 when both are zero, and otherwise returns their harmonic mean; it also rejects unequal-length lists consistently with the other metric methods. It produces the documented result for the example and has no concrete correctness issue.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method computes precision and recall from the supplied labels, returns 0.0 when both are zero, and otherwise returns their harmonic mean; it also rejects unequal-length lists consistently with the other metric methods. It produces the documented result for the example and has no concrete correctness issue.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2050,
+            "cached_tokens": 0,
+            "completion_tokens": 72,
+            "reasoning_tokens": 0,
+            "cost": 0.000241
+          }
+        ],
+        "prompt_tokens": 2050,
+        "cached_tokens": 0,
+        "completion_tokens": 72,
+        "reasoning_tokens": 0,
+        "cost": 0.000241
+      },
+      "revision": null,
+      "final_code": "def f1_score(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate f1 score, which is the harmonic mean of precision and recall\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 1 and true_val == 0)\n    false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 1)\n\n    tp_fp = true_positives + false_positives\n    tp_fn = true_positives + false_negatives\n\n    precision = true_positives / tp_fp if tp_fp > 0 else 0.0\n    recall = true_positives / tp_fn if tp_fn > 0 else 0.0\n\n    if precision + recall == 0:\n        return 0.0\n\n    return 2 * (precision * recall) / (precision + recall)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "accuracy",
+      "first": {
+        "code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 0)\n\n    total = len(predicted_labels)\n\n    return (true_positives + true_negatives) / total",
+        "valid": true,
+        "reply": "```python\ndef accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 0)\n\n    total = len(predicted_labels)\n\n    return (true_positives + true_negatives) / total\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1956,
+        "cached_tokens": 0,
+        "completion_tokens": 733,
+        "reasoning_tokens": 476,
+        "cost": 0.000267418
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For two empty label lists, `total` is 0 and the return expression raises `ZeroDivisionError`. Handle the empty-input case explicitly (for example, return `0.0`) before dividing.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For two empty label lists, `total` is 0 and the return expression raises `ZeroDivisionError`. Handle the empty-input case explicitly (for example, return `0.0`) before dividing.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2280,
+            "cached_tokens": 0,
+            "completion_tokens": 170,
+            "reasoning_tokens": 110,
+            "cost": 0.000313
+          }
+        ],
+        "prompt_tokens": 2280,
+        "cached_tokens": 0,
+        "completion_tokens": 170,
+        "reasoning_tokens": 110,
+        "cost": 0.000313
+      },
+      "revision": {
+        "code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    if len(predicted_labels) == 0:\n        return 0.0\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 0)\n\n    total = len(predicted_labels)\n\n    return (true_positives + true_negatives) / total",
+        "valid": true,
+        "reply": "```python\ndef accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    if len(predicted_labels) == 0:\n        return 0.0\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 0)\n\n    total = len(predicted_labels)\n\n    return (true_positives + true_negatives) / total\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 2279,
+        "cached_tokens": 1920,
+        "completion_tokens": 639,
+        "reasoning_tokens": 378,
+        "cost": 0.000266342
+      },
+      "final_code": "def accuracy(self, predicted_labels, true_labels):\n    \"\"\"\n    Calculate accuracy\n    :param predicted_labels: list, predicted results\n    :param true_labels: list, true labels\n    :return: float\n    >>> mc = MetricsCalculator()\n    >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n    0.5\n    \"\"\"\n    if len(predicted_labels) != len(true_labels):\n        raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                        f\"Predicted and true label lists must have equal length.\")\n\n    if len(predicted_labels) == 0:\n        return 0.0\n\n    true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                        if pred == 1 and true_val == 1)\n    true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                         if pred == 0 and true_val == 0)\n\n    total = len(predicted_labels)\n\n    return (true_positives + true_negatives) / total",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "MetricsCalculatorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestPrecision": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestRecall": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestF1Score": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestAccuracy": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "MetricsCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "MetricsCalculatorTestUpdate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestPrecision": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestRecall": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestF1Score": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "MetricsCalculatorTestAccuracy": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "MetricsCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass MetricsCalculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the number of all four samples to 0\n        \"\"\"\n        self.true_positives = 0\n        self.false_positives = 0\n        self.false_negatives = 0\n        self.true_negatives = 0\n\n    def update(self, predicted_labels, true_labels):\n        \"\"\"\n        Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: None, change the number of corresponding samples\n        >>> mc = MetricsCalculator()\n        >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n        (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n        \"\"\"\n        for pred, true_val in zip(predicted_labels, true_labels):\n            if pred == 1 and true_val == 1:\n                self.true_positives += 1\n            elif pred == 1 and true_val == 0:\n                self.false_positives += 1\n            elif pred == 0 and true_val == 1:\n                self.false_negatives += 1\n            elif pred == 0 and true_val == 0:\n                self.true_negatives += 1\n\n    def precision(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate precision\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 1 and true_val == 0)\n\n        tp_fp = true_positives + false_positives\n\n        if tp_fp == 0:\n            return 0.0\n\n        return true_positives / tp_fp\n\n    def recall(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 1)\n\n        tp_fn = true_positives + false_negatives\n\n        if tp_fn == 0:\n            return 0.0\n\n        return true_positives / tp_fn\n\n    def f1_score(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate f1 score, which is the harmonic mean of precision and recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 1 and true_val == 0)\n        false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 1)\n\n        tp_fp = true_positives + false_positives\n        tp_fn = true_positives + false_negatives\n\n        precision = true_positives / tp_fp if tp_fp > 0 else 0.0\n        recall = true_positives / tp_fn if tp_fn > 0 else 0.0\n\n        if precision + recall == 0:\n            return 0.0\n\n        return 2 * (precision * recall) / (precision + recall)\n\n    def accuracy(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate accuracy\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 0)\n\n        total = len(predicted_labels)\n\n        return (true_positives + true_negatives) / total\n",
+  "source": "\n\nclass MetricsCalculator: \n    def __init__(self):\n        \"\"\"\n        Initialize the number of all four samples to 0\n        \"\"\"\n        self.true_positives = 0\n        self.false_positives = 0\n        self.false_negatives = 0\n        self.true_negatives = 0\n\n    def update(self, predicted_labels, true_labels):\n        \"\"\"\n        Update the number of all four samples(true_positives, false_positives, false_negatives, true_negatives)\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: None, change the number of corresponding samples\n        >>> mc = MetricsCalculator()\n        >>> mc.update([1, 1, 0, 0], [1, 0, 0, 1])\n        (self.true_positives, self.false_positives, self.false_negatives, self.true_negatives) = (1, 1, 1, 1)\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        for pred, true_val in zip(predicted_labels, true_labels):\n            if pred == 1 and true_val == 1:\n                self.true_positives += 1\n            elif pred == 1 and true_val == 0:\n                self.false_positives += 1\n            elif pred == 0 and true_val == 1:\n                self.false_negatives += 1\n            elif pred == 0 and true_val == 0:\n                self.true_negatives += 1\n\n    def precision(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate precision\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.precision([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 1 and true_val == 0)\n\n        tp_fp = true_positives + false_positives\n\n        if tp_fp == 0:\n            return 0.0\n\n        return true_positives / tp_fp\n\n    def recall(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.recall([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 1)\n\n        tp_fn = true_positives + false_negatives\n\n        if tp_fn == 0:\n            return 0.0\n\n        return true_positives / tp_fn\n\n    def f1_score(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate f1 score, which is the harmonic mean of precision and recall\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.f1_score([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        false_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 1 and true_val == 0)\n        false_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 1)\n\n        tp_fp = true_positives + false_positives\n        tp_fn = true_positives + false_negatives\n\n        precision = true_positives / tp_fp if tp_fp > 0 else 0.0\n        recall = true_positives / tp_fn if tp_fn > 0 else 0.0\n\n        if precision + recall == 0:\n            return 0.0\n\n        return 2 * (precision * recall) / (precision + recall)\n\n    def accuracy(self, predicted_labels, true_labels):\n        \"\"\"\n        Calculate accuracy\n        :param predicted_labels: list, predicted results\n        :param true_labels: list, true labels\n        :return: float\n        >>> mc = MetricsCalculator()\n        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])\n        0.5\n        \"\"\"\n        if len(predicted_labels) != len(true_labels):\n            raise ValueError(f\"Lengths differ: {len(predicted_labels)} vs {len(true_labels)}. \"\n                            f\"Predicted and true label lists must have equal length.\")\n\n        if len(predicted_labels) == 0:\n            return 0.0\n\n        true_positives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                            if pred == 1 and true_val == 1)\n        true_negatives = sum(1 for pred, true_val in zip(predicted_labels, true_labels) \n                             if pred == 0 and true_val == 0)\n\n        total = len(predicted_labels)\n\n        return (true_positives + true_negatives) / total\n"
+}

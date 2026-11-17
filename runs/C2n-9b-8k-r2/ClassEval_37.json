@@ -1,0 +1,213 @@
+{
+  "task_id": "ClassEval_37",
+  "class_name": "EncryptionUtils",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r2",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "caesar_cipher",
+      "first": {
+        "code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n\n    \"\"\"\n    result = []\n    for char in plaintext:\n        if char.isalpha():\n            base = ord('A') if char.isupper() else ord('a')\n            shifted = chr((ord(char) - base + shift) % 26 + base)\n            result.append(shifted)\n        else:\n            result.append(char)\n    return \"\".join(result)",
+        "valid": true,
+        "reply": "```python\ndef caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n\n    \"\"\"\n    result = []\n    for char in plaintext:\n        if char.isalpha():\n            base = ord('A') if char.isupper() else ord('a')\n            shifted = chr((ord(char) - base + shift) % 26 + base)\n            result.append(shifted)\n        else:\n            result.append(char)\n    return \"\".join(result)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 470,
+        "cached_tokens": 0,
+        "completion_tokens": 5220,
+        "reasoning_tokens": 5188,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`isalpha()` treats Unicode letters such as `\u00e9` as alphabetic, but the calculation assumes every letter is in the 26-character ASCII alphabet and can turn such input into an unrelated ASCII character. Restrict the shifting logic to `A`\u2013`Z` and `a`\u2013`z`, or explicitly handle other alphabets.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`isalpha()` treats Unicode letters such as `\u00e9` as alphabetic, but the calculation assumes every letter is in the 26-character ASCII alphabet and can turn such input into an unrelated ASCII character. Restrict the shifting logic to `A`\u2013`Z` and `a`\u2013`z`, or explicitly handle other alphabets.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 738,
+            "cached_tokens": 0,
+            "completion_tokens": 340,
+            "reasoning_tokens": 252,
+            "cost": 0.00024380000000000002
+          }
+        ],
+        "prompt_tokens": 738,
+        "cached_tokens": 0,
+        "completion_tokens": 340,
+        "reasoning_tokens": 252,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "revision": {
+        "code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n\n    \"\"\"\n    def shift_char(c, s):\n        if c.isupper():\n            return chr((ord(c) - ord('A') + s) % 26 + ord('A'))\n        elif c.islower():\n            return chr((ord(c) - ord('a') + s) % 26 + ord('a'))\n        else:\n            return c\n\n    return ''.join(shift_char(c, shift) for c in plaintext)",
+        "valid": true,
+        "reply": "```python\ndef caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n\n    \"\"\"\n    def shift_char(c, s):\n        if c.isupper():\n            return chr((ord(c) - ord('A') + s) % 26 + ord('A'))\n        elif c.islower():\n            return chr((ord(c) - ord('a') + s) % 26 + ord('a'))\n        else:\n            return c\n    \n    return ''.join(shift_char(c, shift) for c in plaintext)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 697,
+        "cached_tokens": 0,
+        "completion_tokens": 853,
+        "reasoning_tokens": 765,
+        "cost": 0.000134246
+      },
+      "final_code": "def caesar_cipher(self, plaintext, shift):\n    \"\"\"\n    Encrypts the plaintext using the Caesar cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :param shift: The number of characters to shift each character in the plaintext, int.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.caesar_cipher(\"abc\", 1)\n    'bcd'\n\n    \"\"\"\n    def shift_char(c, s):\n        if c.isupper():\n            return chr((ord(c) - ord('A') + s) % 26 + ord('A'))\n        elif c.islower():\n            return chr((ord(c) - ord('a') + s) % 26 + ord('a'))\n        else:\n            return c\n\n    return ''.join(shift_char(c, shift) for c in plaintext)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "vigenere_cipher",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 679,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 7855,
+        "cost": 0.000854851
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "rail_fence_cipher",
+      "first": {
+        "code": "def rail_fence_cipher(self, plain_text, rails):\n    \"\"\"\n    Encrypts the plaintext using the Rail Fence cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.rail_fence_cipher(\"abc\", 2)\n    'acb'\n\n    \"\"\"\n    if rails <= 1 or len(plain_text) == 0:\n        return plain_text\n\n    # Create rails to store characters\n    fence = [[] for _ in range(rails)]\n\n    # Track current rail and direction\n    rail_idx = 0\n    direction = 1\n\n    # Place each character in the appropriate rail following zigzag pattern\n    for char in plain_text:\n        fence[rail_idx].append(char)\n\n        # Change direction at top and bottom rails\n        if rail_idx == 0:\n            direction = 1\n        elif rail_idx == rails - 1:\n            direction = -1\n\n        rail_idx += direction\n\n    # Concatenate all rails to get ciphertext\n    return ''.join(''.join(rail) for rail in fence)",
+        "valid": true,
+        "reply": "```python\n    def rail_fence_cipher(self, plain_text, rails):\n        \"\"\"\n        Encrypts the plaintext using the Rail Fence cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.rail_fence_cipher(\"abc\", 2)\n        'acb'\n\n        \"\"\"\n        if rails <= 1 or len(plain_text) == 0:\n            return plain_text\n        \n        # Create rails to store characters\n        fence = [[] for _ in range(rails)]\n        \n        # Track current rail and direction\n        rail_idx = 0\n        direction = 1\n        \n        # Place each character in the appropriate rail following zigzag pattern\n        for char in plain_text:\n            fence[rail_idx].append(char)\n            \n            # Change direction at top and bottom rails\n            if rail_idx == 0:\n                direction = 1\n            elif rail_idx == rails - 1:\n                direction = -1\n            \n            rail_idx += direction\n        \n        # Concatenate all rails to get ciphertext\n        return ''.join(''.join(rail) for rail in fence)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 678,
+        "cached_tokens": 0,
+        "completion_tokens": 853,
+        "reasoning_tokens": 495,
+        "cost": 0.000132935
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method follows the Rail Fence zigzag pattern and concatenates the rails in order; it also returns the plaintext unchanged for one or fewer rails or empty input. The documented example produces `'acb'`, so the method is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method follows the Rail Fence zigzag pattern and concatenates the rails in order; it also returns the plaintext unchanged for one or fewer rails or empty input. The documented example produces `'acb'`, so the method is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1005,
+            "cached_tokens": 0,
+            "completion_tokens": 180,
+            "reasoning_tokens": 115,
+            "cost": 0.0001905
+          }
+        ],
+        "prompt_tokens": 1005,
+        "cached_tokens": 0,
+        "completion_tokens": 180,
+        "reasoning_tokens": 115,
+        "cost": 0.0001905
+      },
+      "revision": null,
+      "final_code": "def rail_fence_cipher(self, plain_text, rails):\n    \"\"\"\n    Encrypts the plaintext using the Rail Fence cipher.\n    :param plaintext: The plaintext to encrypt, str.\n    :return: The ciphertext, str.\n    >>> e = EncryptionUtils(\"key\")\n    >>> e.rail_fence_cipher(\"abc\", 2)\n    'acb'\n\n    \"\"\"\n    if rails <= 1 or len(plain_text) == 0:\n        return plain_text\n\n    # Create rails to store characters\n    fence = [[] for _ in range(rails)]\n\n    # Track current rail and direction\n    rail_idx = 0\n    direction = 1\n\n    # Place each character in the appropriate rail following zigzag pattern\n    for char in plain_text:\n        fence[rail_idx].append(char)\n\n        # Change direction at top and bottom rails\n        if rail_idx == 0:\n            direction = 1\n        elif rail_idx == rails - 1:\n            direction = -1\n\n        rail_idx += direction\n\n    # Concatenate all rails to get ciphertext\n    return ''.join(''.join(rail) for rail in fence)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "EncryptionUtilsTestCaesarCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestVigenereCipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "EncryptionUtilsTestRailFenceCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "EncryptionUtilsTestCaesarCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestVigenereCipher": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "EncryptionUtilsTestRailFenceCipher": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "EncryptionUtilsTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass EncryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the class with a key.\n        :param key: The key to use for encryption, str.\n        \"\"\"\n        self.key = key\n\n    def caesar_cipher(self, plaintext, shift):\n        \"\"\"\n        Encrypts the plaintext using the Caesar cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :param shift: The number of characters to shift each character in the plaintext, int.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.caesar_cipher(\"abc\", 1)\n        'bcd'\n\n        \"\"\"\n        result = []\n        for char in plaintext:\n            if char.isalpha():\n                base = ord('A') if char.isupper() else ord('a')\n                shifted = chr((ord(char) - base + shift) % 26 + base)\n                result.append(shifted)\n            else:\n                result.append(char)\n        return \"\".join(result)\n\n    def vigenere_cipher(self, plaintext):\n        return None\n\n    def rail_fence_cipher(self, plain_text, rails):\n        \"\"\"\n        Encrypts the plaintext using the Rail Fence cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.rail_fence_cipher(\"abc\", 2)\n        'acb'\n\n        \"\"\"\n        if rails <= 1 or len(plain_text) == 0:\n            return plain_text\n\n        # Create rails to store characters\n        fence = [[] for _ in range(rails)]\n\n        # Track current rail and direction\n        rail_idx = 0\n        direction = 1\n\n        # Place each character in the appropriate rail following zigzag pattern\n        for char in plain_text:\n            fence[rail_idx].append(char)\n\n            # Change direction at top and bottom rails\n            if rail_idx == 0:\n                direction = 1\n            elif rail_idx == rails - 1:\n                direction = -1\n\n            rail_idx += direction\n\n        # Concatenate all rails to get ciphertext\n        return ''.join(''.join(rail) for rail in fence)\n",
+  "source": "\n\nclass EncryptionUtils: \n    def __init__(self, key):\n        \"\"\"\n        Initializes the class with a key.\n        :param key: The key to use for encryption, str.\n        \"\"\"\n        self.key = key\n\n    def caesar_cipher(self, plaintext, shift):\n        \"\"\"\n        Encrypts the plaintext using the Caesar cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :param shift: The number of characters to shift each character in the plaintext, int.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.caesar_cipher(\"abc\", 1)\n        'bcd'\n\n        \"\"\"\n        def shift_char(c, s):\n            if c.isupper():\n                return chr((ord(c) - ord('A') + s) % 26 + ord('A'))\n            elif c.islower():\n                return chr((ord(c) - ord('a') + s) % 26 + ord('a'))\n            else:\n                return c\n\n        return ''.join(shift_char(c, shift) for c in plaintext)\n\n    def vigenere_cipher(self, plaintext):\n        return None\n\n    def rail_fence_cipher(self, plain_text, rails):\n        \"\"\"\n        Encrypts the plaintext using the Rail Fence cipher.\n        :param plaintext: The plaintext to encrypt, str.\n        :return: The ciphertext, str.\n        >>> e = EncryptionUtils(\"key\")\n        >>> e.rail_fence_cipher(\"abc\", 2)\n        'acb'\n\n        \"\"\"\n        if rails <= 1 or len(plain_text) == 0:\n            return plain_text\n\n        # Create rails to store characters\n        fence = [[] for _ in range(rails)]\n\n        # Track current rail and direction\n        rail_idx = 0\n        direction = 1\n\n        # Place each character in the appropriate rail following zigzag pattern\n        for char in plain_text:\n            fence[rail_idx].append(char)\n\n            # Change direction at top and bottom rails\n            if rail_idx == 0:\n                direction = 1\n            elif rail_idx == rails - 1:\n                direction = -1\n\n            rail_idx += direction\n\n        # Concatenate all rails to get ciphertext\n        return ''.join(''.join(rail) for rail in fence)\n"
+}

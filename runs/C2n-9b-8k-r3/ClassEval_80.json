@@ -1,0 +1,331 @@
+{
+  "task_id": "ClassEval_80",
+  "class_name": "SQLQueryBuilder",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "select",
+      "first": {
+        "code": "@staticmethod\ndef select(table, columns='*', where=None):\n    if not isinstance(columns, str):\n        columns_str = ', '.join(columns)\n    else:\n        columns_str = columns\n\n    sql = f\"SELECT {columns_str} FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def select(table, columns='*', where=None):\n        if not isinstance(columns, str):\n            columns_str = ', '.join(columns)\n        else:\n            columns_str = columns\n        \n        sql = f\"SELECT {columns_str} FROM {table}\"\n        \n        if where:\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n        \n        return sql\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 700,
+        "cached_tokens": 0,
+        "completion_tokens": 547,
+        "reasoning_tokens": 425,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method builds the documented SELECT statement, joining column names and adding `AND`-joined conditions when `where` is nonempty; it also matches the example output. The documented inputs are handled correctly.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method builds the documented SELECT statement, joining column names and adding `AND`-joined conditions when `where` is nonempty; it also matches the example output. The documented inputs are handled correctly.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 902,
+            "cached_tokens": 0,
+            "completion_tokens": 411,
+            "reasoning_tokens": 352,
+            "cost": 0.0002957
+          }
+        ],
+        "prompt_tokens": 902,
+        "cached_tokens": 0,
+        "completion_tokens": 411,
+        "reasoning_tokens": 352,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef select(table, columns='*', where=None):\n    if not isinstance(columns, str):\n        columns_str = ', '.join(columns)\n    else:\n        columns_str = columns\n\n    sql = f\"SELECT {columns_str} FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert",
+      "first": {
+        "code": "@staticmethod\ndef insert(table, data):\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n    sql = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n    return sql",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef insert(table, data):\n    columns = ', '.join(data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n    sql = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 821,
+        "cached_tokens": 0,
+        "completion_tokens": 498,
+        "reasoning_tokens": 454,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "Values containing a single quote (for example, `O'Neil`) produce malformed SQL or can alter the query, because the method inserts values into quoted SQL without escaping or parameterizing them. Use parameterized SQL (or properly escape values for the target database).",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "Values containing a single quote (for example, `O'Neil`) produce malformed SQL or can alter the query, because the method inserts values into quoted SQL without escaping or parameterizing them. Use parameterized SQL (or properly escape values for the target database).",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 971,
+            "cached_tokens": 0,
+            "completion_tokens": 572,
+            "reasoning_tokens": 500,
+            "cost": 0.00038310000000000004
+          }
+        ],
+        "prompt_tokens": 971,
+        "cached_tokens": 0,
+        "completion_tokens": 572,
+        "reasoning_tokens": 500,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "@staticmethod\ndef insert(table, data):\n    columns = ', '.join(data.keys())\n    escaped_values = ', '.join(f\"'{value.replace(\"'\", \"''\")}'\" for value in data.values())\n    sql = f\"INSERT INTO {table} ({columns}) VALUES ({escaped_values})\"\n    return sql",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef insert(table, data):\n    columns = ', '.join(data.keys())\n    escaped_values = ', '.join(f\"'{value.replace(\"'\", \"''\")}'\" for value in data.values())\n    sql = f\"INSERT INTO {table} ({columns}) VALUES ({escaped_values})\"\n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 925,
+        "cached_tokens": 0,
+        "completion_tokens": 590,
+        "reasoning_tokens": 514,
+        "cost": 0.00024
+      },
+      "final_code": "@staticmethod\ndef insert(table, data):\n    columns = ', '.join(data.keys())\n    escaped_values = ', '.join(f\"'{value.replace(\"'\", \"''\")}'\" for value in data.values())\n    sql = f\"INSERT INTO {table} ({columns}) VALUES ({escaped_values})\"\n    return sql",
+      "passed_first": true,
+      "passed": false
+    },
+    {
+      "method_name": "delete",
+      "first": {
+        "code": "@staticmethod\ndef delete(table, where=None):\n    sql = f\"DELETE FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            # Escape single quotes in values to prevent SQL injection\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef delete(table, where=None):\n    sql = f\"DELETE FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            # Escape single quotes in values to prevent SQL injection\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 890,
+        "cached_tokens": 0,
+        "completion_tokens": 719,
+        "reasoning_tokens": 615,
+        "cost": 0.00026875
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`where` values can be non-strings, as in the documented example with age 14; calling `value.replace(...)` on that integer raises `AttributeError`. Convert values to strings before escaping them, as well as escaping quotes.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`where` values can be non-strings, as in the documented example with age 14; calling `value.replace(...)` on that integer raises `AttributeError`. Convert values to strings before escaping them, as well as escaping quotes.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1069,
+            "cached_tokens": 0,
+            "completion_tokens": 131,
+            "reasoning_tokens": 64,
+            "cost": 0.00017240000000000002
+          }
+        ],
+        "prompt_tokens": 1069,
+        "cached_tokens": 0,
+        "completion_tokens": 131,
+        "reasoning_tokens": 64,
+        "cost": 0.00017240000000000002
+      },
+      "revision": {
+        "code": "@staticmethod\ndef delete(table, where=None):\n    sql = f\"DELETE FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef delete(table, where=None):\n    sql = f\"DELETE FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1029,
+        "cached_tokens": 576,
+        "completion_tokens": 759,
+        "reasoning_tokens": 667,
+        "cost": 0.00029265
+      },
+      "final_code": "@staticmethod\ndef delete(table, where=None):\n    sql = f\"DELETE FROM {table}\"\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update",
+      "first": {
+        "code": "@staticmethod\ndef update(table, data, where=None):\n    sql = f\"UPDATE {table} SET \"\n\n    set_pairs = []\n    for key, value in data.items():\n        escaped_value = value.replace(\"'\", \"''\")\n        set_pairs.append(f\"{key}='{escaped_value}'\")\n    sql += ', '.join(set_pairs)\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef update(table, data, where=None):\n    sql = f\"UPDATE {table} SET \"\n    \n    set_pairs = []\n    for key, value in data.items():\n        escaped_value = value.replace(\"'\", \"''\")\n        set_pairs.append(f\"{key}='{escaped_value}'\")\n    sql += ', '.join(set_pairs)\n    \n    if where:\n        conditions = []\n        for key, value in where.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n    \n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 975,
+        "cached_tokens": 576,
+        "completion_tokens": 487,
+        "reasoning_tokens": 338,
+        "cost": 0.00021925
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The documented `update` example raises `AttributeError` because `age` is the integer `15`, which has no `.replace()` method. Convert values to strings before escaping them, e.g. `str(value).replace(\"'\", \"''\")`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The documented `update` example raises `AttributeError` because `age` is the integer `15`, which has no `.replace()` method. Convert values to strings before escaping them, e.g. `str(value).replace(\"'\", \"''\")`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1185,
+            "cached_tokens": 0,
+            "completion_tokens": 208,
+            "reasoning_tokens": 136,
+            "cost": 0.0002225
+          }
+        ],
+        "prompt_tokens": 1185,
+        "cached_tokens": 0,
+        "completion_tokens": 208,
+        "reasoning_tokens": 136,
+        "cost": 0.0002225
+      },
+      "revision": {
+        "code": "@staticmethod\ndef update(table, data, where=None):\n    sql = f\"UPDATE {table} SET \"\n\n    set_pairs = []\n    for key, value in data.items():\n        string_value = str(value)\n        escaped_value = string_value.replace(\"'\", \"''\")\n        set_pairs.append(f\"{key}='{escaped_value}'\")\n    sql += ', '.join(set_pairs)\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            string_value = str(value)\n            escaped_value = string_value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef update(table, data, where=None):\n    sql = f\"UPDATE {table} SET \"\n\n    set_pairs = []\n    for key, value in data.items():\n        string_value = str(value)\n        escaped_value = string_value.replace(\"'\", \"''\")\n        set_pairs.append(f\"{key}='{escaped_value}'\")\n    sql += ', '.join(set_pairs)\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            string_value = str(value)\n            escaped_value = string_value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1159,
+        "cached_tokens": 576,
+        "completion_tokens": 1326,
+        "reasoning_tokens": 1162,
+        "cost": 0.0004474
+      },
+      "final_code": "@staticmethod\ndef update(table, data, where=None):\n    sql = f\"UPDATE {table} SET \"\n\n    set_pairs = []\n    for key, value in data.items():\n        string_value = str(value)\n        escaped_value = string_value.replace(\"'\", \"''\")\n        set_pairs.append(f\"{key}='{escaped_value}'\")\n    sql += ', '.join(set_pairs)\n\n    if where:\n        conditions = []\n        for key, value in where.items():\n            string_value = str(value)\n            escaped_value = string_value.replace(\"'\", \"''\")\n            conditions.append(f\"{key}='{escaped_value}'\")\n        sql += f\" WHERE {' AND '.join(conditions)}\"\n\n    return sql",
+      "passed_first": false,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 6,
+      "passed": false
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 4,
+      "passed": false
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        if not isinstance(columns, str):\n            columns_str = ', '.join(columns)\n        else:\n            columns_str = columns\n\n        sql = f\"SELECT {columns_str} FROM {table}\"\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n\n    @staticmethod\n    def insert(table, data):\n        columns = ', '.join(data.keys())\n        values = ', '.join(f\"'{value}'\" for value in data.values())\n        sql = f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n        return sql\n\n    @staticmethod\n    def delete(table, where=None):\n        sql = f\"DELETE FROM {table}\"\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                # Escape single quotes in values to prevent SQL injection\n                escaped_value = value.replace(\"'\", \"''\")\n                conditions.append(f\"{key}='{escaped_value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n\n    @staticmethod\n    def update(table, data, where=None):\n        sql = f\"UPDATE {table} SET \"\n\n        set_pairs = []\n        for key, value in data.items():\n            escaped_value = value.replace(\"'\", \"''\")\n            set_pairs.append(f\"{key}='{escaped_value}'\")\n        sql += ', '.join(set_pairs)\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                escaped_value = value.replace(\"'\", \"''\")\n                conditions.append(f\"{key}='{escaped_value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n",
+  "source": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        if not isinstance(columns, str):\n            columns_str = ', '.join(columns)\n        else:\n            columns_str = columns\n\n        sql = f\"SELECT {columns_str} FROM {table}\"\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n\n    @staticmethod\n    def insert(table, data):\n        columns = ', '.join(data.keys())\n        escaped_values = ', '.join(f\"'{value.replace(\"'\", \"''\")}'\" for value in data.values())\n        sql = f\"INSERT INTO {table} ({columns}) VALUES ({escaped_values})\"\n        return sql\n\n    @staticmethod\n    def delete(table, where=None):\n        sql = f\"DELETE FROM {table}\"\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                escaped_value = value.replace(\"'\", \"''\")\n                conditions.append(f\"{key}='{escaped_value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n\n    @staticmethod\n    def update(table, data, where=None):\n        sql = f\"UPDATE {table} SET \"\n\n        set_pairs = []\n        for key, value in data.items():\n            string_value = str(value)\n            escaped_value = string_value.replace(\"'\", \"''\")\n            set_pairs.append(f\"{key}='{escaped_value}'\")\n        sql += ', '.join(set_pairs)\n\n        if where:\n            conditions = []\n            for key, value in where.items():\n                string_value = str(value)\n                escaped_value = string_value.replace(\"'\", \"''\")\n                conditions.append(f\"{key}='{escaped_value}'\")\n            sql += f\" WHERE {' AND '.join(conditions)}\"\n\n        return sql\n"
+}

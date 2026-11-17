@@ -1,0 +1,320 @@
+{
+  "task_id": "ClassEval_10",
+  "class_name": "BinaryDataProcessor",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "clean_non_binary_chars",
+      "first": {
+        "code": "def clean_non_binary_chars(self):\n    \"\"\"\n    Clean the binary string by removing all non 0 or 1 characters.\n    >>> bdp = BinaryDataProcessor(\"01101000daf3e4r01100101011011000110110001101111\")\n    >>> bdp.clean_non_binary_chars()\n    >>> bdp.binary_string\n    '0110100001100101011011000110110001101111'\n\n    \"\"\"\n    self.binary_string = ''.join(filter(lambda x: x in '01', self.binary_string))",
+        "valid": true,
+        "reply": "\n\n```python\n    def clean_non_binary_chars(self):\n        \"\"\"\n        Clean the binary string by removing all non 0 or 1 characters.\n        >>> bdp = BinaryDataProcessor(\"01101000daf3e4r01100101011011000110110001101111\")\n        >>> bdp.clean_non_binary_chars()\n        >>> bdp.binary_string\n        '0110100001100101011011000110110001101111'\n\n        \"\"\"\n        self.binary_string = ''.join(filter(lambda x: x in '01', self.binary_string))\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 699,
+        "cached_tokens": 0,
+        "completion_tokens": 431,
+        "reasoning_tokens": 191,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method retains only characters that are `0` or `1` and assigns the result back to `self.binary_string`, as the docstring requires. It produces the cleaned string shown in the example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method retains only characters that are `0` or `1` and assigns the result back to `self.binary_string`, as the docstring requires. It produces the cleaned string shown in the example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 775,
+            "cached_tokens": 0,
+            "completion_tokens": 114,
+            "reasoning_tokens": 55,
+            "cost": 0.0001345
+          }
+        ],
+        "prompt_tokens": 775,
+        "cached_tokens": 0,
+        "completion_tokens": 114,
+        "reasoning_tokens": 55,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def clean_non_binary_chars(self):\n    \"\"\"\n    Clean the binary string by removing all non 0 or 1 characters.\n    >>> bdp = BinaryDataProcessor(\"01101000daf3e4r01100101011011000110110001101111\")\n    >>> bdp.clean_non_binary_chars()\n    >>> bdp.binary_string\n    '0110100001100101011011000110110001101111'\n\n    \"\"\"\n    self.binary_string = ''.join(filter(lambda x: x in '01', self.binary_string))",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "calculate_binary_info",
+      "first": {
+        "code": "def calculate_binary_info(self):\n    \"\"\"\n    Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.calculate_binary_info()\n    {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}\n\n    \"\"\"\n    total_length = len(self.binary_string)\n    zeroes_count = self.binary_string.count('0')\n    ones_count = self.binary_string.count('1')\n\n    zeroes_percentage = zeroes_count / total_length if total_length > 0 else 0.0\n    ones_percentage = ones_count / total_length if total_length > 0 else 0.0\n\n    return {'Zeroes': zeroes_percentage, 'Ones': ones_percentage, 'Bit length': total_length}",
+        "valid": true,
+        "reply": "\n\n```python\ndef calculate_binary_info(self):\n    \"\"\"\n    Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.calculate_binary_info()\n    {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}\n\n    \"\"\"\n    total_length = len(self.binary_string)\n    zeroes_count = self.binary_string.count('0')\n    ones_count = self.binary_string.count('1')\n    \n    zeroes_percentage = zeroes_count / total_length if total_length > 0 else 0.0\n    ones_percentage = ones_count / total_length if total_length > 0 else 0.0\n    \n    return {'Zeroes': zeroes_percentage, 'Ones': ones_percentage, 'Bit length': total_length}\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 880,
+        "cached_tokens": 0,
+        "completion_tokens": 1367,
+        "reasoning_tokens": 909,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly counts `0` and `1` characters, computes their proportions, and returns the total length; it also avoids division by zero for an empty string. The constructor cleans the input first, so the counts match the documented binary-string use case.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly counts `0` and `1` characters, computes their proportions, and returns the total length; it also avoids division by zero for an empty string. The constructor cleans the input first, so the counts match the documented binary-string use case.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1040,
+            "cached_tokens": 0,
+            "completion_tokens": 145,
+            "reasoning_tokens": 75,
+            "cost": 0.0001765
+          }
+        ],
+        "prompt_tokens": 1040,
+        "cached_tokens": 0,
+        "completion_tokens": 145,
+        "reasoning_tokens": 75,
+        "cost": 0.0001765
+      },
+      "revision": null,
+      "final_code": "def calculate_binary_info(self):\n    \"\"\"\n    Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.calculate_binary_info()\n    {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}\n\n    \"\"\"\n    total_length = len(self.binary_string)\n    zeroes_count = self.binary_string.count('0')\n    ones_count = self.binary_string.count('1')\n\n    zeroes_percentage = zeroes_count / total_length if total_length > 0 else 0.0\n    ones_percentage = ones_count / total_length if total_length > 0 else 0.0\n\n    return {'Zeroes': zeroes_percentage, 'Ones': ones_percentage, 'Bit length': total_length}",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "convert_to_ascii",
+      "first": {
+        "code": "def convert_to_ascii(self):\n    \"\"\"\n    Convert the binary string to ascii string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_ascii()\n    'hello'\n\n    \"\"\"\n    result = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            ascii_char = chr(int(chunk, 2))\n            result.append(ascii_char)\n    return ''.join(result)",
+        "valid": true,
+        "reply": "\n\n```python\ndef convert_to_ascii(self):\n    \"\"\"\n    Convert the binary string to ascii string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_ascii()\n    'hello'\n\n    \"\"\"\n    result = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            ascii_char = chr(int(chunk, 2))\n            result.append(ascii_char)\n    return ''.join(result)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1112,
+        "cached_tokens": 0,
+        "completion_tokens": 842,
+        "reasoning_tokens": 370,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method converts each 8-bit chunk with `chr`, so values above 127 become Unicode characters even though they are not ASCII (for example, `11111111` becomes `\u00ff`). Validate that each byte is in the ASCII range or decode the bytes as ASCII and handle non-ASCII input appropriately.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method converts each 8-bit chunk with `chr`, so values above 127 become Unicode characters even though they are not ASCII (for example, `11111111` becomes `\u00ff`). Validate that each byte is in the ASCII range or decode the bytes as ASCII and handle non-ASCII input appropriately.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1214,
+            "cached_tokens": 0,
+            "completion_tokens": 256,
+            "reasoning_tokens": 175,
+            "cost": 0.0002494
+          }
+        ],
+        "prompt_tokens": 1214,
+        "cached_tokens": 0,
+        "completion_tokens": 256,
+        "reasoning_tokens": 175,
+        "cost": 0.0002494
+      },
+      "revision": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1382,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 8352,
+        "cost": 0.0020073
+      },
+      "final_code": "def convert_to_ascii(self):\n    \"\"\"\n    Convert the binary string to ascii string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_ascii()\n    'hello'\n\n    \"\"\"\n    result = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            ascii_char = chr(int(chunk, 2))\n            result.append(ascii_char)\n    return ''.join(result)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "convert_to_utf8",
+      "first": {
+        "code": "def convert_to_utf8(self):\n    \"\"\"\n    Convert the binary string to utf-8 string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_utf8()\n    'hello'\n\n    \"\"\"\n    result = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            utf8_char = chr(int(chunk, 2))\n            result.append(utf8_char)\n    return ''.join(result)",
+        "valid": true,
+        "reply": "\n\n```python\ndef convert_to_utf8(self):\n    \"\"\"\n    Convert the binary string to utf-8 string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_utf8()\n    'hello'\n\n    \"\"\"\n    result = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            utf8_char = chr(int(chunk, 2))\n            result.append(utf8_char)\n    return ''.join(result)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1267,
+        "cached_tokens": 0,
+        "completion_tokens": 664,
+        "reasoning_tokens": 498,
+        "cost": 0.0002927
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "This converts each 8-bit chunk directly to a Unicode code point, rather than decoding the bytes as UTF-8, so multibyte characters are returned incorrectly (for example, the UTF-8 bytes for `\u00e9` become `\u00c3\u00a9`). Convert the bits to bytes and decode them with UTF-8 instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "This converts each 8-bit chunk directly to a Unicode code point, rather than decoding the bytes as UTF-8, so multibyte characters are returned incorrectly (for example, the UTF-8 bytes for `\u00e9` become `\u00c3\u00a9`). Convert the bits to bytes and decode them with UTF-8 instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1407,
+            "cached_tokens": 0,
+            "completion_tokens": 204,
+            "reasoning_tokens": 121,
+            "cost": 0.00024270000000000002
+          }
+        ],
+        "prompt_tokens": 1407,
+        "cached_tokens": 0,
+        "completion_tokens": 204,
+        "reasoning_tokens": 121,
+        "cost": 0.00024270000000000002
+      },
+      "revision": {
+        "code": "def convert_to_utf8(self):\n    \"\"\"\n    Convert the binary string to utf-8 string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_utf8()\n    'hello'\n\n    \"\"\"\n    bytes_list = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            byte_value = int(chunk, 2)\n            bytes_list.append(bytes([byte_value]))\n\n    return bytes(bytes_list).decode('utf-8')",
+        "valid": true,
+        "reply": "\n\n```python\ndef convert_to_utf8(self):\n    \"\"\"\n    Convert the binary string to utf-8 string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_utf8()\n    'hello'\n\n    \"\"\"\n    bytes_list = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            byte_value = int(chunk, 2)\n            bytes_list.append(bytes([byte_value]))\n    \n    return bytes(bytes_list).decode('utf-8')\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1538,
+        "cached_tokens": 1152,
+        "completion_tokens": 1067,
+        "reasoning_tokens": 893,
+        "cost": 0.00042055
+      },
+      "final_code": "def convert_to_utf8(self):\n    \"\"\"\n    Convert the binary string to utf-8 string.\n    >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n    >>> bdp.convert_to_utf8()\n    'hello'\n\n    \"\"\"\n    bytes_list = []\n    for i in range(0, len(self.binary_string), 8):\n        chunk = self.binary_string[i:i+8]\n        if chunk:\n            byte_value = int(chunk, 2)\n            bytes_list.append(bytes([byte_value]))\n\n    return bytes(bytes_list).decode('utf-8')",
+      "passed_first": true,
+      "passed": false
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": false,
+  "tests_first": {
+    "BinaryDataProcessorTestCleanNonBinaryChars": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestCalculateBinaryInfo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestConvertToAscii": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestConvertToUtf8": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BinaryDataProcessorTestCleanNonBinaryChars": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestCalculateBinaryInfo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestConvertToAscii": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BinaryDataProcessorTestConvertToUtf8": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "BinaryDataProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass BinaryDataProcessor: \n    def __init__(self, binary_string):\n        \"\"\"\n        Initialize the class with a binary string and clean it by removing all non 0 or 1 characters.\n        \"\"\"\n        self.binary_string = binary_string\n        self.clean_non_binary_chars()\n\n    def clean_non_binary_chars(self):\n        \"\"\"\n        Clean the binary string by removing all non 0 or 1 characters.\n        >>> bdp = BinaryDataProcessor(\"01101000daf3e4r01100101011011000110110001101111\")\n        >>> bdp.clean_non_binary_chars()\n        >>> bdp.binary_string\n        '0110100001100101011011000110110001101111'\n\n        \"\"\"\n        self.binary_string = ''.join(filter(lambda x: x in '01', self.binary_string))\n\n    def calculate_binary_info(self):\n        \"\"\"\n        Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.calculate_binary_info()\n        {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}\n\n        \"\"\"\n        total_length = len(self.binary_string)\n        zeroes_count = self.binary_string.count('0')\n        ones_count = self.binary_string.count('1')\n\n        zeroes_percentage = zeroes_count / total_length if total_length > 0 else 0.0\n        ones_percentage = ones_count / total_length if total_length > 0 else 0.0\n\n        return {'Zeroes': zeroes_percentage, 'Ones': ones_percentage, 'Bit length': total_length}\n\n    def convert_to_ascii(self):\n        \"\"\"\n        Convert the binary string to ascii string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.convert_to_ascii()\n        'hello'\n\n        \"\"\"\n        result = []\n        for i in range(0, len(self.binary_string), 8):\n            chunk = self.binary_string[i:i+8]\n            if chunk:\n                ascii_char = chr(int(chunk, 2))\n                result.append(ascii_char)\n        return ''.join(result)\n\n    def convert_to_utf8(self):\n        \"\"\"\n        Convert the binary string to utf-8 string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.convert_to_utf8()\n        'hello'\n\n        \"\"\"\n        result = []\n        for i in range(0, len(self.binary_string), 8):\n            chunk = self.binary_string[i:i+8]\n            if chunk:\n                utf8_char = chr(int(chunk, 2))\n                result.append(utf8_char)\n        return ''.join(result)\n",
+  "source": "\n\nclass BinaryDataProcessor: \n    def __init__(self, binary_string):\n        \"\"\"\n        Initialize the class with a binary string and clean it by removing all non 0 or 1 characters.\n        \"\"\"\n        self.binary_string = binary_string\n        self.clean_non_binary_chars()\n\n    def clean_non_binary_chars(self):\n        \"\"\"\n        Clean the binary string by removing all non 0 or 1 characters.\n        >>> bdp = BinaryDataProcessor(\"01101000daf3e4r01100101011011000110110001101111\")\n        >>> bdp.clean_non_binary_chars()\n        >>> bdp.binary_string\n        '0110100001100101011011000110110001101111'\n\n        \"\"\"\n        self.binary_string = ''.join(filter(lambda x: x in '01', self.binary_string))\n\n    def calculate_binary_info(self):\n        \"\"\"\n        Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.calculate_binary_info()\n        {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}\n\n        \"\"\"\n        total_length = len(self.binary_string)\n        zeroes_count = self.binary_string.count('0')\n        ones_count = self.binary_string.count('1')\n\n        zeroes_percentage = zeroes_count / total_length if total_length > 0 else 0.0\n        ones_percentage = ones_count / total_length if total_length > 0 else 0.0\n\n        return {'Zeroes': zeroes_percentage, 'Ones': ones_percentage, 'Bit length': total_length}\n\n    def convert_to_ascii(self):\n        \"\"\"\n        Convert the binary string to ascii string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.convert_to_ascii()\n        'hello'\n\n        \"\"\"\n        result = []\n        for i in range(0, len(self.binary_string), 8):\n            chunk = self.binary_string[i:i+8]\n            if chunk:\n                ascii_char = chr(int(chunk, 2))\n                result.append(ascii_char)\n        return ''.join(result)\n\n    def convert_to_utf8(self):\n        \"\"\"\n        Convert the binary string to utf-8 string.\n        >>> bdp = BinaryDataProcessor(\"0110100001100101011011000110110001101111\")\n        >>> bdp.convert_to_utf8()\n        'hello'\n\n        \"\"\"\n        bytes_list = []\n        for i in range(0, len(self.binary_string), 8):\n            chunk = self.binary_string[i:i+8]\n            if chunk:\n                byte_value = int(chunk, 2)\n                bytes_list.append(bytes([byte_value]))\n\n        return bytes(bytes_list).decode('utf-8')\n"
+}

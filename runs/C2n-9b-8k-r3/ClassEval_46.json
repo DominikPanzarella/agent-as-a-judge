@@ -1,0 +1,179 @@
+{
+  "task_id": "ClassEval_46",
+  "class_name": "Interpolation",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "interpolate_1d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not x_interp:\n        return result\n\n    n = len(x)\n\n    for xi in x_interp:\n        # Clamp to first point if below minimum\n        if xi <= x[0]:\n            yi = y[0]\n            result.append(yi)\n            continue\n\n        # Clamp to last point if above maximum\n        if xi >= x[-1]:\n            yi = y[-1]\n            result.append(yi)\n            continue\n\n        # Find the interval containing xi\n        yi = None\n        for i in range(n - 1):\n            if x[i] < xi < x[i + 1]:\n                t = (xi - x[i]) / (x[i + 1] - x[i])\n                yi = y[i] + t * (y[i + 1] - y[i])\n                break\n\n        if yi is None:\n            # Fallback to nearest endpoint if not found\n            yi = y[0]\n\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n        \n        if not x or not y or not x_interp:\n            return result\n        \n        n = len(x)\n        \n        for xi in x_interp:\n            # Clamp to first point if below minimum\n            if xi <= x[0]:\n                yi = y[0]\n                result.append(yi)\n                continue\n            \n            # Clamp to last point if above maximum\n            if xi >= x[-1]:\n                yi = y[-1]\n                result.append(yi)\n                continue\n            \n            # Find the interval containing xi\n            yi = None\n            for i in range(n - 1):\n                if x[i] < xi < x[i + 1]:\n                    t = (xi - x[i]) / (x[i + 1] - x[i])\n                    yi = y[i] + t * (y[i + 1] - y[i])\n                    break\n            \n            if yi is None:\n                # Fallback to nearest endpoint if not found\n                yi = y[0]\n            \n            result.append(yi)\n        \n        return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 549,
+        "cached_tokens": 0,
+        "completion_tokens": 1271,
+        "reasoning_tokens": 805,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "An interpolation point exactly equal to an interior x-coordinate is not matched by the strict interval checks, so the fallback incorrectly returns y[0] (for example, querying 2 in [1, 2, 3] returns 1). Handle exact data-point matches by returning the corresponding y value.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "An interpolation point exactly equal to an interior x-coordinate is not matched by the strict interval checks, so the fallback incorrectly returns y[0] (for example, querying 2 in [1, 2, 3] returns 1). Handle exact data-point matches by returning the corresponding y value.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1019,
+            "cached_tokens": 0,
+            "completion_tokens": 214,
+            "reasoning_tokens": 134,
+            "cost": 0.0002089
+          }
+        ],
+        "prompt_tokens": 1019,
+        "cached_tokens": 0,
+        "completion_tokens": 214,
+        "reasoning_tokens": 134,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not x_interp:\n        return result\n\n    for xi in x_interp:\n        # Find the interval containing xi\n        i = 0\n        while i < len(x) - 1 and xi > x[i + 1]:\n            i += 1\n\n        # Handle edge cases\n        if i == 0 and xi < x[0]:\n            yi = y[0]\n        elif i == len(x) - 2 and xi >= x[i + 1]:\n            yi = y[i + 1]\n        else:\n            # Linear interpolation formula\n            t = (xi - x[i]) / (x[i + 1] - x[i])\n            yi = y[i] + t * (y[i + 1] - y[i])\n\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n        \n        if not x or not y or not x_interp:\n            return result\n        \n        for xi in x_interp:\n            # Find the interval containing xi\n            i = 0\n            while i < len(x) - 1 and xi > x[i + 1]:\n                i += 1\n            \n            # Handle edge cases\n            if i == 0 and xi < x[0]:\n                yi = y[0]\n            elif i == len(x) - 2 and xi >= x[i + 1]:\n                yi = y[i + 1]\n            else:\n                # Linear interpolation formula\n                t = (xi - x[i]) / (x[i + 1] - x[i])\n                yi = y[i] + t * (y[i + 1] - y[i])\n            \n            result.append(yi)\n        \n        return result\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 988,
+        "cached_tokens": 0,
+        "completion_tokens": 932,
+        "reasoning_tokens": 578,
+        "cost": 0.0003318
+      },
+      "final_code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not x_interp:\n        return result\n\n    for xi in x_interp:\n        # Find the interval containing xi\n        i = 0\n        while i < len(x) - 1 and xi > x[i + 1]:\n            i += 1\n\n        # Handle edge cases\n        if i == 0 and xi < x[0]:\n            yi = y[0]\n        elif i == len(x) - 2 and xi >= x[i + 1]:\n            yi = y[i + 1]\n        else:\n            # Linear interpolation formula\n            t = (xi - x[i]) / (x[i + 1] - x[i])\n            yi = y[i] + t * (y[i + 1] - y[i])\n\n        result.append(yi)\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "interpolate_2d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list (2D).\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not z or not x_interp or not y_interp:\n        return result\n\n    # Handle edge cases for empty lists\n    if not x_interp or not y_interp:\n        return result\n\n    n_interp = len(x_interp)\n    n_x = len(x)\n    n_y = len(y)\n\n    # Pre-fill result array\n    result = [0.0] * n_interp\n\n    # For each interpolation point (xi, yi)\n    for i in range(n_interp):\n        xi = x_interp[i]\n        yi = y_interp[i]\n\n        # First, interpolate along x for two adjacent rows in z\n        # Find the two rows (around y) that bracket yi\n        j = 0\n        while j < n_y - 1 and yi > y[j + 1]:\n            j += 1\n\n        # Handle edge cases for y\n        if j == 0 and yi < y[0]:\n            j_row_low = 0\n            j_row_high = 0\n        elif j == n_y - 2 and yi >= y[j + 1]:\n            j_row_low = n_y - 1\n            j_row_high = n_y - 1\n        else:\n            j_row_low = j\n            j_row_high = j + 1\n\n        # Get the x-interpolated values from row_low and row_high\n        z_x_interp_low = Interpolation.interpolate_1d(x, z[j_row_low], x_interp)\n        z_x_interp_high = Interpolation.interpolate_1d(x, z[j_row_high], x_interp)\n\n        # Now interpolate along y at position i\n        if j_row_low == j_row_high:\n            result[i] = z_x_interp_low[i]\n        else:\n            result[i] = Interpolation.interpolate_1d([y[j_row_low], y[j_row_high]], \n                                                    [z_x_interp_low[i], z_x_interp_high[i]], \n                                                    [yi])[0]\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list (2D).\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not z or not x_interp or not y_interp:\n        return result\n\n    # Handle edge cases for empty lists\n    if not x_interp or not y_interp:\n        return result\n\n    n_interp = len(x_interp)\n    n_x = len(x)\n    n_y = len(y)\n\n    # Pre-fill result array\n    result = [0.0] * n_interp\n\n    # For each interpolation point (xi, yi)\n    for i in range(n_interp):\n        xi = x_interp[i]\n        yi = y_interp[i]\n\n        # First, interpolate along x for two adjacent rows in z\n        # Find the two rows (around y) that bracket yi\n        j = 0\n        while j < n_y - 1 and yi > y[j + 1]:\n            j += 1\n\n        # Handle edge cases for y\n        if j == 0 and yi < y[0]:\n            j_row_low = 0\n            j_row_high = 0\n        elif j == n_y - 2 and yi >= y[j + 1]:\n            j_row_low = n_y - 1\n            j_row_high = n_y - 1\n        else:\n            j_row_low = j\n            j_row_high = j + 1\n\n        # Get the x-interpolated values from row_low and row_high\n        z_x_interp_low = Interpolation.interpolate_1d(x, z[j_row_low], x_interp)\n        z_x_interp_high = Interpolation.interpolate_1d(x, z[j_row_high], x_interp)\n\n        # Now interpolate along y at position i\n        if j_row_low == j_row_high:\n            result[i] = z_x_interp_low[i]\n        else:\n            result[i] = Interpolation.interpolate_1d([y[j_row_low], y[j_row_high]], \n                                                    [z_x_interp_low[i], z_x_interp_high[i]], \n                                                    [yi])[0]\n\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 903,
+        "cached_tokens": 0,
+        "completion_tokens": 4138,
+        "reasoning_tokens": 3462,
+        "cost": 0.0011248
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "For a valid rectangular grid with at least two coordinates on each axis and paired interpolation coordinates, it interpolates across x in the two rows bracketing each y value, then interpolates across y. This gives the documented result and handles out-of-range points consistently with `interpolate_1d`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "For a valid rectangular grid with at least two coordinates on each axis and paired interpolation coordinates, it interpolates across x in the two rows bracketing each y value, then interpolates across y. This gives the documented result and handles out-of-range points consistently with `interpolate_1d`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1631,
+            "cached_tokens": 0,
+            "completion_tokens": 1428,
+            "reasoning_tokens": 1349,
+            "cost": 0.0008771
+          }
+        ],
+        "prompt_tokens": 1631,
+        "cached_tokens": 0,
+        "completion_tokens": 1428,
+        "reasoning_tokens": 1349,
+        "cost": 0.0008771
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list (2D).\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    result = []\n\n    if not x or not y or not z or not x_interp or not y_interp:\n        return result\n\n    # Handle edge cases for empty lists\n    if not x_interp or not y_interp:\n        return result\n\n    n_interp = len(x_interp)\n    n_x = len(x)\n    n_y = len(y)\n\n    # Pre-fill result array\n    result = [0.0] * n_interp\n\n    # For each interpolation point (xi, yi)\n    for i in range(n_interp):\n        xi = x_interp[i]\n        yi = y_interp[i]\n\n        # First, interpolate along x for two adjacent rows in z\n        # Find the two rows (around y) that bracket yi\n        j = 0\n        while j < n_y - 1 and yi > y[j + 1]:\n            j += 1\n\n        # Handle edge cases for y\n        if j == 0 and yi < y[0]:\n            j_row_low = 0\n            j_row_high = 0\n        elif j == n_y - 2 and yi >= y[j + 1]:\n            j_row_low = n_y - 1\n            j_row_high = n_y - 1\n        else:\n            j_row_low = j\n            j_row_high = j + 1\n\n        # Get the x-interpolated values from row_low and row_high\n        z_x_interp_low = Interpolation.interpolate_1d(x, z[j_row_low], x_interp)\n        z_x_interp_high = Interpolation.interpolate_1d(x, z[j_row_high], x_interp)\n\n        # Now interpolate along y at position i\n        if j_row_low == j_row_high:\n            result[i] = z_x_interp_low[i]\n        else:\n            result[i] = Interpolation.interpolate_1d([y[j_row_low], y[j_row_high]], \n                                                    [z_x_interp_low[i], z_x_interp_high[i]], \n                                                    [yi])[0]\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 2,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 3,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n\n        if not x or not y or not x_interp:\n            return result\n\n        n = len(x)\n\n        for xi in x_interp:\n            # Clamp to first point if below minimum\n            if xi <= x[0]:\n                yi = y[0]\n                result.append(yi)\n                continue\n\n            # Clamp to last point if above maximum\n            if xi >= x[-1]:\n                yi = y[-1]\n                result.append(yi)\n                continue\n\n            # Find the interval containing xi\n            yi = None\n            for i in range(n - 1):\n                if x[i] < xi < x[i + 1]:\n                    t = (xi - x[i]) / (x[i + 1] - x[i])\n                    yi = y[i] + t * (y[i + 1] - y[i])\n                    break\n\n            if yi is None:\n                # Fallback to nearest endpoint if not found\n                yi = y[0]\n\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list (2D).\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n\n        \"\"\"\n        result = []\n\n        if not x or not y or not z or not x_interp or not y_interp:\n            return result\n\n        # Handle edge cases for empty lists\n        if not x_interp or not y_interp:\n            return result\n\n        n_interp = len(x_interp)\n        n_x = len(x)\n        n_y = len(y)\n\n        # Pre-fill result array\n        result = [0.0] * n_interp\n\n        # For each interpolation point (xi, yi)\n        for i in range(n_interp):\n            xi = x_interp[i]\n            yi = y_interp[i]\n\n            # First, interpolate along x for two adjacent rows in z\n            # Find the two rows (around y) that bracket yi\n            j = 0\n            while j < n_y - 1 and yi > y[j + 1]:\n                j += 1\n\n            # Handle edge cases for y\n            if j == 0 and yi < y[0]:\n                j_row_low = 0\n                j_row_high = 0\n            elif j == n_y - 2 and yi >= y[j + 1]:\n                j_row_low = n_y - 1\n                j_row_high = n_y - 1\n            else:\n                j_row_low = j\n                j_row_high = j + 1\n\n            # Get the x-interpolated values from row_low and row_high\n            z_x_interp_low = Interpolation.interpolate_1d(x, z[j_row_low], x_interp)\n            z_x_interp_high = Interpolation.interpolate_1d(x, z[j_row_high], x_interp)\n\n            # Now interpolate along y at position i\n            if j_row_low == j_row_high:\n                result[i] = z_x_interp_low[i]\n            else:\n                result[i] = Interpolation.interpolate_1d([y[j_row_low], y[j_row_high]], \n                                                        [z_x_interp_low[i], z_x_interp_high[i]], \n                                                        [yi])[0]\n\n        return result\n",
+  "source": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        result = []\n\n        if not x or not y or not x_interp:\n            return result\n\n        for xi in x_interp:\n            # Find the interval containing xi\n            i = 0\n            while i < len(x) - 1 and xi > x[i + 1]:\n                i += 1\n\n            # Handle edge cases\n            if i == 0 and xi < x[0]:\n                yi = y[0]\n            elif i == len(x) - 2 and xi >= x[i + 1]:\n                yi = y[i + 1]\n            else:\n                # Linear interpolation formula\n                t = (xi - x[i]) / (x[i + 1] - x[i])\n                yi = y[i] + t * (y[i + 1] - y[i])\n\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list (2D).\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n\n        \"\"\"\n        result = []\n\n        if not x or not y or not z or not x_interp or not y_interp:\n            return result\n\n        # Handle edge cases for empty lists\n        if not x_interp or not y_interp:\n            return result\n\n        n_interp = len(x_interp)\n        n_x = len(x)\n        n_y = len(y)\n\n        # Pre-fill result array\n        result = [0.0] * n_interp\n\n        # For each interpolation point (xi, yi)\n        for i in range(n_interp):\n            xi = x_interp[i]\n            yi = y_interp[i]\n\n            # First, interpolate along x for two adjacent rows in z\n            # Find the two rows (around y) that bracket yi\n            j = 0\n            while j < n_y - 1 and yi > y[j + 1]:\n                j += 1\n\n            # Handle edge cases for y\n            if j == 0 and yi < y[0]:\n                j_row_low = 0\n                j_row_high = 0\n            elif j == n_y - 2 and yi >= y[j + 1]:\n                j_row_low = n_y - 1\n                j_row_high = n_y - 1\n            else:\n                j_row_low = j\n                j_row_high = j + 1\n\n            # Get the x-interpolated values from row_low and row_high\n            z_x_interp_low = Interpolation.interpolate_1d(x, z[j_row_low], x_interp)\n            z_x_interp_high = Interpolation.interpolate_1d(x, z[j_row_high], x_interp)\n\n            # Now interpolate along y at position i\n            if j_row_low == j_row_high:\n                result[i] = z_x_interp_low[i]\n            else:\n                result[i] = Interpolation.interpolate_1d([y[j_row_low], y[j_row_high]], \n                                                        [z_x_interp_low[i], z_x_interp_high[i]], \n                                                        [yi])[0]\n\n        return result\n"
+}

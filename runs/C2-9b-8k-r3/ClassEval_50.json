@@ -1,0 +1,252 @@
+{
+  "task_id": "ClassEval_50",
+  "class_name": "JSONProcessor",
+  "setup": "C2",
+  "name": "C2-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "read_json",
+      "first": {
+        "code": "def read_json(self, file_path):\n    \"\"\"\n    Read a JSON file and return the data.\n    :param file_path: str, the path of the JSON file.\n    :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                return 0 if the file does not exist.\n    >>> json.read_json('test.json')\n    {'name': 'test', 'age': 14}\n    \"\"\"\n    try:\n        with open(file_path, 'r') as f:\n            return json.load(f)\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\n    def read_json(self, file_path):\n        \"\"\"\n        Read a JSON file and return the data.\n        :param file_path: str, the path of the JSON file.\n        :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                    return 0 if the file does not exist.\n        >>> json.read_json('test.json')\n        {'name': 'test', 'age': 14}\n        \"\"\"\n        try:\n            with open(file_path, 'r') as f:\n                return json.load(f)\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 621,
+        "cached_tokens": 0,
+        "completion_tokens": 526,
+        "reasoning_tokens": 383,
+        "cost": 7.6761e-05
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "A valid JSON file containing a list or scalar is returned as that value, even though the docstring promises a dict. Validate that the loaded value is a dict and return -1 (or otherwise handle it as specified) when it is not.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "A valid JSON file containing a list or scalar is returned as that value, even though the docstring promises a dict. Validate that the loaded value is a dict and return -1 (or otherwise handle it as specified) when it is not.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 862,
+            "cached_tokens": 0,
+            "completion_tokens": 246,
+            "reasoning_tokens": 178,
+            "cost": 0.0002092
+          }
+        ],
+        "prompt_tokens": 862,
+        "cached_tokens": 0,
+        "completion_tokens": 246,
+        "reasoning_tokens": 178,
+        "cost": 0.0002092
+      },
+      "revision": {
+        "code": "def read_json(self, file_path):\n    \"\"\"\n    Read a JSON file and return the data.\n    :param file_path: str, the path of the JSON file.\n    :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                return 0 if the file does not exist.\n    >>> json.read_json('test.json')\n    {'name': 'test', 'age': 14}\n    \"\"\"\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n            if isinstance(data, dict):\n                return data\n            else:\n                return -1\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\n    def read_json(self, file_path):\n        \"\"\"\n        Read a JSON file and return the data.\n        :param file_path: str, the path of the JSON file.\n        :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                    return 0 if the file does not exist.\n        >>> json.read_json('test.json')\n        {'name': 'test', 'age': 14}\n        \"\"\"\n        try:\n            with open(file_path, 'r') as f:\n                data = json.load(f)\n                if isinstance(data, dict):\n                    return data\n                else:\n                    return -1\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 868,
+        "cached_tokens": 0,
+        "completion_tokens": 488,
+        "reasoning_tokens": 329,
+        "cost": 0.000139824
+      },
+      "final_code": "def read_json(self, file_path):\n    \"\"\"\n    Read a JSON file and return the data.\n    :param file_path: str, the path of the JSON file.\n    :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                return 0 if the file does not exist.\n    >>> json.read_json('test.json')\n    {'name': 'test', 'age': 14}\n    \"\"\"\n    try:\n        with open(file_path, 'r') as f:\n            data = json.load(f)\n            if isinstance(data, dict):\n                return data\n            else:\n                return -1\n    except FileNotFoundError:\n        return 0\n    except Exception:\n        return -1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "write_json",
+      "first": {
+        "code": "def write_json(self, data, file_path):\n    \"\"\"\n    Write data to a JSON file and save it to the given path.\n\n    :param data: dict, the data to be written to the JSON file.\n    :param file_path: str, the path of the JSON file.\n    :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.\n    >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')\n    1\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    \"\"\"\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1",
+        "valid": true,
+        "reply": "```python\ndef write_json(self, data, file_path):\n    \"\"\"\n    Write data to a JSON file and save it to the given path.\n\n    :param data: dict, the data to be written to the JSON file.\n    :param file_path: str, the path of the JSON file.\n    :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.\n    >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')\n    1\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    \"\"\"\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 808,
+        "cached_tokens": 0,
+        "completion_tokens": 581,
+        "reasoning_tokens": 367,
+        "cost": 0.000146634
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "For a dictionary that can be serialized as JSON, the method writes it to the given path and returns 1; any exception during opening or serialization returns -1. This matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "For a dictionary that can be serialized as JSON, the method writes it to the given path and returns 1; any exception during opening or serialization returns -1. This matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1071,
+            "cached_tokens": 0,
+            "completion_tokens": 163,
+            "reasoning_tokens": 106,
+            "cost": 0.00018860000000000003
+          }
+        ],
+        "prompt_tokens": 1071,
+        "cached_tokens": 0,
+        "completion_tokens": 163,
+        "reasoning_tokens": 106,
+        "cost": 0.00018860000000000003
+      },
+      "revision": null,
+      "final_code": "def write_json(self, data, file_path):\n    \"\"\"\n    Write data to a JSON file and save it to the given path.\n\n    :param data: dict, the data to be written to the JSON file.\n    :param file_path: str, the path of the JSON file.\n    :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.\n    >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')\n    1\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    \"\"\"\n    try:\n        with open(file_path, 'w') as f:\n            json.dump(data, f)\n        return 1\n    except Exception:\n        return -1",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "process_json",
+      "first": {
+        "code": "def process_json(self, file_path, remove_key):\n    \"\"\"\n    read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n    :param file_path: str, the path of the JSON file.\n    :param remove_key: str, the key to be removed.\n    :return: 1, if the specified key is successfully removed and the data is written back.\n                0, if the file does not exist or the specified key does not exist in the data.\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    >>> json.process_json('test.json', 'key1')\n    1\n    >>> json.read_json('test.json')\n    {'key2': 'value2'}\n    \"\"\"\n    data = self.read_json(file_path)\n\n    if data == 0 or data == -1:\n        return 0\n\n    if isinstance(data, dict) and remove_key in data:\n        del data[remove_key]\n        result = self.write_json(data, file_path)\n        return result\n\n    return 0",
+        "valid": true,
+        "reply": "```python\ndef process_json(self, file_path, remove_key):\n    \"\"\"\n    read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n    :param file_path: str, the path of the JSON file.\n    :param remove_key: str, the key to be removed.\n    :return: 1, if the specified key is successfully removed and the data is written back.\n                0, if the file does not exist or the specified key does not exist in the data.\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    >>> json.process_json('test.json', 'key1')\n    1\n    >>> json.read_json('test.json')\n    {'key2': 'value2'}\n    \"\"\"\n    data = self.read_json(file_path)\n    \n    if data == 0 or data == -1:\n        return 0\n    \n    if isinstance(data, dict) and remove_key in data:\n        del data[remove_key]\n        result = self.write_json(data, file_path)\n        return result\n    \n    return 0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1000,
+        "cached_tokens": 0,
+        "completion_tokens": 924,
+        "reasoning_tokens": 661,
+        "cost": 0.000129844
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`read_json` returns `-1` for malformed JSON or other read errors, but `process_json` converts those errors to `0`, which its docstring reserves for a missing file or key. Handle `data == -1` separately (for example, return `-1`) and keep `0` for a missing file or key.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`read_json` returns `-1` for malformed JSON or other read errors, but `process_json` converts those errors to `0`, which its docstring reserves for a missing file or key. Handle `data == -1` separately (for example, return `-1`) and keep `0` for a missing file or key.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1308,
+            "cached_tokens": 0,
+            "completion_tokens": 766,
+            "reasoning_tokens": 677,
+            "cost": 0.0005137999999999999
+          }
+        ],
+        "prompt_tokens": 1308,
+        "cached_tokens": 0,
+        "completion_tokens": 766,
+        "reasoning_tokens": 677,
+        "cost": 0.0005137999999999999
+      },
+      "revision": {
+        "code": "def process_json(self, file_path, remove_key):\n    \"\"\"\n    read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n    :param file_path: str, the path of the JSON file.\n    :param remove_key: str, the key to be removed.\n    :return: 1, if the specified key is successfully removed and the data is written back.\n                0, if the file does not exist or the specified key does not exist in the data.\n                -1, if there was an error reading the JSON file.\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    >>> json.process_json('test.json', 'key1')\n    1\n    >>> json.read_json('test.json')\n    {'key2': 'value2'}\n    \"\"\"\n    data = self.read_json(file_path)\n\n    if data == 0:\n        return 0\n\n    if data == -1:\n        return -1\n\n    if isinstance(data, dict) and remove_key in data:\n        del data[remove_key]\n        result = self.write_json(data, file_path)\n        return result\n\n    return 0",
+        "valid": true,
+        "reply": "```python\ndef process_json(self, file_path, remove_key):\n    \"\"\"\n    read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n    :param file_path: str, the path of the JSON file.\n    :param remove_key: str, the key to be removed.\n    :return: 1, if the specified key is successfully removed and the data is written back.\n                0, if the file does not exist or the specified key does not exist in the data.\n                -1, if there was an error reading the JSON file.\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    >>> json.process_json('test.json', 'key1')\n    1\n    >>> json.read_json('test.json')\n    {'key2': 'value2'}\n    \"\"\"\n    data = self.read_json(file_path)\n    \n    if data == 0:\n        return 0\n    \n    if data == -1:\n        return -1\n    \n    if isinstance(data, dict) and remove_key in data:\n        del data[remove_key]\n        result = self.write_json(data, file_path)\n        return result\n    \n    return 0\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1368,
+        "cached_tokens": 0,
+        "completion_tokens": 438,
+        "reasoning_tokens": 158,
+        "cost": 0.000177324
+      },
+      "final_code": "def process_json(self, file_path, remove_key):\n    \"\"\"\n    read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n    :param file_path: str, the path of the JSON file.\n    :param remove_key: str, the key to be removed.\n    :return: 1, if the specified key is successfully removed and the data is written back.\n                0, if the file does not exist or the specified key does not exist in the data.\n                -1, if there was an error reading the JSON file.\n    >>> json.read_json('test.json')\n    {'key1': 'value1', 'key2': 'value2'}\n    >>> json.process_json('test.json', 'key1')\n    1\n    >>> json.read_json('test.json')\n    {'key2': 'value2'}\n    \"\"\"\n    data = self.read_json(file_path)\n\n    if data == 0:\n        return 0\n\n    if data == -1:\n        return -1\n\n    if isinstance(data, dict) and remove_key in data:\n        del data[remove_key]\n        result = self.write_json(data, file_path)\n        return result\n\n    return 0",
+      "passed_first": true,
+      "passed": false
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": false,
+  "tests_first": {
+    "JSONProcessorTestReadJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestWriteJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestProcessJsonExistingKey": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "JSONProcessorTestReadJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestWriteJson": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "JSONProcessorTestProcessJsonExistingKey": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "JSONProcessorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import json\nimport os\n\nclass JSONProcessor:\n\n    def read_json(self, file_path):\n        \"\"\"\n        Read a JSON file and return the data.\n        :param file_path: str, the path of the JSON file.\n        :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                    return 0 if the file does not exist.\n        >>> json.read_json('test.json')\n        {'name': 'test', 'age': 14}\n        \"\"\"\n        try:\n            with open(file_path, 'r') as f:\n                return json.load(f)\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n\n    def write_json(self, data, file_path):\n        \"\"\"\n        Write data to a JSON file and save it to the given path.\n\n        :param data: dict, the data to be written to the JSON file.\n        :param file_path: str, the path of the JSON file.\n        :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.\n        >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')\n        1\n        >>> json.read_json('test.json')\n        {'key1': 'value1', 'key2': 'value2'}\n        \"\"\"\n        try:\n            with open(file_path, 'w') as f:\n                json.dump(data, f)\n            return 1\n        except Exception:\n            return -1\n\n    def process_json(self, file_path, remove_key):\n        \"\"\"\n        read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n        :param file_path: str, the path of the JSON file.\n        :param remove_key: str, the key to be removed.\n        :return: 1, if the specified key is successfully removed and the data is written back.\n                    0, if the file does not exist or the specified key does not exist in the data.\n        >>> json.read_json('test.json')\n        {'key1': 'value1', 'key2': 'value2'}\n        >>> json.process_json('test.json', 'key1')\n        1\n        >>> json.read_json('test.json')\n        {'key2': 'value2'}\n        \"\"\"\n        data = self.read_json(file_path)\n\n        if data == 0 or data == -1:\n            return 0\n\n        if isinstance(data, dict) and remove_key in data:\n            del data[remove_key]\n            result = self.write_json(data, file_path)\n            return result\n\n        return 0\n",
+  "source": "import json\nimport os\n\nclass JSONProcessor:\n\n    def read_json(self, file_path):\n        \"\"\"\n        Read a JSON file and return the data.\n        :param file_path: str, the path of the JSON file.\n        :return: dict, the data from the JSON file if read successfully, or return -1 if an error occurs during the reading process.\n                    return 0 if the file does not exist.\n        >>> json.read_json('test.json')\n        {'name': 'test', 'age': 14}\n        \"\"\"\n        try:\n            with open(file_path, 'r') as f:\n                data = json.load(f)\n                if isinstance(data, dict):\n                    return data\n                else:\n                    return -1\n        except FileNotFoundError:\n            return 0\n        except Exception:\n            return -1\n\n    def write_json(self, data, file_path):\n        \"\"\"\n        Write data to a JSON file and save it to the given path.\n\n        :param data: dict, the data to be written to the JSON file.\n        :param file_path: str, the path of the JSON file.\n        :return: 1 if the writing process is successful, or -1, if an error occurs during the writing process.\n        >>> json.write_json({'key1': 'value1', 'key2': 'value2'}, 'test.json')\n        1\n        >>> json.read_json('test.json')\n        {'key1': 'value1', 'key2': 'value2'}\n        \"\"\"\n        try:\n            with open(file_path, 'w') as f:\n                json.dump(data, f)\n            return 1\n        except Exception:\n            return -1\n\n    def process_json(self, file_path, remove_key):\n        \"\"\"\n        read a JSON file and process the data by removing a specified key and rewrite the modified data back to the file.\n\n        :param file_path: str, the path of the JSON file.\n        :param remove_key: str, the key to be removed.\n        :return: 1, if the specified key is successfully removed and the data is written back.\n                    0, if the file does not exist or the specified key does not exist in the data.\n                    -1, if there was an error reading the JSON file.\n        >>> json.read_json('test.json')\n        {'key1': 'value1', 'key2': 'value2'}\n        >>> json.process_json('test.json', 'key1')\n        1\n        >>> json.read_json('test.json')\n        {'key2': 'value2'}\n        \"\"\"\n        data = self.read_json(file_path)\n\n        if data == 0:\n            return 0\n\n        if data == -1:\n            return -1\n\n        if isinstance(data, dict) and remove_key in data:\n            del data[remove_key]\n            result = self.write_json(data, file_path)\n            return result\n\n        return 0\n"
+}

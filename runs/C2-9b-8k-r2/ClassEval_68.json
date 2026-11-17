@@ -1,0 +1,241 @@
+{
+  "task_id": "ClassEval_68",
+  "class_name": "PageUtil",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "get_page",
+      "first": {
+        "code": "def get_page(self, page_number):\n    \"\"\"\n    Retrieve a specific page of data.\n    :param page_number: int, the page number to fetch\n    :return: list, the data on the specified page\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page(1)\n    [1]\n    \"\"\"\n    if page_number < 1:\n        return []\n    start_index = (page_number - 1) * self.page_size\n    end_index = start_index + self.page_size\n    return self.data[start_index:end_index]",
+        "valid": true,
+        "reply": "```python\ndef get_page(self, page_number):\n    \"\"\"\n    Retrieve a specific page of data.\n    :param page_number: int, the page number to fetch\n    :return: list, the data on the specified page\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page(1)\n    [1]\n    \"\"\"\n    if page_number < 1:\n        return []\n    start_index = (page_number - 1) * self.page_size\n    end_index = start_index + self.page_size\n    return self.data[start_index:end_index]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 673,
+        "cached_tokens": 0,
+        "completion_tokens": 742,
+        "reasoning_tokens": 634,
+        "cost": 0.000155684
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly treats page numbers as 1-based, returns the corresponding slice, and returns an empty list for page numbers below 1 or beyond the available data. This matches the documented behavior for integer page numbers.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly treats page numbers as 1-based, returns the corresponding slice, and returns an empty list for page numbers below 1 or beyond the available data. This matches the documented behavior for integer page numbers.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 897,
+            "cached_tokens": 0,
+            "completion_tokens": 160,
+            "reasoning_tokens": 99,
+            "cost": 0.00016969999999999998
+          }
+        ],
+        "prompt_tokens": 897,
+        "cached_tokens": 0,
+        "completion_tokens": 160,
+        "reasoning_tokens": 99,
+        "cost": 0.00016969999999999998
+      },
+      "revision": null,
+      "final_code": "def get_page(self, page_number):\n    \"\"\"\n    Retrieve a specific page of data.\n    :param page_number: int, the page number to fetch\n    :return: list, the data on the specified page\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page(1)\n    [1]\n    \"\"\"\n    if page_number < 1:\n        return []\n    start_index = (page_number - 1) * self.page_size\n    end_index = start_index + self.page_size\n    return self.data[start_index:end_index]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_page_info",
+      "first": {
+        "code": "def get_page_info(self, page_number):\n    \"\"\"\n    Retrieve information about a specific page.\n    :param page_number: int, the page number to fetch information about\n    :return: dict, containing page information such as current page number, total pages, etc.\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page_info(1)\n    {\n        \"current_page\": 1,\n        \"per_page\": 1,\n        \"total_pages\": 4,\n        \"total_items\": 4,\n        \"has_previous\": False,\n        \"has_next\": True,\n        \"data\": [1]\n    }\n    \"\"\"\n    if page_number < 1:\n        page_data = []\n    else:\n        page_data = self.get_page(page_number)\n\n    has_previous = page_number > 1\n    has_next = page_number < self.total_pages\n\n    return {\n        \"current_page\": page_number,\n        \"per_page\": self.page_size,\n        \"total_pages\": self.total_pages,\n        \"total_items\": self.total_items,\n        \"has_previous\": has_previous,\n        \"has_next\": has_next,\n        \"data\": page_data\n    }",
+        "valid": true,
+        "reply": "```python\ndef get_page_info(self, page_number):\n    \"\"\"\n    Retrieve information about a specific page.\n    :param page_number: int, the page number to fetch information about\n    :return: dict, containing page information such as current page number, total pages, etc.\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page_info(1)\n    {\n        \"current_page\": 1,\n        \"per_page\": 1,\n        \"total_pages\": 4,\n        \"total_items\": 4,\n        \"has_previous\": False,\n        \"has_next\": True,\n        \"data\": [1]\n    }\n    \"\"\"\n    if page_number < 1:\n        page_data = []\n    else:\n        page_data = self.get_page(page_number)\n    \n    has_previous = page_number > 1\n    has_next = page_number < self.total_pages\n    \n    return {\n        \"current_page\": page_number,\n        \"per_page\": self.page_size,\n        \"total_pages\": self.total_pages,\n        \"total_items\": self.total_items,\n        \"has_previous\": has_previous,\n        \"has_next\": has_next,\n        \"data\": page_data\n    }\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 825,
+        "cached_tokens": 0,
+        "completion_tokens": 1309,
+        "reasoning_tokens": 1000,
+        "cost": 0.000241461
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For a page number below 1, `get_page` returns no data, but `has_next` can still be `True` (for example, page 0 when there are pages), and the returned `current_page` is invalid. Validate or normalize the page number before computing the page metadata and flags.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For a page number below 1, `get_page` returns no data, but `has_next` can still be `True` (for example, page 0 when there are pages), and the returned `current_page` is invalid. Validate or normalize the page number before computing the page metadata and flags.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1166,
+            "cached_tokens": 0,
+            "completion_tokens": 407,
+            "reasoning_tokens": 325,
+            "cost": 0.00032010000000000003
+          }
+        ],
+        "prompt_tokens": 1166,
+        "cached_tokens": 0,
+        "completion_tokens": 407,
+        "reasoning_tokens": 325,
+        "cost": 0.00032010000000000003
+      },
+      "revision": {
+        "code": "def get_page_info(self, page_number):\n    \"\"\"\n    Retrieve information about a specific page.\n    :param page_number: int, the page number to fetch information about\n    :return: dict, containing page information such as current page number, total pages, etc.\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page_info(1)\n    {\n        \"current_page\": 1,\n        \"per_page\": 1,\n        \"total_pages\": 4,\n        \"total_items\": 4,\n        \"has_previous\": False,\n        \"has_next\": True,\n        \"data\": [1]\n    }\n    \"\"\"\n    # Validate and normalize page number\n    if page_number < 1:\n        page_data = []\n        current_page = None\n        has_previous = False\n        has_next = False\n    elif page_number > self.total_pages and self.total_pages > 0:\n        page_data = []\n        current_page = self.total_pages\n        has_previous = self.total_pages > 1\n        has_next = False\n    else:\n        page_data = self.get_page(page_number)\n        current_page = page_number\n        has_previous = page_number > 1\n        has_next = page_number < self.total_pages\n\n    return {\n        \"current_page\": current_page,\n        \"per_page\": self.page_size,\n        \"total_pages\": self.total_pages,\n        \"total_items\": self.total_items,\n        \"has_previous\": has_previous,\n        \"has_next\": has_next,\n        \"data\": page_data\n    }",
+        "valid": true,
+        "reply": "```python\ndef get_page_info(self, page_number):\n    \"\"\"\n    Retrieve information about a specific page.\n    :param page_number: int, the page number to fetch information about\n    :return: dict, containing page information such as current page number, total pages, etc.\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page_info(1)\n    {\n        \"current_page\": 1,\n        \"per_page\": 1,\n        \"total_pages\": 4,\n        \"total_items\": 4,\n        \"has_previous\": False,\n        \"has_next\": True,\n        \"data\": [1]\n    }\n    \"\"\"\n    # Validate and normalize page number\n    if page_number < 1:\n        page_data = []\n        current_page = None\n        has_previous = False\n        has_next = False\n    elif page_number > self.total_pages and self.total_pages > 0:\n        page_data = []\n        current_page = self.total_pages\n        has_previous = self.total_pages > 1\n        has_next = False\n    else:\n        page_data = self.get_page(page_number)\n        current_page = page_number\n        has_previous = page_number > 1\n        has_next = page_number < self.total_pages\n    \n    return {\n        \"current_page\": current_page,\n        \"per_page\": self.page_size,\n        \"total_pages\": self.total_pages,\n        \"total_items\": self.total_items,\n        \"has_previous\": has_previous,\n        \"has_next\": has_next,\n        \"data\": page_data\n    }\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1219,
+        "cached_tokens": 0,
+        "completion_tokens": 890,
+        "reasoning_tokens": 555,
+        "cost": 0.000222082
+      },
+      "final_code": "def get_page_info(self, page_number):\n    \"\"\"\n    Retrieve information about a specific page.\n    :param page_number: int, the page number to fetch information about\n    :return: dict, containing page information such as current page number, total pages, etc.\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.get_page_info(1)\n    {\n        \"current_page\": 1,\n        \"per_page\": 1,\n        \"total_pages\": 4,\n        \"total_items\": 4,\n        \"has_previous\": False,\n        \"has_next\": True,\n        \"data\": [1]\n    }\n    \"\"\"\n    # Validate and normalize page number\n    if page_number < 1:\n        page_data = []\n        current_page = None\n        has_previous = False\n        has_next = False\n    elif page_number > self.total_pages and self.total_pages > 0:\n        page_data = []\n        current_page = self.total_pages\n        has_previous = self.total_pages > 1\n        has_next = False\n    else:\n        page_data = self.get_page(page_number)\n        current_page = page_number\n        has_previous = page_number > 1\n        has_next = page_number < self.total_pages\n\n    return {\n        \"current_page\": current_page,\n        \"per_page\": self.page_size,\n        \"total_pages\": self.total_pages,\n        \"total_items\": self.total_items,\n        \"has_previous\": has_previous,\n        \"has_next\": has_next,\n        \"data\": page_data\n    }",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "search",
+      "first": {
+        "code": "def search(self, keyword):\n    \"\"\"\n    Search for items in the data that contain the given keyword.\n    :param keyword: str, the keyword to search for\n    :return: dict, containing search information such as total results and matching items\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.search(\"1\")\n    >>> search_info = {\n    >>>     \"keyword\": \"1\",\n    >>>     \"total_results\": 1,\n    >>>     \"total_pages\": 1,\n    >>>     \"results\": [1]\n    >>> }\n    \"\"\"\n    keyword_str = str(keyword).lower() if keyword else \"\"\n    filtered_data = []\n\n    for item in self.data:\n        try:\n            item_str = str(item).lower()\n        except Exception:\n            continue\n\n        if keyword_str == \"\":\n            filtered_data.append(item)\n        elif keyword_str in item_str:\n            filtered_data.append(item)\n\n    # Calculate pagination info for filtered results\n    total_filtered_items = len(filtered_data)\n    filtered_page_size = self.page_size\n\n    if total_filtered_items > 0:\n        filtered_total_pages = (total_filtered_items + filtered_page_size - 1) // filtered_page_size\n    else:\n        filtered_total_pages = 0\n\n    return {\n        \"keyword\": keyword,\n        \"total_results\": total_filtered_items,\n        \"total_pages\": filtered_total_pages,\n        \"results\": filtered_data\n    }",
+        "valid": true,
+        "reply": "```python\ndef search(self, keyword):\n    \"\"\"\n    Search for items in the data that contain the given keyword.\n    :param keyword: str, the keyword to search for\n    :return: dict, containing search information such as total results and matching items\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.search(\"1\")\n    >>> search_info = {\n    >>>     \"keyword\": \"1\",\n    >>>     \"total_results\": 1,\n    >>>     \"total_pages\": 1,\n    >>>     \"results\": [1]\n    >>> }\n    \"\"\"\n    keyword_str = str(keyword).lower() if keyword else \"\"\n    filtered_data = []\n    \n    for item in self.data:\n        try:\n            item_str = str(item).lower()\n        except Exception:\n            continue\n        \n        if keyword_str == \"\":\n            filtered_data.append(item)\n        elif keyword_str in item_str:\n            filtered_data.append(item)\n    \n    # Calculate pagination info for filtered results\n    total_filtered_items = len(filtered_data)\n    filtered_page_size = self.page_size\n    \n    if total_filtered_items > 0:\n        filtered_total_pages = (total_filtered_items + filtered_page_size - 1) // filtered_page_size\n    else:\n        filtered_total_pages = 0\n    \n    return {\n        \"keyword\": keyword,\n        \"total_results\": total_filtered_items,\n        \"total_pages\": filtered_total_pages,\n        \"results\": filtered_data\n    }\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1188,
+        "cached_tokens": 0,
+        "completion_tokens": 1049,
+        "reasoning_tokens": 733,
+        "cost": 0.000239865
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "For a valid positive page size, the method case-insensitively matches the keyword against each item's string representation and returns the matching items with the correct result count and page count. This also handles an empty keyword as matching every item, consistent with substring matching.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "For a valid positive page size, the method case-insensitively matches the keyword against each item's string representation and returns the matching items with the correct result count and page count. This also handles an empty keyword as matching every item, consistent with substring matching.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1546,
+            "cached_tokens": 0,
+            "completion_tokens": 512,
+            "reasoning_tokens": 442,
+            "cost": 0.0004106
+          }
+        ],
+        "prompt_tokens": 1546,
+        "cached_tokens": 0,
+        "completion_tokens": 512,
+        "reasoning_tokens": 442,
+        "cost": 0.0004106
+      },
+      "revision": null,
+      "final_code": "def search(self, keyword):\n    \"\"\"\n    Search for items in the data that contain the given keyword.\n    :param keyword: str, the keyword to search for\n    :return: dict, containing search information such as total results and matching items\n    >>> page_util = PageUtil([1, 2, 3, 4], 1)\n    >>> page_util.search(\"1\")\n    >>> search_info = {\n    >>>     \"keyword\": \"1\",\n    >>>     \"total_results\": 1,\n    >>>     \"total_pages\": 1,\n    >>>     \"results\": [1]\n    >>> }\n    \"\"\"\n    keyword_str = str(keyword).lower() if keyword else \"\"\n    filtered_data = []\n\n    for item in self.data:\n        try:\n            item_str = str(item).lower()\n        except Exception:\n            continue\n\n        if keyword_str == \"\":\n            filtered_data.append(item)\n        elif keyword_str in item_str:\n            filtered_data.append(item)\n\n    # Calculate pagination info for filtered results\n    total_filtered_items = len(filtered_data)\n    filtered_page_size = self.page_size\n\n    if total_filtered_items > 0:\n        filtered_total_pages = (total_filtered_items + filtered_page_size - 1) // filtered_page_size\n    else:\n        filtered_total_pages = 0\n\n    return {\n        \"keyword\": keyword,\n        \"total_results\": total_filtered_items,\n        \"total_pages\": filtered_total_pages,\n        \"results\": filtered_data\n    }",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "PageUtilTestGetPage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PageUtilTestGetPageInfo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "PageUtilTestSearch": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PageUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "PageUtilTestGetPage": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PageUtilTestGetPageInfo": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "PageUtilTestSearch": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PageUtilTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass PageUtil: \n    def __init__(self, data, page_size):\n        \"\"\"\n        Initialize the PageUtil object with the given data and page size.\n        :param data: list, the data to be paginated\n        :param page_size: int, the number of items per page\n        \"\"\"\n        self.data = data\n        self.page_size = page_size\n        self.total_items = len(data)\n        self.total_pages = (self.total_items + page_size - 1) // page_size\n\n    def get_page(self, page_number):\n        \"\"\"\n        Retrieve a specific page of data.\n        :param page_number: int, the page number to fetch\n        :return: list, the data on the specified page\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.get_page(1)\n        [1]\n        \"\"\"\n        if page_number < 1:\n            return []\n        start_index = (page_number - 1) * self.page_size\n        end_index = start_index + self.page_size\n        return self.data[start_index:end_index]\n\n    def get_page_info(self, page_number):\n        \"\"\"\n        Retrieve information about a specific page.\n        :param page_number: int, the page number to fetch information about\n        :return: dict, containing page information such as current page number, total pages, etc.\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.get_page_info(1)\n        {\n            \"current_page\": 1,\n            \"per_page\": 1,\n            \"total_pages\": 4,\n            \"total_items\": 4,\n            \"has_previous\": False,\n            \"has_next\": True,\n            \"data\": [1]\n        }\n        \"\"\"\n        if page_number < 1:\n            page_data = []\n        else:\n            page_data = self.get_page(page_number)\n\n        has_previous = page_number > 1\n        has_next = page_number < self.total_pages\n\n        return {\n            \"current_page\": page_number,\n            \"per_page\": self.page_size,\n            \"total_pages\": self.total_pages,\n            \"total_items\": self.total_items,\n            \"has_previous\": has_previous,\n            \"has_next\": has_next,\n            \"data\": page_data\n        }\n\n    def search(self, keyword):\n        \"\"\"\n        Search for items in the data that contain the given keyword.\n        :param keyword: str, the keyword to search for\n        :return: dict, containing search information such as total results and matching items\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.search(\"1\")\n        >>> search_info = {\n        >>>     \"keyword\": \"1\",\n        >>>     \"total_results\": 1,\n        >>>     \"total_pages\": 1,\n        >>>     \"results\": [1]\n        >>> }\n        \"\"\"\n        keyword_str = str(keyword).lower() if keyword else \"\"\n        filtered_data = []\n\n        for item in self.data:\n            try:\n                item_str = str(item).lower()\n            except Exception:\n                continue\n\n            if keyword_str == \"\":\n                filtered_data.append(item)\n            elif keyword_str in item_str:\n                filtered_data.append(item)\n\n        # Calculate pagination info for filtered results\n        total_filtered_items = len(filtered_data)\n        filtered_page_size = self.page_size\n\n        if total_filtered_items > 0:\n            filtered_total_pages = (total_filtered_items + filtered_page_size - 1) // filtered_page_size\n        else:\n            filtered_total_pages = 0\n\n        return {\n            \"keyword\": keyword,\n            \"total_results\": total_filtered_items,\n            \"total_pages\": filtered_total_pages,\n            \"results\": filtered_data\n        }\n",
+  "source": "\n\nclass PageUtil: \n    def __init__(self, data, page_size):\n        \"\"\"\n        Initialize the PageUtil object with the given data and page size.\n        :param data: list, the data to be paginated\n        :param page_size: int, the number of items per page\n        \"\"\"\n        self.data = data\n        self.page_size = page_size\n        self.total_items = len(data)\n        self.total_pages = (self.total_items + page_size - 1) // page_size\n\n    def get_page(self, page_number):\n        \"\"\"\n        Retrieve a specific page of data.\n        :param page_number: int, the page number to fetch\n        :return: list, the data on the specified page\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.get_page(1)\n        [1]\n        \"\"\"\n        if page_number < 1:\n            return []\n        start_index = (page_number - 1) * self.page_size\n        end_index = start_index + self.page_size\n        return self.data[start_index:end_index]\n\n    def get_page_info(self, page_number):\n        \"\"\"\n        Retrieve information about a specific page.\n        :param page_number: int, the page number to fetch information about\n        :return: dict, containing page information such as current page number, total pages, etc.\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.get_page_info(1)\n        {\n            \"current_page\": 1,\n            \"per_page\": 1,\n            \"total_pages\": 4,\n            \"total_items\": 4,\n            \"has_previous\": False,\n            \"has_next\": True,\n            \"data\": [1]\n        }\n        \"\"\"\n        # Validate and normalize page number\n        if page_number < 1:\n            page_data = []\n            current_page = None\n            has_previous = False\n            has_next = False\n        elif page_number > self.total_pages and self.total_pages > 0:\n            page_data = []\n            current_page = self.total_pages\n            has_previous = self.total_pages > 1\n            has_next = False\n        else:\n            page_data = self.get_page(page_number)\n            current_page = page_number\n            has_previous = page_number > 1\n            has_next = page_number < self.total_pages\n\n        return {\n            \"current_page\": current_page,\n            \"per_page\": self.page_size,\n            \"total_pages\": self.total_pages,\n            \"total_items\": self.total_items,\n            \"has_previous\": has_previous,\n            \"has_next\": has_next,\n            \"data\": page_data\n        }\n\n    def search(self, keyword):\n        \"\"\"\n        Search for items in the data that contain the given keyword.\n        :param keyword: str, the keyword to search for\n        :return: dict, containing search information such as total results and matching items\n        >>> page_util = PageUtil([1, 2, 3, 4], 1)\n        >>> page_util.search(\"1\")\n        >>> search_info = {\n        >>>     \"keyword\": \"1\",\n        >>>     \"total_results\": 1,\n        >>>     \"total_pages\": 1,\n        >>>     \"results\": [1]\n        >>> }\n        \"\"\"\n        keyword_str = str(keyword).lower() if keyword else \"\"\n        filtered_data = []\n\n        for item in self.data:\n            try:\n                item_str = str(item).lower()\n            except Exception:\n                continue\n\n            if keyword_str == \"\":\n                filtered_data.append(item)\n            elif keyword_str in item_str:\n                filtered_data.append(item)\n\n        # Calculate pagination info for filtered results\n        total_filtered_items = len(filtered_data)\n        filtered_page_size = self.page_size\n\n        if total_filtered_items > 0:\n            filtered_total_pages = (total_filtered_items + filtered_page_size - 1) // filtered_page_size\n        else:\n            filtered_total_pages = 0\n\n        return {\n            \"keyword\": keyword,\n            \"total_results\": total_filtered_items,\n            \"total_pages\": filtered_total_pages,\n            \"results\": filtered_data\n        }\n"
+}

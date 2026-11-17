@@ -1,0 +1,241 @@
+{
+  "task_id": "ClassEval_9",
+  "class_name": "BigNumCalculator",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "add",
+      "first": {
+        "code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    def strip_leading_zeros(s):\n        return s.lstrip('0') or '0'\n\n    # Handle negative numbers\n    if num1.startswith('-') or num2.startswith('-'):\n        abs1 = num1[1:] if num1.startswith('-') else num1\n        abs2 = num2[1:] if num2.startswith('-') else num2\n        abs1 = strip_leading_zeros(abs1)\n        abs2 = strip_leading_zeros(abs2)\n\n        abs_num1 = int(abs1)\n        abs_num2 = int(abs2)\n        num1_is_neg = num1.startswith('-')\n        num2_is_neg = num2.startswith('-')\n\n        if num1_is_neg and num2_is_neg:\n            result_abs = abs_num1 + abs_num2\n            return f'-{result_abs}'\n        elif num1_is_neg and not num2_is_neg:\n            if abs_num1 >= abs_num2:\n                result_abs = abs_num2 - abs_num1\n                return str(-result_abs)\n            else:\n                result_abs = abs_num1 - abs_num2\n                return str(result_abs)\n        elif not num1_is_neg and num2_is_neg:\n            if abs_num2 >= abs_num1:\n                result_abs = abs_num1 - abs_num2\n                return str(-result_abs)\n            else:\n                return abs_num2 - abs_num1\n        else:\n            return str(abs_num1 + abs_num2)\n    else:\n        return str(int(strip_leading_zeros(num1)) + int(strip_leading_zeros(num2)))",
+        "valid": true,
+        "reply": "\n\n```python\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        def strip_leading_zeros(s):\n            return s.lstrip('0') or '0'\n\n        # Handle negative numbers\n        if num1.startswith('-') or num2.startswith('-'):\n            abs1 = num1[1:] if num1.startswith('-') else num1\n            abs2 = num2[1:] if num2.startswith('-') else num2\n            abs1 = strip_leading_zeros(abs1)\n            abs2 = strip_leading_zeros(abs2)\n\n            abs_num1 = int(abs1)\n            abs_num2 = int(abs2)\n            num1_is_neg = num1.startswith('-')\n            num2_is_neg = num2.startswith('-')\n\n            if num1_is_neg and num2_is_neg:\n                result_abs = abs_num1 + abs_num2\n                return f'-{result_abs}'\n            elif num1_is_neg and not num2_is_neg:\n                if abs_num1 >= abs_num2:\n                    result_abs = abs_num2 - abs_num1\n                    return str(-result_abs)\n                else:\n                    result_abs = abs_num1 - abs_num2\n                    return str(result_abs)\n            elif not num1_is_neg and num2_is_neg:\n                if abs_num2 >= abs_num1:\n                    result_abs = abs_num1 - abs_num2\n                    return str(-result_abs)\n                else:\n                    return abs_num2 - abs_num1\n            else:\n                return str(abs_num1 + abs_num2)\n        else:\n            return str(int(strip_leading_zeros(num1)) + int(strip_leading_zeros(num2)))\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 633,
+        "cached_tokens": 0,
+        "completion_tokens": 1559,
+        "reasoning_tokens": 1127,
+        "cost": 0.00029715
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The mixed-sign branches return incorrect signs (and one path returns an `int` instead of a string), so sums such as `add(\"-5\", \"3\")` are wrong. Compare the absolute magnitudes and return the correctly signed difference as a string, normalizing a zero result to `\"0\"`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The mixed-sign branches return incorrect signs (and one path returns an `int` instead of a string), so sums such as `add(\"-5\", \"3\")` are wrong. Compare the absolute magnitudes and return the correctly signed difference as a string, normalizing a zero result to `\"0\"`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1038,
+            "cached_tokens": 0,
+            "completion_tokens": 300,
+            "reasoning_tokens": 216,
+            "cost": 0.0002538
+          }
+        ],
+        "prompt_tokens": 1038,
+        "cached_tokens": 0,
+        "completion_tokens": 300,
+        "reasoning_tokens": 216,
+        "cost": 0.0002538
+      },
+      "revision": {
+        "code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Add the values\n    result = num1_val + num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+        "valid": true,
+        "reply": "\n\n```python\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n        \n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n        \n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n        \n        # Add the values\n        result = num1_val + num2_val\n        \n        # Convert back to string, properly formatted\n        return to_str(result)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1240,
+        "cached_tokens": 0,
+        "completion_tokens": 1683,
+        "reasoning_tokens": 1228,
+        "cost": 0.00037645
+      },
+      "final_code": "@staticmethod\ndef add(num1, num2):\n    \"\"\"\n    Adds two big numbers.\n    :param num1: The first number to add,str.\n    :param num2: The second number to add,str.\n    :return: The sum of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n    '111111111011111111100'\n\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Add the values\n    result = num1_val + num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "subtract",
+      "first": {
+        "code": "@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Subtract the values\n    result = num1_val - num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Subtract the values\n    result = num1_val - num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 961,
+        "cached_tokens": 0,
+        "completion_tokens": 923,
+        "reasoning_tokens": 542,
+        "cost": 0.00023455
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method converts both input strings to Python integers, subtracts them, and formats the result as a signed string, including returning `'0'` for zero. This correctly handles the documented large-number example and signed integer inputs.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method converts both input strings to Python integers, subtracts them, and formats the result as a signed string, including returning `'0'` for zero. This correctly handles the documented large-number example and signed integer inputs.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1128,
+            "cached_tokens": 0,
+            "completion_tokens": 101,
+            "reasoning_tokens": 38,
+            "cost": 0.0001633
+          }
+        ],
+        "prompt_tokens": 1128,
+        "cached_tokens": 0,
+        "completion_tokens": 101,
+        "reasoning_tokens": 38,
+        "cost": 0.0001633
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef subtract(num1, num2):\n    \"\"\"\n    Subtracts two big numbers.\n    :param num1: The first number to subtract,str.\n    :param num2: The second number to subtract,str.\n    :return: The difference of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n    '-86419753208641975320'\n\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Subtract the values\n    result = num1_val - num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "multiply",
+      "first": {
+        "code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Multiply the values\n    result = num1_val * num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Multiply the values\n    result = num1_val * num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1277,
+        "cached_tokens": 0,
+        "completion_tokens": 527,
+        "reasoning_tokens": 214,
+        "cost": 0.00020675
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`multiply` converts both input strings to arbitrary-precision integers, multiplies them, and formats the result as a signed string, including returning `'0'` for zero. This matches the documented behavior and example.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`multiply` converts both input strings to arbitrary-precision integers, multiplies them, and formats the result as a signed string, including returning `'0'` for zero. This matches the documented behavior and example.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1391,
+            "cached_tokens": 0,
+            "completion_tokens": 59,
+            "reasoning_tokens": 0,
+            "cost": 0.0001686
+          }
+        ],
+        "prompt_tokens": 1391,
+        "cached_tokens": 0,
+        "completion_tokens": 59,
+        "reasoning_tokens": 0,
+        "cost": 0.0001686
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef multiply(num1, num2):\n    \"\"\"\n    Multiplies two big numbers.\n    :param num1: The first number to multiply,str.\n    :param num2: The second number to multiply,str.\n    :return: The product of the two numbers,str.\n    >>> bigNum = BigNumCalculator()\n    >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n    '1219326311370217952237463801111263526900'\n    \"\"\"\n    # Helper to convert string number to integer (handles sign properly)\n    def to_int(s):\n        return int(s)  # Python handles arbitrarily large integers\n\n    # Helper to convert integer to signed string (handles zero and negative)\n    def to_str(val):\n        if val == 0:\n            return '0'\n        if val < 0:\n            return '-' + str(-val)\n        return str(val)\n\n    # Parse both numbers (Python int handles big numbers automatically)\n    num1_val = to_int(num1)\n    num2_val = to_int(num2)\n\n    # Multiply the values\n    result = num1_val * num2_val\n\n    # Convert back to string, properly formatted\n    return to_str(result)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "BigNumCalculatorTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "BigNumCalculatorTestAdd": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestSubtract": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMultiply": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "BigNumCalculatorTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        def strip_leading_zeros(s):\n            return s.lstrip('0') or '0'\n\n        # Handle negative numbers\n        if num1.startswith('-') or num2.startswith('-'):\n            abs1 = num1[1:] if num1.startswith('-') else num1\n            abs2 = num2[1:] if num2.startswith('-') else num2\n            abs1 = strip_leading_zeros(abs1)\n            abs2 = strip_leading_zeros(abs2)\n\n            abs_num1 = int(abs1)\n            abs_num2 = int(abs2)\n            num1_is_neg = num1.startswith('-')\n            num2_is_neg = num2.startswith('-')\n\n            if num1_is_neg and num2_is_neg:\n                result_abs = abs_num1 + abs_num2\n                return f'-{result_abs}'\n            elif num1_is_neg and not num2_is_neg:\n                if abs_num1 >= abs_num2:\n                    result_abs = abs_num2 - abs_num1\n                    return str(-result_abs)\n                else:\n                    result_abs = abs_num1 - abs_num2\n                    return str(result_abs)\n            elif not num1_is_neg and num2_is_neg:\n                if abs_num2 >= abs_num1:\n                    result_abs = abs_num1 - abs_num2\n                    return str(-result_abs)\n                else:\n                    return abs_num2 - abs_num1\n            else:\n                return str(abs_num1 + abs_num2)\n        else:\n            return str(int(strip_leading_zeros(num1)) + int(strip_leading_zeros(num2)))\n\n    @staticmethod\n    def subtract(num1, num2):\n        \"\"\"\n        Subtracts two big numbers.\n        :param num1: The first number to subtract,str.\n        :param num2: The second number to subtract,str.\n        :return: The difference of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n        '-86419753208641975320'\n\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n\n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n\n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n\n        # Subtract the values\n        result = num1_val - num2_val\n\n        # Convert back to string, properly formatted\n        return to_str(result)\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n\n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n\n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n\n        # Multiply the values\n        result = num1_val * num2_val\n\n        # Convert back to string, properly formatted\n        return to_str(result)\n",
+  "source": "\n\nclass BigNumCalculator:\n\n    @staticmethod\n    def add(num1, num2):\n        \"\"\"\n        Adds two big numbers.\n        :param num1: The first number to add,str.\n        :param num2: The second number to add,str.\n        :return: The sum of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.add(\"12345678901234567890\", \"98765432109876543210\")\n        '111111111011111111100'\n\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n\n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n\n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n\n        # Add the values\n        result = num1_val + num2_val\n\n        # Convert back to string, properly formatted\n        return to_str(result)\n\n    @staticmethod\n    def subtract(num1, num2):\n        \"\"\"\n        Subtracts two big numbers.\n        :param num1: The first number to subtract,str.\n        :param num2: The second number to subtract,str.\n        :return: The difference of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.subtract(\"12345678901234567890\", \"98765432109876543210\")\n        '-86419753208641975320'\n\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n\n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n\n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n\n        # Subtract the values\n        result = num1_val - num2_val\n\n        # Convert back to string, properly formatted\n        return to_str(result)\n\n    @staticmethod\n    def multiply(num1, num2):\n        \"\"\"\n        Multiplies two big numbers.\n        :param num1: The first number to multiply,str.\n        :param num2: The second number to multiply,str.\n        :return: The product of the two numbers,str.\n        >>> bigNum = BigNumCalculator()\n        >>> bigNum.multiply(\"12345678901234567890\", \"98765432109876543210\")\n        '1219326311370217952237463801111263526900'\n        \"\"\"\n        # Helper to convert string number to integer (handles sign properly)\n        def to_int(s):\n            return int(s)  # Python handles arbitrarily large integers\n\n        # Helper to convert integer to signed string (handles zero and negative)\n        def to_str(val):\n            if val == 0:\n                return '0'\n            if val < 0:\n                return '-' + str(-val)\n            return str(val)\n\n        # Parse both numbers (Python int handles big numbers automatically)\n        num1_val = to_int(num1)\n        num2_val = to_int(num2)\n\n        # Multiply the values\n        result = num1_val * num2_val\n\n        # Convert back to string, properly formatted\n        return to_str(result)\n"
+}

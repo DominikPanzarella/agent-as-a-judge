@@ -1,0 +1,202 @@
+{
+  "task_id": "ClassEval_71",
+  "class_name": "PushBoxGame",
+  "setup": "C2",
+  "name": "C2n-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "init_game",
+      "first": {
+        "code": "def init_game(self):\n    \"\"\"\n    Initialize the game by setting the positions of the player, targets, and boxes based on the map.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.targets\n    [(3, 3)]\n    >>> game.boxes\n    [(2, 2)]\n    >>> game.player_row\n    1\n    >>> game.player_col\n    1\n    \"\"\"\n    self.boxes = []\n    self.targets = []\n    for row_idx, row in enumerate(self.map):\n        for col_idx, char in enumerate(row):\n            if char == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif char == 'G':\n                self.targets.append((row_idx, col_idx))\n            elif char == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.target_count = len(self.targets)\n    self.is_game_over = False",
+        "valid": true,
+        "reply": "```python\n    def init_game(self):\n        \"\"\"\n        Initialize the game by setting the positions of the player, targets, and boxes based on the map.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.targets\n        [(3, 3)]\n        >>> game.boxes\n        [(2, 2)]\n        >>> game.player_row\n        1\n        >>> game.player_col\n        1\n        \"\"\"\n        self.boxes = []\n        self.targets = []\n        for row_idx, row in enumerate(self.map):\n            for col_idx, char in enumerate(row):\n                if char == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif char == 'G':\n                    self.targets.append((row_idx, col_idx))\n                elif char == 'X':\n                    self.boxes.append((row_idx, col_idx))\n        \n        self.target_count = len(self.targets)\n        self.is_game_over = False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 811,
+        "cached_tokens": 0,
+        "completion_tokens": 847,
+        "reasoning_tokens": 574,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method scans the map and records the player, target, and box positions, then sets the target count and resets the game-over flag, matching its docstring. For the documented map, it produces the stated values.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method scans the map and records the player, target, and box positions, then sets the target count and resets the game-over flag, matching its docstring. For the documented map, it produces the stated values.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1117,
+            "cached_tokens": 0,
+            "completion_tokens": 236,
+            "reasoning_tokens": 174,
+            "cost": 0.0002297
+          }
+        ],
+        "prompt_tokens": 1117,
+        "cached_tokens": 0,
+        "completion_tokens": 236,
+        "reasoning_tokens": 174,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": null,
+      "final_code": "def init_game(self):\n    \"\"\"\n    Initialize the game by setting the positions of the player, targets, and boxes based on the map.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.targets\n    [(3, 3)]\n    >>> game.boxes\n    [(2, 2)]\n    >>> game.player_row\n    1\n    >>> game.player_col\n    1\n    \"\"\"\n    self.boxes = []\n    self.targets = []\n    for row_idx, row in enumerate(self.map):\n        for col_idx, char in enumerate(row):\n            if char == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif char == 'G':\n                self.targets.append((row_idx, col_idx))\n            elif char == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.target_count = len(self.targets)\n    self.is_game_over = False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "check_win",
+      "first": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    if len(self.boxes) != len(self.targets):\n        self.is_game_over = False\n        return False\n\n    all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n    self.is_game_over = all_on_targets\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    if len(self.boxes) != len(self.targets):\n        self.is_game_over = False\n        return False\n    \n    all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n    self.is_game_over = all_on_targets\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1050,
+        "cached_tokens": 0,
+        "completion_tokens": 1227,
+        "reasoning_tokens": 1097,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The length check incorrectly prevents a win when there are fewer boxes than targets, even if every box is on a target; the docstring defines winning by all boxes being on target positions. Remove the equality requirement and set the game-over state based on whether every box position is in `self.targets`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The length check incorrectly prevents a win when there are fewer boxes than targets, even if every box is on a target; the docstring defines winning by all boxes being on target positions. Remove the equality requirement and set the game-over state based on whether every box position is in `self.targets`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1286,
+            "cached_tokens": 0,
+            "completion_tokens": 198,
+            "reasoning_tokens": 119,
+            "cost": 0.0002276
+          }
+        ],
+        "prompt_tokens": 1286,
+        "cached_tokens": 0,
+        "completion_tokens": 198,
+        "reasoning_tokens": 119,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n    self.is_game_over = all_on_targets\n    return self.is_game_over",
+        "valid": true,
+        "reply": "\n\n```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n    self.is_game_over = all_on_targets\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1261,
+        "cached_tokens": 0,
+        "completion_tokens": 1335,
+        "reasoning_tokens": 1186,
+        "cost": 0.00045985
+      },
+      "final_code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n    self.is_game_over = all_on_targets\n    return self.is_game_over",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "move",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1191,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 7144,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        \"\"\"\n        Initialize the game by setting the positions of the player, targets, and boxes based on the map.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.targets\n        [(3, 3)]\n        >>> game.boxes\n        [(2, 2)]\n        >>> game.player_row\n        1\n        >>> game.player_col\n        1\n        \"\"\"\n        self.boxes = []\n        self.targets = []\n        for row_idx, row in enumerate(self.map):\n            for col_idx, char in enumerate(row):\n                if char == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif char == 'G':\n                    self.targets.append((row_idx, col_idx))\n                elif char == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.target_count = len(self.targets)\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        if len(self.boxes) != len(self.targets):\n            self.is_game_over = False\n            return False\n\n        all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n        self.is_game_over = all_on_targets\n        return self.is_game_over\n\n    def move(self, direction):\n        return None\n",
+  "source": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        \"\"\"\n        Initialize the game by setting the positions of the player, targets, and boxes based on the map.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.targets\n        [(3, 3)]\n        >>> game.boxes\n        [(2, 2)]\n        >>> game.player_row\n        1\n        >>> game.player_col\n        1\n        \"\"\"\n        self.boxes = []\n        self.targets = []\n        for row_idx, row in enumerate(self.map):\n            for col_idx, char in enumerate(row):\n                if char == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif char == 'G':\n                    self.targets.append((row_idx, col_idx))\n                elif char == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.target_count = len(self.targets)\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        all_on_targets = all(box_pos in self.targets for box_pos in self.boxes)\n        self.is_game_over = all_on_targets\n        return self.is_game_over\n\n    def move(self, direction):\n        return None\n"
+}

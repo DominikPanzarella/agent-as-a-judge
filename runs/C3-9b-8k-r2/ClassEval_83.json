@@ -1,0 +1,284 @@
+{
+  "task_id": "ClassEval_83",
+  "class_name": "StudentDatabaseProcessor",
+  "setup": "C3",
+  "name": "C3-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r2",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "create_student_table",
+      "first": {
+        "code": "def create_student_table(self):\n    \"\"\"\n    Creates a \"students\" table in the database if it does not exist already.Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        CREATE TABLE IF NOT EXISTS students (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            name TEXT,\n            age INTEGER,\n            gender TEXT,\n            grade INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "```python\n    def create_student_table(self):\n        \"\"\"\n        Creates a \"students\" table in the database if it does not exist already.Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            CREATE TABLE IF NOT EXISTS students (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                name TEXT,\n                age INTEGER,\n                gender TEXT,\n                grade INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 659,
+        "cached_tokens": 0,
+        "completion_tokens": 602,
+        "reasoning_tokens": 513,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method creates the `students` table only if it does not already exist, with the requested ID, name, age, gender, and grade fields. It commits and closes the connection, and implicitly returns `None` as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method creates the `students` table only if it does not already exist, with the requested ID, name, age, gender, and grade fields. It commits and closes the connection, and implicitly returns `None` as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 897,
+            "cached_tokens": 0,
+            "completion_tokens": 108,
+            "reasoning_tokens": 43,
+            "cost": 0.0001437
+          }
+        ],
+        "prompt_tokens": 897,
+        "cached_tokens": 0,
+        "completion_tokens": 108,
+        "reasoning_tokens": 43,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "revision": null,
+      "final_code": "def create_student_table(self):\n    \"\"\"\n    Creates a \"students\" table in the database if it does not exist already.Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        CREATE TABLE IF NOT EXISTS students (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            name TEXT,\n            age INTEGER,\n            gender TEXT,\n            grade INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert_student",
+      "first": {
+        "code": "def insert_student(self, student_data):\n    \"\"\"\n    Inserts a new student into the \"students\" table.\n    :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n    >>> processor.insert_student(student_data)\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        INSERT INTO students (name, age, gender, grade)\n        VALUES (?, ?, ?, ?)\n    ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "```python\ndef insert_student(self, student_data):\n    \"\"\"\n    Inserts a new student into the \"students\" table.\n    :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n    >>> processor.insert_student(student_data)\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        INSERT INTO students (name, age, gender, grade)\n        VALUES (?, ?, ?, ?)\n    ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 830,
+        "cached_tokens": 0,
+        "completion_tokens": 545,
+        "reasoning_tokens": 360,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method inserts the student's name, age, gender, and grade into the existing `students` table using parameterized SQL, then commits and closes the connection. It implicitly returns `None`, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method inserts the student's name, age, gender, and grade into the existing `students` table using parameterized SQL, then commits and closes the connection. It implicitly returns `None`, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1154,
+            "cached_tokens": 0,
+            "completion_tokens": 124,
+            "reasoning_tokens": 65,
+            "cost": 0.0001774
+          }
+        ],
+        "prompt_tokens": 1154,
+        "cached_tokens": 0,
+        "completion_tokens": 124,
+        "reasoning_tokens": 65,
+        "cost": 0.0001774
+      },
+      "revision": null,
+      "final_code": "def insert_student(self, student_data):\n    \"\"\"\n    Inserts a new student into the \"students\" table.\n    :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n    >>> processor.insert_student(student_data)\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        INSERT INTO students (name, age, gender, grade)\n        VALUES (?, ?, ?, ?)\n    ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "search_student_by_name",
+      "first": {
+        "code": "def search_student_by_name(self, name):\n    \"\"\"\n    Searches for a student in the \"students\" table by their name.\n    :param name: str, the name of the student to search for.\n    :return: list of tuples, the rows from the \"students\" table that match the search criteria.\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> result = processor.search_student_by_name(\"John\")\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        SELECT * FROM students WHERE name = ?\n    ''', (name,))\n    results = cursor.fetchall()\n    conn.close()\n    return results",
+        "valid": true,
+        "reply": "```python\n    def search_student_by_name(self, name):\n        \"\"\"\n        Searches for a student in the \"students\" table by their name.\n        :param name: str, the name of the student to search for.\n        :return: list of tuples, the rows from the \"students\" table that match the search criteria.\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> result = processor.search_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            SELECT * FROM students WHERE name = ?\n        ''', (name,))\n        results = cursor.fetchall()\n        conn.close()\n        return results\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1031,
+        "cached_tokens": 0,
+        "completion_tokens": 287,
+        "reasoning_tokens": 145,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r2"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method queries the existing `students` table for rows whose name exactly matches the supplied name, fetches and returns them as a list of tuples, and closes the connection. It matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method queries the existing `students` table for rows whose name exactly matches the supplied name, fetches and returns them as a list of tuples, and closes the connection. It matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1345,
+            "cached_tokens": 0,
+            "completion_tokens": 57,
+            "reasoning_tokens": 0,
+            "cost": 0.000163
+          }
+        ],
+        "prompt_tokens": 1345,
+        "cached_tokens": 0,
+        "completion_tokens": 57,
+        "reasoning_tokens": 0,
+        "cost": 0.000163
+      },
+      "revision": null,
+      "final_code": "def search_student_by_name(self, name):\n    \"\"\"\n    Searches for a student in the \"students\" table by their name.\n    :param name: str, the name of the student to search for.\n    :return: list of tuples, the rows from the \"students\" table that match the search criteria.\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> result = processor.search_student_by_name(\"John\")\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        SELECT * FROM students WHERE name = ?\n    ''', (name,))\n    results = cursor.fetchall()\n    conn.close()\n    return results",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "delete_student_by_name",
+      "first": {
+        "code": "def delete_student_by_name(self, name):\n    \"\"\"\n    Deletes a student from the \"students\" table by their name.\n    :param name: str, the name of the student to delete.\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n    >>> processor.insert_student(student_data)\n    >>> processor.delete_student_by_name(\"John\")\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        DELETE FROM students WHERE name = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\n    def delete_student_by_name(self, name):\n        \"\"\"\n        Deletes a student from the \"students\" table by their name.\n        :param name: str, the name of the student to delete.\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n        >>> processor.insert_student(student_data)\n        >>> processor.delete_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            DELETE FROM students WHERE name = ?\n        ''', (name,))\n        conn.commit()\n        conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1185,
+        "cached_tokens": 0,
+        "completion_tokens": 561,
+        "reasoning_tokens": 379,
+        "cost": 0.00025875
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method deletes all rows in the `students` table whose name exactly matches the supplied name, then commits and closes the connection. It implicitly returns `None`, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method deletes all rows in the `students` table whose name exactly matches the supplied name, then commits and closes the connection. It implicitly returns `None`, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1551,
+            "cached_tokens": 0,
+            "completion_tokens": 51,
+            "reasoning_tokens": 0,
+            "cost": 0.00018060000000000003
+          }
+        ],
+        "prompt_tokens": 1551,
+        "cached_tokens": 0,
+        "completion_tokens": 51,
+        "reasoning_tokens": 0,
+        "cost": 0.00018060000000000003
+      },
+      "revision": null,
+      "final_code": "def delete_student_by_name(self, name):\n    \"\"\"\n    Deletes a student from the \"students\" table by their name.\n    :param name: str, the name of the student to delete.\n    :return: None\n    >>> processor = StudentDatabaseProcessor(\"students.db\")\n    >>> processor.create_student_table()\n    >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n    >>> processor.insert_student(student_data)\n    >>> processor.delete_student_by_name(\"John\")\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute('''\n        DELETE FROM students WHERE name = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "StudentDatabaseProcessorTestInsertStudent": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTestSearchStudentByName": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTestDeleteStudentByName": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "StudentDatabaseProcessorTestInsertStudent": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTestSearchStudentByName": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTestDeleteStudentByName": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "StudentDatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import sqlite3\n\nclass StudentDatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initializes the StudentDatabaseProcessor object with the specified database name.\n        :param database_name: str, the name of the SQLite database.\n        \"\"\"\n        self.database_name = database_name\n\n    def create_student_table(self):\n        \"\"\"\n        Creates a \"students\" table in the database if it does not exist already.Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            CREATE TABLE IF NOT EXISTS students (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                name TEXT,\n                age INTEGER,\n                gender TEXT,\n                grade INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_student(self, student_data):\n        \"\"\"\n        Inserts a new student into the \"students\" table.\n        :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n        >>> processor.insert_student(student_data)\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            INSERT INTO students (name, age, gender, grade)\n            VALUES (?, ?, ?, ?)\n        ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))\n        conn.commit()\n        conn.close()\n\n    def search_student_by_name(self, name):\n        \"\"\"\n        Searches for a student in the \"students\" table by their name.\n        :param name: str, the name of the student to search for.\n        :return: list of tuples, the rows from the \"students\" table that match the search criteria.\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> result = processor.search_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            SELECT * FROM students WHERE name = ?\n        ''', (name,))\n        results = cursor.fetchall()\n        conn.close()\n        return results\n\n    def delete_student_by_name(self, name):\n        \"\"\"\n        Deletes a student from the \"students\" table by their name.\n        :param name: str, the name of the student to delete.\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n        >>> processor.insert_student(student_data)\n        >>> processor.delete_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            DELETE FROM students WHERE name = ?\n        ''', (name,))\n        conn.commit()\n        conn.close()\n",
+  "source": "import sqlite3\n\nclass StudentDatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initializes the StudentDatabaseProcessor object with the specified database name.\n        :param database_name: str, the name of the SQLite database.\n        \"\"\"\n        self.database_name = database_name\n\n    def create_student_table(self):\n        \"\"\"\n        Creates a \"students\" table in the database if it does not exist already.Fields include ID of type int, name of type str, age of type int, gender of type str, and grade of type int\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            CREATE TABLE IF NOT EXISTS students (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                name TEXT,\n                age INTEGER,\n                gender TEXT,\n                grade INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_student(self, student_data):\n        \"\"\"\n        Inserts a new student into the \"students\" table.\n        :param student_data: dict, a dictionary containing the student's information (name, age, gender, grade).\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n        >>> processor.insert_student(student_data)\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            INSERT INTO students (name, age, gender, grade)\n            VALUES (?, ?, ?, ?)\n        ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))\n        conn.commit()\n        conn.close()\n\n    def search_student_by_name(self, name):\n        \"\"\"\n        Searches for a student in the \"students\" table by their name.\n        :param name: str, the name of the student to search for.\n        :return: list of tuples, the rows from the \"students\" table that match the search criteria.\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> result = processor.search_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            SELECT * FROM students WHERE name = ?\n        ''', (name,))\n        results = cursor.fetchall()\n        conn.close()\n        return results\n\n    def delete_student_by_name(self, name):\n        \"\"\"\n        Deletes a student from the \"students\" table by their name.\n        :param name: str, the name of the student to delete.\n        :return: None\n        >>> processor = StudentDatabaseProcessor(\"students.db\")\n        >>> processor.create_student_table()\n        >>> student_data = {'name': 'John', 'age': 15, 'gender': 'Male', 'grade': 9}\n        >>> processor.insert_student(student_data)\n        >>> processor.delete_student_by_name(\"John\")\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute('''\n            DELETE FROM students WHERE name = ?\n        ''', (name,))\n        conn.commit()\n        conn.close()\n"
+}

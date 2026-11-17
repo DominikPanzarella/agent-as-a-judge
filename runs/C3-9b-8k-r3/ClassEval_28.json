@@ -1,0 +1,340 @@
+{
+  "task_id": "ClassEval_28",
+  "class_name": "DatabaseProcessor",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "create_table",
+      "first": {
+        "code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "```python\ndef create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS {table_name} (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            {key1} TEXT,\n            {key2} INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 654,
+        "cached_tokens": 0,
+        "completion_tokens": 674,
+        "reasoning_tokens": 467,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The table and column names are interpolated directly into SQL, so names containing spaces or SQL syntax can cause errors or alter the statement. Validate or safely quote these identifiers before constructing the query.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The table and column names are interpolated directly into SQL, so names containing spaces or SQL syntax can cause errors or alter the statement. Validate or safely quote these identifiers before constructing the query.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 936,
+            "cached_tokens": 0,
+            "completion_tokens": 198,
+            "reasoning_tokens": 141,
+            "cost": 0.00019260000000000002
+          }
+        ],
+        "prompt_tokens": 936,
+        "cached_tokens": 0,
+        "completion_tokens": 198,
+        "reasoning_tokens": 141,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name) or not _is_safe_identifier(key1) or not _is_safe_identifier(key2):\n        raise ValueError(\"Table and column names can only contain valid identifier characters (letters, numbers, underscores)\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use single quotes to safely quote the identifiers - acceptable for valid identifier names\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS '{table_name}' (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            '{key1}' TEXT,\n            '{key2}' INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n    \n    if not _is_safe_identifier(table_name) or not _is_safe_identifier(key1) or not _is_safe_identifier(key2):\n        raise ValueError(\"Table and column names can only contain valid identifier characters (letters, numbers, underscores)\")\n    \n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Use single quotes to safely quote the identifiers - acceptable for valid identifier names\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS '{table_name}' (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            '{key1}' TEXT,\n            '{key2}' INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 940,
+        "cached_tokens": 0,
+        "completion_tokens": 463,
+        "reasoning_tokens": 149,
+        "cost": 0.00020975
+      },
+      "final_code": "def create_table(self, table_name, key1, key2):\n    \"\"\"\n    Create a new table in the database if it doesn't exist.\n    And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n    :param table_name: str, the name of the table to create.\n    :param key1: str, the name of the first column in the table.\n    :param key2: str, the name of the second column in the table.\n    >>> db.create_table('user', 'name', 'age')\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name) or not _is_safe_identifier(key1) or not _is_safe_identifier(key2):\n        raise ValueError(\"Table and column names can only contain valid identifier characters (letters, numbers, underscores)\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use single quotes to safely quote the identifiers - acceptable for valid identifier names\n    cursor.execute(f'''\n        CREATE TABLE IF NOT EXISTS '{table_name}' (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            '{key1}' TEXT,\n            '{key2}' INTEGER\n        )\n    ''')\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "insert_into_database",
+      "first": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n    \"\"\"\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    if len(data) == 0:\n        return\n\n    # Get the keys from the first entry to determine columns\n    if not isinstance(data[0], dict):\n        raise ValueError(\"Each element in data must be a dictionary\")\n\n    cols = list(data[0].keys())\n\n    # Build the SQL insert statement with placeholders\n    placeholders = ','.join(['?' for _ in cols])\n    columns_str = ','.join(cols)\n\n    # Check if table exists before inserting (assume it exists from create_table)\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    for entry in data:\n        # Handle potential type mismatches for id column if it needs to be integer\n        if 'id' in entry:\n            try:\n                entry['id'] = int(entry['id'])\n            except (ValueError, TypeError):\n                raise ValueError(\"id must be an integer\")\n\n        # Prepare the values for this row\n        values = [entry[col] for col in cols]\n\n        # Execute the insert\n        cursor.execute(f'''\n            INSERT INTO {table_name} ({columns_str}) \n            VALUES ({placeholders})\n        ''', values)\n\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n    \"\"\"\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n    \n    if len(data) == 0:\n        return\n    \n    # Get the keys from the first entry to determine columns\n    if not isinstance(data[0], dict):\n        raise ValueError(\"Each element in data must be a dictionary\")\n    \n    cols = list(data[0].keys())\n    \n    # Build the SQL insert statement with placeholders\n    placeholders = ','.join(['?' for _ in cols])\n    columns_str = ','.join(cols)\n    \n    # Check if table exists before inserting (assume it exists from create_table)\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    for entry in data:\n        # Handle potential type mismatches for id column if it needs to be integer\n        if 'id' in entry:\n            try:\n                entry['id'] = int(entry['id'])\n            except (ValueError, TypeError):\n                raise ValueError(\"id must be an integer\")\n        \n        # Prepare the values for this row\n        values = [entry[col] for col in cols]\n        \n        # Execute the insert\n        cursor.execute(f'''\n            INSERT INTO {table_name} ({columns_str}) \n            VALUES ({placeholders})\n        ''', values)\n    \n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 972,
+        "cached_tokens": 576,
+        "completion_tokens": 1223,
+        "reasoning_tokens": 808,
+        "cost": 0.00040295
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`table_name` and the dictionary keys are interpolated directly into SQL, so names with special characters can cause errors or alter the query. Validate and safely quote these identifiers (or otherwise restrict them to valid identifiers) before constructing the statement.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`table_name` and the dictionary keys are interpolated directly into SQL, so names with special characters can cause errors or alter the query. Validate and safely quote these identifiers (or otherwise restrict them to valid identifiers) before constructing the statement.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1494,
+            "cached_tokens": 0,
+            "completion_tokens": 256,
+            "reasoning_tokens": 189,
+            "cost": 0.00027739999999999997
+          }
+        ],
+        "prompt_tokens": 1494,
+        "cached_tokens": 0,
+        "completion_tokens": 256,
+        "reasoning_tokens": 189,
+        "cost": 0.00027739999999999997
+      },
+      "revision": {
+        "code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    if len(data) == 0:\n        return\n\n    # Get the keys from the first entry to determine columns\n    if not isinstance(data[0], dict):\n        raise ValueError(\"Each element in data must be a dictionary\")\n\n    cols = list(data[0].keys())\n\n    # Validate all column names are safe identifiers\n    for col in cols:\n        if not _is_safe_identifier(col):\n            raise ValueError(f\"Column name '{col}' must be a valid identifier\")\n\n    # Build the SQL insert statement with parameterized values\n    placeholders = ','.join(['?' for _ in cols])\n    columns_str = ','.join(cols)\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    for entry in data:\n        # Handle potential type mismatches for id column if it needs to be integer\n        if 'id' in entry:\n            try:\n                entry['id'] = int(entry['id'])\n            except (ValueError, TypeError):\n                raise ValueError(\"id must be an integer\")\n\n        # Prepare the values for this row\n        values = [entry[col] for col in cols]\n\n        # Execute the insert with parameterized values\n        cursor.execute(f'''\n            INSERT INTO {table_name} ({columns_str}) \n            VALUES ({placeholders})\n        ''', values)\n\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n    \n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n    \n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n    \n    if len(data) == 0:\n        return\n    \n    # Get the keys from the first entry to determine columns\n    if not isinstance(data[0], dict):\n        raise ValueError(\"Each element in data must be a dictionary\")\n    \n    cols = list(data[0].keys())\n    \n    # Validate all column names are safe identifiers\n    for col in cols:\n        if not _is_safe_identifier(col):\n            raise ValueError(f\"Column name '{col}' must be a valid identifier\")\n    \n    # Build the SQL insert statement with parameterized values\n    placeholders = ','.join(['?' for _ in cols])\n    columns_str = ','.join(cols)\n    \n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    for entry in data:\n        # Handle potential type mismatches for id column if it needs to be integer\n        if 'id' in entry:\n            try:\n                entry['id'] = int(entry['id'])\n            except (ValueError, TypeError):\n                raise ValueError(\"id must be an integer\")\n        \n        # Prepare the values for this row\n        values = [entry[col] for col in cols]\n        \n        # Execute the insert with parameterized values\n        cursor.execute(f'''\n            INSERT INTO {table_name} ({columns_str}) \n            VALUES ({placeholders})\n        ''', values)\n    \n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1473,
+        "cached_tokens": 576,
+        "completion_tokens": 657,
+        "reasoning_tokens": 151,
+        "cost": 0.00031155
+      },
+      "final_code": "def insert_into_database(self, table_name, data):\n    \"\"\"\n    Insert data into the specified table in the database.\n    :param table_name: str, the name of the table to insert data into.\n    :param data: list, a list of dictionaries where each dictionary represents a row of data.\n    >>> db.insert_into_database('user', [\n                {'name': 'John', 'age': 25},\n                {'name': 'Alice', 'age': 30}\n            ])\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    if not isinstance(data, list):\n        raise ValueError(\"Data must be a list\")\n\n    if len(data) == 0:\n        return\n\n    # Get the keys from the first entry to determine columns\n    if not isinstance(data[0], dict):\n        raise ValueError(\"Each element in data must be a dictionary\")\n\n    cols = list(data[0].keys())\n\n    # Validate all column names are safe identifiers\n    for col in cols:\n        if not _is_safe_identifier(col):\n            raise ValueError(f\"Column name '{col}' must be a valid identifier\")\n\n    # Build the SQL insert statement with parameterized values\n    placeholders = ','.join(['?' for _ in cols])\n    columns_str = ','.join(cols)\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    for entry in data:\n        # Handle potential type mismatches for id column if it needs to be integer\n        if 'id' in entry:\n            try:\n                entry['id'] = int(entry['id'])\n            except (ValueError, TypeError):\n                raise ValueError(\"id must be an integer\")\n\n        # Prepare the values for this row\n        values = [entry[col] for col in cols]\n\n        # Execute the insert with parameterized values\n        cursor.execute(f'''\n            INSERT INTO {table_name} ({columns_str}) \n            VALUES ({placeholders})\n        ''', values)\n\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "search_database",
+      "first": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use parameterized query to safely handle the name\n    cursor.execute(f'''\n        SELECT * FROM {table_name} WHERE key1 = ?\n    ''', (name,))\n\n    results = cursor.fetchall()\n    conn.commit()\n    conn.close()\n\n    return results if results else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use parameterized query to safely handle the name\n    cursor.execute(f'''\n        SELECT * FROM {table_name} WHERE key1 = ?\n    ''', (name,))\n\n    results = cursor.fetchall()\n    conn.commit()\n    conn.close()\n\n    return results if results else None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1460,
+        "cached_tokens": 576,
+        "completion_tokens": 1344,
+        "reasoning_tokens": 1082,
+        "cost": 0.000482
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The query filters on a column literally named `key1`, but `create_table` creates a column using the supplied `key1` value (for example, `name`), so the example can raise `sqlite3.OperationalError` instead of returning matches. Query the intended name column, or make its column name available to this method and safely quote it.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The query filters on a column literally named `key1`, but `create_table` creates a column using the supplied `key1` value (for example, `name`), so the example can raise `sqlite3.OperationalError` instead of returning matches. Query the intended name column, or make its column name available to this method and safely quote it.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1882,
+            "cached_tokens": 0,
+            "completion_tokens": 458,
+            "reasoning_tokens": 366,
+            "cost": 0.00041720000000000006
+          }
+        ],
+        "prompt_tokens": 1882,
+        "cached_tokens": 0,
+        "completion_tokens": 458,
+        "reasoning_tokens": 366,
+        "cost": 0.00041720000000000006
+      },
+      "revision": {
+        "code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    # Determine what column to search. Based on create_table, \n    # we need to know the actual column name. Since this method \n    # doesn't take key1 directly, we'll look for a 'name' column\n    # or use a dynamic approach.\n\n    # For this implementation, we'll treat the parameter as the \n    # search term value, and search on a column that matches.\n    # Since we don't know stored column names, we'll assume \n    # common patterns and validate the table exists first.\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Check what columns exist in the table\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    # Try to find a reasonable column to search (key1 equivalent)\n    if 'name' in columns and 'key1' in columns:\n        search_column = 'name'\n    elif 'name' in columns:\n        search_column = 'name'\n    else:\n        # Fall back to key1 equivalent (first TEXT column usually)\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':  # Skip id\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to search on\")\n\n    # Reconnect to perform the actual search with parameterized query\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use parameterized query for the search value to prevent SQL injection\n    cursor.execute(f'''\n        SELECT * FROM {table_name} WHERE {search_column} = ?\n    ''', (name,))\n\n    results = cursor.fetchall()\n    conn.commit()\n    conn.close()\n\n    return results if results else None",
+        "valid": true,
+        "reply": "\n\n```python\ndef search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n    \n    # Determine what column to search. Based on create_table, \n    # we need to know the actual column name. Since this method \n    # doesn't take key1 directly, we'll look for a 'name' column\n    # or use a dynamic approach.\n    \n    # For this implementation, we'll treat the parameter as the \n    # search term value, and search on a column that matches.\n    # Since we don't know stored column names, we'll assume \n    # common patterns and validate the table exists first.\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Check what columns exist in the table\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n    \n    # Try to find a reasonable column to search (key1 equivalent)\n    if 'name' in columns and 'key1' in columns:\n        search_column = 'name'\n    elif 'name' in columns:\n        search_column = 'name'\n    else:\n        # Fall back to key1 equivalent (first TEXT column usually)\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':  # Skip id\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to search on\")\n    \n    # Reconnect to perform the actual search with parameterized query\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    \n    # Use parameterized query for the search value to prevent SQL injection\n    cursor.execute(f'''\n        SELECT * FROM {table_name} WHERE {search_column} = ?\n    ''', (name,))\n    \n    results = cursor.fetchall()\n    conn.commit()\n    conn.close()\n\n    return results if results else None\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 1833,
+        "cached_tokens": 1152,
+        "completion_tokens": 3922,
+        "reasoning_tokens": 3306,
+        "cost": 0.0011638
+      },
+      "final_code": "def search_database(self, table_name, name):\n    \"\"\"\n    Search the specified table in the database for rows with a matching name.\n    :param table_name: str, the name of the table to search.\n    :param name: str, the name to search for.\n    :return: list, a list of tuples representing the rows with matching name, if any;\n                otherwise, returns None.\n    >>> db.search_database('user', 'John')\n    [(1, 'John', 25)]\n    \"\"\"\n    def _is_safe_identifier(name):\n        \"\"\"Check if the identifier only contains safe characters.\"\"\"\n        return name.isidentifier() if name else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    # Determine what column to search. Based on create_table, \n    # we need to know the actual column name. Since this method \n    # doesn't take key1 directly, we'll look for a 'name' column\n    # or use a dynamic approach.\n\n    # For this implementation, we'll treat the parameter as the \n    # search term value, and search on a column that matches.\n    # Since we don't know stored column names, we'll assume \n    # common patterns and validate the table exists first.\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Check what columns exist in the table\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    # Try to find a reasonable column to search (key1 equivalent)\n    if 'name' in columns and 'key1' in columns:\n        search_column = 'name'\n    elif 'name' in columns:\n        search_column = 'name'\n    else:\n        # Fall back to key1 equivalent (first TEXT column usually)\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':  # Skip id\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to search on\")\n\n    # Reconnect to perform the actual search with parameterized query\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n\n    # Use parameterized query for the search value to prevent SQL injection\n    cursor.execute(f'''\n        SELECT * FROM {table_name} WHERE {search_column} = ?\n    ''', (name,))\n\n    results = cursor.fetchall()\n    conn.commit()\n    conn.close()\n\n    return results if results else None",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "delete_from_database",
+      "first": {
+        "code": "def delete_from_database(self, table_name, name):\n    def _is_safe_identifier(n):\n        return n.isidentifier() if n else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    if 'name' in columns:\n        search_column = 'name'\n    else:\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to delete from\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        DELETE FROM {table_name} WHERE {search_column} = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    def _is_safe_identifier(n):\n        return n.isidentifier() if n else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    if 'name' in columns:\n        search_column = 'name'\n    else:\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to delete from\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        DELETE FROM {table_name} WHERE {search_column} = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 2063,
+        "cached_tokens": 1152,
+        "completion_tokens": 6038,
+        "reasoning_tokens": 5772,
+        "cost": 0.0017158
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The method interpolates the discovered column name without quoting it, so a valid column name that is an SQL keyword (for example, `order`) causes a syntax error in the `DELETE` statement. Safely quote the table and column identifiers when building the SQL.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The method interpolates the discovered column name without quoting it, so a valid column name that is an SQL keyword (for example, `order`) causes a syntax error in the `DELETE` statement. Safely quote the table and column identifiers when building the SQL.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2539,
+            "cached_tokens": 0,
+            "completion_tokens": 813,
+            "reasoning_tokens": 741,
+            "cost": 0.0006604
+          }
+        ],
+        "prompt_tokens": 2539,
+        "cached_tokens": 0,
+        "completion_tokens": 813,
+        "reasoning_tokens": 741,
+        "cost": 0.0006604
+      },
+      "revision": {
+        "code": "def delete_from_database(self, table_name, name):\n    def _is_safe_identifier(n):\n        return n.isidentifier() if n else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    if 'name' in columns:\n        search_column = 'name'\n    else:\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to delete from\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        DELETE FROM '{table_name}' WHERE '{search_column}' = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()",
+        "valid": true,
+        "reply": "\n\n```python\ndef delete_from_database(self, table_name, name):\n    def _is_safe_identifier(n):\n        return n.isidentifier() if n else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    if 'name' in columns:\n        search_column = 'name'\n    else:\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to delete from\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        DELETE FROM '{table_name}' WHERE '{search_column}' = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 2421,
+        "cached_tokens": 1728,
+        "completion_tokens": 371,
+        "reasoning_tokens": 105,
+        "cost": 0.00033485
+      },
+      "final_code": "def delete_from_database(self, table_name, name):\n    def _is_safe_identifier(n):\n        return n.isidentifier() if n else False\n\n    if not _is_safe_identifier(table_name):\n        raise ValueError(\"Table name must be a valid identifier\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n    columns = [row[1] for row in cursor.fetchall()]\n    conn.commit()\n    conn.close()\n\n    if 'name' in columns:\n        search_column = 'name'\n    else:\n        first_text_col = None\n        for col in columns:\n            if col.lower() != 'id':\n                first_text_col = col\n                break\n        if first_text_col:\n            search_column = first_text_col\n        else:\n            raise ValueError(\"No suitable column found to delete from\")\n\n    conn = sqlite3.connect(self.database_name)\n    cursor = conn.cursor()\n    cursor.execute(f'''\n        DELETE FROM '{table_name}' WHERE '{search_column}' = ?\n    ''', (name,))\n    conn.commit()\n    conn.close()",
+      "passed_first": true,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 5,
+      "passed": false
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "tests": {
+    "DatabaseProcessorTestCreateTable": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestInsertIntoDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestSearchDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "DatabaseProcessorTestDeteleFromDatabase": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "DatabaseProcessorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''\n            CREATE TABLE IF NOT EXISTS {table_name} (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                {key1} TEXT,\n                {key2} INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                    {'name': 'John', 'age': 25},\n                    {'name': 'Alice', 'age': 30}\n                ])\n        \"\"\"\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n\n        if len(data) == 0:\n            return\n\n        # Get the keys from the first entry to determine columns\n        if not isinstance(data[0], dict):\n            raise ValueError(\"Each element in data must be a dictionary\")\n\n        cols = list(data[0].keys())\n\n        # Build the SQL insert statement with placeholders\n        placeholders = ','.join(['?' for _ in cols])\n        columns_str = ','.join(cols)\n\n        # Check if table exists before inserting (assume it exists from create_table)\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        for entry in data:\n            # Handle potential type mismatches for id column if it needs to be integer\n            if 'id' in entry:\n                try:\n                    entry['id'] = int(entry['id'])\n                except (ValueError, TypeError):\n                    raise ValueError(\"id must be an integer\")\n\n            # Prepare the values for this row\n            values = [entry[col] for col in cols]\n\n            # Execute the insert\n            cursor.execute(f'''\n                INSERT INTO {table_name} ({columns_str}) \n                VALUES ({placeholders})\n            ''', values)\n\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for.\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        def _is_safe_identifier(name):\n            \"\"\"Check if the identifier only contains safe characters.\"\"\"\n            return name.isidentifier() if name else False\n\n        if not _is_safe_identifier(table_name):\n            raise ValueError(\"Table name must be a valid identifier\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Use parameterized query to safely handle the name\n        cursor.execute(f'''\n            SELECT * FROM {table_name} WHERE key1 = ?\n        ''', (name,))\n\n        results = cursor.fetchall()\n        conn.commit()\n        conn.close()\n\n        return results if results else None\n\n    def delete_from_database(self, table_name, name):\n        def _is_safe_identifier(n):\n            return n.isidentifier() if n else False\n\n        if not _is_safe_identifier(table_name):\n            raise ValueError(\"Table name must be a valid identifier\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n        columns = [row[1] for row in cursor.fetchall()]\n        conn.commit()\n        conn.close()\n\n        if 'name' in columns:\n            search_column = 'name'\n        else:\n            first_text_col = None\n            for col in columns:\n                if col.lower() != 'id':\n                    first_text_col = col\n                    break\n            if first_text_col:\n                search_column = first_text_col\n            else:\n                raise ValueError(\"No suitable column found to delete from\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''\n            DELETE FROM {table_name} WHERE {search_column} = ?\n        ''', (name,))\n        conn.commit()\n        conn.close()\n",
+  "source": "import sqlite3\nimport pandas as pd\n\nclass DatabaseProcessor: \n    def __init__(self, database_name):\n        \"\"\"\n        Initialize database name of database processor\n        \"\"\"\n        self.database_name = database_name\n\n    def create_table(self, table_name, key1, key2):\n        \"\"\"\n        Create a new table in the database if it doesn't exist.\n        And make id (INTEGER) as PRIMARY KEY, make key1 as TEXT, key2 as INTEGER\n        :param table_name: str, the name of the table to create.\n        :param key1: str, the name of the first column in the table.\n        :param key2: str, the name of the second column in the table.\n        >>> db.create_table('user', 'name', 'age')\n        \"\"\"\n        def _is_safe_identifier(name):\n            \"\"\"Check if the identifier only contains safe characters.\"\"\"\n            return name.isidentifier() if name else False\n\n        if not _is_safe_identifier(table_name) or not _is_safe_identifier(key1) or not _is_safe_identifier(key2):\n            raise ValueError(\"Table and column names can only contain valid identifier characters (letters, numbers, underscores)\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Use single quotes to safely quote the identifiers - acceptable for valid identifier names\n        cursor.execute(f'''\n            CREATE TABLE IF NOT EXISTS '{table_name}' (\n                id INTEGER PRIMARY KEY AUTOINCREMENT,\n                '{key1}' TEXT,\n                '{key2}' INTEGER\n            )\n        ''')\n        conn.commit()\n        conn.close()\n\n    def insert_into_database(self, table_name, data):\n        \"\"\"\n        Insert data into the specified table in the database.\n        :param table_name: str, the name of the table to insert data into.\n        :param data: list, a list of dictionaries where each dictionary represents a row of data.\n        >>> db.insert_into_database('user', [\n                    {'name': 'John', 'age': 25},\n                    {'name': 'Alice', 'age': 30}\n                ])\n        \"\"\"\n        def _is_safe_identifier(name):\n            \"\"\"Check if the identifier only contains safe characters.\"\"\"\n            return name.isidentifier() if name else False\n\n        if not _is_safe_identifier(table_name):\n            raise ValueError(\"Table name must be a valid identifier\")\n\n        if not isinstance(data, list):\n            raise ValueError(\"Data must be a list\")\n\n        if len(data) == 0:\n            return\n\n        # Get the keys from the first entry to determine columns\n        if not isinstance(data[0], dict):\n            raise ValueError(\"Each element in data must be a dictionary\")\n\n        cols = list(data[0].keys())\n\n        # Validate all column names are safe identifiers\n        for col in cols:\n            if not _is_safe_identifier(col):\n                raise ValueError(f\"Column name '{col}' must be a valid identifier\")\n\n        # Build the SQL insert statement with parameterized values\n        placeholders = ','.join(['?' for _ in cols])\n        columns_str = ','.join(cols)\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        for entry in data:\n            # Handle potential type mismatches for id column if it needs to be integer\n            if 'id' in entry:\n                try:\n                    entry['id'] = int(entry['id'])\n                except (ValueError, TypeError):\n                    raise ValueError(\"id must be an integer\")\n\n            # Prepare the values for this row\n            values = [entry[col] for col in cols]\n\n            # Execute the insert with parameterized values\n            cursor.execute(f'''\n                INSERT INTO {table_name} ({columns_str}) \n                VALUES ({placeholders})\n            ''', values)\n\n        conn.commit()\n        conn.close()\n\n    def search_database(self, table_name, name):\n        \"\"\"\n        Search the specified table in the database for rows with a matching name.\n        :param table_name: str, the name of the table to search.\n        :param name: str, the name to search for.\n        :return: list, a list of tuples representing the rows with matching name, if any;\n                    otherwise, returns None.\n        >>> db.search_database('user', 'John')\n        [(1, 'John', 25)]\n        \"\"\"\n        def _is_safe_identifier(name):\n            \"\"\"Check if the identifier only contains safe characters.\"\"\"\n            return name.isidentifier() if name else False\n\n        if not _is_safe_identifier(table_name):\n            raise ValueError(\"Table name must be a valid identifier\")\n\n        # Determine what column to search. Based on create_table, \n        # we need to know the actual column name. Since this method \n        # doesn't take key1 directly, we'll look for a 'name' column\n        # or use a dynamic approach.\n\n        # For this implementation, we'll treat the parameter as the \n        # search term value, and search on a column that matches.\n        # Since we don't know stored column names, we'll assume \n        # common patterns and validate the table exists first.\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Check what columns exist in the table\n        cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n        columns = [row[1] for row in cursor.fetchall()]\n        conn.commit()\n        conn.close()\n\n        # Try to find a reasonable column to search (key1 equivalent)\n        if 'name' in columns and 'key1' in columns:\n            search_column = 'name'\n        elif 'name' in columns:\n            search_column = 'name'\n        else:\n            # Fall back to key1 equivalent (first TEXT column usually)\n            first_text_col = None\n            for col in columns:\n                if col.lower() != 'id':  # Skip id\n                    first_text_col = col\n                    break\n            if first_text_col:\n                search_column = first_text_col\n            else:\n                raise ValueError(\"No suitable column found to search on\")\n\n        # Reconnect to perform the actual search with parameterized query\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n\n        # Use parameterized query for the search value to prevent SQL injection\n        cursor.execute(f'''\n            SELECT * FROM {table_name} WHERE {search_column} = ?\n        ''', (name,))\n\n        results = cursor.fetchall()\n        conn.commit()\n        conn.close()\n\n        return results if results else None\n\n    def delete_from_database(self, table_name, name):\n        def _is_safe_identifier(n):\n            return n.isidentifier() if n else False\n\n        if not _is_safe_identifier(table_name):\n            raise ValueError(\"Table name must be a valid identifier\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(\"PRAGMA table_info({})\".format(table_name))\n        columns = [row[1] for row in cursor.fetchall()]\n        conn.commit()\n        conn.close()\n\n        if 'name' in columns:\n            search_column = 'name'\n        else:\n            first_text_col = None\n            for col in columns:\n                if col.lower() != 'id':\n                    first_text_col = col\n                    break\n            if first_text_col:\n                search_column = first_text_col\n            else:\n                raise ValueError(\"No suitable column found to delete from\")\n\n        conn = sqlite3.connect(self.database_name)\n        cursor = conn.cursor()\n        cursor.execute(f'''\n            DELETE FROM '{table_name}' WHERE '{search_column}' = ?\n        ''', (name,))\n        conn.commit()\n        conn.close()\n"
+}

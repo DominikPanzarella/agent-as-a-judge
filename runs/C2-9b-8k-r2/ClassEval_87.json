@@ -1,0 +1,486 @@
+{
+  "task_id": "ClassEval_87",
+  "class_name": "TimeUtils",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "get_current_time",
+      "first": {
+        "code": "def get_current_time(self):\n    \"\"\"\n    Return the current time in the format of '%H:%M:%S'\n    :return: string\n    >>> timeutils = TimeUtils()\n    >>> timeutils.get_current_time()\n    \"19:19:22\"\n    \"\"\"\n    return str(self.datetime.time()).replace('.', '')[0:8]",
+        "valid": true,
+        "reply": "```python\nimport datetime\n\nclass TimeUtils:\n    \"\"\"\n    This is a time util class, including getting the current time and date, adding seconds to a datetime, converting between strings and datetime objects, calculating the time difference in minutes, and formatting a datetime object.\n    \"\"\"\n\n    def __init__(self):\n        \"\"\"\n        Get the current datetime\n        \"\"\"\n        self.datetime = datetime.datetime.now()\n\n    def get_current_time(self):\n        \"\"\"\n        Return the current time in the format of '%H:%M:%S'\n        :return: string\n        >>> timeutils = TimeUtils()\n        >>> timeutils.get_current_time()\n        \"19:19:22\"\n        \"\"\"\n        return str(self.datetime.time()).replace('.', '')[0:8]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 838,
+        "cached_tokens": 0,
+        "completion_tokens": 740,
+        "reasoning_tokens": 649,
+        "cost": 0.000167626
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The constructor stores a `datetime` in `self.datetime`, and this method returns its time as `HH:MM:SS`. Slicing to the first eight characters removes any fractional seconds if present.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The constructor stores a `datetime` in `self.datetime`, and this method returns its time as `HH:MM:SS`. Slicing to the first eight characters removes any fractional seconds if present.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 957,
+            "cached_tokens": 0,
+            "completion_tokens": 231,
+            "reasoning_tokens": 173,
+            "cost": 0.00021119999999999998
+          }
+        ],
+        "prompt_tokens": 957,
+        "cached_tokens": 0,
+        "completion_tokens": 231,
+        "reasoning_tokens": 173,
+        "cost": 0.00021119999999999998
+      },
+      "revision": null,
+      "final_code": "def get_current_time(self):\n    \"\"\"\n    Return the current time in the format of '%H:%M:%S'\n    :return: string\n    >>> timeutils = TimeUtils()\n    >>> timeutils.get_current_time()\n    \"19:19:22\"\n    \"\"\"\n    return str(self.datetime.time()).replace('.', '')[0:8]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_current_date",
+      "first": {
+        "code": "def get_current_date(self):\n    \"\"\"\n    Return the current date in the format of \"%Y-%m-%d\"\n    :return: string\n    >>> timeutils.get_current_date()\n    \"2023-06-14\"\n    \"\"\"\n    return self.datetime.strftime(\"%Y-%m-%d\")",
+        "valid": true,
+        "reply": "```python\n    def get_current_date(self):\n        \"\"\"\n        Return the current date in the format of \"%Y-%m-%d\"\n        :return: string\n        >>> timeutils.get_current_date()\n        \"2023-06-14\"\n        \"\"\"\n        return self.datetime.strftime(\"%Y-%m-%d\")\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 932,
+        "cached_tokens": 0,
+        "completion_tokens": 538,
+        "reasoning_tokens": 443,
+        "cost": 0.000145
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`self.datetime` is initialized as a `datetime` instance, and `strftime(\"%Y-%m-%d\")` returns the date in the requested format. The method is correct.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`self.datetime` is initialized as a `datetime` instance, and `strftime(\"%Y-%m-%d\")` returns the date in the requested format. The method is correct.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1029,
+            "cached_tokens": 0,
+            "completion_tokens": 82,
+            "reasoning_tokens": 26,
+            "cost": 0.0001439
+          }
+        ],
+        "prompt_tokens": 1029,
+        "cached_tokens": 0,
+        "completion_tokens": 82,
+        "reasoning_tokens": 26,
+        "cost": 0.0001439
+      },
+      "revision": null,
+      "final_code": "def get_current_date(self):\n    \"\"\"\n    Return the current date in the format of \"%Y-%m-%d\"\n    :return: string\n    >>> timeutils.get_current_date()\n    \"2023-06-14\"\n    \"\"\"\n    return self.datetime.strftime(\"%Y-%m-%d\")",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "add_seconds",
+      "first": {
+        "code": "def add_seconds(self, seconds):\n    \"\"\"\n    Add the specified number of seconds to the current time\n    :param seconds: int, number of seconds to add\n    :return: string, time after adding the specified number of seconds in the format '%H:%M:%S'\n    >>> timeutils.add_seconds(600)\n    \"19:29:22\"\n    \"\"\"\n    new_time = self.datetime + datetime.timedelta(seconds=seconds)\n    return str(new_time.time()).replace('.', '')[0:8]",
+        "valid": true,
+        "reply": "```python\ndef add_seconds(self, seconds):\n    \"\"\"\n    Add the specified number of seconds to the current time\n    :param seconds: int, number of seconds to add\n    :return: string, time after adding the specified number of seconds in the format '%H:%M:%S'\n    >>> timeutils.add_seconds(600)\n    \"19:29:22\"\n    \"\"\"\n    new_time = self.datetime + datetime.timedelta(seconds=seconds)\n    return str(new_time.time()).replace('.', '')[0:8]\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1003,
+        "cached_tokens": 0,
+        "completion_tokens": 444,
+        "reasoning_tokens": 303,
+        "cost": 0.000139308
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method adds the requested seconds to the stored datetime and returns the resulting time as `HH:MM:SS`; slicing off any fractional seconds also handles the microseconds present in `datetime.now()`. It is correct for the documented integer input.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method adds the requested seconds to the stored datetime and returns the resulting time as `HH:MM:SS`; slicing off any fractional seconds also handles the microseconds present in `datetime.now()`. It is correct for the documented integer input.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1132,
+            "cached_tokens": 0,
+            "completion_tokens": 270,
+            "reasoning_tokens": 203,
+            "cost": 0.0002482
+          }
+        ],
+        "prompt_tokens": 1132,
+        "cached_tokens": 0,
+        "completion_tokens": 270,
+        "reasoning_tokens": 203,
+        "cost": 0.0002482
+      },
+      "revision": null,
+      "final_code": "def add_seconds(self, seconds):\n    \"\"\"\n    Add the specified number of seconds to the current time\n    :param seconds: int, number of seconds to add\n    :return: string, time after adding the specified number of seconds in the format '%H:%M:%S'\n    >>> timeutils.add_seconds(600)\n    \"19:29:22\"\n    \"\"\"\n    new_time = self.datetime + datetime.timedelta(seconds=seconds)\n    return str(new_time.time()).replace('.', '')[0:8]",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "string_to_datetime",
+      "first": {
+        "code": "def string_to_datetime(self, string):\n    \"\"\"\n    Convert the time string to a datetime instance\n    :param string: string, string before converting format\n    :return: datetime instance\n    >>> timeutils.string_to_datetime(\"2001-7-18 1:1:1\")\n    2001-07-18 01:01:01\n    \"\"\"\n    return datetime.datetime.strptime(string, \"%Y-%m-%d %H:%M:%S\")",
+        "valid": true,
+        "reply": "```python\ndef string_to_datetime(self, string):\n    \"\"\"\n    Convert the time string to a datetime instance\n    :param string: string, string before converting format\n    :return: datetime instance\n    >>> timeutils.string_to_datetime(\"2001-7-18 1:1:1\")\n    2001-07-18 01:01:01\n    \"\"\"\n    return datetime.datetime.strptime(string, \"%Y-%m-%d %H:%M:%S\")\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1122,
+        "cached_tokens": 0,
+        "completion_tokens": 575,
+        "reasoning_tokens": 395,
+        "cost": 0.000165548
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The format matches the documented date-and-time string, and `strptime` accepts single-digit month, day, hour, minute, and second values, so the example parses correctly into a `datetime` instance.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The format matches the documented date-and-time string, and `strptime` accepts single-digit month, day, hour, minute, and second values, so the example parses correctly into a `datetime` instance.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1231,
+            "cached_tokens": 0,
+            "completion_tokens": 148,
+            "reasoning_tokens": 88,
+            "cost": 0.00019710000000000002
+          }
+        ],
+        "prompt_tokens": 1231,
+        "cached_tokens": 0,
+        "completion_tokens": 148,
+        "reasoning_tokens": 88,
+        "cost": 0.00019710000000000002
+      },
+      "revision": null,
+      "final_code": "def string_to_datetime(self, string):\n    \"\"\"\n    Convert the time string to a datetime instance\n    :param string: string, string before converting format\n    :return: datetime instance\n    >>> timeutils.string_to_datetime(\"2001-7-18 1:1:1\")\n    2001-07-18 01:01:01\n    \"\"\"\n    return datetime.datetime.strptime(string, \"%Y-%m-%d %H:%M:%S\")",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "datetime_to_string",
+      "first": {
+        "code": "def datetime_to_string(self, datetime):\n    \"\"\"\n    Convert a datetime instance to a string\n    :param datetime: the datetime instance to convert\n    :return: string, converted time string\n    >>> timeutils.datetime_to_string(timeutils.datetime)\n    \"2023-06-14 19:30:03\"\n    \"\"\"\n    return datetime.strftime(\"%Y-%m-%d %H:%M:%S\")",
+        "valid": true,
+        "reply": "```python\ndef datetime_to_string(self, datetime):\n    \"\"\"\n    Convert a datetime instance to a string\n    :param datetime: the datetime instance to convert\n    :return: string, converted time string\n    >>> timeutils.datetime_to_string(timeutils.datetime)\n    \"2023-06-14 19:30:03\"\n    \"\"\"\n    return datetime.strftime(\"%Y-%m-%d %H:%M:%S\")\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1234,
+        "cached_tokens": 0,
+        "completion_tokens": 738,
+        "reasoning_tokens": 639,
+        "cost": 0.000195168
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly calls `strftime` on the supplied datetime instance and formats it as `%Y-%m-%d %H:%M:%S`, as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly calls `strftime` on the supplied datetime instance and formats it as `%Y-%m-%d %H:%M:%S`, as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1316,
+            "cached_tokens": 0,
+            "completion_tokens": 85,
+            "reasoning_tokens": 35,
+            "cost": 0.0001741
+          }
+        ],
+        "prompt_tokens": 1316,
+        "cached_tokens": 0,
+        "completion_tokens": 85,
+        "reasoning_tokens": 35,
+        "cost": 0.0001741
+      },
+      "revision": null,
+      "final_code": "def datetime_to_string(self, datetime):\n    \"\"\"\n    Convert a datetime instance to a string\n    :param datetime: the datetime instance to convert\n    :return: string, converted time string\n    >>> timeutils.datetime_to_string(timeutils.datetime)\n    \"2023-06-14 19:30:03\"\n    \"\"\"\n    return datetime.strftime(\"%Y-%m-%d %H:%M:%S\")",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_minutes",
+      "first": {
+        "code": "def get_minutes(self, string_time1, string_time2):\n    \"\"\"\n    Calculate how many minutes have passed between two times, and round the results to the nearest\n    :return: int, the number of minutes between two times, rounded off\n    >>> timeutils.get_minutes(\"2001-7-18 1:1:1\", \"2001-7-18 2:1:1\")\n    60\n    \"\"\"\n    dt1 = self.string_to_datetime(string_time1)\n    dt2 = self.string_to_datetime(string_time2)\n    diff = abs((dt2 - dt1).total_seconds()) / 60\n    return round(diff)",
+        "valid": true,
+        "reply": "```python\ndef get_minutes(self, string_time1, string_time2):\n    \"\"\"\n    Calculate how many minutes have passed between two times, and round the results to the nearest\n    :return: int, the number of minutes between two times, rounded off\n    >>> timeutils.get_minutes(\"2001-7-18 1:1:1\", \"2001-7-18 2:1:1\")\n    60\n    \"\"\"\n    dt1 = self.string_to_datetime(string_time1)\n    dt2 = self.string_to_datetime(string_time2)\n    diff = abs((dt2 - dt1).total_seconds()) / 60\n    return round(diff)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1331,
+        "cached_tokens": 0,
+        "completion_tokens": 598,
+        "reasoning_tokens": 428,
+        "cost": 0.000185956
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method parses both strings, computes the absolute difference in minutes, and rounds it to an integer, matching the docstring. The supplied unpadded date and time components are accepted by the specified `strptime` format.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method parses both strings, computes the absolute difference in minutes, and rounds it to an integer, matching the docstring. The supplied unpadded date and time components are accepted by the specified `strptime` format.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1452,
+            "cached_tokens": 0,
+            "completion_tokens": 171,
+            "reasoning_tokens": 108,
+            "cost": 0.00023070000000000002
+          }
+        ],
+        "prompt_tokens": 1452,
+        "cached_tokens": 0,
+        "completion_tokens": 171,
+        "reasoning_tokens": 108,
+        "cost": 0.00023070000000000002
+      },
+      "revision": null,
+      "final_code": "def get_minutes(self, string_time1, string_time2):\n    \"\"\"\n    Calculate how many minutes have passed between two times, and round the results to the nearest\n    :return: int, the number of minutes between two times, rounded off\n    >>> timeutils.get_minutes(\"2001-7-18 1:1:1\", \"2001-7-18 2:1:1\")\n    60\n    \"\"\"\n    dt1 = self.string_to_datetime(string_time1)\n    dt2 = self.string_to_datetime(string_time2)\n    diff = abs((dt2 - dt1).total_seconds()) / 60\n    return round(diff)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get_format_time",
+      "first": {
+        "code": "def get_format_time(self, year, month, day, hour, minute, second):\n    \"\"\"\n    get format time\n    :param year: int\n    :param month: int\n    :param day: int\n    :param hour: int\n    :param minute: int\n    :param second: int\n    :return: formatted time string\n    >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)\n    \"2001-07-18 01:01:01\"\n    \"\"\"\n    dt = datetime.datetime(year, month, day, hour, minute, second)\n    return dt.strftime(\"%Y-%m-%d %H:%M:%S\")",
+        "valid": true,
+        "reply": "```python\ndef get_format_time(self, year, month, day, hour, minute, second):\n    \"\"\"\n    get format time\n    :param year: int\n    :param month: int\n    :param day: int\n    :param hour: int\n    :param minute: int\n    :param second: int\n    :return: formatted time string\n    >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)\n    \"2001-07-18 01:01:01\"\n    \"\"\"\n    dt = datetime.datetime(year, month, day, hour, minute, second)\n    return dt.strftime(\"%Y-%m-%d %H:%M:%S\")\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1485,
+        "cached_tokens": 0,
+        "completion_tokens": 616,
+        "reasoning_tokens": 347,
+        "cost": 0.000201124
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method constructs a datetime from the supplied components and formats it as `%Y-%m-%d %H:%M:%S`, matching the documented output. Invalid component values appropriately raise `datetime`\u2019s `ValueError`.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method constructs a datetime from the supplied components and formats it as `%Y-%m-%d %H:%M:%S`, matching the documented output. Invalid component values appropriately raise `datetime`\u2019s `ValueError`.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1606,
+            "cached_tokens": 0,
+            "completion_tokens": 62,
+            "reasoning_tokens": 0,
+            "cost": 0.00019160000000000002
+          }
+        ],
+        "prompt_tokens": 1606,
+        "cached_tokens": 0,
+        "completion_tokens": 62,
+        "reasoning_tokens": 0,
+        "cost": 0.00019160000000000002
+      },
+      "revision": null,
+      "final_code": "def get_format_time(self, year, month, day, hour, minute, second):\n    \"\"\"\n    get format time\n    :param year: int\n    :param month: int\n    :param day: int\n    :param hour: int\n    :param minute: int\n    :param second: int\n    :return: formatted time string\n    >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)\n    \"2001-07-18 01:01:01\"\n    \"\"\"\n    dt = datetime.datetime(year, month, day, hour, minute, second)\n    return dt.strftime(\"%Y-%m-%d %H:%M:%S\")",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "TimeUtilsTestGetCurrentTime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetCurrentDate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestAddSeconds": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestStringToDatetime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestDatetimeToString": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetMinutes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetFormatTime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "TimeUtilsTestGetCurrentTime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetCurrentDate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestAddSeconds": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestStringToDatetime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestDatetimeToString": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetMinutes": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTestGetFormatTime": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "TimeUtilsTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import datetime\nimport time\n\nclass TimeUtils: \n    def __init__(self):\n        \"\"\"\n        Get the current datetime\n        \"\"\"\n        self.datetime = datetime.datetime.now()\n\n    def get_current_time(self):\n        \"\"\"\n        Return the current time in the format of '%H:%M:%S'\n        :return: string\n        >>> timeutils = TimeUtils()\n        >>> timeutils.get_current_time()\n        \"19:19:22\"\n        \"\"\"\n        return str(self.datetime.time()).replace('.', '')[0:8]\n\n    def get_current_date(self):\n        \"\"\"\n        Return the current date in the format of \"%Y-%m-%d\"\n        :return: string\n        >>> timeutils.get_current_date()\n        \"2023-06-14\"\n        \"\"\"\n        return self.datetime.strftime(\"%Y-%m-%d\")\n\n    def add_seconds(self, seconds):\n        \"\"\"\n        Add the specified number of seconds to the current time\n        :param seconds: int, number of seconds to add\n        :return: string, time after adding the specified number of seconds in the format '%H:%M:%S'\n        >>> timeutils.add_seconds(600)\n        \"19:29:22\"\n        \"\"\"\n        new_time = self.datetime + datetime.timedelta(seconds=seconds)\n        return str(new_time.time()).replace('.', '')[0:8]\n\n    def string_to_datetime(self, string):\n        \"\"\"\n        Convert the time string to a datetime instance\n        :param string: string, string before converting format\n        :return: datetime instance\n        >>> timeutils.string_to_datetime(\"2001-7-18 1:1:1\")\n        2001-07-18 01:01:01\n        \"\"\"\n        return datetime.datetime.strptime(string, \"%Y-%m-%d %H:%M:%S\")\n\n    def datetime_to_string(self, datetime):\n        \"\"\"\n        Convert a datetime instance to a string\n        :param datetime: the datetime instance to convert\n        :return: string, converted time string\n        >>> timeutils.datetime_to_string(timeutils.datetime)\n        \"2023-06-14 19:30:03\"\n        \"\"\"\n        return datetime.strftime(\"%Y-%m-%d %H:%M:%S\")\n\n    def get_minutes(self, string_time1, string_time2):\n        \"\"\"\n        Calculate how many minutes have passed between two times, and round the results to the nearest\n        :return: int, the number of minutes between two times, rounded off\n        >>> timeutils.get_minutes(\"2001-7-18 1:1:1\", \"2001-7-18 2:1:1\")\n        60\n        \"\"\"\n        dt1 = self.string_to_datetime(string_time1)\n        dt2 = self.string_to_datetime(string_time2)\n        diff = abs((dt2 - dt1).total_seconds()) / 60\n        return round(diff)\n\n    def get_format_time(self, year, month, day, hour, minute, second):\n        \"\"\"\n        get format time\n        :param year: int\n        :param month: int\n        :param day: int\n        :param hour: int\n        :param minute: int\n        :param second: int\n        :return: formatted time string\n        >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)\n        \"2001-07-18 01:01:01\"\n        \"\"\"\n        dt = datetime.datetime(year, month, day, hour, minute, second)\n        return dt.strftime(\"%Y-%m-%d %H:%M:%S\")\n",
+  "source": "import datetime\nimport time\n\nclass TimeUtils: \n    def __init__(self):\n        \"\"\"\n        Get the current datetime\n        \"\"\"\n        self.datetime = datetime.datetime.now()\n\n    def get_current_time(self):\n        \"\"\"\n        Return the current time in the format of '%H:%M:%S'\n        :return: string\n        >>> timeutils = TimeUtils()\n        >>> timeutils.get_current_time()\n        \"19:19:22\"\n        \"\"\"\n        return str(self.datetime.time()).replace('.', '')[0:8]\n\n    def get_current_date(self):\n        \"\"\"\n        Return the current date in the format of \"%Y-%m-%d\"\n        :return: string\n        >>> timeutils.get_current_date()\n        \"2023-06-14\"\n        \"\"\"\n        return self.datetime.strftime(\"%Y-%m-%d\")\n\n    def add_seconds(self, seconds):\n        \"\"\"\n        Add the specified number of seconds to the current time\n        :param seconds: int, number of seconds to add\n        :return: string, time after adding the specified number of seconds in the format '%H:%M:%S'\n        >>> timeutils.add_seconds(600)\n        \"19:29:22\"\n        \"\"\"\n        new_time = self.datetime + datetime.timedelta(seconds=seconds)\n        return str(new_time.time()).replace('.', '')[0:8]\n\n    def string_to_datetime(self, string):\n        \"\"\"\n        Convert the time string to a datetime instance\n        :param string: string, string before converting format\n        :return: datetime instance\n        >>> timeutils.string_to_datetime(\"2001-7-18 1:1:1\")\n        2001-07-18 01:01:01\n        \"\"\"\n        return datetime.datetime.strptime(string, \"%Y-%m-%d %H:%M:%S\")\n\n    def datetime_to_string(self, datetime):\n        \"\"\"\n        Convert a datetime instance to a string\n        :param datetime: the datetime instance to convert\n        :return: string, converted time string\n        >>> timeutils.datetime_to_string(timeutils.datetime)\n        \"2023-06-14 19:30:03\"\n        \"\"\"\n        return datetime.strftime(\"%Y-%m-%d %H:%M:%S\")\n\n    def get_minutes(self, string_time1, string_time2):\n        \"\"\"\n        Calculate how many minutes have passed between two times, and round the results to the nearest\n        :return: int, the number of minutes between two times, rounded off\n        >>> timeutils.get_minutes(\"2001-7-18 1:1:1\", \"2001-7-18 2:1:1\")\n        60\n        \"\"\"\n        dt1 = self.string_to_datetime(string_time1)\n        dt2 = self.string_to_datetime(string_time2)\n        diff = abs((dt2 - dt1).total_seconds()) / 60\n        return round(diff)\n\n    def get_format_time(self, year, month, day, hour, minute, second):\n        \"\"\"\n        get format time\n        :param year: int\n        :param month: int\n        :param day: int\n        :param hour: int\n        :param minute: int\n        :param second: int\n        :return: formatted time string\n        >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)\n        \"2001-07-18 01:01:01\"\n        \"\"\"\n        dt = datetime.datetime(year, month, day, hour, minute, second)\n        return dt.strftime(\"%Y-%m-%d %H:%M:%S\")\n"
+}

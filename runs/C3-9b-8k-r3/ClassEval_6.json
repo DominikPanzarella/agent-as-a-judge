@@ -1,0 +1,179 @@
+{
+  "task_id": "ClassEval_6",
+  "class_name": "AvgPartition",
+  "setup": "C3",
+  "name": "C3-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": "C2-9b-8k-r3",
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "setNum",
+      "first": {
+        "code": "def setNum(self):\n    \"\"\"\n    Calculate the size of each block and the remainder of the division.\n    :return: the size of each block and the remainder of the division, tuple.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.setNum()\n    (2, 0)\n    \"\"\"\n    n = len(self.lst)\n    base_size = n // self.limit\n    remainder = n % self.limit\n    return (base_size, remainder)",
+        "valid": true,
+        "reply": "\n\n```python\ndef setNum(self):\n    \"\"\"\n    Calculate the size of each block and the remainder of the division.\n    :return: the size of each block and the remainder of the division, tuple.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.setNum()\n    (2, 0)\n    \"\"\"\n    n = len(self.lst)\n    base_size = n // self.limit\n    remainder = n % self.limit\n    return (base_size, remainder)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 412,
+        "cached_tokens": 0,
+        "completion_tokens": 562,
+        "reasoning_tokens": 394,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`setNum` raises `ZeroDivisionError` when `limit` is 0, and the provided constructor does not enforce the documented requirement that `limit` be greater than 0. Validate `limit` in the constructor or handle invalid values before dividing.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`setNum` raises `ZeroDivisionError` when `limit` is 0, and the provided constructor does not enforce the documented requirement that `limit` be greater than 0. Validate `limit` in the constructor or handle invalid values before dividing.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 632,
+            "cached_tokens": 0,
+            "completion_tokens": 184,
+            "reasoning_tokens": 113,
+            "cost": 0.00015519999999999998
+          }
+        ],
+        "prompt_tokens": 632,
+        "cached_tokens": 0,
+        "completion_tokens": 184,
+        "reasoning_tokens": 113,
+        "cost": 0.0,
+        "reused": "C2-9b-8k-r3"
+      },
+      "revision": {
+        "code": "def setNum(self):\n    \"\"\"\n    Calculate the size of each block and the remainder of the division.\n    :return: the size of each block and the remainder of the division, tuple.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.setNum()\n    (2, 0)\n    \"\"\"\n    if self.limit == 0:\n        raise ValueError(\"limit cannot be 0\")\n    n = len(self.lst)\n    base_size = n // self.limit\n    remainder = n % self.limit\n    return (base_size, remainder)",
+        "valid": true,
+        "reply": "\n\n```python\ndef setNum(self):\n    \"\"\"\n    Calculate the size of each block and the remainder of the division.\n    :return: the size of each block and the remainder of the division, tuple.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.setNum()\n    (2, 0)\n    \"\"\"\n    if self.limit == 0:\n        raise ValueError(\"limit cannot be 0\")\n    n = len(self.lst)\n    base_size = n // self.limit\n    remainder = n % self.limit\n    return (base_size, remainder)\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 625,
+        "cached_tokens": 0,
+        "completion_tokens": 520,
+        "reasoning_tokens": 376,
+        "cost": 0.0001925
+      },
+      "final_code": "def setNum(self):\n    \"\"\"\n    Calculate the size of each block and the remainder of the division.\n    :return: the size of each block and the remainder of the division, tuple.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.setNum()\n    (2, 0)\n    \"\"\"\n    if self.limit == 0:\n        raise ValueError(\"limit cannot be 0\")\n    n = len(self.lst)\n    base_size = n // self.limit\n    remainder = n % self.limit\n    return (base_size, remainder)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "get",
+      "first": {
+        "code": "def get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n    \"\"\"\n    if index < 0 or index >= self.limit:\n        raise IndexError(\"index out of range\")\n    base_size, remainder = self.setNum()\n    start = index * base_size + min(remainder, index)\n    end = start + base_size if index >= remainder else start + base_size + 1\n    return self.lst[start:end]",
+        "valid": true,
+        "reply": "\n\n```python\ndef get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n    \"\"\"\n    if index < 0 or index >= self.limit:\n        raise IndexError(\"index out of range\")\n    base_size, remainder = self.setNum()\n    start = index * base_size + min(remainder, index)\n    end = start + base_size if index >= remainder else start + base_size + 1\n    return self.lst[start:end]\n```",
+        "finish_reason": "stop",
+        "provider": "Parasail",
+        "prompt_tokens": 560,
+        "cached_tokens": 0,
+        "completion_tokens": 616,
+        "reasoning_tokens": 426,
+        "cost": 0.00021
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method distributes the remainder across the first blocks, computes each block\u2019s boundaries correctly, and rejects indices outside the partition range. Given the documented integer index and a valid positive partition count, it returns the expected slice.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method distributes the remainder across the first blocks, computes each block\u2019s boundaries correctly, and rejects indices outside the partition range. Given the documented integer index and a valid positive partition count, it returns the expected slice.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 918,
+            "cached_tokens": 0,
+            "completion_tokens": 577,
+            "reasoning_tokens": 516,
+            "cost": 0.00038030000000000003
+          }
+        ],
+        "prompt_tokens": 918,
+        "cached_tokens": 0,
+        "completion_tokens": 577,
+        "reasoning_tokens": 516,
+        "cost": 0.00038030000000000003
+      },
+      "revision": null,
+      "final_code": "def get(self, index):\n    \"\"\"\n    calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n    :param index: the index of the partition,int.\n    :return: the corresponding block, list.\n    >>> a = AvgPartition([1, 2, 3, 4], 2)\n    >>> a.get(0)\n    [1, 2]\n    \"\"\"\n    if index < 0 or index >= self.limit:\n        raise IndexError(\"index out of range\")\n    base_size, remainder = self.setNum()\n    start = index * base_size + min(remainder, index)\n    end = start + base_size if index >= remainder else start + base_size + 1\n    return self.lst[start:end]",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "AvgPartitionTestSetNum": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestGet": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "AvgPartitionTestSetNum": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestGet": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "AvgPartitionTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass AvgPartition: \n    def __init__(self, lst, limit):\n        \"\"\"\n        Initialize the class with the given list and the number of partitions, and check if the number of partitions is greater than 0.\n        \"\"\"\n        self.lst = lst\n        self.limit = limit\n\n    def setNum(self):\n        \"\"\"\n        Calculate the size of each block and the remainder of the division.\n        :return: the size of each block and the remainder of the division, tuple.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.setNum()\n        (2, 0)\n        \"\"\"\n        n = len(self.lst)\n        base_size = n // self.limit\n        remainder = n % self.limit\n        return (base_size, remainder)\n\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n        \"\"\"\n        if index < 0 or index >= self.limit:\n            raise IndexError(\"index out of range\")\n        base_size, remainder = self.setNum()\n        start = index * base_size + min(remainder, index)\n        end = start + base_size if index >= remainder else start + base_size + 1\n        return self.lst[start:end]\n",
+  "source": "\n\nclass AvgPartition: \n    def __init__(self, lst, limit):\n        \"\"\"\n        Initialize the class with the given list and the number of partitions, and check if the number of partitions is greater than 0.\n        \"\"\"\n        self.lst = lst\n        self.limit = limit\n\n    def setNum(self):\n        \"\"\"\n        Calculate the size of each block and the remainder of the division.\n        :return: the size of each block and the remainder of the division, tuple.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.setNum()\n        (2, 0)\n        \"\"\"\n        if self.limit == 0:\n            raise ValueError(\"limit cannot be 0\")\n        n = len(self.lst)\n        base_size = n // self.limit\n        remainder = n % self.limit\n        return (base_size, remainder)\n\n    def get(self, index):\n        \"\"\"\n        calculate the size of each block and the remainder of the division, and calculate the corresponding start and end positions based on the index of the partition.\n        :param index: the index of the partition,int.\n        :return: the corresponding block, list.\n        >>> a = AvgPartition([1, 2, 3, 4], 2)\n        >>> a.get(0)\n        [1, 2]\n        \"\"\"\n        if index < 0 or index >= self.limit:\n            raise IndexError(\"index out of range\")\n        base_size, remainder = self.setNum()\n        start = index * base_size + min(remainder, index)\n        end = start + base_size if index >= remainder else start + base_size + 1\n        return self.lst[start:end]\n"
+}

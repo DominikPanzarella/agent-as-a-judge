@@ -1,0 +1,327 @@
+{
+  "task_id": "ClassEval_80",
+  "class_name": "SQLQueryBuilder",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "select",
+      "first": {
+        "code": "@staticmethod\ndef select(table, columns='*', where=None):\n    query_parts = [f'SELECT {columns} FROM {table}']\n\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            if isinstance(value, str):\n                conditions.append(f\"{key}='{value}'\")\n            else:\n                conditions.append(f\"{key}='{value}'\")\n\n        if conditions:\n            query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n\n    return ' '.join(query_parts)",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def select(table, columns='*', where=None):\n        query_parts = [f'SELECT {columns} FROM {table}']\n        \n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                if isinstance(value, str):\n                    conditions.append(f\"{key}='{value}'\")\n                else:\n                    conditions.append(f\"{key}='{value}'\")\n            \n            if conditions:\n                query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n        \n        return ' '.join(query_parts)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 700,
+        "cached_tokens": 0,
+        "completion_tokens": 578,
+        "reasoning_tokens": 448,
+        "cost": 0.000124204
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When `columns` is the documented list, the f-string renders its Python representation (for example, `['col1', 'col2']`) instead of the expected `col1, col2`. Join the column names with `', '` before building the SELECT clause, while preserving `'*'` for the default.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When `columns` is the documented list, the f-string renders its Python representation (for example, `['col1', 'col2']`) instead of the expected `col1, col2`. Join the column names with `', '` before building the SELECT clause, while preserving `'*'` for the default.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 914,
+            "cached_tokens": 0,
+            "completion_tokens": 167,
+            "reasoning_tokens": 83,
+            "cost": 0.0001749
+          }
+        ],
+        "prompt_tokens": 914,
+        "cached_tokens": 0,
+        "completion_tokens": 167,
+        "reasoning_tokens": 83,
+        "cost": 0.0001749
+      },
+      "revision": {
+        "code": "@staticmethod\ndef select(table, columns='*', where=None):\n    # Handle columns parameter\n    if columns == '*':\n        columns_str = '*'\n    elif isinstance(columns, list):\n        columns_str = ', '.join(str(col) for col in columns)\n    else:\n        columns_str = str(columns)\n\n    # Build SELECT and FROM parts\n    query_parts = [f'SELECT {columns_str} FROM {table}']\n\n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n\n        if conditions:\n            query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n\n    return ' '.join(query_parts)",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def select(table, columns='*', where=None):\n        # Handle columns parameter\n        if columns == '*':\n            columns_str = '*'\n        elif isinstance(columns, list):\n            columns_str = ', '.join(str(col) for col in columns)\n        else:\n            columns_str = str(columns)\n        \n        # Build SELECT and FROM parts\n        query_parts = [f'SELECT {columns_str} FROM {table}']\n        \n        # Add WHERE clause if provided\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            \n            if conditions:\n                query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n        \n        return ' '.join(query_parts)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 935,
+        "cached_tokens": 0,
+        "completion_tokens": 639,
+        "reasoning_tokens": 498,
+        "cost": 0.000150202
+      },
+      "final_code": "@staticmethod\ndef select(table, columns='*', where=None):\n    # Handle columns parameter\n    if columns == '*':\n        columns_str = '*'\n    elif isinstance(columns, list):\n        columns_str = ', '.join(str(col) for col in columns)\n    else:\n        columns_str = str(columns)\n\n    # Build SELECT and FROM parts\n    query_parts = [f'SELECT {columns_str} FROM {table}']\n\n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n\n        if conditions:\n            query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n\n    return ' '.join(query_parts)",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "insert",
+      "first": {
+        "code": "@staticmethod\ndef insert(table, data):\n    # Handle data parameter\n    columns = ', '.join(str(col) for col in data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n\n    return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef insert(table, data):\n    # Handle data parameter\n    columns = ', '.join(str(col) for col in data.keys())\n    values = ', '.join(f\"'{value}'\" for value in data.values())\n\n    return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 883,
+        "cached_tokens": 0,
+        "completion_tokens": 370,
+        "reasoning_tokens": 304,
+        "cost": 0.0001143
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "Values containing apostrophes produce invalid SQL (for example, `O'Reilly`), and unescaped values can also allow SQL injection. Escape SQL string literals or, preferably, generate a parameterized query instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "Values containing apostrophes produce invalid SQL (for example, `O'Reilly`), and unescaped values can also allow SQL injection. Escape SQL string literals or, preferably, generate a parameterized query instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1036,
+            "cached_tokens": 0,
+            "completion_tokens": 276,
+            "reasoning_tokens": 214,
+            "cost": 0.00024160000000000002
+          }
+        ],
+        "prompt_tokens": 1036,
+        "cached_tokens": 0,
+        "completion_tokens": 276,
+        "reasoning_tokens": 214,
+        "cost": 0.00024160000000000002
+      },
+      "revision": {
+        "code": "@staticmethod\ndef insert(table, data):\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        # Convert to string and escape single quotes for SQL\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n\n    columns = ', '.join(escape_value(col) for col in data.keys())\n    values = ', '.join(f\"'{escape_value(value)}'\" for value in data.values())\n\n    return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef insert(table, data):\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        # Convert to string and escape single quotes for SQL\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n    \n    columns = ', '.join(escape_value(col) for col in data.keys())\n    values = ', '.join(f\"'{escape_value(value)}'\" for value in data.values())\n\n    return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1037,
+        "cached_tokens": 0,
+        "completion_tokens": 860,
+        "reasoning_tokens": 891,
+        "cost": 0.00018444
+      },
+      "final_code": "@staticmethod\ndef insert(table, data):\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        # Convert to string and escape single quotes for SQL\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n\n    columns = ', '.join(escape_value(col) for col in data.keys())\n    values = ', '.join(f\"'{escape_value(value)}'\" for value in data.values())\n\n    return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "delete",
+      "first": {
+        "code": "@staticmethod\ndef delete(table, where=None):\n    query_parts = [f'DELETE FROM {table}']\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n    return ' '.join(query_parts)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef delete(table, where=None):\n    query_parts = [f'DELETE FROM {table}']\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n    return ' '.join(query_parts)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1001,
+        "cached_tokens": 0,
+        "completion_tokens": 2847,
+        "reasoning_tokens": 3002,
+        "cost": 0.000416026
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method builds the documented DELETE statement, joining dictionary conditions with `AND` and omitting `WHERE` when no conditions are provided. It uses no undefined fields or methods.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method builds the documented DELETE statement, joining dictionary conditions with `AND` and omitting `WHERE` when no conditions are provided. It uses no undefined fields or methods.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1167,
+            "cached_tokens": 0,
+            "completion_tokens": 191,
+            "reasoning_tokens": 138,
+            "cost": 0.00021219999999999998
+          }
+        ],
+        "prompt_tokens": 1167,
+        "cached_tokens": 0,
+        "completion_tokens": 191,
+        "reasoning_tokens": 138,
+        "cost": 0.00021219999999999998
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef delete(table, where=None):\n    query_parts = [f'DELETE FROM {table}']\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{value}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n    return ' '.join(query_parts)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "update",
+      "first": {
+        "code": "@staticmethod\ndef update(table, data, where=None):\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n\n    # Build SET clause from data\n    set_parts = []\n    for key, value in data.items():\n        set_parts.append(f\"{key}='{escape_value(value)}'\")\n\n    set_clause = ', '.join(set_parts)\n\n    # Build query parts\n    query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n\n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{escape_value(value)}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n\n    return ' '.join(query_parts)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef update(table, data, where=None):\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n    \n    # Build SET clause from data\n    set_parts = []\n    for key, value in data.items():\n        set_parts.append(f\"{key}='{escape_value(value)}'\")\n    \n    set_clause = ', '.join(set_parts)\n    \n    # Build query parts\n    query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n    \n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{escape_value(value)}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n    \n    return ' '.join(query_parts)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1094,
+        "cached_tokens": 0,
+        "completion_tokens": 562,
+        "reasoning_tokens": 365,
+        "cost": 0.000153836
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "If `data` is an empty dict, `set_clause` is empty and the method returns invalid SQL such as `UPDATE table SET `. Reject empty data or handle it explicitly; otherwise the documented example is generated correctly.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "If `data` is an empty dict, `set_clause` is empty and the method returns invalid SQL such as `UPDATE table SET `. Reject empty data or handle it explicitly; otherwise the documented example is generated correctly.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1356,
+            "cached_tokens": 0,
+            "completion_tokens": 329,
+            "reasoning_tokens": 266,
+            "cost": 0.00030010000000000003
+          }
+        ],
+        "prompt_tokens": 1356,
+        "cached_tokens": 0,
+        "completion_tokens": 329,
+        "reasoning_tokens": 266,
+        "cost": 0.00030010000000000003
+      },
+      "revision": {
+        "code": "@staticmethod\ndef update(table, data, where=None):\n    # Validate that data is not empty - cannot update without fields to set\n    if not isinstance(data, dict) or len(data) == 0:\n        raise ValueError(\"Data cannot be empty; must contain at least one field to update\")\n\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n\n    # Build SET clause from data\n    set_parts = []\n    for key, value in data.items():\n        set_parts.append(f\"{key}='{escape_value(value)}'\")\n\n    set_clause = ', '.join(set_parts)\n\n    # Build query parts\n    query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n\n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{escape_value(value)}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n\n    return ' '.join(query_parts)",
+        "valid": true,
+        "reply": "```python\n@staticmethod\ndef update(table, data, where=None):\n    # Validate that data is not empty - cannot update without fields to set\n    if not isinstance(data, dict) or len(data) == 0:\n        raise ValueError(\"Data cannot be empty; must contain at least one field to update\")\n    \n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n    \n    # Build SET clause from data\n    set_parts = []\n    for key, value in data.items():\n        set_parts.append(f\"{key}='{escape_value(value)}'\")\n    \n    set_clause = ', '.join(set_parts)\n    \n    # Build query parts\n    query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n    \n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{escape_value(value)}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n    \n    return ' '.join(query_parts)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1390,
+        "cached_tokens": 0,
+        "completion_tokens": 771,
+        "reasoning_tokens": 559,
+        "cost": 0.000219618
+      },
+      "final_code": "@staticmethod\ndef update(table, data, where=None):\n    # Validate that data is not empty - cannot update without fields to set\n    if not isinstance(data, dict) or len(data) == 0:\n        raise ValueError(\"Data cannot be empty; must contain at least one field to update\")\n\n    # Convert all data values to strings and escape for SQL safety\n    def escape_value(value):\n        s_value = str(value)\n        return s_value.replace(\"'\", \"''\")\n\n    # Build SET clause from data\n    set_parts = []\n    for key, value in data.items():\n        set_parts.append(f\"{key}='{escape_value(value)}'\")\n\n    set_clause = ', '.join(set_parts)\n\n    # Build query parts\n    query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n\n    # Add WHERE clause if provided\n    if where and isinstance(where, dict):\n        conditions = []\n        for key, value in where.items():\n            conditions.append(f\"{key}='{escape_value(value)}'\")\n        if conditions:\n            query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n\n    return ' '.join(query_parts)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": true,
+  "tests_first": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 6,
+      "errors": 0,
+      "passed": false
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "SQLQueryBuilderTestSelect": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestInsert": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestDetele": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestUpdate": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "SQLQueryBuilderTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        query_parts = [f'SELECT {columns} FROM {table}']\n\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                if isinstance(value, str):\n                    conditions.append(f\"{key}='{value}'\")\n                else:\n                    conditions.append(f\"{key}='{value}'\")\n\n            if conditions:\n                query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n\n        return ' '.join(query_parts)\n\n    @staticmethod\n    def insert(table, data):\n        # Handle data parameter\n        columns = ', '.join(str(col) for col in data.keys())\n        values = ', '.join(f\"'{value}'\" for value in data.values())\n\n        return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n\n    @staticmethod\n    def delete(table, where=None):\n        query_parts = [f'DELETE FROM {table}']\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            if conditions:\n                query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n        return ' '.join(query_parts)\n\n    @staticmethod\n    def update(table, data, where=None):\n        # Convert all data values to strings and escape for SQL safety\n        def escape_value(value):\n            s_value = str(value)\n            return s_value.replace(\"'\", \"''\")\n\n        # Build SET clause from data\n        set_parts = []\n        for key, value in data.items():\n            set_parts.append(f\"{key}='{escape_value(value)}'\")\n\n        set_clause = ', '.join(set_parts)\n\n        # Build query parts\n        query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n\n        # Add WHERE clause if provided\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{escape_value(value)}'\")\n            if conditions:\n                query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n\n        return ' '.join(query_parts)\n",
+  "source": "\n\nclass SQLQueryBuilder:\n\n    @staticmethod\n    def select(table, columns='*', where=None):\n        # Handle columns parameter\n        if columns == '*':\n            columns_str = '*'\n        elif isinstance(columns, list):\n            columns_str = ', '.join(str(col) for col in columns)\n        else:\n            columns_str = str(columns)\n\n        # Build SELECT and FROM parts\n        query_parts = [f'SELECT {columns_str} FROM {table}']\n\n        # Add WHERE clause if provided\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n\n            if conditions:\n                query_parts.append(f\"WHERE {' AND '.join(conditions)}\")\n\n        return ' '.join(query_parts)\n\n    @staticmethod\n    def insert(table, data):\n        # Convert all data values to strings and escape for SQL safety\n        def escape_value(value):\n            # Convert to string and escape single quotes for SQL\n            s_value = str(value)\n            return s_value.replace(\"'\", \"''\")\n\n        columns = ', '.join(escape_value(col) for col in data.keys())\n        values = ', '.join(f\"'{escape_value(value)}'\" for value in data.values())\n\n        return f\"INSERT INTO {table} ({columns}) VALUES ({values})\"\n\n    @staticmethod\n    def delete(table, where=None):\n        query_parts = [f'DELETE FROM {table}']\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{value}'\")\n            if conditions:\n                query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n        return ' '.join(query_parts)\n\n    @staticmethod\n    def update(table, data, where=None):\n        # Validate that data is not empty - cannot update without fields to set\n        if not isinstance(data, dict) or len(data) == 0:\n            raise ValueError(\"Data cannot be empty; must contain at least one field to update\")\n\n        # Convert all data values to strings and escape for SQL safety\n        def escape_value(value):\n            s_value = str(value)\n            return s_value.replace(\"'\", \"''\")\n\n        # Build SET clause from data\n        set_parts = []\n        for key, value in data.items():\n            set_parts.append(f\"{key}='{escape_value(value)}'\")\n\n        set_clause = ', '.join(set_parts)\n\n        # Build query parts\n        query_parts = [f\"UPDATE {table} SET {set_clause}\"]\n\n        # Add WHERE clause if provided\n        if where and isinstance(where, dict):\n            conditions = []\n            for key, value in where.items():\n                conditions.append(f\"{key}='{escape_value(value)}'\")\n            if conditions:\n                query_parts.append(\"WHERE \" + \" AND \".join(conditions))\n\n        return ' '.join(query_parts)\n"
+}

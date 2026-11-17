@@ -1,0 +1,147 @@
+{
+  "task_id": "ClassEval_46",
+  "class_name": "Interpolation",
+  "setup": "C2",
+  "name": "C2-9b-8k-r2",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "interpolate_1d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    y_interp = []\n    n_x = len(x)\n    n_y = len(y)\n\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi < x[i+1]\n        i = 0\n        while i < n_x - 1 and x[i + 1] < xi:\n            i += 1\n\n        # Avoid division by zero if all x are the same\n        if x[i + 1] != x[i]:\n            t = (xi - x[i]) / (x[i + 1] - x[i])\n            yi = y[i] + t * (y[i + 1] - y[i])\n        else:\n            yi = y[i]\n\n        y_interp.append(yi)\n\n    return y_interp",
+        "valid": true,
+        "reply": "```python\nclass Interpolation:\n    \"\"\"\n    This is a class that implements the Linear interpolation operation of one-dimensional and two-dimensional data\n    \"\"\"\n\n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        y_interp = []\n        n_x = len(x)\n        n_y = len(y)\n        \n        for xi in x_interp:\n            # Find the index i such that x[i] <= xi < x[i+1]\n            i = 0\n            while i < n_x - 1 and x[i + 1] < xi:\n                i += 1\n            \n            # Avoid division by zero if all x are the same\n            if x[i + 1] != x[i]:\n                t = (xi - x[i]) / (x[i + 1] - x[i])\n                yi = y[i] + t * (y[i + 1] - y[i])\n            else:\n                yi = y[i]\n            \n            y_interp.append(yi)\n        \n        return y_interp\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 549,
+        "cached_tokens": 0,
+        "completion_tokens": 975,
+        "reasoning_tokens": 549,
+        "cost": 0.00010917
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "For an interpolation point greater than the largest x value, the loop advances i to the last index and then accesses x[i + 1], raising IndexError. Handle out-of-range points explicitly (for example, extrapolate using the last interval or reject them with a clear validation error), and validate that x has at least two entries.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "For an interpolation point greater than the largest x value, the loop advances i to the last index and then accesses x[i + 1], raising IndexError. Handle out-of-range points explicitly (for example, extrapolate using the last interval or reject them with a clear validation error), and validate that x has at least two entries.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 966,
+            "cached_tokens": 0,
+            "completion_tokens": 313,
+            "reasoning_tokens": 227,
+            "cost": 0.0002531
+          }
+        ],
+        "prompt_tokens": 966,
+        "cached_tokens": 0,
+        "completion_tokens": 313,
+        "reasoning_tokens": 227,
+        "cost": 0.0002531
+      },
+      "revision": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    if len(x) < 2:\n        raise ValueError(\"x must contain at least 2 entries\")\n\n    y_interp = []\n    n_x = len(x)\n\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi <= x[i+1] or extrapolate\n        i = 0\n        while i < n_x - 1 and x[i + 1] < xi:\n            i += 1\n\n        if i == n_x - 1:\n            # Extrapolate forward using the last interval\n            denom = x[n_x - 1] - x[n_x - 2]\n            if denom != 0:\n                t = (xi - x[n_x - 2]) / denom\n                yi = y[n_x - 2] + t * (y[n_x - 1] - y[n_x - 2])\n            else:\n                yi = y[n_x - 2]\n        else:\n            # Normal interpolation within the bounds\n            denom = x[i + 1] - x[i]\n            if denom != 0:\n                t = (xi - x[i]) / denom\n                yi = y[i] + t * (y[i + 1] - y[i])\n            else:\n                yi = y[i]\n\n        y_interp.append(yi)\n\n    return y_interp",
+        "valid": true,
+        "reply": "```python\nclass Interpolation:\n    \"\"\"\n    This is a class that implements the Linear interpolation operation of one-dimensional and two-dimensional data\n    \"\"\"\n\n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        if len(x) < 2:\n            raise ValueError(\"x must contain at least 2 entries\")\n        \n        y_interp = []\n        n_x = len(x)\n        \n        for xi in x_interp:\n            # Find the index i such that x[i] <= xi <= x[i+1] or extrapolate\n            i = 0\n            while i < n_x - 1 and x[i + 1] < xi:\n                i += 1\n            \n            if i == n_x - 1:\n                # Extrapolate forward using the last interval\n                denom = x[n_x - 1] - x[n_x - 2]\n                if denom != 0:\n                    t = (xi - x[n_x - 2]) / denom\n                    yi = y[n_x - 2] + t * (y[n_x - 1] - y[n_x - 2])\n                else:\n                    yi = y[n_x - 2]\n            else:\n                # Normal interpolation within the bounds\n                denom = x[i + 1] - x[i]\n                if denom != 0:\n                    t = (xi - x[i]) / denom\n                    yi = y[i] + t * (y[i + 1] - y[i])\n                else:\n                    yi = y[i]\n            \n            y_interp.append(yi)\n        \n        return y_interp\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1036,
+        "cached_tokens": 0,
+        "completion_tokens": 1114,
+        "reasoning_tokens": 571,
+        "cost": 0.000147214
+      },
+      "final_code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    if len(x) < 2:\n        raise ValueError(\"x must contain at least 2 entries\")\n\n    y_interp = []\n    n_x = len(x)\n\n    for xi in x_interp:\n        # Find the index i such that x[i] <= xi <= x[i+1] or extrapolate\n        i = 0\n        while i < n_x - 1 and x[i + 1] < xi:\n            i += 1\n\n        if i == n_x - 1:\n            # Extrapolate forward using the last interval\n            denom = x[n_x - 1] - x[n_x - 2]\n            if denom != 0:\n                t = (xi - x[n_x - 2]) / denom\n                yi = y[n_x - 2] + t * (y[n_x - 1] - y[n_x - 2])\n            else:\n                yi = y[n_x - 2]\n        else:\n            # Normal interpolation within the bounds\n            denom = x[i + 1] - x[i]\n            if denom != 0:\n                t = (xi - x[i]) / denom\n                yi = y[i] + t * (y[i + 1] - y[i])\n            else:\n                yi = y[i]\n\n        y_interp.append(yi)\n\n    return y_interp",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "interpolate_2d",
+      "first": {
+        "code": null,
+        "valid": false,
+        "reply": "",
+        "finish_reason": "length",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 1013,
+        "cached_tokens": 0,
+        "completion_tokens": 8000,
+        "reasoning_tokens": 6163,
+        "cost": 0.000703715
+      },
+      "review": null,
+      "revision": null,
+      "final_code": null,
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "tests": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        y_interp = []\n        n_x = len(x)\n        n_y = len(y)\n\n        for xi in x_interp:\n            # Find the index i such that x[i] <= xi < x[i+1]\n            i = 0\n            while i < n_x - 1 and x[i + 1] < xi:\n                i += 1\n\n            # Avoid division by zero if all x are the same\n            if x[i + 1] != x[i]:\n                t = (xi - x[i]) / (x[i + 1] - x[i])\n                yi = y[i] + t * (y[i + 1] - y[i])\n            else:\n                yi = y[i]\n\n            y_interp.append(yi)\n\n        return y_interp\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        return None\n",
+  "source": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        if len(x) < 2:\n            raise ValueError(\"x must contain at least 2 entries\")\n\n        y_interp = []\n        n_x = len(x)\n\n        for xi in x_interp:\n            # Find the index i such that x[i] <= xi <= x[i+1] or extrapolate\n            i = 0\n            while i < n_x - 1 and x[i + 1] < xi:\n                i += 1\n\n            if i == n_x - 1:\n                # Extrapolate forward using the last interval\n                denom = x[n_x - 1] - x[n_x - 2]\n                if denom != 0:\n                    t = (xi - x[n_x - 2]) / denom\n                    yi = y[n_x - 2] + t * (y[n_x - 1] - y[n_x - 2])\n                else:\n                    yi = y[n_x - 2]\n            else:\n                # Normal interpolation within the bounds\n                denom = x[i + 1] - x[i]\n                if denom != 0:\n                    t = (xi - x[i]) / denom\n                    yi = y[i] + t * (y[i + 1] - y[i])\n                else:\n                    yi = y[i]\n\n            y_interp.append(yi)\n\n        return y_interp\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        return None\n"
+}

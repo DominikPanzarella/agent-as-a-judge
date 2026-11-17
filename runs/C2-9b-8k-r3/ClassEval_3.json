@@ -1,0 +1,380 @@
+{
+  "task_id": "ClassEval_3",
+  "class_name": "ArrangementCalculator",
+  "setup": "C2",
+  "name": "C2-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "factorial",
+      "first": {
+        "code": "def factorial(n):\n    \"\"\"\n    Calculates the factorial of a given number.\n    :param n: int, the number to calculate the factorial.\n    :return: int, the factorial of the given number.\n    >>> ArrangementCalculator.factorial(4)\n    24\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Factorial not defined for negative numbers\")\n    if n == 0 or n == 1:\n        return 1\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef factorial(n):\n    \"\"\"\n    Calculates the factorial of a given number.\n    :param n: int, the number to calculate the factorial.\n    :return: int, the factorial of the given number.\n    >>> ArrangementCalculator.factorial(4)\n    24\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Factorial not defined for negative numbers\")\n    if n == 0 or n == 1:\n        return 1\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 835,
+        "cached_tokens": 0,
+        "completion_tokens": 670,
+        "reasoning_tokens": 555,
+        "cost": 0.000184
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method returns the factorial for nonnegative integers, including 0 and 1, and raises `ValueError` for negative inputs. This matches the docstring\u2019s stated integer input and behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method returns the factorial for nonnegative integers, including 0 and 1, and raises `ValueError` for negative inputs. This matches the docstring\u2019s stated integer input and behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1036,
+            "cached_tokens": 0,
+            "completion_tokens": 109,
+            "reasoning_tokens": 52,
+            "cost": 0.00015810000000000002
+          }
+        ],
+        "prompt_tokens": 1036,
+        "cached_tokens": 0,
+        "completion_tokens": 109,
+        "reasoning_tokens": 52,
+        "cost": 0.00015810000000000002
+      },
+      "revision": null,
+      "final_code": "def factorial(n):\n    \"\"\"\n    Calculates the factorial of a given number.\n    :param n: int, the number to calculate the factorial.\n    :return: int, the factorial of the given number.\n    >>> ArrangementCalculator.factorial(4)\n    24\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Factorial not defined for negative numbers\")\n    if n == 0 or n == 1:\n        return 1\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "count",
+      "first": {
+        "code": "@staticmethod\ndef count(n, m=None):\n    \"\"\"\n    Counts the number of arrangements by choosing m items from n items (permutations).\n    If m is not provided or n equals m, returns factorial(n).\n    :param n: int, the total number of items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: int, the count of arrangements.\n    >>> ArrangementCalculator.count(5, 3)\n    60\n    \"\"\"\n    if n < 0 or m is None or m < 0:\n        raise ValueError(\"Invalid input values\")\n\n    if m is None:\n        return ArrangementCalculator.factorial(n)\n\n    if m > n:\n        return 0\n\n    if m == 0:\n        return 1\n\n    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef count(n, m=None):\n    \"\"\"\n    Counts the number of arrangements by choosing m items from n items (permutations).\n    If m is not provided or n equals m, returns factorial(n).\n    :param n: int, the total number of items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: int, the count of arrangements.\n    >>> ArrangementCalculator.count(5, 3)\n    60\n    \"\"\"\n    if n < 0 or m is None or m < 0:\n        raise ValueError(\"Invalid input values\")\n    \n    if m is None:\n        return ArrangementCalculator.factorial(n)\n    \n    if m > n:\n        return 0\n    \n    if m == 0:\n        return 1\n    \n    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 980,
+        "cached_tokens": 0,
+        "completion_tokens": 925,
+        "reasoning_tokens": 675,
+        "cost": 0.00023675
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The initial validation raises `ValueError` whenever `m` is `None`, so the documented default case never reaches the factorial calculation. Handle `m is None` by returning `factorial(n)` before validating negative `m` values.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The initial validation raises `ValueError` whenever `m` is `None`, so the documented default case never reaches the factorial calculation. Handle `m is None` by returning `factorial(n)` before validating negative `m` values.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1228,
+            "cached_tokens": 0,
+            "completion_tokens": 186,
+            "reasoning_tokens": 119,
+            "cost": 0.00021580000000000001
+          }
+        ],
+        "prompt_tokens": 1228,
+        "cached_tokens": 0,
+        "completion_tokens": 186,
+        "reasoning_tokens": 119,
+        "cost": 0.00021580000000000001
+      },
+      "revision": {
+        "code": "@staticmethod\ndef count(n, m=None):\n    \"\"\"\n    Counts the number of arrangements by choosing m items from n items (permutations).\n    If m is not provided or n equals m, returns factorial(n).\n    :param n: int, the total number of items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: int, the count of arrangements.\n    >>> ArrangementCalculator.count(5, 3)\n    60\n    \"\"\"\n    if m is None:\n        return ArrangementCalculator.factorial(n)\n\n    if n < 0 or m < 0:\n        raise ValueError(\"Invalid input values\")\n\n    if m > n:\n        return 0\n\n    if m == 0:\n        return 1\n\n    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef count(n, m=None):\n    \"\"\"\n    Counts the number of arrangements by choosing m items from n items (permutations).\n    If m is not provided or n equals m, returns factorial(n).\n    :param n: int, the total number of items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: int, the count of arrangements.\n    >>> ArrangementCalculator.count(5, 3)\n    60\n    \"\"\"\n    if m is None:\n        return ArrangementCalculator.factorial(n)\n    \n    if n < 0 or m < 0:\n        raise ValueError(\"Invalid input values\")\n    \n    if m > n:\n        return 0\n    \n    if m == 0:\n        return 1\n    \n    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1274,
+        "cached_tokens": 0,
+        "completion_tokens": 337,
+        "reasoning_tokens": 131,
+        "cost": 0.00017795
+      },
+      "final_code": "@staticmethod\ndef count(n, m=None):\n    \"\"\"\n    Counts the number of arrangements by choosing m items from n items (permutations).\n    If m is not provided or n equals m, returns factorial(n).\n    :param n: int, the total number of items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: int, the count of arrangements.\n    >>> ArrangementCalculator.count(5, 3)\n    60\n    \"\"\"\n    if m is None:\n        return ArrangementCalculator.factorial(n)\n\n    if n < 0 or m < 0:\n        raise ValueError(\"Invalid input values\")\n\n    if m > n:\n        return 0\n\n    if m == 0:\n        return 1\n\n    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "count_all",
+      "first": {
+        "code": "@staticmethod\ndef count_all(n):\n    \"\"\"\n    Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.\n    :param n: int, the total number of items.\n    :return: int, the count of all arrangements.\n    >>> ArrangementCalculator.count_all(4)\n    64\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Invalid input: n must be non-negative\")\n\n    count = 0\n    for k in range(1, n + 1):\n        count += ArrangementCalculator.count(n, k)\n\n    return count",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef count_all(n):\n    \"\"\"\n    Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.\n    :param n: int, the total number of items.\n    :return: int, the count of all arrangements.\n    >>> ArrangementCalculator.count_all(4)\n    64\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Invalid input: n must be non-negative\")\n    \n    count = 0\n    for k in range(1, n + 1):\n        count += ArrangementCalculator.count(n, k)\n    \n    return count\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1179,
+        "cached_tokens": 0,
+        "completion_tokens": 606,
+        "reasoning_tokens": 266,
+        "cost": 0.0002088
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method sums `count(n, k)` for every valid selection size from 1 through n, which counts exactly the arrangements described; it also returns 0 for n=0 and rejects negative n. No fix is needed.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method sums `count(n, k)` for every valid selection size from 1 through n, which counts exactly the arrangements described; it also returns 0 for n=0 and rejects negative n. No fix is needed.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1355,
+            "cached_tokens": 0,
+            "completion_tokens": 172,
+            "reasoning_tokens": 108,
+            "cost": 0.0002215
+          }
+        ],
+        "prompt_tokens": 1355,
+        "cached_tokens": 0,
+        "completion_tokens": 172,
+        "reasoning_tokens": 108,
+        "cost": 0.0002215
+      },
+      "revision": null,
+      "final_code": "@staticmethod\ndef count_all(n):\n    \"\"\"\n    Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.\n    :param n: int, the total number of items.\n    :return: int, the count of all arrangements.\n    >>> ArrangementCalculator.count_all(4)\n    64\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"Invalid input: n must be non-negative\")\n\n    count = 0\n    for k in range(1, n + 1):\n        count += ArrangementCalculator.count(n, k)\n\n    return count",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "select",
+      "first": {
+        "code": "def select(self, m=None):\n    \"\"\"\n    Generates a list of arrangements by selecting m items from the internal datas.\n    If m is not provided, selects all items.\n    :param m: int, the number of items to be chosen (default=None).\n    :return: List, a list of arrangements.\n    >>> ac = ArrangementCalculator([1, 2, 3, 4])\n    >>> ac.select(2)\n    [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n    \"\"\"\n    import itertools\n    if m is None:\n        result = []\n        for k in range(1, len(self.datas) + 1):\n            result.extend(itertools.permutations(self.datas, k))\n        return [list(arr) for arr in result]\n    else:\n        perms = itertools.permutations(self.datas, m)\n        return [list(arr) for arr in perms]",
+        "valid": true,
+        "reply": "\n\n```python\n    def select(self, m=None):\n        \"\"\"\n        Generates a list of arrangements by selecting m items from the internal datas.\n        If m is not provided, selects all items.\n        :param m: int, the number of items to be chosen (default=None).\n        :return: List, a list of arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3, 4])\n        >>> ac.select(2)\n        [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n        \"\"\"\n        import itertools\n        if m is None:\n            result = []\n            for k in range(1, len(self.datas) + 1):\n                result.extend(itertools.permutations(self.datas, k))\n            return [list(arr) for arr in result]\n        else:\n            perms = itertools.permutations(self.datas, m)\n            return [list(arr) for arr in perms]\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1320,
+        "cached_tokens": 0,
+        "completion_tokens": 788,
+        "reasoning_tokens": 432,
+        "cost": 0.0002502
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When `m` is `None`, the docstring says to select all items, but the method returns arrangements of every nonzero length. Return only permutations of length `len(self.datas)` for the default case; `select_all` is the method for generating arrangements of all lengths.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When `m` is `None`, the docstring says to select all items, but the method returns arrangements of every nonzero length. Return only permutations of length `len(self.datas)` for the default case; `select_all` is the method for generating arrangements of all lengths.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1597,
+            "cached_tokens": 0,
+            "completion_tokens": 202,
+            "reasoning_tokens": 126,
+            "cost": 0.00026070000000000005
+          }
+        ],
+        "prompt_tokens": 1597,
+        "cached_tokens": 0,
+        "completion_tokens": 202,
+        "reasoning_tokens": 126,
+        "cost": 0.00026070000000000005
+      },
+      "revision": {
+        "code": "def select(self, m=None):\n    \"\"\"\n    Generates a list of arrangements by selecting m items from the internal datas.\n    If m is not provided, selects all items (full length only).\n    :param m: int, the number of items to be chosen (default=None).\n    :return: List, a list of arrangements.\n    >>> ac = ArrangementCalculator([1, 2, 3, 4])\n    >>> ac.select(2)\n    [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n    \"\"\"\n    import itertools\n    if m is None:\n        n = len(self.datas)\n        perms = itertools.permutations(self.datas, n)\n        return [list(arr) for arr in perms]\n    else:\n        perms = itertools.permutations(self.datas, m)\n        return [list(arr) for arr in perms]",
+        "valid": true,
+        "reply": "\n\n```python\n    def select(self, m=None):\n        \"\"\"\n        Generates a list of arrangements by selecting m items from the internal datas.\n        If m is not provided, selects all items (full length only).\n        :param m: int, the number of items to be chosen (default=None).\n        :return: List, a list of arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3, 4])\n        >>> ac.select(2)\n        [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n        \"\"\"\n        import itertools\n        if m is None:\n            n = len(self.datas)\n            perms = itertools.permutations(self.datas, n)\n            return [list(arr) for arr in perms]\n        else:\n            perms = itertools.permutations(self.datas, m)\n            return [list(arr) for arr in perms]\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1680,
+        "cached_tokens": 0,
+        "completion_tokens": 434,
+        "reasoning_tokens": 194,
+        "cost": 0.0002331
+      },
+      "final_code": "def select(self, m=None):\n    \"\"\"\n    Generates a list of arrangements by selecting m items from the internal datas.\n    If m is not provided, selects all items (full length only).\n    :param m: int, the number of items to be chosen (default=None).\n    :return: List, a list of arrangements.\n    >>> ac = ArrangementCalculator([1, 2, 3, 4])\n    >>> ac.select(2)\n    [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n    \"\"\"\n    import itertools\n    if m is None:\n        n = len(self.datas)\n        perms = itertools.permutations(self.datas, n)\n        return [list(arr) for arr in perms]\n    else:\n        perms = itertools.permutations(self.datas, m)\n        return [list(arr) for arr in perms]",
+      "passed_first": false,
+      "passed": true
+    },
+    {
+      "method_name": "select_all",
+      "first": {
+        "code": "def select_all(self):\n    \"\"\"\n    Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.\n    :return: List, a list of all arrangements.\n    >>> ac = ArrangementCalculator([1, 2, 3])\n    >>> ac.select_all()\n    [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n\n    \"\"\"\n    import itertools\n    n = len(self.datas)\n    if n == 0:\n        return []\n\n    result = []\n    for k in range(1, n + 1):\n        perms = itertools.permutations(self.datas, k)\n        result.extend([list(arr) for arr in perms])\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n    def select_all(self):\n        \"\"\"\n        Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.\n        :return: List, a list of all arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3])\n        >>> ac.select_all()\n        [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n\n        \"\"\"\n        import itertools\n        n = len(self.datas)\n        if n == 0:\n            return []\n        \n        result = []\n        for k in range(1, n + 1):\n            perms = itertools.permutations(self.datas, k)\n            result.extend([list(arr) for arr in perms])\n        \n        return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1571,
+        "cached_tokens": 0,
+        "completion_tokens": 707,
+        "reasoning_tokens": 312,
+        "cost": 0.00026315
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method correctly generates permutations of lengths 1 through `len(self.datas)`, in the order shown in the docstring, and returns an empty list for empty input. No concrete issue is apparent.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method correctly generates permutations of lengths 1 through `len(self.datas)`, in the order shown in the docstring, and returns an empty list for empty input. No concrete issue is apparent.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1820,
+            "cached_tokens": 0,
+            "completion_tokens": 56,
+            "reasoning_tokens": 0,
+            "cost": 0.00021
+          }
+        ],
+        "prompt_tokens": 1820,
+        "cached_tokens": 0,
+        "completion_tokens": 56,
+        "reasoning_tokens": 0,
+        "cost": 0.00021
+      },
+      "revision": null,
+      "final_code": "def select_all(self):\n    \"\"\"\n    Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.\n    :return: List, a list of all arrangements.\n    >>> ac = ArrangementCalculator([1, 2, 3])\n    >>> ac.select_all()\n    [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n\n    \"\"\"\n    import itertools\n    n = len(self.datas)\n    if n == 0:\n        return []\n\n    result = []\n    for k in range(1, n + 1):\n        perms = itertools.permutations(self.datas, k)\n        result.extend([list(arr) for arr in perms])\n\n    return result",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": true,
+  "tests_first": {
+    "ArrangementCalculatorTestCount": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestCountAll": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestSelect": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "passed": false
+    },
+    "ArrangementCalculatorTestSelectAll": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestFactorial": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "ArrangementCalculatorTestCount": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestCountAll": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestSelect": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestSelectAll": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTestFactorial": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "ArrangementCalculatorTest": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "import itertools\n\nclass ArrangementCalculator: \n    def __init__(self, datas):\n        \"\"\"\n        Initializes the ArrangementCalculator object with a list of datas.\n        :param datas: List, the data elements to be used for arrangements.\n        \"\"\"\n        self.datas = datas\n\n    @staticmethod\n    def count(n, m=None):\n        \"\"\"\n        Counts the number of arrangements by choosing m items from n items (permutations).\n        If m is not provided or n equals m, returns factorial(n).\n        :param n: int, the total number of items.\n        :param m: int, the number of items to be chosen (default=None).\n        :return: int, the count of arrangements.\n        >>> ArrangementCalculator.count(5, 3)\n        60\n        \"\"\"\n        if n < 0 or m is None or m < 0:\n            raise ValueError(\"Invalid input values\")\n\n        if m is None:\n            return ArrangementCalculator.factorial(n)\n\n        if m > n:\n            return 0\n\n        if m == 0:\n            return 1\n\n        return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)\n\n    @staticmethod\n    def count_all(n):\n        \"\"\"\n        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.\n        :param n: int, the total number of items.\n        :return: int, the count of all arrangements.\n        >>> ArrangementCalculator.count_all(4)\n        64\n        \"\"\"\n        if n < 0:\n            raise ValueError(\"Invalid input: n must be non-negative\")\n\n        count = 0\n        for k in range(1, n + 1):\n            count += ArrangementCalculator.count(n, k)\n\n        return count\n\n    def select(self, m=None):\n        \"\"\"\n        Generates a list of arrangements by selecting m items from the internal datas.\n        If m is not provided, selects all items.\n        :param m: int, the number of items to be chosen (default=None).\n        :return: List, a list of arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3, 4])\n        >>> ac.select(2)\n        [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n        \"\"\"\n        import itertools\n        if m is None:\n            result = []\n            for k in range(1, len(self.datas) + 1):\n                result.extend(itertools.permutations(self.datas, k))\n            return [list(arr) for arr in result]\n        else:\n            perms = itertools.permutations(self.datas, m)\n            return [list(arr) for arr in perms]\n\n    def select_all(self):\n        \"\"\"\n        Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.\n        :return: List, a list of all arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3])\n        >>> ac.select_all()\n        [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n\n        \"\"\"\n        import itertools\n        n = len(self.datas)\n        if n == 0:\n            return []\n\n        result = []\n        for k in range(1, n + 1):\n            perms = itertools.permutations(self.datas, k)\n            result.extend([list(arr) for arr in perms])\n\n        return result\n\n    @staticmethod\n    def factorial(n):\n        \"\"\"\n        Calculates the factorial of a given number.\n        :param n: int, the number to calculate the factorial.\n        :return: int, the factorial of the given number.\n        >>> ArrangementCalculator.factorial(4)\n        24\n        \"\"\"\n        if n < 0:\n            raise ValueError(\"Factorial not defined for negative numbers\")\n        if n == 0 or n == 1:\n            return 1\n        result = 1\n        for i in range(2, n + 1):\n            result *= i\n        return result\n",
+  "source": "import itertools\n\nclass ArrangementCalculator: \n    def __init__(self, datas):\n        \"\"\"\n        Initializes the ArrangementCalculator object with a list of datas.\n        :param datas: List, the data elements to be used for arrangements.\n        \"\"\"\n        self.datas = datas\n\n    @staticmethod\n    def count(n, m=None):\n        \"\"\"\n        Counts the number of arrangements by choosing m items from n items (permutations).\n        If m is not provided or n equals m, returns factorial(n).\n        :param n: int, the total number of items.\n        :param m: int, the number of items to be chosen (default=None).\n        :return: int, the count of arrangements.\n        >>> ArrangementCalculator.count(5, 3)\n        60\n        \"\"\"\n        if m is None:\n            return ArrangementCalculator.factorial(n)\n\n        if n < 0 or m < 0:\n            raise ValueError(\"Invalid input values\")\n\n        if m > n:\n            return 0\n\n        if m == 0:\n            return 1\n\n        return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)\n\n    @staticmethod\n    def count_all(n):\n        \"\"\"\n        Counts the total number of all possible arrangements by choosing at least 1 item and at most n items from n items.\n        :param n: int, the total number of items.\n        :return: int, the count of all arrangements.\n        >>> ArrangementCalculator.count_all(4)\n        64\n        \"\"\"\n        if n < 0:\n            raise ValueError(\"Invalid input: n must be non-negative\")\n\n        count = 0\n        for k in range(1, n + 1):\n            count += ArrangementCalculator.count(n, k)\n\n        return count\n\n    def select(self, m=None):\n        \"\"\"\n        Generates a list of arrangements by selecting m items from the internal datas.\n        If m is not provided, selects all items (full length only).\n        :param m: int, the number of items to be chosen (default=None).\n        :return: List, a list of arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3, 4])\n        >>> ac.select(2)\n        [[1, 2], [1, 3], [1, 4], [2, 1], [2, 3], [2, 4], [3, 1], [3, 2], [3, 4], [4, 1], [4, 2], [4, 3]]\n        \"\"\"\n        import itertools\n        if m is None:\n            n = len(self.datas)\n            perms = itertools.permutations(self.datas, n)\n            return [list(arr) for arr in perms]\n        else:\n            perms = itertools.permutations(self.datas, m)\n            return [list(arr) for arr in perms]\n\n    def select_all(self):\n        \"\"\"\n        Generates a list of all arrangements by selecting at least 1 item and at most the number of internal datas.\n        :return: List, a list of all arrangements.\n        >>> ac = ArrangementCalculator([1, 2, 3])\n        >>> ac.select_all()\n        [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n\n        \"\"\"\n        import itertools\n        n = len(self.datas)\n        if n == 0:\n            return []\n\n        result = []\n        for k in range(1, n + 1):\n            perms = itertools.permutations(self.datas, k)\n            result.extend([list(arr) for arr in perms])\n\n        return result\n\n    @staticmethod\n    def factorial(n):\n        \"\"\"\n        Calculates the factorial of a given number.\n        :param n: int, the number to calculate the factorial.\n        :return: int, the factorial of the given number.\n        >>> ArrangementCalculator.factorial(4)\n        24\n        \"\"\"\n        if n < 0:\n            raise ValueError(\"Factorial not defined for negative numbers\")\n        if n == 0 or n == 1:\n            return 1\n        result = 1\n        for i in range(2, n + 1):\n            result *= i\n        return result\n"
+}

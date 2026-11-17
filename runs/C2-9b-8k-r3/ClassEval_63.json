@@ -1,0 +1,216 @@
+{
+  "task_id": "ClassEval_63",
+  "class_name": "NLPDataProcessor2",
+  "setup": "C2",
+  "name": "C2-9b-8k-r3",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 8000,
+  "reuse": null,
+  "feedback": "reason",
+  "methods": [
+    {
+      "method_name": "process_data",
+      "first": {
+        "code": "def process_data(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.\n    :param string_list: a list of strings\n    :return: words_list: a list of words lists\n    >>> NLPDataProcessor.process_data(['This is a test.'])\n    [['this', 'is', 'a', 'test']]\n    \"\"\"\n    result = []\n    for s in string_list:\n        cleaned = re.sub(r'[^a-zA-Z\\s]', '', s)\n        cleaned = cleaned.lower()\n        words = cleaned.split()\n        result.append(words)\n    return result",
+        "valid": true,
+        "reply": "```python\ndef process_data(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.\n    :param string_list: a list of strings\n    :return: words_list: a list of words lists\n    >>> NLPDataProcessor.process_data(['This is a test.'])\n    [['this', 'is', 'a', 'test']]\n    \"\"\"\n    result = []\n    for s in string_list:\n        cleaned = re.sub(r'[^a-zA-Z\\s]', '', s)\n        cleaned = cleaned.lower()\n        words = cleaned.split()\n        result.append(words)\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 593,
+        "cached_tokens": 0,
+        "completion_tokens": 620,
+        "reasoning_tokens": 452,
+        "cost": 0.000132164
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method removes characters other than English letters and whitespace, lowercases each string, splits it into words, and returns one word list per input string as documented.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method removes characters other than English letters and whitespace, lowercases each string, splits it into words, and returns one word list per input string as documented.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 845,
+            "cached_tokens": 0,
+            "completion_tokens": 141,
+            "reasoning_tokens": 91,
+            "cost": 0.000155
+          }
+        ],
+        "prompt_tokens": 845,
+        "cached_tokens": 0,
+        "completion_tokens": 141,
+        "reasoning_tokens": 91,
+        "cost": 0.000155
+      },
+      "revision": null,
+      "final_code": "def process_data(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.\n    :param string_list: a list of strings\n    :return: words_list: a list of words lists\n    >>> NLPDataProcessor.process_data(['This is a test.'])\n    [['this', 'is', 'a', 'test']]\n    \"\"\"\n    result = []\n    for s in string_list:\n        cleaned = re.sub(r'[^a-zA-Z\\s]', '', s)\n        cleaned = cleaned.lower()\n        words = cleaned.split()\n        result.append(words)\n    return result",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "calculate_word_frequency",
+      "first": {
+        "code": "def calculate_word_frequency(self, words_list):\n    \"\"\"\n    Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n    :param words_list: a list of words lists\n    :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n    >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])\n    {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n    \"\"\"\n    counter = Counter()\n    for sublist in words_list:\n        counter.update(sublist)\n    top_5 = counter.most_common(5)\n    return dict(top_5)",
+        "valid": true,
+        "reply": "```python\n    def calculate_word_frequency(self, words_list):\n        \"\"\"\n        Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n        :param words_list: a list of words lists\n        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n        >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])\n        {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n        \"\"\"\n        counter = Counter()\n        for sublist in words_list:\n            counter.update(sublist)\n        top_5 = counter.most_common(5)\n        return dict(top_5)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 760,
+        "cached_tokens": 0,
+        "completion_tokens": 786,
+        "reasoning_tokens": 549,
+        "cost": 0.000168274
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method counts words across all sublists with `Counter` and returns up to the five most frequent entries, ordered by descending frequency. It uses the imported `Counter` and matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method counts words across all sublists with `Counter` and returns up to the five most frequent entries, ordered by descending frequency. It uses the imported `Counter` and matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1038,
+            "cached_tokens": 0,
+            "completion_tokens": 189,
+            "reasoning_tokens": 131,
+            "cost": 0.00019830000000000002
+          }
+        ],
+        "prompt_tokens": 1038,
+        "cached_tokens": 0,
+        "completion_tokens": 189,
+        "reasoning_tokens": 131,
+        "cost": 0.00019830000000000002
+      },
+      "revision": null,
+      "final_code": "def calculate_word_frequency(self, words_list):\n    \"\"\"\n    Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n    :param words_list: a list of words lists\n    :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n    >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])\n    {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n    \"\"\"\n    counter = Counter()\n    for sublist in words_list:\n        counter.update(sublist)\n    top_5 = counter.most_common(5)\n    return dict(top_5)",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "process",
+      "first": {
+        "code": "def process(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n    :param string_list: a list of strings\n    :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n    >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])\n    {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n    \"\"\"\n    words_list = self.process_data(string_list)\n    return self.calculate_word_frequency(words_list)",
+        "valid": true,
+        "reply": "```python\ndef process(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n    :param string_list: a list of strings\n    :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n    >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])\n    {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n    \"\"\"\n    words_list = self.process_data(string_list)\n    return self.calculate_word_frequency(words_list)\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 949,
+        "cached_tokens": 0,
+        "completion_tokens": 703,
+        "reasoning_tokens": 554,
+        "cost": 0.000174199
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "`process` correctly passes the strings to `process_data`, then passes the resulting word lists to `calculate_word_frequency`, which returns the top five counts. This matches the documented behavior.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "`process` correctly passes the strings to `process_data`, then passes the resulting word lists to `calculate_word_frequency`, which returns the top five counts. This matches the documented behavior.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1206,
+            "cached_tokens": 0,
+            "completion_tokens": 112,
+            "reasoning_tokens": 57,
+            "cost": 0.0001766
+          }
+        ],
+        "prompt_tokens": 1206,
+        "cached_tokens": 0,
+        "completion_tokens": 112,
+        "reasoning_tokens": 57,
+        "cost": 0.0001766
+      },
+      "revision": null,
+      "final_code": "def process(self, string_list):\n    \"\"\"\n    keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n    :param string_list: a list of strings\n    :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n    >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])\n    {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n    \"\"\"\n    words_list = self.process_data(string_list)\n    return self.calculate_word_frequency(words_list)",
+      "passed_first": true,
+      "passed": true
+    }
+  ],
+  "class_passed_first": true,
+  "class_passed": true,
+  "tests_first": {
+    "NLPDataProcessorTestProcessData": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NLPDataProcessorTestCalculate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NLPDataProcessorTestProcess": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "NLPDataProcessorTestProcessData": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NLPDataProcessorTestCalculate": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "NLPDataProcessorTestProcess": {
+      "status": "ok",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "from collections import Counter\nimport re\n\nclass NLPDataProcessor2:\n\n    def process_data(self, string_list):\n        \"\"\"\n        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.\n        :param string_list: a list of strings\n        :return: words_list: a list of words lists\n        >>> NLPDataProcessor.process_data(['This is a test.'])\n        [['this', 'is', 'a', 'test']]\n        \"\"\"\n        result = []\n        for s in string_list:\n            cleaned = re.sub(r'[^a-zA-Z\\s]', '', s)\n            cleaned = cleaned.lower()\n            words = cleaned.split()\n            result.append(words)\n        return result\n\n    def calculate_word_frequency(self, words_list):\n        \"\"\"\n        Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n        :param words_list: a list of words lists\n        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n        >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])\n        {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n        \"\"\"\n        counter = Counter()\n        for sublist in words_list:\n            counter.update(sublist)\n        top_5 = counter.most_common(5)\n        return dict(top_5)\n\n    def process(self, string_list):\n        \"\"\"\n        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n        :param string_list: a list of strings\n        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n        >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])\n        {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n        \"\"\"\n        words_list = self.process_data(string_list)\n        return self.calculate_word_frequency(words_list)\n",
+  "source": "from collections import Counter\nimport re\n\nclass NLPDataProcessor2:\n\n    def process_data(self, string_list):\n        \"\"\"\n        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words.\n        :param string_list: a list of strings\n        :return: words_list: a list of words lists\n        >>> NLPDataProcessor.process_data(['This is a test.'])\n        [['this', 'is', 'a', 'test']]\n        \"\"\"\n        result = []\n        for s in string_list:\n            cleaned = re.sub(r'[^a-zA-Z\\s]', '', s)\n            cleaned = cleaned.lower()\n            words = cleaned.split()\n            result.append(words)\n        return result\n\n    def calculate_word_frequency(self, words_list):\n        \"\"\"\n        Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n        :param words_list: a list of words lists\n        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n        >>> NLPDataProcessor.calculate_word_frequency([['this', 'is', 'a', 'test'], ['this', 'is', 'another', 'test']])\n        {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n        \"\"\"\n        counter = Counter()\n        for sublist in words_list:\n            counter.update(sublist)\n        top_5 = counter.most_common(5)\n        return dict(top_5)\n\n    def process(self, string_list):\n        \"\"\"\n        keep only English letters and spaces in the string, then convert the string to lower case, and then split the string into a list of words. Calculate the word frequency of each word in the list of words list, and sort the word frequency dictionary by value in descending order.\n        :param string_list: a list of strings\n        :return: top 5 word frequency dictionary, a dictionary of word frequency, key is word, value is frequency\n        >>> NLPDataProcessor.process(['This is a test.', 'This is another test.'])\n        {'this': 2, 'is': 2, 'test': 2, 'a': 1, 'another': 1}\n        \"\"\"\n        words_list = self.process_data(string_list)\n        return self.calculate_word_frequency(words_list)\n"
+}
