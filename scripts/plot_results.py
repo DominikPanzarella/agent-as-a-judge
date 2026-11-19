@@ -7,9 +7,10 @@ before and after the feedback (setups_first_final.png), and the judge's TPR and 
 intervals (judge_rates.png, from pilot_controls.py). For the full runs on the 61 test classes:
 the methods passing before and after the feedback (full_first_final.png), the differences with
 their intervals (full_differences.png) and the judge against the tests (full_judge.png). The
-gain of each setup with its 95% interval, the run with 4000 tokens next to the three
-repetitions with 8000 (full_runs_compared.png). The colors are checked for color blindness,
-and every mark carries its value.
+methods passing before and after the feedback in every run, with the 95% interval of the
+final count, the run with 4000 tokens next to the three repetitions with 8000
+(full_runs_compared.png). The colors are checked for color blindness, and every mark carries
+its value.
 
     .venv/bin/python scripts/plot_results.py
 """
@@ -36,8 +37,8 @@ JUDGES = [("v1", "low"), ("v1", "medium"), ("v2", "low"), ("v2", "medium")]
 FULL = [("C2", "C2-9b"), ("C3", "C3-9b")]  # the full runs on the 61 test classes
 # The full runs under the two limits of output tokens for the coder. The control is C2 where the
 # coder gets the verdict without the judge's reason.
-COMPARED = [("First run, 4000 tokens", {"C2": ["C2-9b"], "C3": ["C3-9b"], "Control": ["C2n-9b"]}),
-            ("Three repetitions, 8000 tokens", {"C2": [f"C2-9b-8k-r{i}" for i in (1, 2, 3)],
+COMPARED = [("4000 tokens, one run", {"C2": ["C2-9b"], "C3": ["C3-9b"], "Control": ["C2n-9b"]}),
+            ("8000 tokens, three repetitions", {"C2": [f"C2-9b-8k-r{i}" for i in (1, 2, 3)],
                                                 "C3": [f"C3-9b-8k-r{i}" for i in (1, 2, 3)],
                                                 "Control": [f"C2n-9b-8k-r{i}" for i in (1, 2, 3)]})]
 
@@ -318,39 +319,51 @@ def full_runs():
 
 
 def runs_compared():
-    """The gain after the feedback with its 95% interval, one panel per token limit and one row per
-    setup. Where a setup has repetitions they are taken together, and each one is a grey dot."""
+    """Methods passing before and after the feedback, run by run, one panel per token limit. The
+    shaded bar is the 95% interval of the final count: the first count plus the interval of the gain."""
     task_ids = harness.class_ids("test")
     setups = list(COMPARED[0][1])
-    height = 1.75 + 0.42 * len(setups)
+    height = 3.7
     fig, axes = plt.subplots(1, len(COMPARED), figsize=(8, height), dpi=200, sharey=True, sharex=True)
-    fig.text(0.02, 0.97, "The gain after the feedback with 4000 and with 8000 tokens", fontsize=14,
-             fontweight="bold", va="top")
-    fig.text(0.02, 0.97 - 0.42 / height, "Methods passing in the final versions minus the first versions, in "
-             "points of 251 methods, with 95% interval", fontsize=10.5, color=INK_2, va="top")
+    fig.text(0.02, 0.97, "Methods passing before and after the feedback, with 4000 and with 8000 tokens",
+             fontsize=13.5, fontweight="bold", va="top")
+    fig.text(0.02, 0.97 - 0.42 / height, "Of 251 methods. Each row is one run; the three repetitions of a setup "
+             "are stacked", fontsize=10.5, color=INK_2, va="top")
     ys = dict(zip(setups, range(len(setups))[::-1]))
     for ax, (title, runs) in zip(axes, COMPARED):
         ax.set_title(title, fontsize=11, fontweight="bold", loc="left", pad=6)
-        ax.axvline(0, color=INK_2, linewidth=1, zorder=1)
         for setup, names in runs.items():
-            loaded = [analyze.load_run(name, task_ids) for name in names]
-            if any(len(results) != len(task_ids) for results in loaded):
-                continue
-            first, final, _ = analyze.pooled(names, task_ids)
-            d, y = analyze.difference(first, final), ys[setup]
-            ax.plot([100 * d["low"], 100 * d["high"]], [y, y], color=BLUE, linewidth=2.5, alpha=0.45, zorder=2)
-            if len(names) > 1:
-                singles = [analyze.difference(analyze.first_outcomes(r), analyze.outcomes(r))["diff"] for r in loaded]
-                ax.scatter([100 * s for s in singles], [y] * len(singles), s=22, color="#8f8e89", zorder=3)
-            ax.scatter([100 * d["diff"]], [y], s=85, color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=4)
-            ax.text(100 * d["high"] + 0.8, y, f"{100 * d['diff']:+.1f}", va="center", fontsize=10, color=INK)
+            offsets = [0] if len(names) == 1 else [0.27 * (1 - i) for i in range(len(names))]
+            for name, dy in zip(names, offsets):
+                results = analyze.load_run(name, task_ids)
+                if len(results) != len(task_ids):
+                    continue
+                first, final = analyze.first_outcomes(results), analyze.outcomes(results)
+                d, n = analyze.difference(first, final), len(first)
+                a, b, y = sum(first.values()), sum(final.values()), ys[setup] + dy
+                ax.plot([a + d["low"] * n, a + d["high"] * n], [y, y], color=ORANGE, linewidth=7, alpha=0.28,
+                        solid_capstyle="butt", zorder=1, label="95% interval of the count after")
+                ax.plot([a, b], [y, y], color=INK_2, linewidth=1, zorder=2)
+                ax.scatter([a], [y], s=46, color=BLUE, edgecolor=SURFACE, linewidth=1.2, zorder=3,
+                           label="before the feedback")
+                ax.scatter([b], [y], s=46, color=ORANGE, edgecolor=SURFACE, linewidth=1.2, zorder=4,
+                           label="after the feedback")
+                # the two counts, each in a darker shade of the color of its point
+                for text, color, dx in ((str(a), "#1f5fae", 7), ("→", INK_2, 24), (str(b), "#c24e1f", 36)):
+                    ax.annotate(text, (a + d["high"] * n, y), xytext=(dx, 0), textcoords="offset points",
+                                va="center", fontsize=8.5, color=color,
+                                fontweight="normal" if text == "→" else "bold")
         ax.tick_params(axis="y", length=0)
         ax.tick_params(axis="x", labelsize=9.5)
-        ax.set_xlabel("gain after the feedback, in points", fontsize=9.5)
+        ax.set_xlabel("methods that pass their tests (of 251)", fontsize=9.5)
     axes[0].set_yticks(list(ys.values()), list(ys))
-    axes[0].set_ylim(-0.6, len(setups) - 0.4)
-    axes[0].set_xlim(-6, 17)
-    fig.subplots_adjust(left=0.1, right=0.985, top=1 - 1.1 / height, bottom=0.42 / height + 0.06, wspace=0.07)
+    axes[0].set_ylim(-0.62, len(setups) - 0.38)
+    axes[0].set_xlim(156, 222)
+    handles, labels = axes[0].get_legend_handles_labels()
+    order = [labels.index(x) for x in ("before the feedback", "after the feedback", "95% interval of the count after")]
+    fig.legend([handles[k] for k in order], [labels[k] for k in order], loc="lower center", fontsize=9, ncol=3,
+               bbox_to_anchor=(0.54, -0.01), handletextpad=0.4, columnspacing=1.4)
+    fig.subplots_adjust(left=0.1, right=0.985, top=1 - 0.95 / height, bottom=0.82 / height, wspace=0.07)
     fig.savefig(OUT / "full_runs_compared.png")
     plt.close(fig)
     print("docs/figures/full_runs_compared.png")

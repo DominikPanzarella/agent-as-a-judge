@@ -228,7 +228,7 @@ versions, of 251 per run:
 | NOT OK and revisions | 232 | 241 | 243 |
 | Cost of the three runs | 0.36 $ | 0.34 $ | 0.26 $ |
 
-![The gain after the feedback with 4000 and with 8000 tokens](docs/figures/full_runs_compared.png)
+![Methods passing before and after the feedback, with 4000 and with 8000 tokens](docs/figures/full_runs_compared.png)
 
 Read together, the two limits say that the feedback helps a coder in difficulty and stops
 helping once the first versions are good: with 4000 tokens and the feedback the coder reaches

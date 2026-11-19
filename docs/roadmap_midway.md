@@ -134,8 +134,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   versions and reviews of `C2-9b`: from 164 to 165 methods, +0.4 points [-1.6, +2.5]. Against
   C2: -8.4 [-13.5, -3.7], McNemar p < 0.001. With that limit the judge's reason carries the gain.
 - [x] **The run with 4000 tokens is a result**, shown apart from the runs with 8000 tokens.
-- [x] **Clearer charts, with intervals**: the gain of each setup with its 95% interval, one panel
-  per limit (`figures/full_runs_compared.png`).
+- [x] **Clearer charts, with intervals**: methods passing before and after the feedback in every
+  run, with the 95% interval of the final count, one panel per limit
+  (`figures/full_runs_compared.png`).
 
 ## Decisions after the first full run (the instructors' answer to our mail)
 
