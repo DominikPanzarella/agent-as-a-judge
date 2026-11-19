@@ -179,23 +179,26 @@ is one, the token counts, the cost and the test result.
 ## 6. Results so far
 
 One full run of each setup on the 61 test classes (251 methods), on 12 November: coder
-`qwen3.5-9b`, judge v1 with medium effort.
+`qwen3.5-9b` with 4000 output tokens, judge v1 with medium effort. The control, C2 without the
+judge's reason, ran on 19 November on the first versions and reviews of that C2.
 
-| | C2 | C3 |
-|---|---|---|
-| Methods passing, first versions | 165 (65.7%) | 169 (67.3%) |
-| Methods passing, final versions | 186 (74.1%) | 182 (72.5%) |
-| Final minus first, in points, with 95% interval | +8.4 [+4.4, +12.9] | +5.2 [+1.7, +9.4] |
-| Methods fixed, broken | 22, 1 | 14, 1 |
-| NOT OK and revisions | 75 | 75 |
-| Judge on first versions: TPR, TNR, kappa | 0.76, 0.55, 0.30 | 0.77, 0.59, 0.33 |
-| Cost | 0.18 $ | 0.09 $ |
+| | C2 | C3 | Control |
+|---|---|---|---|
+| Methods passing, first versions | 165 (65.7%) | 169 (67.3%) | 164 (65.3%) |
+| Methods passing, final versions | 186 (74.1%) | 182 (72.5%) | 165 (65.7%) |
+| Final minus first, in points, with 95% interval | +8.4 [+4.4, +12.9] | +5.2 [+1.7, +9.4] | +0.4 [-1.6, +2.5] |
+| Methods fixed, broken | 22, 1 | 14, 1 | 4, 3 |
+| NOT OK and revisions | 75 | 75 | 83 |
+| Judge on first versions: TPR, TNR, kappa | 0.76, 0.55, 0.30 | 0.77, 0.59, 0.33 | 0.75, 0.61, 0.34 |
+| Cost | 0.18 $ | 0.09 $ | 0.08 $ |
 
 ![Methods passing before and after the feedback](docs/figures/full_first_final.png)
 
-- **RQ1.** After the feedback more methods pass in both setups. In the pilot, rewriting a
-  rejected method without feedback did about as well, so the gain is feedback and second
-  attempt together; these two runs have no such control, the repetitions below have one.
+- **RQ1.** After the feedback more methods pass in C2 and C3. In the control the gain is 0.4
+  points, and it ends 8.4 points below C2 [-13.5, -3.7], McNemar p < 0.001. On the 23 failing
+  methods that the same review rejects in both, the coder fixes 8 with the reason and 1
+  without it. With 4000 tokens the gain comes from the judge's reason, and a second attempt
+  alone gives almost nothing. The control ran a week later, on another provider of the model.
 - **RQ2.** C3 against C2 on the final versions: -1.6 points [-4.7, +1.5], McNemar p = 0.42.
   With the memory the judge changes 10 of 95 verdicts on the same code, as many as between two
   passes of the same judge on the pilot (7 of 71).
@@ -225,7 +228,11 @@ versions, of 251 per run:
 | NOT OK and revisions | 232 | 241 | 243 |
 | Cost of the three runs | 0.36 $ | 0.34 $ | 0.26 $ |
 
-![Methods passing before and after the feedback, run by run](docs/figures/full_runs_compared.png)
+![The gain after the feedback with 4000 and with 8000 tokens](docs/figures/full_runs_compared.png)
+
+Read together, the two limits say that the feedback helps a coder in difficulty and stops
+helping once the first versions are good: with 4000 tokens and the feedback the coder reaches
+186 methods, close to the 190 that 8000 tokens give without any feedback.
 
 - **RQ1.** With 8000 tokens the first versions already pass more often, and the gain of C2 falls
   from 8.4 to 1.6 points, with an interval that contains zero. The control ends 1.2 points below

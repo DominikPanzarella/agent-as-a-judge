@@ -1,0 +1,190 @@
+{
+  "task_id": "ClassEval_46",
+  "class_name": "Interpolation",
+  "setup": "C2",
+  "name": "C2n-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 4000,
+  "reuse": "C2-9b",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "interpolate_1d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    import bisect\n    result = []\n    for xi in x_interp:\n        idx = bisect.bisect_left(x, xi)\n\n        if idx >= len(x):\n            yi = y[-1]\n        elif idx == 0:\n            yi = y[0]\n        else:\n            x0 = x[idx - 1]\n            x1 = x[idx]\n            y0 = y[idx - 1]\n            y1 = y[idx]\n\n            if x1 == x0:\n                yi = y0\n            else:\n                t = (xi - x0) / (x1 - x0)\n                yi = y0 + t * (y1 - y0)\n\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "```python\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n        \n        \"\"\"\n        import bisect\n        result = []\n        for xi in x_interp:\n            idx = bisect.bisect_left(x, xi)\n            \n            if idx >= len(x):\n                yi = y[-1]\n            elif idx == 0:\n                yi = y[0]\n            else:\n                x0 = x[idx - 1]\n                x1 = x[idx]\n                y0 = y[idx - 1]\n                y1 = y[idx]\n                \n                if x1 == x0:\n                    yi = y0\n                else:\n                    t = (xi - x0) / (x1 - x0)\n                    yi = y0 + t * (y1 - y0)\n            \n            result.append(yi)\n        \n        return result\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 549,
+        "cached_tokens": 0,
+        "completion_tokens": 1378,
+        "reasoning_tokens": 934,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "`bisect_left` only finds the correct interval when `x` is sorted, but the docstring only requires a list; unsorted coordinates can therefore produce wrong values (or clamp to an unrelated endpoint). Sort the `(x, y)` pairs before searching, or explicitly require and document that `x` is sorted.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "`bisect_left` only finds the correct interval when `x` is sorted, but the docstring only requires a list; unsorted coordinates can therefore produce wrong values (or clamp to an unrelated endpoint). Sort the `(x, y)` pairs before searching, or explicitly require and document that `x` is sorted.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 956,
+            "cached_tokens": 0,
+            "completion_tokens": 1320,
+            "reasoning_tokens": 1236,
+            "cost": 0.0007556
+          }
+        ],
+        "prompt_tokens": 956,
+        "cached_tokens": 0,
+        "completion_tokens": 1320,
+        "reasoning_tokens": 1236,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": {
+        "code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi in x_interp:\n        idx = bisect.bisect_left(x, xi)\n\n        if idx == 0:\n            yi = y[0]\n        elif idx == len(x):\n            yi = y[-1]\n        else:\n            x0, x1 = x[idx - 1], x[idx]\n            y0, y1 = y[idx - 1], y[idx]\n\n            if x1 == x0:\n                yi = y0\n            else:\n                t = (xi - x0) / (x1 - x0)\n                yi = y0 + t * (y1 - y0)\n\n        result.append(yi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n        \n        \"\"\"\n        import bisect\n        \n        result = []\n        for xi in x_interp:\n            idx = bisect.bisect_left(x, xi)\n            \n            if idx == 0:\n                yi = y[0]\n            elif idx == len(x):\n                yi = y[-1]\n            else:\n                x0, x1 = x[idx - 1], x[idx]\n                y0, y1 = y[idx - 1], y[idx]\n                \n                if x1 == x0:\n                    yi = y0\n                else:\n                    t = (xi - x0) / (x1 - x0)\n                    yi = y0 + t * (y1 - y0)\n            \n            result.append(yi)\n        \n        return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 926,
+        "cached_tokens": 0,
+        "completion_tokens": 1423,
+        "reasoning_tokens": 986,
+        "cost": 0.00030605
+      },
+      "final_code": "@staticmethod\ndef interpolate_1d(x, y, x_interp):\n    \"\"\"\n    Linear interpolation of one-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :return: The y-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n    [1.5, 2.5]\n\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi in x_interp:\n        idx = bisect.bisect_left(x, xi)\n\n        if idx == 0:\n            yi = y[0]\n        elif idx == len(x):\n            yi = y[-1]\n        else:\n            x0, x1 = x[idx - 1], x[idx]\n            y0, y1 = y[idx - 1], y[idx]\n\n            if x1 == x0:\n                yi = y0\n            else:\n                t = (xi - x0) / (x1 - x0)\n                yi = y0 + t * (y1 - y0)\n\n        result.append(yi)\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "interpolate_2d",
+      "first": {
+        "code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        # Find x index\n        idx_x = bisect.bisect_left(x, xi)\n        idx_y = bisect.bisect_left(y, yi)\n\n        # Get indices for interpolation\n        x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n        x1 = x[idx_x] if idx_x < len(x) else x[-1]\n        y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n        y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n        z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n        z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n        z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][1]\n        z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n        # Bilinear interpolation\n        if x1 == x0 and y1 == y0:\n            zi = z00\n        else:\n            tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n            ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n            zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n        result.append(zi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        # Find x index\n        idx_x = bisect.bisect_left(x, xi)\n        idx_y = bisect.bisect_left(y, yi)\n\n        # Get indices for interpolation\n        x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n        x1 = x[idx_x] if idx_x < len(x) else x[-1]\n        y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n        y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n        z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n        z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n        z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][1]\n        z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n        # Bilinear interpolation\n        if x1 == x0 and y1 == y0:\n            zi = z00\n        else:\n            tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n            ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n            zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n        result.append(zi)\n\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 877,
+        "cached_tokens": 0,
+        "completion_tokens": 1823,
+        "reasoning_tokens": 672,
+        "cost": 0.00036115
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The corner fallbacks use fixed cells such as `z[0][0]` instead of the adjacent grid cells for the query, so boundary queries can return wrong values (for example, `(1, 2.5)` on the documented grid returns `2.0`, not `2.5`). Select valid neighboring indices by clamping each bracket to the grid, then use those same indices consistently for all four corners.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The corner fallbacks use fixed cells such as `z[0][0]` instead of the adjacent grid cells for the query, so boundary queries can return wrong values (for example, `(1, 2.5)` on the documented grid returns `2.0`, not `2.5`). Select valid neighboring indices by clamping each bracket to the grid, then use those same indices consistently for all four corners.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1597,
+            "cached_tokens": 0,
+            "completion_tokens": 876,
+            "reasoning_tokens": 771,
+            "cost": 0.0005977
+          }
+        ],
+        "prompt_tokens": 1597,
+        "cached_tokens": 0,
+        "completion_tokens": 876,
+        "reasoning_tokens": 771,
+        "cost": 0.0005977
+      },
+      "revision": {
+        "code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        idx_x = bisect.bisect_left(x, xi)\n        idx_y = bisect.bisect_left(y, yi)\n\n        x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n        x1 = x[idx_x] if idx_x < len(x) else x[-1]\n        y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n        y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n        z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n        z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n        z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][-1]\n        z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n        if x1 == x0 and y1 == y0:\n            zi = z00\n        else:\n            tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n            ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n            zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n        result.append(zi)\n\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\n@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        idx_x = bisect.bisect_left(x, xi)\n        idx_y = bisect.bisect_left(y, yi)\n\n        x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n        x1 = x[idx_x] if idx_x < len(x) else x[-1]\n        y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n        y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n        z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n        z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n        z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][-1]\n        z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n        if x1 == x0 and y1 == y0:\n            zi = z00\n        else:\n            tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n            ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n            zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n        result.append(zi)\n\n    return result\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1601,
+        "cached_tokens": 0,
+        "completion_tokens": 3519,
+        "reasoning_tokens": 2037,
+        "cost": 0.00068795
+      },
+      "final_code": "@staticmethod\ndef interpolate_2d(x, y, z, x_interp, y_interp):\n    \"\"\"\n    Linear interpolation of two-dimensional data\n    :param x: The x-coordinate of the data point, list.\n    :param y: The y-coordinate of the data point, list.\n    :param z: The z-coordinate of the data point, list.\n    :param x_interp: The x-coordinate of the interpolation point, list.\n    :param y_interp: The y-coordinate of the interpolation point, list.\n    :return: The z-coordinate of the interpolation point, list.\n    >>> interpolation = Interpolation()\n    >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n    [3.0, 7.0]\n    \"\"\"\n    import bisect\n\n    result = []\n    for xi, yi in zip(x_interp, y_interp):\n        idx_x = bisect.bisect_left(x, xi)\n        idx_y = bisect.bisect_left(y, yi)\n\n        x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n        x1 = x[idx_x] if idx_x < len(x) else x[-1]\n        y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n        y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n        z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n        z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n        z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][-1]\n        z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n        if x1 == x0 and y1 == y0:\n            zi = z00\n        else:\n            tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n            ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n            zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n        result.append(zi)\n\n    return result",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "tests": {
+    "InterpolationTestInterpolate1d": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 1,
+      "errors": 1,
+      "passed": false
+    },
+    "InterpolationTestInterpolate2d": {
+      "status": "ok",
+      "tests": 5,
+      "failures": 3,
+      "errors": 0,
+      "passed": false
+    },
+    "InterpolationTestMain": {
+      "status": "ok",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    }
+  },
+  "source_first": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        import bisect\n        result = []\n        for xi in x_interp:\n            idx = bisect.bisect_left(x, xi)\n\n            if idx >= len(x):\n                yi = y[-1]\n            elif idx == 0:\n                yi = y[0]\n            else:\n                x0 = x[idx - 1]\n                x1 = x[idx]\n                y0 = y[idx - 1]\n                y1 = y[idx]\n\n                if x1 == x0:\n                    yi = y0\n                else:\n                    t = (xi - x0) / (x1 - x0)\n                    yi = y0 + t * (y1 - y0)\n\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n\n        \"\"\"\n        import bisect\n\n        result = []\n        for xi, yi in zip(x_interp, y_interp):\n            # Find x index\n            idx_x = bisect.bisect_left(x, xi)\n            idx_y = bisect.bisect_left(y, yi)\n\n            # Get indices for interpolation\n            x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n            x1 = x[idx_x] if idx_x < len(x) else x[-1]\n            y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n            y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n            z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n            z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n            z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][1]\n            z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n            # Bilinear interpolation\n            if x1 == x0 and y1 == y0:\n                zi = z00\n            else:\n                tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n                ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n                zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n            result.append(zi)\n\n        return result\n",
+  "source": "\n\nclass Interpolation: \n    def __init__(self):\n        pass\n\n    @staticmethod\n    def interpolate_1d(x, y, x_interp):\n        \"\"\"\n        Linear interpolation of one-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :return: The y-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_1d([1, 2, 3], [1, 2, 3], [1.5, 2.5])\n        [1.5, 2.5]\n\n        \"\"\"\n        import bisect\n\n        result = []\n        for xi in x_interp:\n            idx = bisect.bisect_left(x, xi)\n\n            if idx == 0:\n                yi = y[0]\n            elif idx == len(x):\n                yi = y[-1]\n            else:\n                x0, x1 = x[idx - 1], x[idx]\n                y0, y1 = y[idx - 1], y[idx]\n\n                if x1 == x0:\n                    yi = y0\n                else:\n                    t = (xi - x0) / (x1 - x0)\n                    yi = y0 + t * (y1 - y0)\n\n            result.append(yi)\n\n        return result\n\n    @staticmethod\n    def interpolate_2d(x, y, z, x_interp, y_interp):\n        \"\"\"\n        Linear interpolation of two-dimensional data\n        :param x: The x-coordinate of the data point, list.\n        :param y: The y-coordinate of the data point, list.\n        :param z: The z-coordinate of the data point, list.\n        :param x_interp: The x-coordinate of the interpolation point, list.\n        :param y_interp: The y-coordinate of the interpolation point, list.\n        :return: The z-coordinate of the interpolation point, list.\n        >>> interpolation = Interpolation()\n        >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])\n        [3.0, 7.0]\n        \"\"\"\n        import bisect\n\n        result = []\n        for xi, yi in zip(x_interp, y_interp):\n            idx_x = bisect.bisect_left(x, xi)\n            idx_y = bisect.bisect_left(y, yi)\n\n            x0 = x[idx_x - 1] if idx_x > 0 else x[0]\n            x1 = x[idx_x] if idx_x < len(x) else x[-1]\n            y0 = y[idx_y - 1] if idx_y > 0 else y[0]\n            y1 = y[idx_y] if idx_y < len(y) else y[-1]\n\n            z00 = z[idx_x - 1][idx_y - 1] if idx_x > 0 and idx_y > 0 else z[0][0]\n            z10 = z[idx_x][idx_y - 1] if idx_x < len(x) and idx_y > 0 else z[-1][0]\n            z01 = z[idx_x - 1][idx_y] if idx_x > 0 and idx_y < len(y) else z[0][-1]\n            z11 = z[idx_x][idx_y] if idx_x < len(x) and idx_y < len(y) else z[-1][-1]\n\n            if x1 == x0 and y1 == y0:\n                zi = z00\n            else:\n                tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0\n                ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0\n\n                zi = z00 + tx * (z10 - z00) + ty * (z01 - z00) + tx * ty * (z11 - z10 - z01 + z00)\n\n            result.append(zi)\n\n        return result\n"
+}

@@ -128,6 +128,15 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
 
+## Feedback at the lesson of 19 November
+
+- [x] **The control for the run with 4000 tokens** (19 Nov, 0.08 $). Run `C2n-9b`, on the first
+  versions and reviews of `C2-9b`: from 164 to 165 methods, +0.4 points [-1.6, +2.5]. Against
+  C2: -8.4 [-13.5, -3.7], McNemar p < 0.001. With that limit the judge's reason carries the gain.
+- [x] **The run with 4000 tokens is a result**, shown apart from the runs with 8000 tokens.
+- [x] **Clearer charts, with intervals**: the gain of each setup with its 95% interval, one panel
+  per limit (`figures/full_runs_compared.png`).
+
 ## Decisions after the first full run (the instructors' answer to our mail)
 
 - [x] **Three repetitions** of C2 and C3.

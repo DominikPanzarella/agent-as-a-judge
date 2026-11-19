@@ -1,0 +1,242 @@
+{
+  "task_id": "ClassEval_71",
+  "class_name": "PushBoxGame",
+  "setup": "C2",
+  "name": "C2n-9b",
+  "coder_model": "qwen/qwen3.5-9b",
+  "judge": "v1",
+  "effort": "medium",
+  "confidence": false,
+  "min_confidence": null,
+  "max_tokens": 4000,
+  "reuse": "C2-9b",
+  "feedback": "verdict",
+  "methods": [
+    {
+      "method_name": "init_game",
+      "first": {
+        "code": "def init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n\n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.is_game_over = False",
+        "valid": true,
+        "reply": "```python\ndef init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n    \n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n    \n    self.is_game_over = False\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 811,
+        "cached_tokens": 0,
+        "completion_tokens": 746,
+        "reasoning_tokens": 586,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "OK",
+        "reason": "The method scans the map and records the player, target, and box positions, counts the targets, and resets the game-over flag as required. It correctly produces the documented values for the example map.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "OK",
+            "reason": "The method scans the map and records the player, target, and box positions, counts the targets, and resets the game-over flag as required. It correctly produces the documented values for the example map.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1043,
+            "cached_tokens": 0,
+            "completion_tokens": 115,
+            "reasoning_tokens": 57,
+            "cost": 0.0001618
+          }
+        ],
+        "prompt_tokens": 1043,
+        "cached_tokens": 0,
+        "completion_tokens": 115,
+        "reasoning_tokens": 57,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": null,
+      "final_code": "def init_game(self):\n    self.player_row = 0\n    self.player_col = 0\n    self.targets = []\n    self.boxes = []\n    self.target_count = 0\n\n    for row_idx, row in enumerate(self.map):\n        for col_idx, cell in enumerate(row):\n            if cell == 'O':\n                self.player_row = row_idx\n                self.player_col = col_idx\n            elif cell == 'G':\n                self.targets.append((row_idx, col_idx))\n                self.target_count += 1\n            elif cell == 'X':\n                self.boxes.append((row_idx, col_idx))\n\n    self.is_game_over = False",
+      "passed_first": true,
+      "passed": true
+    },
+    {
+      "method_name": "check_win",
+      "first": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over",
+        "valid": true,
+        "reply": "```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "PrimeIntellect",
+        "prompt_tokens": 970,
+        "cached_tokens": 0,
+        "completion_tokens": 818,
+        "reasoning_tokens": 715,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "The `len(self.boxes) > 0` condition makes a map with no boxes unwinnable, although the stated rule says the game is won when all boxes are on targets (which is vacuously true when there are none). Remove that condition if maps with zero boxes are allowed; otherwise, this method is correct for maps guaranteed to contain a box.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "The `len(self.boxes) > 0` condition makes a map with no boxes unwinnable, although the stated rule says the game is won when all boxes are on targets (which is vacuously true when there are none). Remove that condition if maps with zero boxes are allowed; otherwise, this method is correct for maps guaranteed to contain a box.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 1186,
+            "cached_tokens": 0,
+            "completion_tokens": 609,
+            "reasoning_tokens": 516,
+            "cost": 0.00042310000000000004
+          }
+        ],
+        "prompt_tokens": 1186,
+        "cached_tokens": 0,
+        "completion_tokens": 609,
+        "reasoning_tokens": 516,
+        "cost": 0.0,
+        "reused": "C2-9b"
+      },
+      "revision": {
+        "code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(box_pos in self.targets for box_pos in self.boxes)\n    return self.is_game_over",
+        "valid": true,
+        "reply": "\n\n```python\ndef check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(box_pos in self.targets for box_pos in self.boxes)\n    return self.is_game_over\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1154,
+        "cached_tokens": 0,
+        "completion_tokens": 720,
+        "reasoning_tokens": 650,
+        "cost": 0.0002234
+      },
+      "final_code": "def check_win(self):\n    \"\"\"\n    Check if the game is won. The game is won when all the boxes are placed on target positions.\n    And update the value of self.is_game_over.\n    :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n    >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n    >>> game.check_win()\n    \"\"\"\n    self.is_game_over = all(box_pos in self.targets for box_pos in self.boxes)\n    return self.is_game_over",
+      "passed_first": false,
+      "passed": false
+    },
+    {
+      "method_name": "move",
+      "first": {
+        "code": "def move(self, direction):\n    # Calculate new position based on direction\n    if direction == 'w':\n        new_row = self.player_row - 1\n        new_col = self.player_col\n    elif direction == 's':\n        new_row = self.player_row + 1\n        new_col = self.player_col\n    elif direction == 'a':\n        new_row = self.player_row\n        new_col = self.player_col - 1\n    elif direction == 'd':\n        new_row = self.player_row\n        new_col = self.player_col + 1\n    else:\n        return False\n\n    # Check if new position is within bounds\n    if new_row < 0 or new_row >= len(self.map):\n        return False\n    if new_col < 0 or new_col >= len(self.map[new_row]):\n        return False\n\n    # Check if new position is a wall\n    if self.map[new_row][new_col] == '#':\n        return False\n\n    # Check if there's a box at the new position, and if we can push it\n    can_push = True\n    if self.map[new_row][new_col] == 'X':\n        # Calculate box's new position after potential push\n        box_row = new_row\n        box_col = new_col\n\n        if direction == 'w':\n            box_row = new_row - 1\n            box_col = box_col\n        elif direction == 's':\n            box_row = new_row + 1\n            box_col = box_col\n        elif direction == 'a':\n            box_row = box_row\n            box_col = new_col - 1\n        elif direction == 'd':\n            box_row = box_row\n            box_col = new_col + 1\n\n        # Check if box's new position is valid\n        if box_row < 0 or box_row >= len(self.map):\n            can_push = False\n        elif new_col < 0 or new_col >= len(self.map[box_row]):\n            can_push = False\n        elif self.map[box_row][box_col] == '#':\n            can_push = False\n        elif self.map[box_row][box_col] == 'X':\n            can_push = False\n\n    # If we can't push, just return False\n    if not can_push:\n        return False\n\n    # Perform the move\n    # Clear old positions\n    self.map[self.player_row][self.player_col] = 'O'\n    if self.map[new_row][new_col] == 'X':\n        self.map[new_row + 0][new_col + 0] = ' '  # Original box position\n\n    # Update player position\n    self.player_row = new_row\n    self.player_col = new_col\n\n    # If pushing a box, update box position\n    if self.map[new_row][new_col] == 'X':\n        # Update map to show old box position as empty\n        box_row = new_row\n        box_col = new_col\n        if direction == 'w':\n            box_row = box_row - 1\n        elif direction == 's':\n            box_row = box_row + 1\n        elif direction == 'a':\n            box_col = box_col - 1\n        elif direction == 'd':\n            box_col = box_col + 1\n\n        self.map[box_row][box_col] = ' '\n        # Find and update the box position in our boxes list\n        for i, (br, bc) in enumerate(self.boxes):\n            self.boxes[i] = (box_row, box_col)\n\n    # Update map to show new box position if pushed\n    if self.map[new_row][new_col] == 'X':\n        # Box position is still 'X' after push\n        pass\n\n    # Update the player's new position in map\n    self.map[self.player_row][self.player_col] = 'O'\n\n    # If box was pushed, update its target position in map from 'X' to 'G' or 'X' becomes box on target\n    if self.map[new_row][new_col] == 'X':\n        # The box is at (new_row, new_col) target or not\n        # We need to keep 'X' for box, 'G' for target\n        pass\n\n    # Update the map\n    self.map[self.player_row][self.player_col] = 'O'\n    if self.map[new_row][new_col] == 'X':\n        # Need to update the box position in self.map\n        # It should stay 'X', which it already is from the check above\n        # But we need to update where the target is\n        pass\n\n    # Check if game is won\n    result = self.check_win()\n    return result",
+        "valid": true,
+        "reply": "\n\n```python\ndef move(self, direction):\n    # Calculate new position based on direction\n    if direction == 'w':\n        new_row = self.player_row - 1\n        new_col = self.player_col\n    elif direction == 's':\n        new_row = self.player_row + 1\n        new_col = self.player_col\n    elif direction == 'a':\n        new_row = self.player_row\n        new_col = self.player_col - 1\n    elif direction == 'd':\n        new_row = self.player_row\n        new_col = self.player_col + 1\n    else:\n        return False\n    \n    # Check if new position is within bounds\n    if new_row < 0 or new_row >= len(self.map):\n        return False\n    if new_col < 0 or new_col >= len(self.map[new_row]):\n        return False\n    \n    # Check if new position is a wall\n    if self.map[new_row][new_col] == '#':\n        return False\n    \n    # Check if there's a box at the new position, and if we can push it\n    can_push = True\n    if self.map[new_row][new_col] == 'X':\n        # Calculate box's new position after potential push\n        box_row = new_row\n        box_col = new_col\n        \n        if direction == 'w':\n            box_row = new_row - 1\n            box_col = box_col\n        elif direction == 's':\n            box_row = new_row + 1\n            box_col = box_col\n        elif direction == 'a':\n            box_row = box_row\n            box_col = new_col - 1\n        elif direction == 'd':\n            box_row = box_row\n            box_col = new_col + 1\n        \n        # Check if box's new position is valid\n        if box_row < 0 or box_row >= len(self.map):\n            can_push = False\n        elif new_col < 0 or new_col >= len(self.map[box_row]):\n            can_push = False\n        elif self.map[box_row][box_col] == '#':\n            can_push = False\n        elif self.map[box_row][box_col] == 'X':\n            can_push = False\n    \n    # If we can't push, just return False\n    if not can_push:\n        return False\n    \n    # Perform the move\n    # Clear old positions\n    self.map[self.player_row][self.player_col] = 'O'\n    if self.map[new_row][new_col] == 'X':\n        self.map[new_row + 0][new_col + 0] = ' '  # Original box position\n    \n    # Update player position\n    self.player_row = new_row\n    self.player_col = new_col\n    \n    # If pushing a box, update box position\n    if self.map[new_row][new_col] == 'X':\n        # Update map to show old box position as empty\n        box_row = new_row\n        box_col = new_col\n        if direction == 'w':\n            box_row = box_row - 1\n        elif direction == 's':\n            box_row = box_row + 1\n        elif direction == 'a':\n            box_col = box_col - 1\n        elif direction == 'd':\n            box_col = box_col + 1\n        \n        self.map[box_row][box_col] = ' '\n        # Find and update the box position in our boxes list\n        for i, (br, bc) in enumerate(self.boxes):\n            self.boxes[i] = (box_row, box_col)\n    \n    # Update map to show new box position if pushed\n    if self.map[new_row][new_col] == 'X':\n        # Box position is still 'X' after push\n        pass\n    \n    # Update the player's new position in map\n    self.map[self.player_row][self.player_col] = 'O'\n    \n    # If box was pushed, update its target position in map from 'X' to 'G' or 'X' becomes box on target\n    if self.map[new_row][new_col] == 'X':\n        # The box is at (new_row, new_col) target or not\n        # We need to keep 'X' for box, 'G' for target\n        pass\n    \n    # Update the map\n    self.map[self.player_row][self.player_col] = 'O'\n    if self.map[new_row][new_col] == 'X':\n        # Need to update the box position in self.map\n        # It should stay 'X', which it already is from the check above\n        # But we need to update where the target is\n        pass\n    \n    # Check if game is won\n    result = self.check_win()\n    return result\n```\n\nWait, I need to reconsider this. Let me trace through the map properly and fix the logic:",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 1102,
+        "cached_tokens": 0,
+        "completion_tokens": 1824,
+        "reasoning_tokens": 827,
+        "cost": 0.0003838
+      },
+      "review": {
+        "verdict": "NOT OK",
+        "reason": "When pushing, the method clears the box\u2019s original map cell before checking whether that cell still contains `'X'`, so the box-update code never runs; the box disappears from the map while its position in `self.boxes` stays unchanged. It also leaves `'O'` at the player\u2019s old position; preserve and update the box and player positions consistently, clearing the old player cell instead.",
+        "confidence": null,
+        "looks": [
+          {
+            "verdict": "NOT OK",
+            "reason": "When pushing, the method clears the box\u2019s original map cell before checking whether that cell still contains `'X'`, so the box-update code never runs; the box disappears from the map while its position in `self.boxes` stays unchanged. It also leaves `'O'` at the player\u2019s old position; preserve and update the box and player positions consistently, clearing the old player cell instead.",
+            "confidence": null
+          }
+        ],
+        "status": "completed",
+        "provider": "OpenAI",
+        "n_runs": 0,
+        "runs": [],
+        "requests": [
+          {
+            "provider": "OpenAI",
+            "prompt_tokens": 2165,
+            "cached_tokens": 0,
+            "completion_tokens": 373,
+            "reasoning_tokens": 274,
+            "cost": 0.000403
+          }
+        ],
+        "prompt_tokens": 2165,
+        "cached_tokens": 0,
+        "completion_tokens": 373,
+        "reasoning_tokens": 274,
+        "cost": 0.000403
+      },
+      "revision": {
+        "code": "def move(self, direction):\n    # Calculate new position based on direction\n    if direction == 'w':\n        new_row = self.player_row - 1\n        new_col = self.player_col\n    elif direction == 's':\n        new_row = self.player_row + 1\n        new_col = self.player_col\n    elif direction == 'a':\n        new_row = self.player_row\n        new_col = self.player_col - 1\n    elif direction == 'd':\n        new_row = self.player_row\n        new_col = self.player_col + 1\n    else:\n        return False\n\n    # Check bounds\n    if new_row < 0 or new_row >= len(self.map):\n        return False\n    if new_col < 0 or new_col >= len(self.map[new_row]):\n        return False\n\n    # Get the cell we're moving into\n    cell = self.map[new_row][new_col]\n\n    # Check if it's a wall\n    if cell == '#':\n        return False\n\n    # Check if there's a box\n    is_box_at_new_pos = cell == 'X'\n\n    if is_box_at_new_pos:\n        # We want to push the box, calculate where the box would go\n        box_new_row = new_row\n        box_new_col = new_col\n\n        if direction == 'w':\n            box_new_row -= 1\n        elif direction == 's':\n            box_new_row += 1\n        elif direction == 'a':\n            box_new_col -= 1\n        elif direction == 'd':\n            box_new_col += 1\n\n        # Check if box new position is valid (not wall, not another box)\n        if box_new_row < 0 or box_new_row >= len(self.map):\n            return False\n        if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n            return False\n        box_cell = self.map[box_new_row][box_new_col]\n        if box_cell == '#' or box_cell == 'X':\n            return False\n\n    # We can make the move\n    # Update the map: move player out\n    old_cell = self.map[self.player_row][self.player_col]\n    self.map[self.player_row][self.player_col] = ' '\n\n    # Move player to new position\n    self.player_row = new_row\n    self.player_col = new_col\n\n    # If we pushed a box, update box position\n    if is_box_at_new_pos:\n        old_box_row = new_row\n        old_box_col = new_col\n\n        # Update map to show box moves to new position\n        self.map[old_box_row][old_box_col] = ' '\n        self.map[box_new_row][box_new_col] = 'X'\n\n        # Update box position in the list\n        for i in range(len(self.boxes)):\n            if self.boxes[i][0] == old_box_row and self.boxes[i][1] == old_box_col:\n                self.boxes[i] = (box_new_row, box_new_col)\n                break\n\n    # Update map to show player at new position\n    self.map[new_row][new_col] = 'O'\n\n    # Check if game is won\n    return self.check_win()",
+        "valid": true,
+        "reply": "\n\n```python\ndef move(self, direction):\n    # Calculate new position based on direction\n    if direction == 'w':\n        new_row = self.player_row - 1\n        new_col = self.player_col\n    elif direction == 's':\n        new_row = self.player_row + 1\n        new_col = self.player_col\n    elif direction == 'a':\n        new_row = self.player_row\n        new_col = self.player_col - 1\n    elif direction == 'd':\n        new_row = self.player_row\n        new_col = self.player_col + 1\n    else:\n        return False\n    \n    # Check bounds\n    if new_row < 0 or new_row >= len(self.map):\n        return False\n    if new_col < 0 or new_col >= len(self.map[new_row]):\n        return False\n    \n    # Get the cell we're moving into\n    cell = self.map[new_row][new_col]\n    \n    # Check if it's a wall\n    if cell == '#':\n        return False\n    \n    # Check if there's a box\n    is_box_at_new_pos = cell == 'X'\n    \n    if is_box_at_new_pos:\n        # We want to push the box, calculate where the box would go\n        box_new_row = new_row\n        box_new_col = new_col\n        \n        if direction == 'w':\n            box_new_row -= 1\n        elif direction == 's':\n            box_new_row += 1\n        elif direction == 'a':\n            box_new_col -= 1\n        elif direction == 'd':\n            box_new_col += 1\n        \n        # Check if box new position is valid (not wall, not another box)\n        if box_new_row < 0 or box_new_row >= len(self.map):\n            return False\n        if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n            return False\n        box_cell = self.map[box_new_row][box_new_col]\n        if box_cell == '#' or box_cell == 'X':\n            return False\n    \n    # We can make the move\n    # Update the map: move player out\n    old_cell = self.map[self.player_row][self.player_col]\n    self.map[self.player_row][self.player_col] = ' '\n    \n    # Move player to new position\n    self.player_row = new_row\n    self.player_col = new_col\n    \n    # If we pushed a box, update box position\n    if is_box_at_new_pos:\n        old_box_row = new_row\n        old_box_col = new_col\n        \n        # Update map to show box moves to new position\n        self.map[old_box_row][old_box_col] = ' '\n        self.map[box_new_row][box_new_col] = 'X'\n        \n        # Update box position in the list\n        for i in range(len(self.boxes)):\n            if self.boxes[i][0] == old_box_row and self.boxes[i][1] == old_box_col:\n                self.boxes[i] = (box_new_row, box_new_col)\n                break\n    \n    # Update map to show player at new position\n    self.map[new_row][new_col] = 'O'\n    \n    # Check if game is won\n    return self.check_win()\n```",
+        "finish_reason": "stop",
+        "provider": "DeepInfra",
+        "prompt_tokens": 2193,
+        "cached_tokens": 0,
+        "completion_tokens": 1774,
+        "reasoning_tokens": 1085,
+        "cost": 0.0004854
+      },
+      "final_code": "def move(self, direction):\n    # Calculate new position based on direction\n    if direction == 'w':\n        new_row = self.player_row - 1\n        new_col = self.player_col\n    elif direction == 's':\n        new_row = self.player_row + 1\n        new_col = self.player_col\n    elif direction == 'a':\n        new_row = self.player_row\n        new_col = self.player_col - 1\n    elif direction == 'd':\n        new_row = self.player_row\n        new_col = self.player_col + 1\n    else:\n        return False\n\n    # Check bounds\n    if new_row < 0 or new_row >= len(self.map):\n        return False\n    if new_col < 0 or new_col >= len(self.map[new_row]):\n        return False\n\n    # Get the cell we're moving into\n    cell = self.map[new_row][new_col]\n\n    # Check if it's a wall\n    if cell == '#':\n        return False\n\n    # Check if there's a box\n    is_box_at_new_pos = cell == 'X'\n\n    if is_box_at_new_pos:\n        # We want to push the box, calculate where the box would go\n        box_new_row = new_row\n        box_new_col = new_col\n\n        if direction == 'w':\n            box_new_row -= 1\n        elif direction == 's':\n            box_new_row += 1\n        elif direction == 'a':\n            box_new_col -= 1\n        elif direction == 'd':\n            box_new_col += 1\n\n        # Check if box new position is valid (not wall, not another box)\n        if box_new_row < 0 or box_new_row >= len(self.map):\n            return False\n        if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n            return False\n        box_cell = self.map[box_new_row][box_new_col]\n        if box_cell == '#' or box_cell == 'X':\n            return False\n\n    # We can make the move\n    # Update the map: move player out\n    old_cell = self.map[self.player_row][self.player_col]\n    self.map[self.player_row][self.player_col] = ' '\n\n    # Move player to new position\n    self.player_row = new_row\n    self.player_col = new_col\n\n    # If we pushed a box, update box position\n    if is_box_at_new_pos:\n        old_box_row = new_row\n        old_box_col = new_col\n\n        # Update map to show box moves to new position\n        self.map[old_box_row][old_box_col] = ' '\n        self.map[box_new_row][box_new_col] = 'X'\n\n        # Update box position in the list\n        for i in range(len(self.boxes)):\n            if self.boxes[i][0] == old_box_row and self.boxes[i][1] == old_box_col:\n                self.boxes[i] = (box_new_row, box_new_col)\n                break\n\n    # Update map to show player at new position\n    self.map[new_row][new_col] = 'O'\n\n    # Check if game is won\n    return self.check_win()",
+      "passed_first": false,
+      "passed": false
+    }
+  ],
+  "class_passed_first": false,
+  "class_passed": false,
+  "tests_first": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 3,
+      "passed": false
+    }
+  },
+  "tests": {
+    "PushBoxGameTestInitGame": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "passed": true
+    },
+    "PushBoxGameTestCheckWin": {
+      "status": "ok",
+      "tests": 2,
+      "failures": 0,
+      "errors": 1,
+      "passed": false
+    },
+    "PushBoxGameTestMove": {
+      "status": "ok",
+      "tests": 7,
+      "failures": 0,
+      "errors": 3,
+      "passed": false
+    }
+  },
+  "source_first": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n\n        for row_idx, row in enumerate(self.map):\n            for col_idx, cell in enumerate(row):\n                if cell == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif cell == 'G':\n                    self.targets.append((row_idx, col_idx))\n                    self.target_count += 1\n                elif cell == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        self.is_game_over = len(self.boxes) > 0 and all(pos in self.targets for pos in self.boxes)\n        return self.is_game_over\n\n    def move(self, direction):\n        # Calculate new position based on direction\n        if direction == 'w':\n            new_row = self.player_row - 1\n            new_col = self.player_col\n        elif direction == 's':\n            new_row = self.player_row + 1\n            new_col = self.player_col\n        elif direction == 'a':\n            new_row = self.player_row\n            new_col = self.player_col - 1\n        elif direction == 'd':\n            new_row = self.player_row\n            new_col = self.player_col + 1\n        else:\n            return False\n\n        # Check if new position is within bounds\n        if new_row < 0 or new_row >= len(self.map):\n            return False\n        if new_col < 0 or new_col >= len(self.map[new_row]):\n            return False\n\n        # Check if new position is a wall\n        if self.map[new_row][new_col] == '#':\n            return False\n\n        # Check if there's a box at the new position, and if we can push it\n        can_push = True\n        if self.map[new_row][new_col] == 'X':\n            # Calculate box's new position after potential push\n            box_row = new_row\n            box_col = new_col\n\n            if direction == 'w':\n                box_row = new_row - 1\n                box_col = box_col\n            elif direction == 's':\n                box_row = new_row + 1\n                box_col = box_col\n            elif direction == 'a':\n                box_row = box_row\n                box_col = new_col - 1\n            elif direction == 'd':\n                box_row = box_row\n                box_col = new_col + 1\n\n            # Check if box's new position is valid\n            if box_row < 0 or box_row >= len(self.map):\n                can_push = False\n            elif new_col < 0 or new_col >= len(self.map[box_row]):\n                can_push = False\n            elif self.map[box_row][box_col] == '#':\n                can_push = False\n            elif self.map[box_row][box_col] == 'X':\n                can_push = False\n\n        # If we can't push, just return False\n        if not can_push:\n            return False\n\n        # Perform the move\n        # Clear old positions\n        self.map[self.player_row][self.player_col] = 'O'\n        if self.map[new_row][new_col] == 'X':\n            self.map[new_row + 0][new_col + 0] = ' '  # Original box position\n\n        # Update player position\n        self.player_row = new_row\n        self.player_col = new_col\n\n        # If pushing a box, update box position\n        if self.map[new_row][new_col] == 'X':\n            # Update map to show old box position as empty\n            box_row = new_row\n            box_col = new_col\n            if direction == 'w':\n                box_row = box_row - 1\n            elif direction == 's':\n                box_row = box_row + 1\n            elif direction == 'a':\n                box_col = box_col - 1\n            elif direction == 'd':\n                box_col = box_col + 1\n\n            self.map[box_row][box_col] = ' '\n            # Find and update the box position in our boxes list\n            for i, (br, bc) in enumerate(self.boxes):\n                self.boxes[i] = (box_row, box_col)\n\n        # Update map to show new box position if pushed\n        if self.map[new_row][new_col] == 'X':\n            # Box position is still 'X' after push\n            pass\n\n        # Update the player's new position in map\n        self.map[self.player_row][self.player_col] = 'O'\n\n        # If box was pushed, update its target position in map from 'X' to 'G' or 'X' becomes box on target\n        if self.map[new_row][new_col] == 'X':\n            # The box is at (new_row, new_col) target or not\n            # We need to keep 'X' for box, 'G' for target\n            pass\n\n        # Update the map\n        self.map[self.player_row][self.player_col] = 'O'\n        if self.map[new_row][new_col] == 'X':\n            # Need to update the box position in self.map\n            # It should stay 'X', which it already is from the check above\n            # But we need to update where the target is\n            pass\n\n        # Check if game is won\n        result = self.check_win()\n        return result\n",
+  "source": "\n\nclass PushBoxGame: \n    def __init__(self, map):\n        \"\"\"\n        Initialize the push box game with the map and various attributes.\n        :param map: list[str], the map of the push box game, represented as a list of strings. \n            Each character on the map represents a different element, including the following:\n            - '#' represents a wall that neither the player nor the box can pass through;\n            - 'O' represents the initial position of the player;\n            - 'G' represents the target position;\n            - 'X' represents the initial position of the box.\n        >>> map = [\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]   \n        >>> game = PushBoxGame(map)                \n        \"\"\"\n        self.map = map\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n        self.is_game_over = False\n        self.init_game()\n\n    def init_game(self):\n        self.player_row = 0\n        self.player_col = 0\n        self.targets = []\n        self.boxes = []\n        self.target_count = 0\n\n        for row_idx, row in enumerate(self.map):\n            for col_idx, cell in enumerate(row):\n                if cell == 'O':\n                    self.player_row = row_idx\n                    self.player_col = col_idx\n                elif cell == 'G':\n                    self.targets.append((row_idx, col_idx))\n                    self.target_count += 1\n                elif cell == 'X':\n                    self.boxes.append((row_idx, col_idx))\n\n        self.is_game_over = False\n\n    def check_win(self):\n        \"\"\"\n        Check if the game is won. The game is won when all the boxes are placed on target positions.\n        And update the value of self.is_game_over.\n        :return self.is_game_over: True if all the boxes are placed on target positions, or False otherwise.\n        >>> game = PushBoxGame([\"#####\", \"#O  #\", \"# X #\", \"#  G#\", \"#####\"]) \n        >>> game.check_win()\n        \"\"\"\n        self.is_game_over = all(box_pos in self.targets for box_pos in self.boxes)\n        return self.is_game_over\n\n    def move(self, direction):\n        # Calculate new position based on direction\n        if direction == 'w':\n            new_row = self.player_row - 1\n            new_col = self.player_col\n        elif direction == 's':\n            new_row = self.player_row + 1\n            new_col = self.player_col\n        elif direction == 'a':\n            new_row = self.player_row\n            new_col = self.player_col - 1\n        elif direction == 'd':\n            new_row = self.player_row\n            new_col = self.player_col + 1\n        else:\n            return False\n\n        # Check bounds\n        if new_row < 0 or new_row >= len(self.map):\n            return False\n        if new_col < 0 or new_col >= len(self.map[new_row]):\n            return False\n\n        # Get the cell we're moving into\n        cell = self.map[new_row][new_col]\n\n        # Check if it's a wall\n        if cell == '#':\n            return False\n\n        # Check if there's a box\n        is_box_at_new_pos = cell == 'X'\n\n        if is_box_at_new_pos:\n            # We want to push the box, calculate where the box would go\n            box_new_row = new_row\n            box_new_col = new_col\n\n            if direction == 'w':\n                box_new_row -= 1\n            elif direction == 's':\n                box_new_row += 1\n            elif direction == 'a':\n                box_new_col -= 1\n            elif direction == 'd':\n                box_new_col += 1\n\n            # Check if box new position is valid (not wall, not another box)\n            if box_new_row < 0 or box_new_row >= len(self.map):\n                return False\n            if box_new_col < 0 or box_new_col >= len(self.map[box_new_row]):\n                return False\n            box_cell = self.map[box_new_row][box_new_col]\n            if box_cell == '#' or box_cell == 'X':\n                return False\n\n        # We can make the move\n        # Update the map: move player out\n        old_cell = self.map[self.player_row][self.player_col]\n        self.map[self.player_row][self.player_col] = ' '\n\n        # Move player to new position\n        self.player_row = new_row\n        self.player_col = new_col\n\n        # If we pushed a box, update box position\n        if is_box_at_new_pos:\n            old_box_row = new_row\n            old_box_col = new_col\n\n            # Update map to show box moves to new position\n            self.map[old_box_row][old_box_col] = ' '\n            self.map[box_new_row][box_new_col] = 'X'\n\n            # Update box position in the list\n            for i in range(len(self.boxes)):\n                if self.boxes[i][0] == old_box_row and self.boxes[i][1] == old_box_col:\n                    self.boxes[i] = (box_new_row, box_new_col)\n                    break\n\n        # Update map to show player at new position\n        self.map[new_row][new_col] = 'O'\n\n        # Check if game is won\n        return self.check_win()\n"
+}
