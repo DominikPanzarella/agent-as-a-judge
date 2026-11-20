@@ -98,8 +98,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   many as two passes of v1 differ on the pilot (7 of 71): no effect of the memory is visible.
 - [x] **Analysis** (12 Nov). Pass rates before and after the feedback in C2, C3 against C2
   on the same methods, with and without the weak methods, McNemar tests and bootstrap intervals;
-  the judge's TPR and TNR come from the same files (`analyze.py`). Charts:
-  `figures/full_first_final.png`, `full_differences.png`, `full_judge.png` (`plot_results.py`).
+  the judge's TPR and TNR come from the same files (`analyze.py`). The charts of the full runs
+  now cover both token limits: `figures/full_runs_compared.png`, `full_differences.png`,
+  `full_judge.png` (`plot_results.py`).
 
 ## 16 to 19 November: midway report
 
@@ -108,22 +109,23 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 
 ## After the midway (20 November to 17 December)
 
-- [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of the pilot methods
+- [ ] **Judge vs tests by hand** (20 to 26 Nov). Our labels of 28 pilot methods
   (`label_sheet.py`, two raters, then consensus) and the error analysis of 20 disagreements of C2
   (`analyze.py --sample 20`).
-- [x] **Control and repetitions** (16 and 17 Nov, 0.96 $), approved by the instructors. C2, C3 and
-  the control without the judge's reason, three times each on the 61 classes, with the coder's
-  limit at 8000 tokens (`loop.py --no-reason`, `--max-tokens`; `analyze.py --pool`).
-  Together: C2 from 571 to 583 methods of 753, +1.6 points [-1.4, +4.5]; C3 +0.9 [-1.7, +3.5];
-  control +0.8 [-1.1, +2.6]. Control against C2: -1.2 [-3.0, +0.8]; C3 against C2: -0.5
-  [-2.0, +1.0]. With good first versions the feedback, the reason and the memory give no gain
-  that we can tell from zero.
-- [ ] **A judge that writes its own tests** from the docstring and runs them, never ClassEval's.
-- [ ] **More than one rewrite**, as long as the judge is sure of its NOT OK. Compared with C2 at
-  the same number of attempts, and with rewriting without feedback.
+- [x] **Control and repetitions with 8000 tokens** (16 and 17 Nov, 0.96 $), approved by the
+  instructors. C2, C3 and the control without the judge's reason, three times each on the 61
+  classes (`loop.py --no-reason`, `--max-tokens`; `analyze.py --pool`). Together: C2 from 571 to
+  583 methods of 753, +1.6 points [-1.4, +4.5]; C3 +0.9 [-1.7, +3.5]; control +0.8 [-1.1, +2.6].
+  Control against C2: -1.2 [-3.0, +0.8]; C3 against C2: -0.5 [-2.0, +1.0]. With good first
+  versions the feedback, the reason and the memory give no gain that we can tell from zero.
+- [ ] **Three repetitions with 4000 tokens** (23 to 29 Nov). C2 and its control, because the gain
+  of 8.4 points with that limit comes from one run. We also read which rewrites fix a method
+  and which break it. Less than 1 $.
+- [ ] **One or two variants of the judge** (30 Nov to 6 Dec), the ones the instructors accept: a
+  judge that writes its own tests from the docstring and runs them, never ClassEval's, and more
+  than one rewrite per method, compared with C2 at the same number of attempts.
 - [ ] **C3 as a flywheel**, if time and budget allow. Rounds of classes; between rounds the judge
   keeps a memory of its mistakes, confirmed by hand. Today's C3 has no rounds and no such check.
-- [ ] **Later variants** (30 Nov to 6 Dec), the ones the instructors accept.
 - [ ] **Full analysis** (7 to 11 Dec), answering RQ1, RQ2 and RQ3.
 - [ ] **Final report** (7 to 16 Dec), with a draft at the lab of 14 December.
 - [ ] **Presentation** (17 Dec).
@@ -135,8 +137,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   C2: -8.4 [-13.5, -3.7], McNemar p < 0.001. With that limit the judge's reason carries the gain.
 - [x] **The run with 4000 tokens is a result**, shown apart from the runs with 8000 tokens.
 - [x] **Clearer charts, with intervals**: methods passing before and after the feedback in every
-  run, with the 95% interval of the final count, one panel per limit
-  (`figures/full_runs_compared.png`).
+  run, with the 95% interval of the count after, one panel per limit
+  (`figures/full_runs_compared.png`), and the gain of each setup with its interval
+  (`figures/full_differences.png`).
 
 ## Decisions after the first full run (the instructors' answer to our mail)
 
@@ -151,8 +154,9 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 
 ## Decisions of 12 November (the simplest version for the midway)
 
-- [x] **The judge of the study is v1**: it only reads the code and runs nothing. On the pilot it
-  agrees with the tests about as often as the judges that run code (kappa 0.52 against 0.54).
+- [x] **The judge of the study is v1**: it reads the docstrings and the code and runs nothing. On
+  the pilot it agrees with the tests about as often as the judges that run code (kappa 0.52
+  against 0.54).
 - [x] **Only C2 and C3 before the midway.** The checks by hand of judge against tests, and a
   judge that writes tests of its own, come after.
 - [x] **C3: the memory is the judge's earlier reviews of the same class**, as in the paper's

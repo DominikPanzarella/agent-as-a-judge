@@ -3,11 +3,15 @@
 **Project: Can a Judge Agent Make a Coding Agent Better?**
 Dominik Panzarella and Daniele Buser, Neural Code Analysis, USI, autumn 2026.
 
-A coding agent writes a Python class one method at a time, and a judge agent reviews the work. We
-measure whether the judge's feedback makes the code pass more tests, and how often the judge is
-wrong. The tasks come from ClassEval. Neither agent sees the tests: the judge works only with what
-exists when the code is written (the docstring and the code so far), and the tests only give the
-grade.
+A coding agent writes a Python class one method at a time, and a judge agent reviews each method.
+We measure whether the judge's feedback makes the code pass more tests, and how often the judge
+is wrong. The tasks come from ClassEval. Neither agent sees the tests: the judge works with the
+docstrings and the code written so far, and the tests only give the grade.
+
+In short: when the coder has few output tokens and its first versions are weak, the feedback
+adds 8.4 points of methods passing, and the gain comes from the judge's reason. When the coder
+has more tokens and its first versions are already good, the feedback adds nothing we can tell
+from zero. The numbers are in [Results so far](#6-results-so-far).
 
 ## Contents
 
@@ -33,17 +37,22 @@ worker improve each other (a "flywheel"). We test both ideas on tasks with real 
 
 ![Architecture](docs/architecture_base.png)
 
-Blue parts are in both setups; the orange part is only in C3.
+Blue parts are in every setup; the orange part is only in C3.
 
-Both setups have a coder and a judge:
+Every setup has a coder and a judge:
 
-| Setup | Feedback to the coder | Status |
-|---|---|---|
-| C2 | after each method the judge reviews it; one revision of that method, then the next method | run on the 61 test classes |
-| C3 | as C2, and the judge also reads its earlier reviews of the same class (its memory); nothing from the tests reaches it | run on the 61 test classes |
+| Setup | What happens after each method |
+|---|---|
+| C2 | the judge reviews the method; after a NOT OK the coder gets the reason and rewrites the method once |
+| C3 | as C2, and the judge also reads its earlier reviews of the same class, its memory |
+| Control | as C2, but after a NOT OK the coder learns the verdict without the reason |
 
-There is no setup without the judge: the baseline is inside each setup, in the first version of
-each method, written before any feedback.
+There is no setup without the judge. The baseline is inside each setup: the first version of
+each method, written before any feedback, against the final one. The control separates the
+effect of the judge's reason from that of a second attempt.
+
+All three ran with two limits of output tokens for the coder: 4000 per method, in one run, and
+8000, in three repetitions.
 
 **One method in C2.** (1) The coder writes the method. (2) The judge gets the skeleton with the
 docstrings, the methods written so far and the new one, never the tests, and it runs no code.
@@ -60,46 +69,42 @@ harness runs all its tests on the first and on the final versions: that is the g
   called method comes before its caller.
 - **Prompt.** The class skeleton with all the docstrings, the methods written so far and the name
   of the next method.
-- **Coder.** `qwen/qwen3.5-9b` on OpenRouter (chosen on 11 November; the pilot also used
-  `qwen3.8-27b`, which already passes 82% of the methods), with low reasoning effort and 8000
-  output tokens per request (4000 in the runs of 12 November; doubled with the instructors on
-  16 November). It writes one method at a time and rewrites it after a NOT OK, without ever
-  seeing the tests or running code.
+- **Coder.** `qwen/qwen3.5-9b` on OpenRouter, with low reasoning effort. It writes one method at
+  a time and rewrites it after a NOT OK, without ever seeing the tests or running code. Its limit
+  is 8000 output tokens per request; the first run had 4000, and the instructors agreed to double
+  it. The pilot also tried `qwen3.8-27b`, which already passes 82% of the methods.
 - **Judge.** `gpt-6-luna` on OpenAI, with medium effort. It answers OK or NOT OK with a reason, and
   the reason is the feedback. The judge of the study is v1: it reads the docstrings and the code,
-  runs nothing and never sees the tests. The pilot also tried judges that run code of their own (v2 to v5), which agreed with
-  the tests about as often (kappa 0.50 to 0.54, v1 0.52), and two variants of v1 itself (v6, v7),
-  which did not beat it: between two passes of v1, 7 of 71 verdicts change, more than either
-  variant gains. Two options are built and not used in the full runs: the judge adds to the
-  verdict how sure it is, from 0 to 100 (`--confidence`), and below a threshold it looks at the
-  method again, at most twice (`--min-confidence`). On the pilot classes the confidence was 95
-  or more for 68 of 71 verdicts, right or wrong.
-- **Control of C2** (16 November). With `--no-reason` the coder learns after a NOT OK that the
-  method was rejected, without the judge's reason. Paired with a C2 run through `--reuse`, it
-  separates the effect of the reason from that of a second attempt.
+  runs nothing and never sees the tests. The pilot also tried judges that run code of their own
+  (v2 to v5) and two variants of v1 (v6, v7). They agreed with the tests about as often as v1
+  (kappa 0.47 to 0.54, v1 0.52), and two passes of v1 already differ on 7 of 71 verdicts, more
+  than any variant gains. Two options are built and not used in the full runs: the judge can say
+  how sure it is, from 0 to 100 (`--confidence`), and look at the method again when it is unsure
+  (`--min-confidence`). On the pilot the confidence was 95 or more for 68 of 71 verdicts, right or
+  wrong.
+- **Control.** With `--no-reason` the coder learns after a NOT OK that the method was rejected,
+  without the judge's reason. Through `--reuse` it starts from the first versions and reviews of
+  its C2 run, so the two runs differ only in that message.
 - **Judge memory (C3).** From the second method of a class, the judge's message lists its earlier
   reviews of that class: verdict, reason, and whether the method was then rewritten. It is the
   memory module of the paper, which stores past judgments and no ground truth.
 - **Test harness.** Each ClassEval test class runs in its own process. A missing method becomes a
   stub, so it fails only its own tests. 4 methods pass even as stubs; we report results with and
   without them.
-- **Judge vs tests.** Not part of the loop: after a run, the judge's verdict on each first version is
-  set next to the grade of the same version. It gives TPR, TNR and Cohen's kappa, and the list of
-  disagreements. We check them by hand after the midway report.
+- **Judge vs tests.** After a run, the judge's verdict on each first version is set next to the
+  grade of the same version. It gives TPR, TNR and Cohen's kappa, and the list of disagreements,
+  which we check by hand after the midway report. It is not part of the loop.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
-**Plan for the midway report** (12 November)
+**Where we are** (20 November)
 
-- **The judge on the pilot classes** (done). Seven prompts tried on the 9B's methods of the 10 pilot
-  classes; none beats v1 by more than a judge differs from its own repeat, so the study uses v1.
-- **One full run of C2** (done) on the 61 test classes, then a report of the budget spent.
-- **One full run of C3** (done) on the same classes. It takes from C2 every first version and review
-  whose input is the same (`--reuse`), so the two runs differ only where the memory changes a
-  verdict.
-
-After the midway: our labels and the error analysis, a judge that writes tests of its own from
-the docstring and runs them, more than one rewrite when the judge is sure, and the other variants
-in the [roadmap](docs/roadmap_midway.md).
+- The judge's instructions are chosen, and C2, C3 and the control have run on the 61 test
+  classes, once with 4000 tokens and three times with 8000. The
+  [midway report](docs/Neural%20Code%20Analysis%20-%20Midway%20Reporting%20-%20Panzarella%20Buser.pdf)
+  describes these runs.
+- Next come our labels of the cases in which judge and tests disagree, three repetitions of C2
+  and its control with 4000 tokens, and one or two variants of the judge. The dates are in the
+  [roadmap](docs/roadmap_midway.md).
 
 ## 3. Quick start
 
@@ -178,74 +183,72 @@ is one, the token counts, the cost and the test result.
 
 ## 6. Results so far
 
-One full run of each setup on the 61 test classes (251 methods), on 12 November: coder
-`qwen3.5-9b` with 4000 output tokens, judge v1 with medium effort. The control, C2 without the
-judge's reason, ran on 19 November on the first versions and reviews of that C2.
+All runs are on the 61 test classes (251 methods), with coder `qwen3.5-9b` and judge v1. The
+chart shows every run: how many methods pass their tests before the feedback and after it.
+
+![Methods passing before and after the feedback, with 4000 and with 8000 tokens](docs/figures/full_runs_compared.png)
+
+**With 4000 output tokens, one run.** C2 and C3 ran on 12 November. The control ran on
+19 November, on the first versions and reviews of that C2.
 
 | | C2 | C3 | Control |
 |---|---|---|---|
-| Methods passing, first versions | 165 (65.7%) | 169 (67.3%) | 164 (65.3%) |
-| Methods passing, final versions | 186 (74.1%) | 182 (72.5%) | 165 (65.7%) |
-| Final minus first, in points, with 95% interval | +8.4 [+4.4, +12.9] | +5.2 [+1.7, +9.4] | +0.4 [-1.6, +2.5] |
+| Methods passing before the feedback | 165 (65.7%) | 169 (67.3%) | 164 (65.3%) |
+| Methods passing after the feedback | 186 (74.1%) | 182 (72.5%) | 165 (65.7%) |
+| Gain in points, with 95% interval | +8.4 [+4.4, +12.9] | +5.2 [+1.7, +9.4] | +0.4 [-1.6, +2.5] |
 | Methods fixed, broken | 22, 1 | 14, 1 | 4, 3 |
-| NOT OK and revisions | 75 | 75 | 83 |
-| Judge on first versions: TPR, TNR, kappa | 0.76, 0.55, 0.30 | 0.77, 0.59, 0.33 | 0.75, 0.61, 0.34 |
+| NOT OK and rewrites | 75 | 75 | 83 |
+| Judge against the tests: TPR, TNR, kappa | 0.76, 0.55, 0.30 | 0.77, 0.59, 0.33 | 0.75, 0.61, 0.34 |
 | Cost | 0.18 $ | 0.09 $ | 0.08 $ |
 
-![Methods passing before and after the feedback](docs/figures/full_first_final.png)
+**With 8000 output tokens, three repetitions** (16 and 17 November). Methods passing before and
+after the feedback, of 251 per run:
 
-- **RQ1.** After the feedback more methods pass in C2 and C3. In the control the gain is 0.4
-  points, and it ends 8.4 points below C2 [-13.5, -3.7], McNemar p < 0.001. On the 23 failing
-  methods that the same review rejects in both, the coder fixes 8 with the reason and 1
-  without it. With 4000 tokens the gain comes from the judge's reason, and a second attempt
-  alone gives almost nothing. The control ran a week later, on another provider of the model.
-- **RQ2.** C3 against C2 on the final versions: -1.6 points [-4.7, +1.5], McNemar p = 0.42.
-  With the memory the judge changes 10 of 95 verdicts on the same code, as many as between two
-  passes of the same judge on the pilot (7 of 71).
-
-![Differences with their intervals](docs/figures/full_differences.png)
-
-- **RQ3.** Against the tests the judge has a kappa of 0.30 on the test classes and 0.52 on the
-  pilot ones. Who is wrong, the judge or the tests, needs our labels, after the midway.
-
-![The judge against the tests](docs/figures/full_judge.png)
-
-In C2, 21 of the 251 first replies (8%) had no usable method: the coder spent its 4000 tokens
-on reasoning. They get no review and count as failing before and after.
-
-**Three repetitions with 8000 tokens (16 and 17 November).** The coder's limit doubled to 8000
-output tokens, and a control ran next to C2 and C3. Methods passing in the first and final
-versions, of 251 per run:
-
-| | C2 | C3 | Control (C2 without the reason) |
+| | C2 | C3 | Control |
 |---|---|---|---|
 | Repetition 1 | 190 → 197 | 190 → 193 | 190 → 189 |
 | Repetition 2 | 191 → 190 | 192 → 192 | 192 → 197 |
 | Repetition 3 | 190 → 196 | 190 → 194 | 186 → 188 |
 | Together, of 753 | 571 → 583 | 572 → 579 | 568 → 574 |
-| Final minus first, in points, with 95% interval | +1.6 [-1.4, +4.5] | +0.9 [-1.7, +3.5] | +0.8 [-1.1, +2.6] |
+| Gain in points, with 95% interval | +1.6 [-1.4, +4.5] | +0.9 [-1.7, +3.5] | +0.8 [-1.1, +2.6] |
 | Methods fixed, broken | 34, 22 | 29, 22 | 24, 18 |
-| NOT OK and revisions | 232 | 241 | 243 |
+| NOT OK and rewrites | 232 | 241 | 243 |
 | Cost of the three runs | 0.36 $ | 0.34 $ | 0.26 $ |
 
-![Methods passing before and after the feedback, with 4000 and with 8000 tokens](docs/figures/full_runs_compared.png)
+![The gain after the feedback, with 4000 and with 8000 tokens](docs/figures/full_differences.png)
+
+- **RQ1, does the feedback improve the code?** With 4000 tokens it does. C2 gains 8.4 points and
+  the control 0.4, so a second attempt alone gives almost nothing and the gain comes from the
+  judge's reason. The control ends 8.4 points below C2 [-13.5, -3.7], McNemar p < 0.001. On the
+  23 failing methods that the same review rejects in both, the coder fixes 8 with the reason and
+  1 without it. With 8000 tokens about 190 methods already pass before any feedback, and the gain
+  of C2 is 1.6 points, with an interval that includes zero. The control ends 1.2 points below C2
+  [-3.0, +0.8]. On the 138 methods that the same review rejects in both, the coder fixes 10 and
+  breaks 11 with the reason, 9 and 8 without it.
+- **RQ2, does the judge's memory help?** It does not, under either limit. C3 against C2 is -1.6
+  points [-4.7, +1.5] with 4000 tokens and -0.5 [-2.0, +1.0] with 8000. On the same code the
+  memory changes 10 of 95 verdicts in the first case and 30 of 359 in the second, about as often
+  as two passes of the same judge differ on the pilot (7 of 71).
+- **RQ3, how often is the judge wrong?** Against the tests it accepts about three in four of the
+  methods that pass and rejects a little more than half of those that fail. Its kappa is 0.30
+  with 4000 tokens and 0.31 with 8000, against 0.52 on the pilot classes. More than half of its
+  rejections hit methods that already pass. Whether the judge or the tests are wrong in those
+  cases needs our labels.
+
+![The judge against the tests](docs/figures/full_judge.png)
 
 Read together, the two limits say that the feedback helps a coder in difficulty and stops
-helping once the first versions are good: with 4000 tokens and the feedback the coder reaches
+helping once the first versions are good. With 4000 tokens and the feedback the coder reaches
 186 methods, close to the 190 that 8000 tokens give without any feedback.
 
-- **RQ1.** With 8000 tokens the first versions already pass more often, and the gain of C2 falls
-  from 8.4 to 1.6 points, with an interval that contains zero. The control ends 1.2 points below
-  C2 [-3.0, +0.8]. On the 138 methods that the same review rejects in C2 and in the control, the
-  coder fixes 10 of 49 and breaks 11 of 89 with the reason, 9 and 8 without it. Once the first
-  versions are good, we see no gain from the feedback, with or without the reason.
-- **RQ2.** C3 against C2: -0.5 points [-2.0, +1.0]. On 359 reviews of the same code, the memory
-  changes 30 verdicts.
-- **RQ3.** More than half of the judge's rejections hit methods that already pass (58%), and a
-  rewrite breaks about one in six of them. Kappa against the tests: 0.33, 0.31 and 0.28 in C2.
-- With 8000 tokens, 4 or 5 of the 251 first replies of C2 have no usable method.
+Three things limit these results. The gain with 4000 tokens comes from one run. Its control ran
+a week later, on another provider of the same model. With 4000 tokens, 21 of the 251 first
+replies of C2 (8%) had no usable method because the coder spent the limit on reasoning; they
+get no review and count as failing. With 8000 tokens they are 4 or 5 per run.
 
-The numbers come from `analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k`.
+The numbers come from `analyze.py --classes test C2-9b C3-9b C2n-9b` and
+`analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k`. All the runs so far cost
+1.83 $ of the 20 $ available.
 
 ## 7. References and data
 
