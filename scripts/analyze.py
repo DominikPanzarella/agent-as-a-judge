@@ -5,7 +5,8 @@ judge, its agreement, kappa, TPR and TNR on the first versions, and the final ve
 the first ones. For each pair of runs, and for final against first versions: an exact McNemar
 test and a bootstrap interval over classes. --sample N writes N disagreements per run to
 runs/error_analysis_<run>.csv, to classify by hand. --pool takes the repetitions of each setup
-(<prefix>-r1, -r2, ...) together and compares the setups on all of them.
+(<prefix>-r1, -r2, ...) together and compares the setups on all of them. Both also say what a
+rewrite does after a NOT OK: failing methods fixed, passing methods broken.
 
     .venv/bin/python scripts/analyze.py --classes dev C0 C2-v2-medium
     .venv/bin/python scripts/analyze.py --classes test C2-9b C3-9b
@@ -70,6 +71,33 @@ def judge_rows(results):
     return rows
 
 
+def rejections(runs):
+    """Methods rewritten after a NOT OK, by the test result of their first version: how many of the
+    failing ones the rewrite fixes and how many of the passing ones it breaks."""
+    c = Counter()
+    for results in runs:
+        for m in (m for r in results.values() for m in r["methods"] if m.get("revision") is not None):
+            c["passing" if m["passed_first"] else "failing"] += 1
+            c["broken" if m["passed_first"] else "fixed"] += bool(m["passed"]) != bool(m["passed_first"])
+    return c
+
+
+def after_not_ok(runs):
+    c = rejections(runs)
+    return (f"after a NOT OK: {c['fixed']} of {c['failing']} failing methods fixed, "
+            f"{c['broken']} of {c['passing']} passing methods broken")
+
+
+def by_position(results):
+    """Methods passing before and after the feedback, by the place of the method in its class."""
+    groups = {"first method": [], "second and third": [], "fourth and later": []}
+    for r in results.values():
+        for i, m in enumerate(r["methods"]):
+            groups[list(groups)[min((i + 1) // 2, 2)]].append((bool(m["passed_first"]), bool(m["passed"])))
+    return "; ".join(f"{label} {sum(a for a, _ in g) / len(g):.0%} -> {sum(b for _, b in g) / len(g):.0%} of {len(g)}"
+                     for label, g in groups.items() if g)
+
+
 def describe(name, results, weak):
     out = outcomes(results)
     print(f"\n{name}: {len(results)} classes")
@@ -86,6 +114,8 @@ def describe(name, results, weak):
     fixed = sum(not first[k] and out[k] for k in out)
     broken = sum(first[k] and not out[k] for k in out)
     print(f"  revisions: {sum(r['revised'] for r in rows)} after a NOT OK; methods fixed {fixed}, broken {broken}")
+    print(f"  {after_not_ok([results])}")
+    print(f"  passing before -> after, by position in the class: {by_position(results)}")
     paired("first versions", first, "final versions", out)
 
 
@@ -191,6 +221,15 @@ def pool(prefixes, task_ids):
         print(f"  {prefix}: {len(names)} runs, methods passing {share(list(first.values()))} in the first versions, "
               f"{share(list(final.values()))} in the final ones")
         paired("first versions", first, "final versions", final)
+        print(f"  {after_not_ok(runs)}")
+        passes = Counter(sum(first_outcomes(r)[k] for r in runs) for k in first_outcomes(runs[0]))
+        print(f"  first versions over the {len(runs)} runs: {passes[len(runs)]} methods always pass, {passes[0]} never, "
+              f"{sum(passes.values()) - passes[len(runs)] - passes[0]} change")
+    every = [o for _, runs in pools.values() for r in runs for o in (first_outcomes(r), outcomes(r))]
+    if every:
+        never = sum(not any(o[k] for o in every) for k in every[0])
+        print(f"  methods that pass in none of the {len(every) // 2} runs, before or after the feedback: "
+              f"{never} of {len(every[0])}")
     for (name_a, (a, runs_a)), (name_b, (b, runs_b)) in combinations(pools.items(), 2):
         paired(name_a, a, name_b, b)
         if all(r and next(iter(r.values())).get("reuse", "").startswith(name_a) for r in runs_b):

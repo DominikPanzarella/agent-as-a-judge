@@ -160,9 +160,9 @@ the prompt, send nothing) and skip classes already done unless you pass `--force
 .venv/bin/python scripts/analyze.py --classes test --pool C2-9b-8k C3-9b-8k C2n-9b-8k   # the repetitions together
 ```
 
-`analyze.py` reports pass rates before and after the feedback, the judge's TPR and TNR, McNemar
-tests and bootstrap intervals between runs; `--sample 20` draws disagreements for the error
-analysis.
+`analyze.py` reports pass rates before and after the feedback, the judge's TPR and TNR, what a
+rewrite does after a NOT OK, McNemar tests and bootstrap intervals between runs; `--sample 20`
+draws disagreements for the error analysis.
 
 ## 5. Project layout
 
@@ -240,6 +240,43 @@ after the feedback, of 251 per run:
 Read together, the two limits say that the feedback helps a coder in difficulty and stops
 helping once the first versions are good. With 4000 tokens and the feedback the coder reaches
 186 methods, close to the 190 that 8000 tokens give without any feedback.
+
+### Comparing the setups
+
+The table puts the six conditions side by side. For each it gives the share of the 251 methods
+that pass before and after the feedback, the methods the judge rejects, those that go from
+failing to passing (fixed) and those that go from passing to failing (broken). With 8000 tokens
+the three repetitions are added up.
+
+| | Pass before | Pass after | Rejected | Fixed | Broken |
+|---|---|---|---|---|---|
+| 4000 tokens, C2 | 65.7% | 74.1% | 75 | 22 | 1 |
+| 4000 tokens, C3 | 67.3% | 72.5% | 75 | 14 | 1 |
+| 4000 tokens, control | 65.3% | 65.7% | 83 | 4 | 3 |
+| 8000 tokens, C2 | 75.8% | 77.4% | 232 | 34 | 22 |
+| 8000 tokens, C3 | 76.0% | 76.9% | 241 | 29 | 22 |
+| 8000 tokens, control | 75.4% | 76.2% | 243 | 24 | 18 |
+
+![After a NOT OK: methods fixed and methods broken by the rewrite](docs/figures/full_after_rejection.png)
+
+The chart counts the rejected methods alone. In the table, fixed and broken also include a few
+methods whose result changes because another method of their class was rewritten.
+
+- C3 never does better than C2. With 4000 tokens the two judges reject 36 failing and 39 passing
+  methods each, and the rewrite fixes 18 of the failing ones in C2 against 10 in C3. With 8000
+  tokens the two are level.
+- The judge's reason matters when the coder struggles. With 4000 tokens the rewrite fixes half of
+  the rejected failing methods with the reason and 4 of 42 without it. With 8000 tokens the
+  reason still fixes a few more (31% against 24%) but also breaks more passing methods (16%
+  against 12%), so C2 and the control end level.
+- A wrong rejection does more damage with 8000 tokens. The rewrite breaks 1 of 39 passing
+  methods under the lower limit and 21 of 134 under the higher one, and more than half of the
+  judge's rejections fall on passing methods.
+- With 4000 tokens the gain of C2 sits in the methods written later in the class. The first
+  method goes from 69% to 70%, the fourth and later ones from 68% to 82%.
+- The coder changes from one run to the next. Across the three repetitions of C2 with 8000
+  tokens, 163 methods pass at the first attempt every time, 36 never do and 52 change. In the
+  nine runs with 8000 tokens, 25 methods never pass, before or after the feedback.
 
 Three things limit these results. The gain with 4000 tokens comes from one run. Its control ran
 a week later, on another provider of the same model. With 4000 tokens, 21 of the 251 first

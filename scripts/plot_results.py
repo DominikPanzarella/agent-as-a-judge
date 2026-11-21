@@ -7,7 +7,8 @@ before and after the feedback (setups_first_final.png), and the judge's TPR and 
 intervals (judge_rates.png, from pilot_controls.py). For the full runs on the 61 test classes,
 with 4000 and with 8000 tokens for the coder: the methods passing before and after the feedback
 in every run (full_runs_compared.png), the gain of each setup with its 95% interval
-(full_differences.png) and the judge against the tests (full_judge.png). The colors are checked
+(full_differences.png), what a rewrite does after a NOT OK (full_after_rejection.png) and the
+judge against the tests (full_judge.png). The colors are checked
 for color blindness, and every mark carries its value.
 
     .venv/bin/python scripts/plot_results.py
@@ -346,6 +347,47 @@ def runs_compared():
     print("docs/figures/full_runs_compared.png")
 
 
+def after_rejection():
+    """What a rewrite does after a NOT OK, one panel per token limit: the share of failing methods
+    it fixes and the share of passing methods it breaks, with 95% Wilson intervals."""
+    task_ids = harness.class_ids("test")
+    setups = list(COMPARED[0][1])
+    height = 3.5
+    fig, axes = plt.subplots(1, len(COMPARED), figsize=(8, height), dpi=200, sharey=True, sharex=True)
+    fig.text(0.02, 0.97, "After a NOT OK: methods fixed and methods broken by the rewrite", fontsize=13.5,
+             fontweight="bold", va="top")
+    fig.text(0.02, 0.97 - 0.42 / height, "Share of the rejected methods, with 95% Wilson intervals",
+             fontsize=10.5, color=INK_2, va="top")
+    ys = dict(zip(setups, range(len(setups))[::-1]))
+    for ax, (title, runs) in zip(axes, COMPARED):
+        ax.set_title(title, fontsize=11, fontweight="bold", loc="left", pad=6)
+        for setup, names in runs.items():
+            loaded = [analyze.load_run(name, task_ids) for name in names]
+            if any(len(results) != len(task_ids) for results in loaded):
+                continue
+            c = analyze.rejections(loaded)
+            for k, n, color, dy, name in [(c["fixed"], c["failing"], AQUA, 0.16, "failing methods that get fixed"),
+                                          (c["broken"], c["passing"], ORANGE, -0.16, "passing methods that get broken")]:
+                lo, hi = pilot_controls.wilson(k, n)
+                y = ys[setup] + dy
+                ax.plot([100 * lo, 100 * hi], [y, y], color=color, linewidth=2, alpha=0.5, zorder=2)
+                ax.scatter([100 * k / n], [y], s=60, color=color, edgecolor=SURFACE, linewidth=1.5, zorder=3, label=name)
+                ax.text(100 * hi + 1.5, y, f"{k} of {n}", va="center", fontsize=8.5, color=INK_2)
+        ax.tick_params(axis="y", length=0)
+        ax.tick_params(axis="x", labelsize=9.5)
+        ax.set_xlabel("share of the rejected methods, in %", fontsize=9.5)
+    axes[0].set_yticks(list(ys.values()), list(ys))
+    axes[0].set_ylim(-0.6, len(setups) - 0.4)
+    axes[0].set_xlim(0, 82)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles[:2], labels[:2], loc="lower center", fontsize=9, ncol=2, bbox_to_anchor=(0.54, -0.01),
+               handletextpad=0.4, columnspacing=1.4)
+    fig.subplots_adjust(left=0.1, right=0.985, top=1 - 0.95 / height, bottom=0.82 / height, wspace=0.07)
+    fig.savefig(OUT / "full_after_rejection.png")
+    plt.close(fig)
+    print("docs/figures/full_after_rejection.png")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     task_ids = pilot_report.dev_classes()
@@ -356,6 +398,7 @@ def main():
     judge_rates()
     full_runs()
     runs_compared()
+    after_rejection()
 
 
 if __name__ == "__main__":
