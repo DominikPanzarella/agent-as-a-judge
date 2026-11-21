@@ -105,7 +105,7 @@ Blue parts are in both setups; the orange part is only in C3. The source is
 ## 16 to 19 November: midway report
 
 - [x] **Draft** (13 Nov), to bring to the lab of 16 November.
-- [ ] **Submission** (19 Nov).
+- [x] **Submission** (19 Nov).
 
 ## After the midway (20 November to 17 December)
 
@@ -118,6 +118,11 @@ Blue parts are in both setups; the orange part is only in C3. The source is
   583 methods of 753, +1.6 points [-1.4, +4.5]; C3 +0.9 [-1.7, +3.5]; control +0.8 [-1.1, +2.6].
   Control against C2: -1.2 [-3.0, +0.8]; C3 against C2: -0.5 [-2.0, +1.0]. With good first
   versions the feedback, the reason and the memory give no gain that we can tell from zero.
+- [x] **The six conditions side by side** (21 Nov, no request sent). One table for C2, C3 and the
+  control under both limits, and what a rewrite does after a NOT OK
+  (`figures/full_after_rejection.png`, `analyze.py`). C3 never does better than C2, and the
+  judge's reason fixes half of the rejected failing methods with 4000 tokens against 4 of 42
+  without it. The copy of the midway report in `docs/` has the table too.
 - [ ] **Three repetitions with 4000 tokens** (23 to 29 Nov). C2 and its control, because the gain
   of 8.4 points with that limit comes from one run. We also read which rewrites fix a method
   and which break it. Less than 1 $.

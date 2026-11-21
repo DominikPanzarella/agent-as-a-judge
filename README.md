@@ -96,7 +96,7 @@ harness runs all its tests on the first and on the final versions: that is the g
   which we check by hand after the midway report. It is not part of the loop.
 - **Analysis.** McNemar tests paired by method and bootstrap intervals over classes.
 
-**Where we are** (20 November)
+**Where we are** (21 November)
 
 - The judge's instructions are chosen, and C2, C3 and the control have run on the 61 test
   classes, once with 4000 tokens and three times with 8000. The
